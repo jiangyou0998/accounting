@@ -55,7 +55,8 @@ class TblOrderZMenuController extends AdminController
 //            $grid->disablePagination();
 
             $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('int_id');
+                $filter->equal('chr_cuttime');
+                $filter->equal('tblOrderZCat.chr_name');
 
             });
         });

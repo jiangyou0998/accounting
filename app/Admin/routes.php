@@ -16,5 +16,7 @@ Route::group([
     $router->resource('users', 'TblUserController');
     $router->resource('menus', 'TblOrderZMenuController');
     $router->resource('groups', 'TblOrderZGroupController');
+    $router->resource('notices', 'TblNoticeController');
+    $router->resource('checks', 'TblOrderCheckController');
 
 });
