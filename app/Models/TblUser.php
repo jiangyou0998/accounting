@@ -14,4 +14,7 @@ class TblUser extends Model
 
     public $timestamps = false;
 
+
+
+
 }

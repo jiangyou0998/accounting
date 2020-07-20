@@ -64,7 +64,6 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection chr_cuttime
      * @property Grid\Column|Collection int_phase
      * @property Grid\Column|Collection status
-     * @property Grid\Column|Collection chr_canordertime
      * @property Grid\Column|Collection int_id
      * @property Grid\Column|Collection int_group
      * @property Grid\Column|Collection int_unit
@@ -75,6 +74,7 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection txt_detail_2
      * @property Grid\Column|Collection txt_detail_3
      * @property Grid\Column|Collection last_modify
+     * @property Grid\Column|Collection chr_canordertime
      * @property Grid\Column|Collection int_cat
      * @property Grid\Column|Collection txt_path
      * @property Grid\Column|Collection int_user
@@ -84,6 +84,8 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection date_last
      * @property Grid\Column|Collection first_path
      * @property Grid\Column|Collection int_num_of_day
+     * @property Grid\Column|Collection int_user_id
+     * @property Grid\Column|Collection int_menu_id
      * @property Grid\Column|Collection parent_id
      * @property Grid\Column|Collection order
      * @property Grid\Column|Collection icon
@@ -103,9 +105,12 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection failed_at
      * @property Grid\Column|Collection email
      * @property Grid\Column|Collection token
+     * @property Grid\Column|Collection r_order_id
+     * @property Grid\Column|Collection qty
+     * @property Grid\Column|Collection disabled
+     * @property Grid\Column|Collection orderdates
      * @property Grid\Column|Collection txt_dept
      * @property Grid\Column|Collection bl_isvalid
-     * @property Grid\Column|Collection int_user_id
      * @property Grid\Column|Collection int_dept_id
      * @property Grid\Column|Collection chr_tel
      * @property Grid\Column|Collection chr_address
@@ -180,7 +185,6 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection chr_item_list
      * @property Grid\Column|Collection int_hide
      * @property Grid\Column|Collection int_main_item
-     * @property Grid\Column|Collection disabled
      * @property Grid\Column|Collection order_date
      * @property Grid\Column|Collection int_form
      * @property Grid\Column|Collection int_qty
@@ -188,7 +192,6 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection int_po_no
      * @property Grid\Column|Collection sampledate
      * @property Grid\Column|Collection sample_id
-     * @property Grid\Column|Collection qty
      * @property Grid\Column|Collection int_page
      * @property Grid\Column|Collection int_product
      * @property Grid\Column|Collection chr_phase
@@ -201,7 +204,6 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection reason
      * @property Grid\Column|Collection chr_name_long
      * @property Grid\Column|Collection int_group_id
-     * @property Grid\Column|Collection int_menu_id
      * @property Grid\Column|Collection int_report_id
      * @property Grid\Column|Collection chr_time
      * @property Grid\Column|Collection chr_weekday
@@ -271,7 +273,6 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection chr_cuttime(string $label = null)
      * @method Grid\Column|Collection int_phase(string $label = null)
      * @method Grid\Column|Collection status(string $label = null)
-     * @method Grid\Column|Collection chr_canordertime(string $label = null)
      * @method Grid\Column|Collection int_id(string $label = null)
      * @method Grid\Column|Collection int_group(string $label = null)
      * @method Grid\Column|Collection int_unit(string $label = null)
@@ -282,6 +283,7 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection txt_detail_2(string $label = null)
      * @method Grid\Column|Collection txt_detail_3(string $label = null)
      * @method Grid\Column|Collection last_modify(string $label = null)
+     * @method Grid\Column|Collection chr_canordertime(string $label = null)
      * @method Grid\Column|Collection int_cat(string $label = null)
      * @method Grid\Column|Collection txt_path(string $label = null)
      * @method Grid\Column|Collection int_user(string $label = null)
@@ -291,6 +293,8 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection date_last(string $label = null)
      * @method Grid\Column|Collection first_path(string $label = null)
      * @method Grid\Column|Collection int_num_of_day(string $label = null)
+     * @method Grid\Column|Collection int_user_id(string $label = null)
+     * @method Grid\Column|Collection int_menu_id(string $label = null)
      * @method Grid\Column|Collection parent_id(string $label = null)
      * @method Grid\Column|Collection order(string $label = null)
      * @method Grid\Column|Collection icon(string $label = null)
@@ -310,9 +314,12 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection failed_at(string $label = null)
      * @method Grid\Column|Collection email(string $label = null)
      * @method Grid\Column|Collection token(string $label = null)
+     * @method Grid\Column|Collection r_order_id(string $label = null)
+     * @method Grid\Column|Collection qty(string $label = null)
+     * @method Grid\Column|Collection disabled(string $label = null)
+     * @method Grid\Column|Collection orderdates(string $label = null)
      * @method Grid\Column|Collection txt_dept(string $label = null)
      * @method Grid\Column|Collection bl_isvalid(string $label = null)
-     * @method Grid\Column|Collection int_user_id(string $label = null)
      * @method Grid\Column|Collection int_dept_id(string $label = null)
      * @method Grid\Column|Collection chr_tel(string $label = null)
      * @method Grid\Column|Collection chr_address(string $label = null)
@@ -387,7 +394,6 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection chr_item_list(string $label = null)
      * @method Grid\Column|Collection int_hide(string $label = null)
      * @method Grid\Column|Collection int_main_item(string $label = null)
-     * @method Grid\Column|Collection disabled(string $label = null)
      * @method Grid\Column|Collection order_date(string $label = null)
      * @method Grid\Column|Collection int_form(string $label = null)
      * @method Grid\Column|Collection int_qty(string $label = null)
@@ -395,7 +401,6 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection int_po_no(string $label = null)
      * @method Grid\Column|Collection sampledate(string $label = null)
      * @method Grid\Column|Collection sample_id(string $label = null)
-     * @method Grid\Column|Collection qty(string $label = null)
      * @method Grid\Column|Collection int_page(string $label = null)
      * @method Grid\Column|Collection int_product(string $label = null)
      * @method Grid\Column|Collection chr_phase(string $label = null)
@@ -408,7 +413,6 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection reason(string $label = null)
      * @method Grid\Column|Collection chr_name_long(string $label = null)
      * @method Grid\Column|Collection int_group_id(string $label = null)
-     * @method Grid\Column|Collection int_menu_id(string $label = null)
      * @method Grid\Column|Collection int_report_id(string $label = null)
      * @method Grid\Column|Collection chr_time(string $label = null)
      * @method Grid\Column|Collection chr_weekday(string $label = null)
@@ -483,7 +487,6 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection chr_cuttime
      * @property Show\Field|Collection int_phase
      * @property Show\Field|Collection status
-     * @property Show\Field|Collection chr_canordertime
      * @property Show\Field|Collection int_id
      * @property Show\Field|Collection int_group
      * @property Show\Field|Collection int_unit
@@ -494,6 +497,7 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection txt_detail_2
      * @property Show\Field|Collection txt_detail_3
      * @property Show\Field|Collection last_modify
+     * @property Show\Field|Collection chr_canordertime
      * @property Show\Field|Collection int_cat
      * @property Show\Field|Collection txt_path
      * @property Show\Field|Collection int_user
@@ -503,6 +507,8 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection date_last
      * @property Show\Field|Collection first_path
      * @property Show\Field|Collection int_num_of_day
+     * @property Show\Field|Collection int_user_id
+     * @property Show\Field|Collection int_menu_id
      * @property Show\Field|Collection parent_id
      * @property Show\Field|Collection order
      * @property Show\Field|Collection icon
@@ -522,9 +528,12 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection failed_at
      * @property Show\Field|Collection email
      * @property Show\Field|Collection token
+     * @property Show\Field|Collection r_order_id
+     * @property Show\Field|Collection qty
+     * @property Show\Field|Collection disabled
+     * @property Show\Field|Collection orderdates
      * @property Show\Field|Collection txt_dept
      * @property Show\Field|Collection bl_isvalid
-     * @property Show\Field|Collection int_user_id
      * @property Show\Field|Collection int_dept_id
      * @property Show\Field|Collection chr_tel
      * @property Show\Field|Collection chr_address
@@ -599,7 +608,6 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection chr_item_list
      * @property Show\Field|Collection int_hide
      * @property Show\Field|Collection int_main_item
-     * @property Show\Field|Collection disabled
      * @property Show\Field|Collection order_date
      * @property Show\Field|Collection int_form
      * @property Show\Field|Collection int_qty
@@ -607,7 +615,6 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection int_po_no
      * @property Show\Field|Collection sampledate
      * @property Show\Field|Collection sample_id
-     * @property Show\Field|Collection qty
      * @property Show\Field|Collection int_page
      * @property Show\Field|Collection int_product
      * @property Show\Field|Collection chr_phase
@@ -620,7 +627,6 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection reason
      * @property Show\Field|Collection chr_name_long
      * @property Show\Field|Collection int_group_id
-     * @property Show\Field|Collection int_menu_id
      * @property Show\Field|Collection int_report_id
      * @property Show\Field|Collection chr_time
      * @property Show\Field|Collection chr_weekday
@@ -690,7 +696,6 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection chr_cuttime(string $label = null)
      * @method Show\Field|Collection int_phase(string $label = null)
      * @method Show\Field|Collection status(string $label = null)
-     * @method Show\Field|Collection chr_canordertime(string $label = null)
      * @method Show\Field|Collection int_id(string $label = null)
      * @method Show\Field|Collection int_group(string $label = null)
      * @method Show\Field|Collection int_unit(string $label = null)
@@ -701,6 +706,7 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection txt_detail_2(string $label = null)
      * @method Show\Field|Collection txt_detail_3(string $label = null)
      * @method Show\Field|Collection last_modify(string $label = null)
+     * @method Show\Field|Collection chr_canordertime(string $label = null)
      * @method Show\Field|Collection int_cat(string $label = null)
      * @method Show\Field|Collection txt_path(string $label = null)
      * @method Show\Field|Collection int_user(string $label = null)
@@ -710,6 +716,8 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection date_last(string $label = null)
      * @method Show\Field|Collection first_path(string $label = null)
      * @method Show\Field|Collection int_num_of_day(string $label = null)
+     * @method Show\Field|Collection int_user_id(string $label = null)
+     * @method Show\Field|Collection int_menu_id(string $label = null)
      * @method Show\Field|Collection parent_id(string $label = null)
      * @method Show\Field|Collection order(string $label = null)
      * @method Show\Field|Collection icon(string $label = null)
@@ -729,9 +737,12 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection failed_at(string $label = null)
      * @method Show\Field|Collection email(string $label = null)
      * @method Show\Field|Collection token(string $label = null)
+     * @method Show\Field|Collection r_order_id(string $label = null)
+     * @method Show\Field|Collection qty(string $label = null)
+     * @method Show\Field|Collection disabled(string $label = null)
+     * @method Show\Field|Collection orderdates(string $label = null)
      * @method Show\Field|Collection txt_dept(string $label = null)
      * @method Show\Field|Collection bl_isvalid(string $label = null)
-     * @method Show\Field|Collection int_user_id(string $label = null)
      * @method Show\Field|Collection int_dept_id(string $label = null)
      * @method Show\Field|Collection chr_tel(string $label = null)
      * @method Show\Field|Collection chr_address(string $label = null)
@@ -806,7 +817,6 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection chr_item_list(string $label = null)
      * @method Show\Field|Collection int_hide(string $label = null)
      * @method Show\Field|Collection int_main_item(string $label = null)
-     * @method Show\Field|Collection disabled(string $label = null)
      * @method Show\Field|Collection order_date(string $label = null)
      * @method Show\Field|Collection int_form(string $label = null)
      * @method Show\Field|Collection int_qty(string $label = null)
@@ -814,7 +824,6 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection int_po_no(string $label = null)
      * @method Show\Field|Collection sampledate(string $label = null)
      * @method Show\Field|Collection sample_id(string $label = null)
-     * @method Show\Field|Collection qty(string $label = null)
      * @method Show\Field|Collection int_page(string $label = null)
      * @method Show\Field|Collection int_product(string $label = null)
      * @method Show\Field|Collection chr_phase(string $label = null)
@@ -827,7 +836,6 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection reason(string $label = null)
      * @method Show\Field|Collection chr_name_long(string $label = null)
      * @method Show\Field|Collection int_group_id(string $label = null)
-     * @method Show\Field|Collection int_menu_id(string $label = null)
      * @method Show\Field|Collection int_report_id(string $label = null)
      * @method Show\Field|Collection chr_time(string $label = null)
      * @method Show\Field|Collection chr_weekday(string $label = null)

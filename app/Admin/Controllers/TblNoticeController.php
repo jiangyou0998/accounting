@@ -18,6 +18,7 @@ class TblNoticeController extends AdminController
     protected function grid()
     {
         return Grid::make(new TblNotice(), function (Grid $grid) {
+            $grid->model()->where('int_dept',1);
             $grid->int_no;
             $grid->txt_name;
             $grid->int_dept;

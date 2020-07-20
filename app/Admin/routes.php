@@ -18,5 +18,9 @@ Route::group([
     $router->resource('groups', 'TblOrderZGroupController');
     $router->resource('notices', 'TblNoticeController');
     $router->resource('checks', 'TblOrderCheckController');
+    $router->get('api/group', 'ApiController@group');
+    $router->get('api/group2', 'ApiController@group2');
+    $router->get('api/cat', 'ApiController@cat');
+    $router->get('api/unit', 'ApiController@unit');
 
 });
