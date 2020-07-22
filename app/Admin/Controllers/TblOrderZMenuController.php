@@ -4,6 +4,8 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Actions\Tree\SelectShop;
 use App\Admin\Repositories\TblOrderZMenu;
+use App\Models\TblOrderZGroup;
+use App\Models\TblOrderZUnit;
 use App\Models\TblUser;
 use App\Models\TblOrderCheck;
 use App\Models\TblOrderZCat;
@@ -27,8 +29,17 @@ class TblOrderZMenuController extends AdminController
 //        dd(Admin::user()->can('menus'));
 //        Permission::check('factory-menus');
 
+
         return Grid::make(new TblOrderZMenu(), function (Grid $grid) {
 
+
+            if(Admin::user()->can('factory-menus') === false){
+                // 禁用创建按钮
+                $grid->disableCreateButton();
+                // 禁用行操作按钮
+                $grid->disableActions();
+            }
+            //生產表數組
             $checks = new TblOrderCheck();
 
             $checkArr = array();
@@ -42,6 +53,29 @@ class TblOrderZMenuController extends AdminController
 
             }
 
+            //單位數組
+            $units = new TblOrderZUnit();
+
+            $unitArr = array();
+            foreach ($units::all() as $unit) {
+                $unitArr[$unit['int_id']] =  $unit['chr_name'];
+            }
+
+
+            //細類數組
+            $groups = new TblOrderZGroup();
+
+            $groupArr = array();
+            $groups = $groups::with('tblOrderZCat')->get();
+            foreach ($groups as $group) {
+//                dump($group->toArray()['tbl_order_z_cat']);
+                $groupArr[$group['int_id']] = $group->toArray()['tbl_order_z_cat']['chr_name'].'-'.$group['chr_name'];
+            }
+
+
+//            dd($groupArr);
+
+
 //            $menu = new \App\Models\TblOrderZMenu
 //
 //            dd($menu);
@@ -50,7 +84,8 @@ class TblOrderZMenuController extends AdminController
                 ->with(['tblOrderZCat'])
                 ->with(['tblOrderZGroup'])
                 ->with(['tblOrderZUnit'])
-                ->with(['price']);
+                ->with(['price'])
+                ->where('status','<>', 4);
             $grid->chr_no;
             $grid->chr_name;
             $grid->column('tblOrderZUnit.chr_name',"單位");
@@ -96,11 +131,29 @@ class TblOrderZMenuController extends AdminController
 
             // 禁用分頁
 //            $grid->disablePagination();
+            $titles = [
+                'chr_no' => '編碼',
+                'chr_name' => '貨名',
+                'int_group' => '細類',
+                'int_min' => 'MOQ',
+                'int_unit' => '包裝' ,
+                'int_default_price' => '單價'];
+            $grid->export($titles)->rows(function (array $rows) use ($groupArr , $unitArr){
+                foreach ($rows as $index => &$row) {
+                    $row['int_group'] = $groupArr[$row['int_group']];
+                    $row['int_unit'] = $unitArr[$row['int_unit']];
+                }
 
+                return $rows;
+            });
+
+            //------------------------------------------------------------------
+            //過濾器
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('chr_cuttime');
                 $filter->like('chr_name');
-                $filter->equal('status')->select([1 => '現貨', 2 => '暫停', 3 => '新貨', 5 => '季節貨'])->default(1);
+                $filter->like('chr_no');
+                $filter->equal('status')->select([1 => '現貨', 2 => '暫停', 3 => '新貨', 5 => '季節貨']);
 //                $filter->equal('tblOrderZCat.chr_name');
 //                $filter->where('int_id', function ($query) {
 //
@@ -118,7 +171,7 @@ class TblOrderZMenuController extends AdminController
                         });
                     });
 
-                }, '大類');
+                }, '大類')->select('api/cat');
 
             });
         });
