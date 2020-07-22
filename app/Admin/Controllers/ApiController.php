@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\ShopGroup;
 use App\Models\TblOrderZCat;
 use App\Models\TblOrderZGroup;
 use App\Models\TblOrderZUnit;
@@ -36,6 +37,11 @@ class ApiController extends Controller
     {
 
         return TblOrderZUnit::get([DB::raw('int_id as id'), DB::raw('chr_name as text')]);
+    }
+
+    public function shop_group()
+    {
+        return ShopGroup::get(['id', DB::raw('name as text')]);
     }
 
 }

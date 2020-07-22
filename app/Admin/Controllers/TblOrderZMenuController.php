@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Actions\Tree\SelectShop;
 use App\Admin\Repositories\TblOrderZMenu;
 use App\Models\TblUser;
 use App\Models\TblOrderCheck;
@@ -41,12 +42,15 @@ class TblOrderZMenuController extends AdminController
 
             }
 
-//            dd($checkArr[842]);
+//            $menu = new \App\Models\TblOrderZMenu
+//
+//            dd($menu);
 
             $grid->model()
                 ->with(['tblOrderZCat'])
                 ->with(['tblOrderZGroup'])
-                ->with(['tblOrderZUnit']);
+                ->with(['tblOrderZUnit'])
+                ->with(['price']);
             $grid->chr_no;
             $grid->chr_name;
             $grid->column('tblOrderZUnit.chr_name',"單位");
@@ -79,21 +83,32 @@ class TblOrderZMenuController extends AdminController
 
             });
 
+
+//            $grid->prices->display(function ($prices) use ($grid){
+//                foreach ($prices as $price){
+//                    $grid->column('')->values($price['price']);
+//                }
+////                $count = count($prices);
+////
+////                return "<span>{$count}</span>";
+//
+//            });;
+
             // 禁用分頁
 //            $grid->disablePagination();
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('chr_cuttime');
-
+                $filter->like('chr_name');
                 $filter->equal('status')->select([1 => '現貨', 2 => '暫停', 3 => '新貨', 5 => '季節貨'])->default(1);
 //                $filter->equal('tblOrderZCat.chr_name');
-                $filter->where('int_id', function ($query) {
-
-                    $query->whereHas('tblOrderZGroup', function ($query) {
-                        $query->where('int_id', 'like', "%{$this->input}%");
-                    });
-
-                }, '細類');
+//                $filter->where('int_id', function ($query) {
+//
+//                    $query->whereHas('tblOrderZGroup', function ($query) {
+//                        $query->where('int_id', 'like', "%{$this->input}%");
+//                    });
+//
+//                }, '細類');
 
                 $filter->where('int_group', function ($query) {
 
@@ -151,11 +166,15 @@ class TblOrderZMenuController extends AdminController
     protected function form()
     {
         return Form::make(new TblOrderZMenu(), function (Form $form) {
-            $form->model()
-                ->with(['tblOrderZCat'])
-                ->with(['tblOrderZGroup'])
-                ->with(['tblOrderZUnit'])
-                ->with(['tblUser']);
+
+//            $form->action($this->confirm1());
+//
+//            $form->model()
+//                ->with(['tblOrderZCat'])
+//                ->with(['tblOrderZGroup'])
+//                ->with(['tblOrderZUnit'])
+//                ->with(['tblUser'])
+//                ->with(['price']);
 
 
             $form->tools(function (Form\Tools $tools) {
@@ -174,7 +193,7 @@ class TblOrderZMenuController extends AdminController
 
             $form->display('int_id',"ID");
             $form->text('chr_name')->required();
-            $form->text('chr_no')->required()->rules('required|max:7|unique:chr_no')
+            $form->text('chr_no')->required()->rules('required|max:7')
                 ;
 
             $form->select('','大類')->options('/api/cat')->load('int_group', '/api/group');
@@ -235,14 +254,23 @@ class TblOrderZMenuController extends AdminController
 
             $form->display('last_modify');
 
-            $permissionModel = new Permission();
-            $form->tree('permissions')
-                ->nodes($permissionModel->allNodes()) // 设置所有节点
-                ->customFormat(function ($v) { // 格式化外部注入的值
-                    if (!$v) return [];
+//            $form->tools(function (Form\Tools $tools) {
+//                $tools->append(new SelectShop());
+//            });
 
-                    return array_column($v, 'id');
-                });
+//            $form->selectResource('chr_sap', 'Select Resource(Multiple)')
+//                ->path('users')
+//                ->multiple();
+//
+//            $form->list('column_name')->max(10)->min(5);
+
+
+            $form->hasMany('price', '價格列表', function (Form\NestedForm $form) {
+                $form->select('shop_group_id', '商店分組')->options('api/shopgroup')->rules('required');
+//                $form->text('shop_group_id', '商店分組')->rules('required');
+                $form->text('price', '单价')->rules('required|numeric|min:0.01');
+            });
+
 
             $form->saving(function (Form $form) {
 
@@ -251,10 +279,21 @@ class TblOrderZMenuController extends AdminController
                 // 修改
                 $form->input('last_modify', $last_modify);
 
+                $form->deleteInput('chr_sap');
+
+            });
+
+            $form->saved(function (Form $form) {
+
+                $data = $form->updates();
+//                dump($data);
+
             });
 
         });
 
 
     }
+
+
 }

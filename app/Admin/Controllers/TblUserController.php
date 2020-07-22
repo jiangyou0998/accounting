@@ -5,11 +5,35 @@ namespace App\Admin\Controllers;
 use App\Admin\Repositories\TblUser;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
+use Dcat\Admin\IFrameGrid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
 
 class TblUserController extends AdminController
 {
+
+    protected function iFrameGrid()
+    {
+        $grid = new IFrameGrid(new TblUser());
+
+        // 指定行选择器选中时显示的值的字段名称
+        // 指定行选择器选中时显示的值的字段名称
+        // 指定行选择器选中时显示的值的字段名称
+        // 如果表格数据中带有 “name”、“title”或“username”字段，则可以不用设置
+        $grid->rowSelector()->titleColumn('txt_name');
+
+        $grid->int_id->sortable();
+        $grid->txt_login;
+        $grid->txt_name;
+
+        $grid->filter(function (Grid\Filter $filter) {
+            $filter->equal('int_id');
+            $filter->like('txt_login');
+            $filter->like('txt_name');
+        });
+
+        return $grid;
+    }
     /**
      * Make a grid builder.
      *
@@ -42,10 +66,10 @@ class TblUserController extends AdminController
             $grid->int_force;
             $grid->chr_pocode;
             $grid->int_sort;
-        
+
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
-        
+
             });
         });
     }

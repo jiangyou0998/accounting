@@ -15,12 +15,17 @@ Route::group([
     $router->get('/', 'HomeController@index');
     $router->resource('users', 'TblUserController');
     $router->resource('menus', 'TblOrderZMenuController');
+//    $router->post('menus/confirm1', 'TblOrderZMenuController@confirm1');
     $router->resource('groups', 'TblOrderZGroupController');
     $router->resource('notices', 'TblNoticeController');
     $router->resource('checks', 'TblOrderCheckController');
+    $router->resource('shopgroups', 'ShopGroupController');
+
+    //api
     $router->get('api/group', 'ApiController@group');
     $router->get('api/group2', 'ApiController@group2');
     $router->get('api/cat', 'ApiController@cat');
     $router->get('api/unit', 'ApiController@unit');
+    $router->get('api/shopgroup', 'ApiController@shop_group');
 
 });

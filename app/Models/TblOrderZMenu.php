@@ -39,4 +39,9 @@ class TblOrderZMenu extends Model
         return $this->belongsToMany($relatedModel, $pivotTable, 'int_user_id', 'int_menu_id');
     }
 
+    public function price()
+    {
+        return $this->hasMany(Price::class,"menu_id","int_id");
+    }
+
 }
