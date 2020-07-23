@@ -118,6 +118,9 @@ class TblOrderZMenuController extends AdminController
 
             });
 
+            $grid->column('price')->pluck('price','id')->map('ucwords');
+
+
 
 //            $grid->prices->display(function ($prices) use ($grid){
 //                foreach ($prices as $price){

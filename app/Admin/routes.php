@@ -21,11 +21,16 @@ Route::group([
     $router->resource('checks', 'TblOrderCheckController');
     $router->resource('shopgroups', 'ShopGroupController');
 
+
+    //export
+    $router->resource('export/salesbyshopandmenu', 'Export\SalesByShopAndMenuController');
+
     //api
     $router->get('api/group', 'ApiController@group');
     $router->get('api/group2', 'ApiController@group2');
     $router->get('api/cat', 'ApiController@cat');
     $router->get('api/unit', 'ApiController@unit');
     $router->get('api/shopgroup', 'ApiController@shop_group');
+    $router->get('api/export', 'ApiController@export');
 
 });

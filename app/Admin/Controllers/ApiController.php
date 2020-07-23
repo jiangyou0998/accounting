@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Exports\SalesByShopAndMenuExport;
 use App\Http\Controllers\Controller;
 use App\Models\ShopGroup;
 use App\Models\TblOrderZCat;
@@ -9,6 +10,7 @@ use App\Models\TblOrderZGroup;
 use App\Models\TblOrderZUnit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ApiController extends Controller
 {
@@ -42,6 +44,11 @@ class ApiController extends Controller
     public function shop_group()
     {
         return ShopGroup::get(['id', DB::raw('name as text')]);
+    }
+
+    public function export()
+    {
+        return Excel::download(new SalesByShopAndMenuExport(), 'users.xlsx');
     }
 
 }

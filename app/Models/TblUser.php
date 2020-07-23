@@ -14,7 +14,18 @@ class TblUser extends Model
 
     public $timestamps = false;
 
+    public static function getKingBakeryShops(){
 
+        $users = new TblUser();
+        $shops = $users->where('chr_type', 2)
+            ->where('txt_login','like','kb%')
+            ->orWhere('txt_login','like','ces%')
+            ->orWhere('txt_login','like','b&b%')
+            ->orderBy('txt_login')
+            ->get(['int_id','chr_report_name']);
+
+        return $shops;
+    }
 
 
 }
