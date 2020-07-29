@@ -21,12 +21,16 @@ class ExportReport extends Form
     {
 //        dump($input);
 //        Excel::download(new SalesByShopAndMenuExport(), 'users.xls');
-        return $this->ajaxResponse($input['starttime']);
+
+        $start = $input['starttime'];
+        $end = $input['endtime'];
+        $url = 'reports?start='.$start.'&end='.$end;
+//        return $this->ajaxResponse($input['starttime']);
 
 //        Excel::download(new SalesByShopAndMenuExport(), 'users.xls');
 //         return $this->error($input);
 
-//        return $this->success('Processed successfully.', '/');
+        return $this->success('Processed successfully.', $url);
 //        return
     }
 

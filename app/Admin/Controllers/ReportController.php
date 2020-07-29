@@ -15,6 +15,7 @@ use Dcat\Admin\Widgets\Card;
 use Dcat\Admin\Widgets\Form;
 
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\Console\Input\Input;
 
 
 class ReportController extends AdminController
@@ -36,16 +37,33 @@ class ReportController extends AdminController
     {
         return new Grid(null, function (Grid $grid) {
 
+            $grid->header(function ($collection) {
+                // 自定义组件
+                return new Card(new ExportReport());
+            });
 
+            $start = $_REQUEST['start'];
+            $end = $_REQUEST['end'];
 //            dd($this->headings());
-            $keys = $this->generate()->first()->toArray();
-            foreach ($keys as $key => $values){
-                $grid->column($key);
+            $data = $this->generate($start,$end);
+
+            if(count($data) > 0){
+                $keys = $data->first()->toArray();
+                foreach ($keys as $key => $values){
+                    $grid->column($key);
+                }
             }
+
 //
 
 
             $grid->withBorder();
+
+            //禁用 导出所有 选项
+            $grid->export()->disableExportAll();
+
+            //禁用 导出选中行 选项
+            $grid->export()->disableExportSelectedRow();
 
 
 
@@ -56,9 +74,10 @@ class ReportController extends AdminController
             $grid->disablePagination();
 
             // 设置表格数据
-            $grid->model()->setData($this->generate());
+            $grid->model()->setData($data);
 
-            $grid->export()->xlsx();
+            $filename = 'Report '.$start.'至'.$end ;
+            $grid->export()->xlsx()->filename($filename);
 
 
 
@@ -74,14 +93,14 @@ class ReportController extends AdminController
      *
      * @return array
      */
-    public function generate() {
+    public function generate($start,$end) {
 
         $shops = TblUser::getKingBakeryShops();
 
         $orderzdept = new OrderZDept;
         $orderzdept = $orderzdept
             ->select('tbl_order_z_menu.chr_no' , 'tbl_order_z_menu.chr_name')
-            ->addSelect(DB::raw('sum(ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty)) as total'));
+            ->addSelect(DB::raw('sum(ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty)) as Total'));
 
 
         foreach ($shops as $shop){
@@ -98,7 +117,7 @@ class ReportController extends AdminController
             ->leftJoin('tbl_user', 'tbl_user.int_id', '=', 'tbl_order_z_dept.int_user')
             ->where('tbl_user.chr_type', '=', 2)
             ->where('tbl_order_z_dept.status', '<>', 4)
-            ->whereRaw(DB::raw('DATE(DATE_ADD(tbl_order_z_dept.order_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) between "2020-06-01" and "2020-06-30"'))
+            ->whereRaw(DB::raw("DATE(DATE_ADD(tbl_order_z_dept.order_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) between '$start' and '$end'"))
             ->groupBy('tbl_order_z_menu.int_id')
             ->orderBy('tbl_order_z_menu.chr_no')
             ->get();
