@@ -65,6 +65,7 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection chr_cuttime
      * @property Grid\Column|Collection int_phase
      * @property Grid\Column|Collection status
+     * @property Grid\Column|Collection prices
      * @property Grid\Column|Collection int_group
      * @property Grid\Column|Collection int_unit
      * @property Grid\Column|Collection chr_sap_2
@@ -85,9 +86,6 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection first_path
      * @property Grid\Column|Collection int_num_of_day
      * @property Grid\Column|Collection sort
-     * @property Grid\Column|Collection painter_id
-     * @property Grid\Column|Collection body
-     * @property Grid\Column|Collection completed_at
      * @property Grid\Column|Collection parent_id
      * @property Grid\Column|Collection order
      * @property Grid\Column|Collection icon
@@ -101,6 +99,9 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection password
      * @property Grid\Column|Collection remember_token
      * @property Grid\Column|Collection bio
+     * @property Grid\Column|Collection painter_id
+     * @property Grid\Column|Collection body
+     * @property Grid\Column|Collection completed_at
      * @property Grid\Column|Collection connection
      * @property Grid\Column|Collection queue
      * @property Grid\Column|Collection payload
@@ -281,6 +282,7 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection chr_cuttime(string $label = null)
      * @method Grid\Column|Collection int_phase(string $label = null)
      * @method Grid\Column|Collection status(string $label = null)
+     * @method Grid\Column|Collection prices(string $label = null)
      * @method Grid\Column|Collection int_group(string $label = null)
      * @method Grid\Column|Collection int_unit(string $label = null)
      * @method Grid\Column|Collection chr_sap_2(string $label = null)
@@ -301,9 +303,6 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection first_path(string $label = null)
      * @method Grid\Column|Collection int_num_of_day(string $label = null)
      * @method Grid\Column|Collection sort(string $label = null)
-     * @method Grid\Column|Collection painter_id(string $label = null)
-     * @method Grid\Column|Collection body(string $label = null)
-     * @method Grid\Column|Collection completed_at(string $label = null)
      * @method Grid\Column|Collection parent_id(string $label = null)
      * @method Grid\Column|Collection order(string $label = null)
      * @method Grid\Column|Collection icon(string $label = null)
@@ -317,6 +316,9 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection password(string $label = null)
      * @method Grid\Column|Collection remember_token(string $label = null)
      * @method Grid\Column|Collection bio(string $label = null)
+     * @method Grid\Column|Collection painter_id(string $label = null)
+     * @method Grid\Column|Collection body(string $label = null)
+     * @method Grid\Column|Collection completed_at(string $label = null)
      * @method Grid\Column|Collection connection(string $label = null)
      * @method Grid\Column|Collection queue(string $label = null)
      * @method Grid\Column|Collection payload(string $label = null)
@@ -502,6 +504,7 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection chr_cuttime
      * @property Show\Field|Collection int_phase
      * @property Show\Field|Collection status
+     * @property Show\Field|Collection prices
      * @property Show\Field|Collection int_group
      * @property Show\Field|Collection int_unit
      * @property Show\Field|Collection chr_sap_2
@@ -522,9 +525,6 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection first_path
      * @property Show\Field|Collection int_num_of_day
      * @property Show\Field|Collection sort
-     * @property Show\Field|Collection painter_id
-     * @property Show\Field|Collection body
-     * @property Show\Field|Collection completed_at
      * @property Show\Field|Collection parent_id
      * @property Show\Field|Collection order
      * @property Show\Field|Collection icon
@@ -538,6 +538,9 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection password
      * @property Show\Field|Collection remember_token
      * @property Show\Field|Collection bio
+     * @property Show\Field|Collection painter_id
+     * @property Show\Field|Collection body
+     * @property Show\Field|Collection completed_at
      * @property Show\Field|Collection connection
      * @property Show\Field|Collection queue
      * @property Show\Field|Collection payload
@@ -718,6 +721,7 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection chr_cuttime(string $label = null)
      * @method Show\Field|Collection int_phase(string $label = null)
      * @method Show\Field|Collection status(string $label = null)
+     * @method Show\Field|Collection prices(string $label = null)
      * @method Show\Field|Collection int_group(string $label = null)
      * @method Show\Field|Collection int_unit(string $label = null)
      * @method Show\Field|Collection chr_sap_2(string $label = null)
@@ -738,9 +742,6 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection first_path(string $label = null)
      * @method Show\Field|Collection int_num_of_day(string $label = null)
      * @method Show\Field|Collection sort(string $label = null)
-     * @method Show\Field|Collection painter_id(string $label = null)
-     * @method Show\Field|Collection body(string $label = null)
-     * @method Show\Field|Collection completed_at(string $label = null)
      * @method Show\Field|Collection parent_id(string $label = null)
      * @method Show\Field|Collection order(string $label = null)
      * @method Show\Field|Collection icon(string $label = null)
@@ -754,6 +755,9 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection password(string $label = null)
      * @method Show\Field|Collection remember_token(string $label = null)
      * @method Show\Field|Collection bio(string $label = null)
+     * @method Show\Field|Collection painter_id(string $label = null)
+     * @method Show\Field|Collection body(string $label = null)
+     * @method Show\Field|Collection completed_at(string $label = null)
      * @method Show\Field|Collection connection(string $label = null)
      * @method Show\Field|Collection queue(string $label = null)
      * @method Show\Field|Collection payload(string $label = null)

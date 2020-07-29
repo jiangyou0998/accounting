@@ -15,6 +15,8 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Models\Permission;
 use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
+use Illuminate\Support\Collection;
+use App\Admin\Renderable\Price;
 
 
 class TblOrderZMenuController extends AdminController
@@ -39,6 +41,8 @@ class TblOrderZMenuController extends AdminController
                 // 禁用行操作按钮
                 $grid->disableActions();
             }
+
+            $grid->showQuickEditButton();
             //生產表數組
             $checks = new TblOrderCheck();
 
@@ -86,12 +90,40 @@ class TblOrderZMenuController extends AdminController
                 ->with(['tblOrderZUnit'])
                 ->with(['price'])
                 ->where('status','<>', 4);
-            $grid->chr_no;
+
+//            dd($grid->model()->collection()->toArray());
+            $grid->model()->collection(function (Collection $collection) {
+
+
+//                $collection->transform(function ($item) {
+//
+//                    return $item;
+//                });
+
+                // 2. 给表格加一个序号列
+                $collection->transform(function ($item, $index) {
+                    $item['number'] = $index + 1 ;
+
+                    return $item;
+                });
+
+                // 最后一定要返回集合对象
+                return $collection;
+            });
+
+            $grid->column('number',"#");
+            $grid->chr_no->sortable();
             $grid->chr_name;
             $grid->column('tblOrderZUnit.chr_name',"單位");
             $grid->int_base;
             $grid->int_min;
             $grid->int_default_price;
+//            $grid->price->display('View')->modal('Price', Price::make(['int_id' => $this->int_id]));
+            $grid->price->display('分組價格')->expand(function () {
+                // 允许在比包内返回异步加载类的实例
+                return Price::make(['int_id' => $this->int_id]);
+            });
+
             $grid->column('tblOrderZCat.chr_name',"大類");
             $grid->column('tblOrderZGroup.chr_name',"細類");
             $grid->int_sort;
@@ -118,7 +150,9 @@ class TblOrderZMenuController extends AdminController
 
             });
 
-            $grid->column('price')->pluck('price','id')->map('ucwords');
+
+
+//            $grid->column('price')->pluck('price','id')->map('ucwords');
 
 
 

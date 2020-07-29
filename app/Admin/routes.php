@@ -20,6 +20,7 @@ Route::group([
     $router->resource('notices', 'TblNoticeController');
     $router->resource('checks', 'TblOrderCheckController');
     $router->resource('shopgroups', 'ShopGroupController');
+    $router->resource('reports', 'ReportController');
 
 
     //export

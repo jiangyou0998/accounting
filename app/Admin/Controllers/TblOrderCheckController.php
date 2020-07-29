@@ -7,6 +7,8 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
+use Illuminate\Support\Collection;
+
 
 class TblOrderCheckController extends AdminController
 {
@@ -17,17 +19,35 @@ class TblOrderCheckController extends AdminController
      */
     protected function grid()
     {
-        return Grid::make(new TblOrderCheck(), function (Grid $grid) {
-            $grid->int_id->sortable();
+
+
+        $grid = new Grid(new TblOrderCheck());
+            $grid->model()->collection(function (Collection $collection) {
+
+
+                // 2. 给表格加一个序号列
+                $collection->transform(function ($item, $index) {
+                    $item['number'] = $index + 1 ;
+
+                    return $item;
+                });
+
+                // 最后一定要返回集合对象
+                return $collection;
+            });
+
+            $grid->column('number',"#");
             $grid->chr_report_name;
             $grid->int_num_of_day;
             $grid->int_sort;
-        
+
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('int_id');
-        
+
             });
-        });
+
+            return $grid;
+
     }
 
     /**

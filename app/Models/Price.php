@@ -13,4 +13,9 @@ class Price extends Model
     {
         return $this->belongsTo(TblOrderZMenu::class , "menu_id" , "int_id" );
     }
+
+    public function shopGroup()
+    {
+        return $this->belongsTo(ShopGroup::class , "shop_group_id" , "id" );
+    }
 }
