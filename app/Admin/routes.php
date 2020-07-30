@@ -20,11 +20,13 @@ Route::group([
     $router->resource('notices', 'TblNoticeController');
     $router->resource('checks', 'TblOrderCheckController');
     $router->resource('shopgroups', 'ShopGroupController');
-    $router->resource('reports', 'ReportController');
+//    $router->resource('report', 'ReportController');
+    //分店每月銷售數量報告
+    $router->resource('reports/total_sales_amount_by_menu', 'Reports\TotalSalesAmountByMenuReportController');
+    //分店每月銷售總額報告
+    $router->resource('reports/total_sales_by_group', 'Reports\TotalSalesByGroupReportController');
 
 
-    //export
-    $router->resource('export/salesbyshopandmenu', 'Export\SalesByShopAndMenuController');
 
     //api
     $router->get('api/group', 'ApiController@group');
@@ -32,6 +34,5 @@ Route::group([
     $router->get('api/cat', 'ApiController@cat');
     $router->get('api/unit', 'ApiController@unit');
     $router->get('api/shopgroup', 'ApiController@shop_group');
-    $router->get('api/export', 'ApiController@export');
 
 });

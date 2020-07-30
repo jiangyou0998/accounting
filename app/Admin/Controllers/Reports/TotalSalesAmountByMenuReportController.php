@@ -1,30 +1,41 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Reports;
 
 use App\Models\OrderZDept;
 use App\Models\TblUser;
 use Carbon\Carbon;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Grid;
+use Dcat\Admin\Layout\Content;
+use Dcat\Admin\Widgets\Card;
 use Illuminate\Support\Facades\DB;
 
 
-
-class ReportController extends AdminController
+//分店每月銷售數量報告
+class TotalSalesAmountByMenuReportController extends AdminController
 {
+    public function index(Content $content)
+    {
+        return $content
+            ->header('分店每月銷售數量報告')
+            ->body($this->grid());
+    }
 
     protected function grid()
     {
         return new Grid(null, function (Grid $grid) {
 
-//            $grid->header(function ($collection) {
-//                // 自定义组件
-//                return new Card(new ExportReport());
-//            });
+            $grid->header(function ($collection) {
+                $start = $this->getStartTime();
+                $end = $this->getEndTime();
 
-//            $start = $_REQUEST['start'];
-//            $end = $_REQUEST['end'];
+                // 标题和内容
+                $cardInfo = $start." 至 ".$end ;
+                $card = Card::make('日期:', $cardInfo);
+
+                return $card;
+            });
 
             //上个月第一天
             if(isset($_REQUEST['between']['start'])){
@@ -79,7 +90,7 @@ class ReportController extends AdminController
             $grid->export()->xlsx()->filename($filename);
 
 
-            });
+        });
 
     }
 
@@ -120,6 +131,26 @@ class ReportController extends AdminController
 
         return $orderzdept;
 
+    }
+
+    public function getStartTime(){
+        if(isset($_REQUEST['between']['start'])){
+            $start = $_REQUEST['between']['start'];
+        }else{
+            //上个月第一天
+            $start = Carbon::now()->subMonth()->firstOfMonth()->toDateString();
+        }
+        return $start;
+    }
+
+    public function getEndTime(){
+        if(isset($_REQUEST['between']['end'])){
+            $end = $_REQUEST['between']['end'];
+        }else{
+            //上个月最后一天
+            $end = Carbon::now()->subMonth()->lastOfMonth()->toDateString();
+        }
+        return $end;
     }
 
     public function headings(): array

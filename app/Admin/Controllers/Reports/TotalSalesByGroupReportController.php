@@ -1,51 +1,58 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Reports;
 
 use App\Models\OrderZDept;
 use App\Models\TblUser;
 use Carbon\Carbon;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Grid;
+use Dcat\Admin\Layout\Content;
+use Dcat\Admin\Widgets\Card;
 use Illuminate\Support\Facades\DB;
 
 
-
-class ReportController extends AdminController
+//分店每月銷售總額報告
+class TotalSalesByGroupReportController extends AdminController
 {
+    public function index(Content $content)
+    {
+        return $content
+            ->header('分店每月銷售總額報告')
+            ->body($this->grid());
+    }
 
     protected function grid()
     {
         return new Grid(null, function (Grid $grid) {
 
-//            $grid->header(function ($collection) {
-//                // 自定义组件
-//                return new Card(new ExportReport());
-//            });
+            $grid->header(function ($collection) {
+                $start = $this->getStartTime();
+                $end = $this->getEndTime();
 
-//            $start = $_REQUEST['start'];
-//            $end = $_REQUEST['end'];
+                // 标题和内容
+                $cardInfo = $start." 至 ".$end ;
+                $card = Card::make('日期:', $cardInfo);
 
-            //上个月第一天
-            if(isset($_REQUEST['between']['start'])){
-                $start = $_REQUEST['between']['start'];
-            }else{
-                $start = Carbon::now()->subMonth()->firstOfMonth()->toDateString();
-            }
+                return $card;
+            });
 
-            //上个月最后一天
-            if(isset($_REQUEST['between']['end'])){
-                $end = $_REQUEST['between']['end'];
-            }else{
-                $end = Carbon::now()->subMonth()->lastOfMonth()->toDateString();
-            }
+            $start = $this->getStartTime();
+            $end = $this->getEndTime();
 
             $data = $this->generate($start,$end);
 
             if(count($data) > 0){
                 $keys = $data->first()->toArray();
                 foreach ($keys as $key => $values){
+//                    if($key == '大類'){
+//                        $grid->column($key);
+//                    }else{
+//                        $grid->column($key);
+//                    }
+
                     $grid->column($key);
+
                 }
             }
 
@@ -75,7 +82,7 @@ class ReportController extends AdminController
 
             });
 
-            $filename = '分店每月銷售數量報告 '.$start.'至'.$end ;
+            $filename = '分店每月銷售總額報告 '.$start.'至'.$end ;
             $grid->export()->xlsx()->filename($filename);
 
 
@@ -94,32 +101,55 @@ class ReportController extends AdminController
 
         $orderzdept = new OrderZDept;
         $orderzdept = $orderzdept
-            ->select(DB::raw('tbl_order_z_menu.chr_no as "編號"' ))
-            ->addSelect(DB::raw( 'tbl_order_z_menu.chr_name as "名稱"'))
-            ->addSelect(DB::raw('sum(ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty)) as Total'));
+            ->select(DB::raw('tbl_order_z_cat.chr_name as "大類"' ))
+            ->addSelect(DB::raw( 'tbl_order_z_group.chr_name as "細類"'))
+            ->addSelect(DB::raw('ROUND(sum(ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) * tbl_order_z_menu.int_default_price) , 2) as Total'));
 
-
-        foreach ($shops as $shop){
+            foreach ($shops as $shop){
 //                $sql = "sum(case when tbl_order_z_dept.int_user = '$shop->int_id' then tbl_order_z_dept.int_qty else 0 end) as '$shop->chr_report_name'";
 //                dump($sql);
-            $sql = "sum(case when tbl_order_z_dept.int_user = '$shop->int_id' then ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) else 0 end) as '$shop->chr_report_name'";
-            $orderzdept = $orderzdept
-                ->addSelect(DB::raw($sql));
-        }
+                $sql = "ROUND(sum(case when tbl_order_z_dept.int_user = '$shop->int_id' then (ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) * tbl_order_z_menu.int_default_price) else 0 end),2) as '$shop->chr_report_name'";
+                $orderzdept = $orderzdept
+                    ->addSelect(DB::raw($sql));
+            }
 
-        $orderzdept = $orderzdept
+       $orderzdept = $orderzdept
             ->leftJoin('tbl_order_z_menu', 'tbl_order_z_menu.int_id', '=', 'tbl_order_z_dept.int_product')
             ->leftJoin('tbl_order_z_group', 'tbl_order_z_menu.int_group', '=', 'tbl_order_z_group.int_id')
+            ->leftJoin('tbl_order_z_cat', 'tbl_order_z_group.int_cat', '=', 'tbl_order_z_cat.int_id')
             ->leftJoin('tbl_user', 'tbl_user.int_id', '=', 'tbl_order_z_dept.int_user')
             ->where('tbl_user.chr_type', '=', 2)
             ->where('tbl_order_z_dept.status', '<>', 4)
             ->whereRaw(DB::raw("DATE(DATE_ADD(tbl_order_z_dept.order_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) between '$start' and '$end'"))
-            ->groupBy('tbl_order_z_menu.int_id')
-            ->orderBy('tbl_order_z_menu.chr_no')
+            ->groupBy('tbl_order_z_group.int_id')
+            ->orderBy('tbl_order_z_cat.int_sort')
+            ->orderBy('tbl_order_z_group.int_id')
             ->get();
+
+//        dd($orderzdept->toArray());
 
         return $orderzdept;
 
+    }
+
+    public function getStartTime(){
+        if(isset($_REQUEST['between']['start'])){
+            $start = $_REQUEST['between']['start'];
+        }else{
+            //上个月第一天
+            $start = Carbon::now()->subMonth()->firstOfMonth()->toDateString();
+        }
+        return $start;
+    }
+
+    public function getEndTime(){
+        if(isset($_REQUEST['between']['end'])){
+            $end = $_REQUEST['between']['end'];
+        }else{
+            //上个月最后一天
+            $end = Carbon::now()->subMonth()->lastOfMonth()->toDateString();
+        }
+        return $end;
     }
 
     public function headings(): array

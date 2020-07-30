@@ -46,15 +46,5 @@ class ApiController extends Controller
         return ShopGroup::get(['id', DB::raw('name as text')]);
     }
 
-    public function export()
-    {
-//        return Excel::download(new SalesByShopAndMenuExport(), 'users.xls');
-//        Excel::assertDownloaded('filename.xlsx', function(SalesByShopAndMenuExport $export) {
-//            // Assert that the correct export is downloaded.
-//            return $export->collection()->contains('#2018-01');
-//        });
-
-        (new SalesByShopAndMenuExport)->download('invoices.xlsx', \Maatwebsite\Excel\Excel::XLSX);
-    }
 
 }
