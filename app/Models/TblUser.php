@@ -27,5 +27,12 @@ class TblUser extends Model
         return $shops;
     }
 
+    public static function getTestUserIDs(){
+
+        $testUserIDs = [1,2,3,4,77,82];
+
+        return $testUserIDs;
+    }
+
 
 }

@@ -102,24 +102,20 @@ class TotalSalesByGroupCombineReportController extends AdminController
 
         $cats = TblOrderZCat::getCatsExceptResale();
         $resales = TblOrderZGroup::getResaleGroups();
-
+        $testids = TblUser::getTestUserIDs();
 
         $orderzdept = new OrderZDept;
         $orderzdept = $orderzdept
-            ->select(DB::raw('tbl_user.chr_report_name as "分店"'))
+            ->select(DB::raw('tbl_user.int_id as "分店"'))
             ->addSelect(DB::raw('ROUND(sum(ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) * tbl_order_z_menu.int_default_price) , 2) as Total'));
 
         foreach ($cats as $cat) {
-//                $sql = "sum(case when tbl_order_z_dept.int_user = '$shop->int_id' then tbl_order_z_dept.int_qty else 0 end) as '$shop->chr_report_name'";
-//                dump($sql);
             $sql = "ROUND(sum(case when tbl_order_z_cat.int_id = '$cat->int_id' then (ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) * tbl_order_z_menu.int_default_price) else 0 end),2) as '$cat->chr_name'";
             $orderzdept = $orderzdept
                 ->addSelect(DB::raw($sql));
         }
 
         foreach ($resales as $resale) {
-//                $sql = "sum(case when tbl_order_z_dept.int_user = '$shop->int_id' then tbl_order_z_dept.int_qty else 0 end) as '$shop->chr_report_name'";
-//                dump($sql);
             $sql = "ROUND(sum(case when tbl_order_z_menu.int_group = '$resale->int_id' then (ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) * tbl_order_z_menu.int_default_price) else 0 end),2) as '$resale->chr_name'";
             $orderzdept = $orderzdept
                 ->addSelect(DB::raw($sql));
@@ -132,6 +128,7 @@ class TotalSalesByGroupCombineReportController extends AdminController
             ->leftJoin('tbl_user', 'tbl_user.int_id', '=', 'tbl_order_z_dept.int_user')
             ->where('tbl_user.chr_type', '=', 2)
             ->where('tbl_order_z_dept.status', '<>', 4)
+            ->whereNotIn('tbl_user.int_id', $testids)
             ->whereRaw(DB::raw("DATE(DATE_ADD(tbl_order_z_dept.order_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) between '$start' and '$end'"))
             ->groupBy('tbl_user.int_id')
             ->orderBy('tbl_user.txt_login')
