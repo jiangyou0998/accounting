@@ -24,4 +24,15 @@ class TblOrderZCat extends Model
         return $this->hasManyThrough(TblOrderZMenu::class,TblOrderZGroup::class,"int_id" ,"int_id","int_group","int_cat");
     }
 
+    //查詢所有大類(除轉手貨)
+    public static function getCatsExceptResale(){
+
+        $cats = new TblOrderZCat();
+        $cats = $cats->where('chr_name','<>', '轉手貨')
+            ->orderby('int_sort')
+            ->get(['int_id','chr_name']);
+
+        return $cats;
+    }
+
 }

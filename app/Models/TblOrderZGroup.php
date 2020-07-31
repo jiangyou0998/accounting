@@ -23,4 +23,14 @@ class TblOrderZGroup extends Model
         return $this->hasMany(TblOrderZMenu::class,"int_group","int_id");
     }
 
+    //查詢所有轉手貨組
+    public static function getResaleGroups(){
+
+        $groups = new TblOrderZGroup();
+        $groups = $groups->where('int_cat', 5)
+            ->get(['int_id','chr_name']);
+
+        return $groups;
+    }
+
 }

@@ -25,6 +25,8 @@ Route::group([
     $router->resource('reports/total_sales_amount_by_menu', 'Reports\TotalSalesAmountByMenuReportController');
     //分店每月銷售總額報告
     $router->resource('reports/total_sales_by_group', 'Reports\TotalSalesByGroupReportController');
+    //分店每月銷售總額報告(組合)
+    $router->resource('reports/total_sales_by_group_combine', 'Reports\TotalSalesByGroupCombineReportController');
 
 
 
