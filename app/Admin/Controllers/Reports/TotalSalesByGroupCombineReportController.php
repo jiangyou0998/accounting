@@ -106,7 +106,7 @@ class TotalSalesByGroupCombineReportController extends AdminController
 
         $orderzdept = new OrderZDept;
         $orderzdept = $orderzdept
-            ->select(DB::raw('tbl_user.int_id as "分店"'))
+            ->select(DB::raw('tbl_user.chr_report_name as "分店"'))
             ->addSelect(DB::raw('ROUND(sum(ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) * tbl_order_z_menu.int_default_price) , 2) as Total'));
 
         foreach ($cats as $cat) {
@@ -163,15 +163,4 @@ class TotalSalesByGroupCombineReportController extends AdminController
         return $end;
     }
 
-    public function headings(): array
-    {
-        $shops = TblUser::getKingBakeryShops();
-
-        $headings = ['編號', '名稱', 'Total'];
-        foreach ($shops as $shop) {
-            array_push($headings, $shop->chr_report_name);
-        }
-
-        return $headings;
-    }
 }
