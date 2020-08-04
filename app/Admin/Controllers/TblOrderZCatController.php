@@ -18,38 +18,22 @@ class TblOrderZCatController extends AdminController
     protected function grid()
     {
         return Grid::make(new TblOrderZCat(), function (Grid $grid) {
-            $grid->id->sortable();
+
+            $grid->model()->orderBy('int_sort');
             $grid->chr_name;
             $grid->int_sort;
             $grid->status;
-            $grid->int_page;
-            $grid->created_at;
-            $grid->updated_at->sortable();
-        
-            $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
-        
-            });
-        });
-    }
+            $grid->start_time;
+            $grid->end_time;
 
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     *
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        return Show::make($id, new TblOrderZCat(), function (Show $show) {
-            $show->id;
-            $show->chr_name;
-            $show->int_sort;
-            $show->status;
-            $show->int_page;
-            $show->created_at;
-            $show->updated_at;
+            $grid->disableRowSelector();
+            $grid->disableCreateButton();
+            $grid->disableBatchDelete();
+            $grid->actions(function (Grid\Displayers\Actions $actions) {
+                $actions->disableView();
+                $actions->disableDelete();
+            });
+
         });
     }
 
@@ -61,14 +45,28 @@ class TblOrderZCatController extends AdminController
     protected function form()
     {
         return Form::make(new TblOrderZCat(), function (Form $form) {
-            $form->display('id');
+
+            $form->disableEditingCheck();
+
+            $form->disableCreatingCheck();
+
+            $form->disableViewCheck();
+
+            $form->tools(function (Form\Tools $tools) {
+
+                // 去掉`删除`按钮
+                $tools->disableDelete();
+
+                // 去掉`查看`按钮
+                $tools->disableView();
+
+            });
+
             $form->text('chr_name');
             $form->text('int_sort');
             $form->text('status');
-            $form->text('int_page');
-        
-            $form->display('created_at');
-            $form->display('updated_at');
+            $form->dateRange('start_time', 'end_time', '生效時間');
+
         });
     }
 }

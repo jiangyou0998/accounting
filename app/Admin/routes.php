@@ -14,6 +14,7 @@ Route::group([
 
     $router->get('/', 'HomeController@index');
     $router->resource('users', 'TblUserController');
+    $router->resource('cats', 'TblOrderZCatController');
     $router->resource('menus', 'TblOrderZMenuController');
 //    $router->post('menus/confirm1', 'TblOrderZMenuController@confirm1');
     $router->resource('groups', 'TblOrderZGroupController');
