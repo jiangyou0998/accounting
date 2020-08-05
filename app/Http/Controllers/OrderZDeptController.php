@@ -9,9 +9,8 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class OrderZDeptController extends Controller
 {
-    public function export()
+    public function cart()
     {
-//        dd(OrderZDept::all()->toArray());
-        return Excel::download(new TotalByShopExport, 'total.xlsx');
+        return view('order.cart');
     }
 }

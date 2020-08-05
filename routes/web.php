@@ -15,4 +15,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('order/exportTotalByShop','OrderZDeptController@export');
+Route::get('order/cart','OrderZDeptController@cart');
