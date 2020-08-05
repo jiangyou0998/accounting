@@ -105,15 +105,15 @@ class TotalSalesAmountByMenuReportController extends AdminController
 
         $orderzdept = new OrderZDept;
         $orderzdept = $orderzdept
-            ->select(DB::raw('tbl_order_z_menu.chr_no as "編號"' ))
-            ->addSelect(DB::raw( 'tbl_order_z_menu.chr_name as "名稱"'))
-            ->addSelect(DB::raw('sum(ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty)) as Total'));
+            ->select('tbl_order_z_menu.chr_no as 編號' )
+            ->addSelect('tbl_order_z_menu.chr_name as 名稱')
+            ->addSelect(DB::raw('ROUND(sum(ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty)),0) as Total'));
 
 
         foreach ($shops as $shop){
 //                $sql = "sum(case when tbl_order_z_dept.int_user = '$shop->int_id' then tbl_order_z_dept.int_qty else 0 end) as '$shop->chr_report_name'";
 //                dump($sql);
-            $sql = "sum(case when tbl_order_z_dept.int_user = '$shop->int_id' then ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) else 0 end) as '$shop->chr_report_name'";
+            $sql = "ROUND(sum(case when tbl_order_z_dept.int_user = '$shop->int_id' then ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) else 0 end),0) as '$shop->chr_report_name'";
             $orderzdept = $orderzdept
                 ->addSelect(DB::raw($sql));
         }

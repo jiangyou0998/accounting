@@ -106,7 +106,7 @@ class TotalSalesByGroupCombineReportController extends AdminController
 
         $orderzdept = new OrderZDept;
         $orderzdept = $orderzdept
-            ->select(DB::raw('tbl_user.chr_report_name as "分店"'))
+            ->select('tbl_user.chr_report_name as 分店')
             ->addSelect(DB::raw('ROUND(sum(ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) * tbl_order_z_menu.int_default_price) , 2) as Total'));
 
         foreach ($cats as $cat) {

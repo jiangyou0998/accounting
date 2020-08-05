@@ -12,7 +12,7 @@ Route::group([
     'middleware'    => config('admin.route.middleware'),
 ], function (Router $router) {
 
-    $router->get('/', 'HomeController@index');
+    $router->get('/', [\App\Admin\Controllers\HomeController::class , 'index'])->name('home');
     $router->resource('users', 'TblUserController');
     $router->resource('cats', 'TblOrderZCatController');
     $router->resource('menus', 'TblOrderZMenuController');
