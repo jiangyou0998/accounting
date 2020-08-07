@@ -35,4 +35,37 @@ class TblOrderZCat extends Model
         return $cats;
     }
 
+    //获取所有大類
+    public static function getCats()
+    {
+        $cats = new TblOrderZCat();
+        $cats = $cats
+            ->orderby('int_sort')
+            ->get();
+
+        return $cats;
+    }
+
+    //获取所有大類(生效)
+    public static function getCatsNotExpired($date)
+    {
+        $cats = new TblOrderZCat();
+        $cats = $cats
+            ->where(function ($query) use ($date){
+                $query->whereNotNull('start_time')
+                    ->whereDate('start_time','<=',$date);
+            })->where(function ($query) use ($date){
+                $query->whereNotNull('end_time')
+                    ->whereDate('end_time','>=',$date);
+            })->orWhere(function ($query) use ($date){
+                $query->whereNull('start_time')
+                    ->whereNull('end_time');
+            })
+
+
+            ->get();
+
+        return $cats;
+    }
+
 }

@@ -16,12 +16,24 @@
 
     <br>
     <br>
-    <input type="hidden" name="action" value="DirectAdd">
-    <table border="0" cellpadding="0" cellspacing="5">
-        <tbody>
+    <div class="container-fluid">
+        <div class="row">
             @include('order._menu')
             @include('order._menu')
             @include('order._menu')
-        </tbody>
-    </table>
+            @include('order._menu')
+            @include('order._menu')
+            @include('order._menu')
+            @include('order._menu')
+            @include('order._menu')
+            @include('order._menu')
+            @include('order._menu')
+            @include('order._menu')
+            @include('order._menu')
+            @include('order._menu')
+            @include('order._menu')
+            @include('order._menu')
+        </div>
+    </div>
+
 </form>

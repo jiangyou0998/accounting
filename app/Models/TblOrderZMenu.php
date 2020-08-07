@@ -44,4 +44,5 @@ class TblOrderZMenu extends Model
         return $this->hasMany(Price::class,"menu_id","int_id");
     }
 
+
 }
