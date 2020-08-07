@@ -80,7 +80,7 @@
     });
 
     //刪除(x按鈕),隱藏相應行,原本已經存在的
-    $('document').on('click', '.del', function () {
+    $(document).on('click', '.del', function () {
         var parent = $(this).parents(".cartold");
         var parentClass = parent.attr("class");
         parent.removeClass(parentClass).addClass("cartdel");
@@ -90,24 +90,24 @@
     });
 
     //刪除(x按鈕),隱藏相應行,新增的行
-    // $('.cart').on('click', '.delnew', function () {
-    //     alert(666);
+    $(document).on('click', '.delnew', function () {
+        // alert(666);
+        var parent = $(this).parents(".cart");
+        var parentClass = parent.attr("class");
+        parent.remove();
+        console.log(parent.attr("class"));
+
+    });
+
+    // function aaa(id) {
+    //     // alert(666);
     //     // var parent = $(this).parents(".cart");
     //     // var parentClass = parent.attr("class");
     //     // parent.remove();
-    //     // console.log(parent.attr("class"));
     //
-    // });
-
-    function aaa(id) {
-        // alert(666);
-        // var parent = $(this).parents(".cart");
-        // var parentClass = parent.attr("class");
-        // parent.remove();
-
-        alert($('#'+id).html());
-        $('#'+id).remove();
-    }
+    //     alert($('#'+id).html());
+    //     $('#'+id).remove();
+    // }
 
     //點擊完成按鈕提交修改
     function sss() {

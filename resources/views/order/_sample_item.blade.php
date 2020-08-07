@@ -20,7 +20,7 @@
     </td>
     <td align="center">{{$item->UoM}}</td>
     <td align="center">
-        <a href="javascript:void(0);" onclick = 'aaa({{$item->chr_no}})' style="cursor: pointer;" class="delnew">
+        <a href="javascript:void(0);" style="cursor: pointer;" class="delnew">
             x
         </a>
     </td>
