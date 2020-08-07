@@ -16,3 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('order/cart','OrderZDeptController@cart');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
