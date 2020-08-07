@@ -27,8 +27,8 @@ class OrderZDeptController extends Controller
 
         $items = TblOrderZDept::getCartItems($shop, $dept, $advancePlusOne);
         $cats = TblOrderZCat::getCatsNotExpired($deliDate);
-        dump($deliDate);
-        dump(count($items));
+//        dump($deliDate);
+//        dump(count($items));
         $sampleItems = new Collection();
         if(count($items) == 0 && $dept == 'R'){
             $sampleItems = TblOrderSample::getRegularOrderItems($shop,$week);
