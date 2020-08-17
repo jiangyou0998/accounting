@@ -16,7 +16,9 @@
         "laravel/framework": "^6.2",
         "laravel/tinker": "^2.0",
         "maatwebsite/excel": "^3.1",
-        "symfony/translation": "4.3.8"
+        "spatie/laravel-permission": "^3.13",
+        "symfony/translation": "4.3.8",
+        "viacreative/sudo-su": "~1.1"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

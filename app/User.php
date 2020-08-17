@@ -5,10 +5,11 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, HasRoles;
 
 //    protected $table = 'tbl_user';
 
@@ -38,4 +39,18 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function allNodes()
+    {
+//        $user = array(['蛋撻王'=>array('id'=>'1','name'=>'大業')]);
+//        $user = array(['蛋撻王'=>
+//            array([('id'=>'1','name'=>'大業')])
+//        ]);
+//        dump($user);
+//        dump(User::get(['id','name'])->toArray());
+//        return $user;
+        return User::get(['id','name'])->toArray();
+    }
+
+
 }

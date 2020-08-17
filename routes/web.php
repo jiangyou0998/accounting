@@ -19,4 +19,6 @@ Route::get('order/cart','OrderZDeptController@cart');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')
+    ->middleware('permission:visit_home')
+    ->name('home');

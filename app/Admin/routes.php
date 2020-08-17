@@ -30,6 +30,10 @@ Route::group([
     $router->resource('reports/total_sales_by_group_combine', 'Reports\TotalSalesByGroupCombineReportController');
 
 
+    $router->get('order/test', 'OrderPrintController@test');
+    $router->resource('front/permissions', 'PermissionController');
+    $router->resource('front/roles', 'RoleController');
+    $router->resource('pages/front_users', 'UserController');
 
     //api
     $router->get('api/group', 'ApiController@group');
@@ -37,5 +41,6 @@ Route::group([
     $router->get('api/cat', 'ApiController@cat');
     $router->get('api/unit', 'ApiController@unit');
     $router->get('api/shopgroup', 'ApiController@shop_group');
+
 
 });

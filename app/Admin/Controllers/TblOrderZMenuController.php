@@ -43,6 +43,12 @@ class TblOrderZMenuController extends AdminController
             }
 
             $grid->showQuickEditButton();
+
+            // 表格快捷搜索
+            $grid->quickSearch('chr_no','chr_name')
+                ->placeholder('輸入「編號」或「名稱」快速搜索');
+
+
             //生產表數組
             $checks = new TblOrderCheck();
 
@@ -100,7 +106,7 @@ class TblOrderZMenuController extends AdminController
 //                    return $item;
 //                });
 
-                // 2. 给表格加一个序号列
+                //给表格加一个序号列
                 $collection->transform(function ($item, $index) {
                     $item['number'] = $index + 1 ;
 
@@ -114,9 +120,9 @@ class TblOrderZMenuController extends AdminController
             $grid->column('number',"#");
             $grid->chr_no->sortable();
             $grid->chr_name;
-            $grid->column('tblOrderZUnit.chr_name',"單位");
             $grid->int_base;
             $grid->int_min;
+            $grid->column('tblOrderZUnit.chr_name',"單位");
             $grid->int_default_price;
 //            $grid->price->display('View')->modal('Price', Price::make(['int_id' => $this->int_id]));
             $grid->price->display('分組價格')->expand(function () {
@@ -128,7 +134,18 @@ class TblOrderZMenuController extends AdminController
             $grid->column('tblOrderZGroup.chr_name',"細類");
             $grid->int_sort;
             $grid->chr_cuttime->label('danger');
-            $grid->int_phase;
+            $grid->int_phase->display(function ($phase) {
+
+                if($phase > 0){
+                    return $phase."日後";
+                }else{
+                    return "<span style='color:red'>後勤落單</span>";
+                }
+
+
+            });
+//            $grid->int_phase;
+
             $grid->status->using([1 => '現貨', 2 => '暫停', 3 => '新貨', 5 => '季節貨'])
                 ->dot(
                     [
@@ -200,15 +217,25 @@ class TblOrderZMenuController extends AdminController
 //
 //                }, '細類');
 
-                $filter->where('int_group', function ($query) {
+                $filter->where('int_cat', function ($query) {
 
                     $query->whereHas('tblOrderZGroup', function ($query) {
                         $query->whereHas('tblOrderZCat', function ($query) {
-                            $query->where('int_id', 'like', "%{$this->input}%");
+                            $query->where('int_id', '=', $this->input);
                         });
                     });
 
-                }, '大類')->select('api/cat');
+                }, '大類')->select('api/cat')->load('int_group', '/api/group');
+
+                $filter->where('int_group', function ($query) {
+
+                    $query->whereHas('tblOrderZGroup', function ($query) {
+                        $query->where('int_id', '=', $this->input);
+                    });
+
+                }, '細類')->select('api/group2')->default("");
+
+
 
             });
         });
@@ -255,17 +282,12 @@ class TblOrderZMenuController extends AdminController
      */
     protected function form()
     {
-        return Form::make(new TblOrderZMenu(), function (Form $form) {
+        $builder = new TblOrderZMenu();
+        $builder = $builder->with('price');
+
+        return Form::make($builder, function (Form $form) {
 
 //            $form->action($this->confirm1());
-//
-//            $form->model()
-//                ->with(['tblOrderZCat'])
-//                ->with(['tblOrderZGroup'])
-//                ->with(['tblOrderZUnit'])
-//                ->with(['tblUser'])
-//                ->with(['price']);
-
 
             $form->tools(function (Form\Tools $tools) {
                 // 去掉跳转列表按钮
@@ -343,16 +365,6 @@ class TblOrderZMenuController extends AdminController
                 });
 
             $form->display('last_modify');
-
-//            $form->tools(function (Form\Tools $tools) {
-//                $tools->append(new SelectShop());
-//            });
-
-//            $form->selectResource('chr_sap', 'Select Resource(Multiple)')
-//                ->path('users')
-//                ->multiple();
-//
-//            $form->list('column_name')->max(10)->min(5);
 
 
             $form->hasMany('price', '價格列表', function (Form\NestedForm $form) {

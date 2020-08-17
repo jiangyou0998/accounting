@@ -16,8 +16,30 @@
 
                     You are logged in!
                 </div>
+                <div>
+                    用户角色为: {{ auth()->user()->getRoleNames() }}
+                </div>
+                <div>
+                    @can('visit_home')
+                        visit_home
+                    @endcan
+                </div>
+                <div>
+                    @can('show_users')
+                        show_users
+                    @endcan
+                </div>
+                <div>
+                    @can('edit_users')
+                        edit_users
+                    @endcan
+                </div>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@if (app()->isLocal())
+    @include('sudosu::user-selector')
+@endif

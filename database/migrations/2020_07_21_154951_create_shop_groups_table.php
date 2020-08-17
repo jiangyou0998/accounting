@@ -14,7 +14,7 @@ class CreateShopGroupsTable extends Migration
     public function up()
     {
         Schema::create('shop_groups', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('name')->default('');
             $table->unsignedInteger('sort');
             $table->timestamps();

@@ -8,14 +8,17 @@ use App\Models\TblOrderZCat;
 use App\Models\TblOrderZDept;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 class OrderZDeptController extends Controller
 {
     public function cart()
     {
-        $advance = 36;
+        $user = Auth::User();
+//        dd(Auth::User());
+        $advance = 20;
         $dept = 'R';
-        $shop = 32;
+        $shop = $user->id;
         $advancePlusOne = $advance + 1;
         $now = Carbon::now();
         $deliDate = $now->add($advancePlusOne . 'day')->toDateString();
@@ -40,6 +43,9 @@ class OrderZDeptController extends Controller
 
         $orderInfos = new Collection();
         $orderInfos->date = $deliDate;
+        $orderInfos->shop_name = $user->txt_name;
+        $orderInfos->dept = $dept;
+        $orderInfos->deli_date = $deliDate;
 
         return view('order.cart', compact('items', 'cats','sampleItems', 'orderInfos'));
     }

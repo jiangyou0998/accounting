@@ -45,11 +45,6 @@ class TotalSalesByGroupReportController extends AdminController
             if(count($data) > 0){
                 $keys = $data->first()->toArray();
                 foreach ($keys as $key => $values){
-//                    if($key == '大類'){
-//                        $grid->column($key);
-//                    }else{
-//                        $grid->column($key);
-//                    }
 
                     $grid->column($key);
 

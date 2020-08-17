@@ -20,13 +20,13 @@ class ApiController extends Controller
 //        $groupId = 150;
 //        dd($catId);
 
-        return TblOrderZGroup::where('int_cat', $catId)->get([DB::raw('int_id as id'), DB::raw('chr_name as text')]);
+        return TblOrderZGroup::where('int_cat', $catId)->get([DB::raw('int_id as id'), DB::raw('chr_name as text')])->prepend(['id' => '','text'=>'全部']);
     }
 
     public function cat()
     {
 
-        return TblOrderZCat::get([DB::raw('int_id as id'), DB::raw('chr_name as text')]);
+        return TblOrderZCat::orderBy('int_sort')->get([DB::raw('int_id as id'), DB::raw('chr_name as text')]);
     }
 
     public function group2()
@@ -44,6 +44,11 @@ class ApiController extends Controller
     public function shop_group()
     {
         return ShopGroup::get(['id', DB::raw('name as text')]);
+    }
+
+    public function test()
+    {
+        return view('admin.order_print.index');
     }
 
 

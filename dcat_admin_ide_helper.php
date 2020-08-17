@@ -57,14 +57,17 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection int_force
      * @property Grid\Column|Collection chr_pocode
      * @property Grid\Column|Collection int_sort
-     * @property Grid\Column|Collection chr_no
      * @property Grid\Column|Collection chr_name
+     * @property Grid\Column|Collection status
+     * @property Grid\Column|Collection start_time
+     * @property Grid\Column|Collection end_time
+     * @property Grid\Column|Collection chr_no
      * @property Grid\Column|Collection int_base
      * @property Grid\Column|Collection int_min
      * @property Grid\Column|Collection int_default_price
+     * @property Grid\Column|Collection price
      * @property Grid\Column|Collection chr_cuttime
      * @property Grid\Column|Collection int_phase
-     * @property Grid\Column|Collection status
      * @property Grid\Column|Collection prices
      * @property Grid\Column|Collection int_group
      * @property Grid\Column|Collection int_unit
@@ -98,19 +101,17 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection role_id
      * @property Grid\Column|Collection password
      * @property Grid\Column|Collection remember_token
-     * @property Grid\Column|Collection bio
-     * @property Grid\Column|Collection painter_id
-     * @property Grid\Column|Collection body
-     * @property Grid\Column|Collection completed_at
      * @property Grid\Column|Collection connection
      * @property Grid\Column|Collection queue
      * @property Grid\Column|Collection payload
      * @property Grid\Column|Collection exception
      * @property Grid\Column|Collection failed_at
+     * @property Grid\Column|Collection model_type
+     * @property Grid\Column|Collection model_id
      * @property Grid\Column|Collection email
      * @property Grid\Column|Collection token
+     * @property Grid\Column|Collection guard_name
      * @property Grid\Column|Collection shop_group_id
-     * @property Grid\Column|Collection price
      * @property Grid\Column|Collection r_order_id
      * @property Grid\Column|Collection qty
      * @property Grid\Column|Collection disabled
@@ -226,7 +227,6 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection shop
      * @property Grid\Column|Collection int_price
      * @property Grid\Column|Collection int_cal
-     * @property Grid\Column|Collection email_verified_at
      *
      * @method Grid\Column|Collection id(string $label = null)
      * @method Grid\Column|Collection username(string $label = null)
@@ -274,14 +274,17 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection int_force(string $label = null)
      * @method Grid\Column|Collection chr_pocode(string $label = null)
      * @method Grid\Column|Collection int_sort(string $label = null)
-     * @method Grid\Column|Collection chr_no(string $label = null)
      * @method Grid\Column|Collection chr_name(string $label = null)
+     * @method Grid\Column|Collection status(string $label = null)
+     * @method Grid\Column|Collection start_time(string $label = null)
+     * @method Grid\Column|Collection end_time(string $label = null)
+     * @method Grid\Column|Collection chr_no(string $label = null)
      * @method Grid\Column|Collection int_base(string $label = null)
      * @method Grid\Column|Collection int_min(string $label = null)
      * @method Grid\Column|Collection int_default_price(string $label = null)
+     * @method Grid\Column|Collection price(string $label = null)
      * @method Grid\Column|Collection chr_cuttime(string $label = null)
      * @method Grid\Column|Collection int_phase(string $label = null)
-     * @method Grid\Column|Collection status(string $label = null)
      * @method Grid\Column|Collection prices(string $label = null)
      * @method Grid\Column|Collection int_group(string $label = null)
      * @method Grid\Column|Collection int_unit(string $label = null)
@@ -315,19 +318,17 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection role_id(string $label = null)
      * @method Grid\Column|Collection password(string $label = null)
      * @method Grid\Column|Collection remember_token(string $label = null)
-     * @method Grid\Column|Collection bio(string $label = null)
-     * @method Grid\Column|Collection painter_id(string $label = null)
-     * @method Grid\Column|Collection body(string $label = null)
-     * @method Grid\Column|Collection completed_at(string $label = null)
      * @method Grid\Column|Collection connection(string $label = null)
      * @method Grid\Column|Collection queue(string $label = null)
      * @method Grid\Column|Collection payload(string $label = null)
      * @method Grid\Column|Collection exception(string $label = null)
      * @method Grid\Column|Collection failed_at(string $label = null)
+     * @method Grid\Column|Collection model_type(string $label = null)
+     * @method Grid\Column|Collection model_id(string $label = null)
      * @method Grid\Column|Collection email(string $label = null)
      * @method Grid\Column|Collection token(string $label = null)
+     * @method Grid\Column|Collection guard_name(string $label = null)
      * @method Grid\Column|Collection shop_group_id(string $label = null)
-     * @method Grid\Column|Collection price(string $label = null)
      * @method Grid\Column|Collection r_order_id(string $label = null)
      * @method Grid\Column|Collection qty(string $label = null)
      * @method Grid\Column|Collection disabled(string $label = null)
@@ -443,7 +444,6 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection shop(string $label = null)
      * @method Grid\Column|Collection int_price(string $label = null)
      * @method Grid\Column|Collection int_cal(string $label = null)
-     * @method Grid\Column|Collection email_verified_at(string $label = null)
      */
     class Grid {}
 
@@ -496,14 +496,17 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection int_force
      * @property Show\Field|Collection chr_pocode
      * @property Show\Field|Collection int_sort
-     * @property Show\Field|Collection chr_no
      * @property Show\Field|Collection chr_name
+     * @property Show\Field|Collection status
+     * @property Show\Field|Collection start_time
+     * @property Show\Field|Collection end_time
+     * @property Show\Field|Collection chr_no
      * @property Show\Field|Collection int_base
      * @property Show\Field|Collection int_min
      * @property Show\Field|Collection int_default_price
+     * @property Show\Field|Collection price
      * @property Show\Field|Collection chr_cuttime
      * @property Show\Field|Collection int_phase
-     * @property Show\Field|Collection status
      * @property Show\Field|Collection prices
      * @property Show\Field|Collection int_group
      * @property Show\Field|Collection int_unit
@@ -537,19 +540,17 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection role_id
      * @property Show\Field|Collection password
      * @property Show\Field|Collection remember_token
-     * @property Show\Field|Collection bio
-     * @property Show\Field|Collection painter_id
-     * @property Show\Field|Collection body
-     * @property Show\Field|Collection completed_at
      * @property Show\Field|Collection connection
      * @property Show\Field|Collection queue
      * @property Show\Field|Collection payload
      * @property Show\Field|Collection exception
      * @property Show\Field|Collection failed_at
+     * @property Show\Field|Collection model_type
+     * @property Show\Field|Collection model_id
      * @property Show\Field|Collection email
      * @property Show\Field|Collection token
+     * @property Show\Field|Collection guard_name
      * @property Show\Field|Collection shop_group_id
-     * @property Show\Field|Collection price
      * @property Show\Field|Collection r_order_id
      * @property Show\Field|Collection qty
      * @property Show\Field|Collection disabled
@@ -665,7 +666,6 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection shop
      * @property Show\Field|Collection int_price
      * @property Show\Field|Collection int_cal
-     * @property Show\Field|Collection email_verified_at
      *
      * @method Show\Field|Collection id(string $label = null)
      * @method Show\Field|Collection username(string $label = null)
@@ -713,14 +713,17 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection int_force(string $label = null)
      * @method Show\Field|Collection chr_pocode(string $label = null)
      * @method Show\Field|Collection int_sort(string $label = null)
-     * @method Show\Field|Collection chr_no(string $label = null)
      * @method Show\Field|Collection chr_name(string $label = null)
+     * @method Show\Field|Collection status(string $label = null)
+     * @method Show\Field|Collection start_time(string $label = null)
+     * @method Show\Field|Collection end_time(string $label = null)
+     * @method Show\Field|Collection chr_no(string $label = null)
      * @method Show\Field|Collection int_base(string $label = null)
      * @method Show\Field|Collection int_min(string $label = null)
      * @method Show\Field|Collection int_default_price(string $label = null)
+     * @method Show\Field|Collection price(string $label = null)
      * @method Show\Field|Collection chr_cuttime(string $label = null)
      * @method Show\Field|Collection int_phase(string $label = null)
-     * @method Show\Field|Collection status(string $label = null)
      * @method Show\Field|Collection prices(string $label = null)
      * @method Show\Field|Collection int_group(string $label = null)
      * @method Show\Field|Collection int_unit(string $label = null)
@@ -754,19 +757,17 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection role_id(string $label = null)
      * @method Show\Field|Collection password(string $label = null)
      * @method Show\Field|Collection remember_token(string $label = null)
-     * @method Show\Field|Collection bio(string $label = null)
-     * @method Show\Field|Collection painter_id(string $label = null)
-     * @method Show\Field|Collection body(string $label = null)
-     * @method Show\Field|Collection completed_at(string $label = null)
      * @method Show\Field|Collection connection(string $label = null)
      * @method Show\Field|Collection queue(string $label = null)
      * @method Show\Field|Collection payload(string $label = null)
      * @method Show\Field|Collection exception(string $label = null)
      * @method Show\Field|Collection failed_at(string $label = null)
+     * @method Show\Field|Collection model_type(string $label = null)
+     * @method Show\Field|Collection model_id(string $label = null)
      * @method Show\Field|Collection email(string $label = null)
      * @method Show\Field|Collection token(string $label = null)
+     * @method Show\Field|Collection guard_name(string $label = null)
      * @method Show\Field|Collection shop_group_id(string $label = null)
-     * @method Show\Field|Collection price(string $label = null)
      * @method Show\Field|Collection r_order_id(string $label = null)
      * @method Show\Field|Collection qty(string $label = null)
      * @method Show\Field|Collection disabled(string $label = null)
@@ -882,7 +883,6 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection shop(string $label = null)
      * @method Show\Field|Collection int_price(string $label = null)
      * @method Show\Field|Collection int_cal(string $label = null)
-     * @method Show\Field|Collection email_verified_at(string $label = null)
      */
     class Show {}
 

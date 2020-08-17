@@ -5,12 +5,12 @@
     <!-- <form action="order_z_dept_2.php?action=confirm&dept=烘焙" method="post" id="cart" name="cart" target="_top">-->
     <div align="right">
         <strong>
-            <font color="#FF0000" size="+3">分店：共食薈(慧霖) </font>
+            <font color="#FF0000" size="+3">分店：{{$orderInfos->shop_name}} </font>
         </strong>
     </div>
     <div align="right">
         <strong>
-            <font color="#FF0000" size="+3">部門：烘焙 <br>送貨日期：8月06日 (四) </font>
+            <font color="#FF0000" size="+3">部門：烘焙 <br>送貨日期：{{$orderInfos->deli_date}} </font>
         </strong>
     </div>
 </div>
