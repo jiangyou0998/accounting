@@ -22,13 +22,17 @@ Route::group([
     $router->resource('checks', 'TblOrderCheckController');
     $router->resource('shopgroups', 'ShopGroupController');
 //    $router->resource('report', 'ReportController');
+    
+    //------------------------------------------------------------------
+    //報告
     //分店每月銷售數量報告
     $router->resource('reports/total_sales_amount_by_menu', 'Reports\TotalSalesAmountByMenuReportController');
     //分店每月銷售總額報告
     $router->resource('reports/total_sales_by_group', 'Reports\TotalSalesByGroupReportController');
     //分店每月銷售總額報告(組合)
     $router->resource('reports/total_sales_by_group_combine', 'Reports\TotalSalesByGroupCombineReportController');
-
+    //分店每月銷售總額報告(按日)
+    $router->resource('reports/total_sales_by_day_combine', 'Reports\TotalSalesByDayCombineReportController');
 
     $router->get('order/test', 'OrderPrintController@test');
     $router->resource('front/permissions', 'PermissionController');

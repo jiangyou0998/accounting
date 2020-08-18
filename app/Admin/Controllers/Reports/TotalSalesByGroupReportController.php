@@ -115,7 +115,7 @@ class TotalSalesByGroupReportController extends AdminController
             ->leftJoin('tbl_user', 'tbl_user.int_id', '=', 'tbl_order_z_dept.int_user')
             ->where('tbl_user.chr_type', '=', 2)
             ->where('tbl_order_z_dept.status', '<>', 4)
-            ->whereRaw("DATE(DATE_ADD(tbl_order_z_dept.order_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) between '$start' and '$end'")
+            ->whereRaw("DATE(DATE_ADD(tbl_order_z_dept.insert_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) between '$start' and '$end'")
             ->groupBy('tbl_order_z_group.int_id')
             ->orderBy('tbl_order_z_cat.int_sort')
             ->orderBy('tbl_order_z_group.int_id')

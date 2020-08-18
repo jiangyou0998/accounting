@@ -11,16 +11,17 @@ use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Card;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 
-//分店每月銷售總額報告(組合)
-class TotalSalesByGroupCombineReportController extends AdminController
+//分店每月銷售總額報告(按日)
+class TotalSalesByDayCombineReportController extends AdminController
 {
     public function index(Content $content)
     {
         return $content
-            ->header('分店每月銷售總額報告(組合)')
+            ->header('分店每月銷售總額報告(按日)')
             ->body($this->grid());
     }
 
@@ -29,29 +30,23 @@ class TotalSalesByGroupCombineReportController extends AdminController
         return new Grid(null, function (Grid $grid) {
 
             $grid->header(function ($collection) {
-                $start = $this->getStartTime();
-                $end = $this->getEndTime();
+
+                $month = $this->getMonth();
 
                 // 标题和内容
-                $cardInfo = $start . " 至 " . $end;
+                $cardInfo = $month;
                 $card = Card::make('日期:', $cardInfo);
 
                 return $card;
             });
 
-            $start = $this->getStartTime();
-            $end = $this->getEndTime();
+            $month = $this->getMonth();
 
-            $data = $this->generate($start, $end);
+            $data = $this->generate($month);
 
             if (count($data) > 0) {
                 $keys = $data->first()->toArray();
                 foreach ($keys as $key => $values) {
-//                    if($key == '大類'){
-//                        $grid->column($key);
-//                    }else{
-//                        $grid->column($key);
-//                    }
 
                     $grid->column($key);
 
@@ -79,12 +74,13 @@ class TotalSalesByGroupCombineReportController extends AdminController
                 // 更改为 panel 布局
                 $filter->panel();
 
-                $filter->between('between', '報表日期')->date();
+//                $filter->between('between', '報表日期')->date();
+                $filter->month('month', '報表日期');
 
 
             });
 
-            $filename = '分店每月銷售總額報告(組合) ' . $start . '至' . $end;
+            $filename = '分店每月銷售總額報告(按日) ' . $month ;
             $grid->export()->xlsx()->filename($filename);
 
 
@@ -97,26 +93,25 @@ class TotalSalesByGroupCombineReportController extends AdminController
      *
      * @return array
      */
-    public function generate($start, $end)
+    public function generate($month)
     {
 
-        $cats = TblOrderZCat::getCatsExceptResale();
+        $cats = TblOrderZCat::getCats();
         $resales = TblOrderZGroup::getResaleGroups();
         $testids = TblUser::getTestUserIDs();
 
         $orderzdept = new OrderZDept;
         $orderzdept = $orderzdept
-            ->select('tbl_user.chr_report_name as 分店')
+            ->select(DB::raw("DATE_format(DATE(DATE_ADD(tbl_order_z_dept.insert_date,
+            INTERVAL 1 + tbl_order_z_dept.chr_phase DAY)),'%Y-%m-%d') as day"))
+            ->addSelect(DB::raw("(DATE_FORMAT(DATE(DATE_ADD(tbl_order_z_dept.insert_date,
+                    INTERVAL 1 + tbl_order_z_dept.chr_phase DAY)),
+            '%e')-1) div 7 as week"))
+
             ->addSelect(DB::raw('ROUND(sum(ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) * tbl_order_z_menu.int_default_price) , 2) as Total'));
 
         foreach ($cats as $cat) {
             $sql = "ROUND(sum(case when tbl_order_z_cat.int_id = '$cat->int_id' then (ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) * tbl_order_z_menu.int_default_price) else 0 end),2) as '$cat->chr_name'";
-            $orderzdept = $orderzdept
-                ->addSelect(DB::raw($sql));
-        }
-
-        foreach ($resales as $resale) {
-            $sql = "ROUND(sum(case when tbl_order_z_menu.int_group = '$resale->int_id' then (ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) * tbl_order_z_menu.int_default_price) else 0 end),2) as '$resale->chr_name'";
             $orderzdept = $orderzdept
                 ->addSelect(DB::raw($sql));
         }
@@ -129,13 +124,19 @@ class TotalSalesByGroupCombineReportController extends AdminController
             ->where('tbl_user.chr_type', '=', 2)
             ->where('tbl_order_z_dept.status', '<>', 4)
             ->whereNotIn('tbl_user.int_id', $testids)
-            ->whereRaw(DB::raw("DATE(DATE_ADD(tbl_order_z_dept.insert_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) between '$start' and '$end'"))
-            ->groupBy('tbl_user.int_id')
-            ->orderBy('tbl_user.txt_login')
-//            ->orderBy('tbl_order_z_group.int_id')
+            ->whereRaw(DB::raw("DATE(DATE_ADD(tbl_order_z_dept.insert_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) like '%$month%' "))
+            ->groupBy(DB::raw('week,day with rollup'))
             ->get();
 
-//        dd($orderzdept->toArray());
+
+        foreach ($orderzdept as $value){
+            if($value->day){
+                $value->week = (new Carbon($value->day))->isoFormat('dd');
+            }else{
+                $value->week = '';
+            }
+
+        }
 
         return $orderzdept;
 
@@ -161,6 +162,17 @@ class TotalSalesByGroupCombineReportController extends AdminController
             $end = Carbon::now()->subMonth()->lastOfMonth()->toDateString();
         }
         return $end;
+    }
+
+    public function getMonth()
+    {
+        if (isset($_REQUEST['month'])) {
+            $month = $_REQUEST['month'];
+        } else {
+            //上个月最后一天
+            $month = Carbon::now()->subMonth()->isoFormat('Y-MM');
+        }
+        return $month;
     }
 
 }
