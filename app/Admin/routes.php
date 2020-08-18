@@ -22,7 +22,7 @@ Route::group([
     $router->resource('checks', 'TblOrderCheckController');
     $router->resource('shopgroups', 'ShopGroupController');
 //    $router->resource('report', 'ReportController');
-    
+
     //------------------------------------------------------------------
     //報告
     //分店每月銷售數量報告
