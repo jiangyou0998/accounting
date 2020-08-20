@@ -17,6 +17,8 @@ use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
 use Illuminate\Support\Collection;
 use App\Admin\Renderable\Price;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 
 class TblOrderZMenuController extends AdminController
@@ -303,10 +305,27 @@ class TblOrderZMenuController extends AdminController
 
 
 
+
             $form->display('int_id',"ID");
             $form->text('chr_name')->required();
-            $form->text('chr_no')->required()->rules('required|max:7')
-                ;
+            $form->text('chr_no')->required()->rules("required|
+                max:7|unique:tbl_order_z_menu,chr_no,{$form->getKey()},int_id", [
+                    'max' => '編號最大長度為7',
+                    'unique'   => '編號已存在',
+                ]);
+//                ;
+//            $form->text('chr_no')->required()->rules(function ($form) {
+//
+//                return [
+//                    'required',
+//                    'max:7',
+//                    Rule::unique('tbl_order_z_menu')->ignore($form->getKey(),'int_id'), [
+//                        'max' => '編號最大長度為7',
+//                        'unique'   => '編號已存在',
+//                    ]
+//                ];
+//
+//            });
 
             $form->select('','大類')->options('/api/cat')->load('int_group', '/api/group');
 
@@ -396,6 +415,7 @@ class TblOrderZMenuController extends AdminController
 
 
     }
+
 
 
 }

@@ -81,7 +81,7 @@ class TotalSalesByDayCombineReportController extends AdminController
             });
 
             $filename = '分店每月銷售總額報告(按日) ' . $month ;
-            $grid->export()->xlsx()->filename($filename);
+            $grid->export()->csv()->filename($filename);
 
 
         });
@@ -97,7 +97,6 @@ class TotalSalesByDayCombineReportController extends AdminController
     {
 
         $cats = TblOrderZCat::getCats();
-        $resales = TblOrderZGroup::getResaleGroups();
         $testids = TblUser::getTestUserIDs();
 
         $orderzdept = new OrderZDept;

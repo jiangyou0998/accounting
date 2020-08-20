@@ -85,7 +85,7 @@ class TotalSalesByGroupCombineReportController extends AdminController
             });
 
             $filename = '分店每月銷售總額報告(組合) ' . $start . '至' . $end;
-            $grid->export()->xlsx()->filename($filename);
+            $grid->export()->csv()->filename($filename);
 
 
         });
