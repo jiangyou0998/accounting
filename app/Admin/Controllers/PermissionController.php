@@ -18,7 +18,7 @@ class PermissionController extends AdminController
     protected function grid()
     {
         return Grid::make(new Permission(), function (Grid $grid) {
-
+            $grid->model()->with('roles');
             // 禁用创建按钮
             $grid->disableCreateButton();
             // 禁用行操作按钮
@@ -27,8 +27,9 @@ class PermissionController extends AdminController
             $grid->disableRowSelector();
 
             $grid->id->sortable();
-            $grid->name;
+            $grid->name->label();
             $grid->guard_name;
+            $grid->roles()->pluck('name')->label('danger');
             $grid->created_at;
             $grid->updated_at->sortable();
 

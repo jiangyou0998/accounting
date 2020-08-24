@@ -7,12 +7,33 @@ use App\Models\Role;
 use App\User;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
+use Dcat\Admin\IFrameGrid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
-use Illuminate\Support\Collection;
+
 
 class RoleController extends AdminController
 {
+    protected function iFrameGrid()
+    {
+        $grid = new IFrameGrid(new Role());
+        $grid->model()->with('permissions');
+
+        // 表格快捷搜索
+        $grid->quickSearch('name')
+            ->placeholder('輸入「名稱」快速搜索');
+
+        // 指定行选择器选中时显示的值的字段名称
+        // 如果表格数据中带有 “name”、“title”或“username”字段，则可以不用设置
+        $grid->rowSelector()->titleColumn('name');
+
+        $grid->name->label();
+        $grid->permissions()->pluck('name')->label('danger');
+
+        return $grid;
+    }
+
+
     /**
      * Make a grid builder.
      *
@@ -23,9 +44,16 @@ class RoleController extends AdminController
         return Grid::make(new Role(), function (Grid $grid) {
             $grid->showQuickEditButton();
 
-            $grid->id->sortable();
-            $grid->name->label('danger');;
+            $grid->model()->with('users')->with('permissions');
+
+//            $grid->id->sortable();
+            $grid->name->label();
             $grid->guard_name;
+            $grid->permissions()->pluck('name')->label('danger');
+            $grid->users->display('用戶')->expand(function () {
+                // 允许在比包内返回异步加载类的实例
+                return \App\Admin\Renderable\User::make(['id' => $this->id]);
+            });
             $grid->created_at;
             $grid->updated_at->sortable();
 
@@ -67,6 +95,7 @@ class RoleController extends AdminController
             $form->text('name');
             $form->text('guard_name');
 
+            //選擇權限(樹狀插件)
             $form->tree('permissions')
                 ->nodes(function () {
                     return (new Permission())->allNodes();
@@ -78,17 +107,7 @@ class RoleController extends AdminController
                     return array_column($v, 'id');
                 });
 
-//            $form->tree('users')
-//                ->nodes(function () {
-//                    return (new User())->allNodes();
-//                })
-//                ->customFormat(function ($v) {
-//                    if (!$v) return [];
-//
-//                    // 这一步非常重要，需要把数据库中查出来的二维数组转化成一维数组
-//                    return array_column($v, 'id');
-//                });
-
+            //選擇用戶
             $form->selectResource('users')
                 ->path('pages/front_users') // 设置表格页面链接
                 ->multiple() // 设置为多选
@@ -106,31 +125,7 @@ class RoleController extends AdminController
             $form->display('created_at');
             $form->display('updated_at');
 
-//            $form->saving(function (Form $form) {
-//                dump($form->users);
-//
-//                $form->model()->collection(function (Collection $collection) {
-//
-//
-////                $collection->transform(function ($item) {
-////
-////                    return $item;
-////                });
-//
-//                    //给表格加一个序号列
-//                    $collection->transform(function ($item, $index) {
-//                        dump($item['users']);
-////                        $item['users'] = $index + 1 ;
-//
-//                        return $item;
-//                    });
-//
-//                    // 最后一定要返回集合对象
-//                    return $collection;
-//                });
-////                dump($form->getKey());
-//            });
-
+            //保存完後刷新權限
             $form->saved(function (Form $form, $result) {
                 $user = new User();
                 $user->syncPermissions([]);

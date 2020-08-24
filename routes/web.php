@@ -15,10 +15,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('order/cart','OrderZDeptController@cart');
+Route::get('order/cart','OrderZDeptController@cart')
+    ->middleware('permission:visit_home');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')
-    ->middleware('permission:visit_home')
+//    ->middleware('permission:visit_home')
     ->name('home');

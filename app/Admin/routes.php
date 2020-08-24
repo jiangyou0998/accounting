@@ -13,7 +13,7 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', [\App\Admin\Controllers\HomeController::class , 'index'])->name('home');
-    $router->resource('users', 'TblUserController');
+    $router->resource('users', 'UserController');
     $router->resource('cats', 'TblOrderZCatController');
     $router->resource('menus', 'TblOrderZMenuController');
 //    $router->post('menus/confirm1', 'TblOrderZMenuController@confirm1');

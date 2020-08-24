@@ -2,7 +2,10 @@
 
 namespace App;
 
+use App\Models\Role;
+use App\Models\TblUser;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -40,15 +43,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function roles(): BelongsToMany
+    {
+        $pivotTable = 'model_has_roles'; // 中间表
+
+        $relatedModel = Role::class; // 关联模型类名
+
+        return $this->belongsToMany($relatedModel, $pivotTable, 'model_id', 'role_id')
+            ->withPivot('model_type')->withPivotValue('model_type','App\User');
+    }
+
     public function allNodes()
     {
-//        $user = array(['蛋撻王'=>array('id'=>'1','name'=>'大業')]);
-//        $user = array(['蛋撻王'=>
-//            array([('id'=>'1','name'=>'大業')])
-//        ]);
-//        dump($user);
-//        dump(User::get(['id','name'])->toArray());
-//        return $user;
+
         return User::get(['id','name'])->toArray();
     }
 
