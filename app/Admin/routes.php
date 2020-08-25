@@ -34,7 +34,9 @@ Route::group([
     //分店每月銷售總額報告(按日)
     $router->resource('reports/total_sales_by_day_combine', 'Reports\TotalSalesByDayCombineReportController');
 
+    //前台
     $router->get('order/test', 'OrderPrintController@test');
+    $router->resource('front/menu', 'MenuController');
     $router->resource('front/permissions', 'PermissionController');
     $router->resource('front/roles', 'RoleController');
     $router->resource('pages/front_users', 'UserController');
