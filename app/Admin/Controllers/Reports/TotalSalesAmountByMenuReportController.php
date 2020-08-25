@@ -4,6 +4,8 @@ namespace App\Admin\Controllers\Reports;
 
 use App\Models\OrderZDept;
 use App\Models\TblUser;
+use App\Models\WorkshopCartItem;
+use App\User;
 use Carbon\Carbon;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Grid;
@@ -87,7 +89,7 @@ class TotalSalesAmountByMenuReportController extends AdminController
             });
 
             $filename = '分店每月銷售數量報告 '.$start.'至'.$end ;
-            $grid->export()->xlsx()->filename($filename);
+            $grid->export()->csv()->filename($filename);
 
 
         });
@@ -101,35 +103,35 @@ class TotalSalesAmountByMenuReportController extends AdminController
      */
     public function generate($start,$end) {
 
-        $shops = TblUser::getKingBakeryShops();
+        $shops = User::getKingBakeryShops();
 
-        $orderzdept = new OrderZDept;
-        $orderzdept = $orderzdept
-            ->select('tbl_order_z_menu.chr_no as 編號' )
-            ->addSelect('tbl_order_z_menu.chr_name as 名稱')
-            ->addSelect(DB::raw('ROUND(sum(ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty)),0) as Total'));
+        $cartitem = new WorkshopCartItem();
+        $cartitem = $cartitem
+            ->select('workshop_products.product_no as 編號' )
+            ->addSelect('workshop_products.product_name as 名稱')
+            ->addSelect(DB::raw('ROUND(sum(ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty)),0) as Total'));
 
 
         foreach ($shops as $shop){
-//                $sql = "sum(case when tbl_order_z_dept.int_user = '$shop->int_id' then tbl_order_z_dept.int_qty else 0 end) as '$shop->chr_report_name'";
+//                $sql = "sum(case when workshop_cart_items.user_id = '$shop->id' then workshop_cart_items.qty else 0 end) as '$shop->chr_report_name'";
 //                dump($sql);
-            $sql = "ROUND(sum(case when tbl_order_z_dept.int_user = '$shop->int_id' then ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) else 0 end),0) as '$shop->chr_report_name'";
-            $orderzdept = $orderzdept
+            $sql = "ROUND(sum(case when workshop_cart_items.user_id = '$shop->id' then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '$shop->report_name'";
+            $cartitem = $cartitem
                 ->addSelect(DB::raw($sql));
         }
 
-        $orderzdept = $orderzdept
-            ->leftJoin('tbl_order_z_menu', 'tbl_order_z_menu.int_id', '=', 'tbl_order_z_dept.int_product')
-            ->leftJoin('tbl_order_z_group', 'tbl_order_z_menu.int_group', '=', 'tbl_order_z_group.int_id')
-            ->leftJoin('tbl_user', 'tbl_user.int_id', '=', 'tbl_order_z_dept.int_user')
-            ->where('tbl_user.chr_type', '=', 2)
-            ->where('tbl_order_z_dept.status', '<>', 4)
-            ->whereRaw(DB::raw("DATE(DATE_ADD(tbl_order_z_dept.insert_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) between '$start' and '$end'"))
-            ->groupBy('tbl_order_z_menu.int_id')
-            ->orderBy('tbl_order_z_menu.chr_no')
+        $cartitem = $cartitem
+            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
+            ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
+            ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
+            ->where('users.type', '=', 2)
+            ->where('workshop_cart_items.status', '<>', 4)
+            ->whereRaw(DB::raw("deli_date between '$start' and '$end'"))
+            ->groupBy('workshop_products.id')
+            ->orderBy('workshop_products.product_no')
             ->get();
 
-        return $orderzdept;
+        return $cartitem;
 
     }
 
@@ -153,15 +155,4 @@ class TotalSalesAmountByMenuReportController extends AdminController
         return $end;
     }
 
-    public function headings(): array
-    {
-        $shops = TblUser::getKingBakeryShops();
-
-        $headings = ['編號','名稱','Total'];
-        foreach ($shops as $shop){
-            array_push($headings,$shop->chr_report_name);
-        }
-
-        return $headings;
-    }
 }

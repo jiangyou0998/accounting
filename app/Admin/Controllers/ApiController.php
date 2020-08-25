@@ -6,8 +6,10 @@ use App\Exports\SalesByShopAndMenuExport;
 use App\Http\Controllers\Controller;
 use App\Models\ShopGroup;
 use App\Models\TblOrderZCat;
-use App\Models\TblOrderZGroup;
+use App\Models\WorkshopCat;
+use App\Models\WorkshopGroup;
 use App\Models\TblOrderZUnit;
+use App\Models\WorkshopUnit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -20,25 +22,25 @@ class ApiController extends Controller
 //        $groupId = 150;
 //        dd($catId);
 
-        return TblOrderZGroup::where('int_cat', $catId)->get([DB::raw('int_id as id'), DB::raw('chr_name as text')])->prepend(['id' => '','text'=>'全部']);
+        return WorkshopGroup::where('cat_id', $catId)->get(['id', DB::raw('group_name as text')])->prepend(['id' => '','text'=>'全部']);
     }
 
     public function cat()
     {
 
-        return TblOrderZCat::orderBy('int_sort')->get([DB::raw('int_id as id'), DB::raw('chr_name as text')]);
+        return WorkshopCat::orderBy('sort')->get(['id', DB::raw('cat_name as text')]);
     }
 
     public function group2()
     {
 
-        return TblOrderZGroup::get([DB::raw('int_id as id'), DB::raw('chr_name as text')]);
+        return WorkshopGroup::get(['id', DB::raw('group_name as text')]);
     }
 
     public function unit()
     {
 
-        return TblOrderZUnit::get([DB::raw('int_id as id'), DB::raw('chr_name as text')]);
+        return WorkshopUnit::get(['id', DB::raw('unit_name as text')]);
     }
 
     public function shop_group()

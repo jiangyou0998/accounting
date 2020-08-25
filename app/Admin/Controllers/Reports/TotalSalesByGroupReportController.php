@@ -4,6 +4,8 @@ namespace App\Admin\Controllers\Reports;
 
 use App\Models\OrderZDept;
 use App\Models\TblUser;
+use App\Models\WorkshopCartItem;
+use App\User;
 use Carbon\Carbon;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Grid;
@@ -78,7 +80,7 @@ class TotalSalesByGroupReportController extends AdminController
             });
 
             $filename = '分店每月銷售總額報告 '.$start.'至'.$end ;
-            $grid->export()->xlsx()->filename($filename);
+            $grid->export()->csv()->filename($filename);
 
 
             });
@@ -92,38 +94,38 @@ class TotalSalesByGroupReportController extends AdminController
      */
     public function generate($start,$end) {
 
-        $shops = TblUser::getKingBakeryShops();
+        $shops = User::getKingBakeryShops();
 
-        $orderzdept = new OrderZDept;
-        $orderzdept = $orderzdept
-            ->select('tbl_order_z_cat.chr_name as 大類' )
-            ->addSelect('tbl_order_z_group.chr_name as 細類')
-            ->addSelect(DB::raw('ROUND(sum(ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) * tbl_order_z_menu.int_default_price) , 2) as Total'));
+        $cartitem = new WorkshopCartItem();
+        $cartitem = $cartitem
+            ->select('workshop_cats.cat_name as 大類' )
+            ->addSelect('workshop_groups.group_name as 細類')
+            ->addSelect(DB::raw('ROUND(sum(ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_products.default_price) , 2) as Total'));
 
             foreach ($shops as $shop){
-//                $sql = "sum(case when tbl_order_z_dept.int_user = '$shop->int_id' then tbl_order_z_dept.int_qty else 0 end) as '$shop->chr_report_name'";
+//                $sql = "sum(case when workshop_cart_items.user = '$shop->id' then workshop_cart_items.qty else 0 end) as '$shop->report_name'";
 //                dump($sql);
-                $sql = "ROUND(sum(case when tbl_order_z_dept.int_user = '$shop->int_id' then (ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) * tbl_order_z_menu.int_default_price) else 0 end),2) as '$shop->chr_report_name'";
-                $orderzdept = $orderzdept
+                $sql = "ROUND(sum(case when workshop_cart_items.user_id = '$shop->id' then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_products.default_price) else 0 end),2) as '$shop->report_name'";
+                $cartitem = $cartitem
                     ->addSelect(DB::raw($sql));
             }
 
-       $orderzdept = $orderzdept
-            ->leftJoin('tbl_order_z_menu', 'tbl_order_z_menu.int_id', '=', 'tbl_order_z_dept.int_product')
-            ->leftJoin('tbl_order_z_group', 'tbl_order_z_menu.int_group', '=', 'tbl_order_z_group.int_id')
-            ->leftJoin('tbl_order_z_cat', 'tbl_order_z_group.int_cat', '=', 'tbl_order_z_cat.int_id')
-            ->leftJoin('tbl_user', 'tbl_user.int_id', '=', 'tbl_order_z_dept.int_user')
-            ->where('tbl_user.chr_type', '=', 2)
-            ->where('tbl_order_z_dept.status', '<>', 4)
-            ->whereRaw("DATE(DATE_ADD(tbl_order_z_dept.insert_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) between '$start' and '$end'")
-            ->groupBy('tbl_order_z_group.int_id')
-            ->orderBy('tbl_order_z_cat.int_sort')
-            ->orderBy('tbl_order_z_group.int_id')
+       $cartitem = $cartitem
+            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
+            ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
+            ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
+            ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
+            ->where('users.type', '=', 2)
+            ->where('workshop_cart_items.status', '<>', 4)
+            ->whereRaw("deli_date between '$start' and '$end'")
+            ->groupBy('workshop_groups.id')
+            ->orderBy('workshop_cats.sort')
+            ->orderBy('workshop_groups.id')
             ->get();
 
-//        dd($orderzdept->toArray());
+//        dd($cartitem->toArray());
 
-        return $orderzdept;
+        return $cartitem;
 
     }
 
@@ -153,7 +155,7 @@ class TotalSalesByGroupReportController extends AdminController
 
         $headings = ['編號','名稱','Total'];
         foreach ($shops as $shop){
-            array_push($headings,$shop->chr_report_name);
+            array_push($headings,$shop->report_name);
         }
 
         return $headings;

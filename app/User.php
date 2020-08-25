@@ -59,5 +59,25 @@ class User extends Authenticatable
         return User::get(['id','name'])->toArray();
     }
 
+    public static function getKingBakeryShops(){
+
+        $users = new User();
+        $shops = $users->where('type', 2)
+            ->where('name','like','kb%')
+            ->orWhere('name','like','ces%')
+            ->orWhere('name','like','b&b%')
+            ->orderBy('name')
+            ->get(['id','report_name']);
+
+        return $shops;
+    }
+
+    public static function getTestUserIDs(){
+
+        $testUserIDs = [1,2,3,4,77,82];
+
+        return $testUserIDs;
+    }
+
 
 }

@@ -14,8 +14,8 @@ Route::group([
 
     $router->get('/', [\App\Admin\Controllers\HomeController::class , 'index'])->name('home');
     $router->resource('users', 'UserController');
-    $router->resource('cats', 'TblOrderZCatController');
-    $router->resource('menus', 'TblOrderZMenuController');
+    $router->resource('cats', 'WorkshopCatController');
+    $router->resource('menus', 'WorkshopProductController');
 //    $router->post('menus/confirm1', 'TblOrderZMenuController@confirm1');
     $router->resource('groups', 'TblOrderZGroupController');
     $router->resource('notices', 'TblNoticeController');
