@@ -11,7 +11,7 @@ class Price extends LazyRenderable
     public function render()
     {
         // 获取ID
-        $id = $this->int_id;
+        $id = $this->id;
 
         // 获取其他自定义参数
 //        $type = $this->post_type;
