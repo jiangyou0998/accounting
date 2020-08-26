@@ -30,11 +30,30 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
+                <nav class="navbar navbar-default navbar-fixed-top">
+                    <div class="container">
+                        <li class=""><a href="">话题</a></li>
+                        <li class=""><a href="">话题</a></li>
+
+                    </div>
+                </nav>
+
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
 
-                    </ul>
+{{--                    <ul class="nav nav-pills">--}}
+{{--                        --}}
+{{--                        <li class=""><a href="">话题</a></li>--}}
+{{--                        <li class=""><a href="">话题</a></li>--}}
+{{--                        <li class=""><a href="">话题</a></li>--}}
+{{--                        <li class=""><a href="">话题</a></li>--}}
+{{--                        <li class=""><a href="">话题</a></li>--}}
+{{--                        <li class=""><a href="">话题</a></li>--}}
+{{--                        <li class=""><a href="">话题</a></li>--}}
+{{--                        <li class=""><a href="">话题</a></li>--}}
+
+
+{{--                    </ul>--}}
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">

@@ -62,7 +62,7 @@ class MenuController extends AdminController
                 if (! isset($branch['children'])) {
                     $uri = $branch['uri'];
 
-                    $payload .= "&nbsp;&nbsp;&nbsp;<a href=\"$uri\" class=\"dd-nodrag\"  target='view_window'>$uri</a>";
+                    $payload .= "&nbsp;&nbsp;&nbsp;<a href=\"$uri\" class=\"dd-nodrag\"  target='_blank'>$uri</a>";
                 }
 
                 return $payload;
