@@ -87,7 +87,7 @@ class TotalSalesAmountByMenuReportController extends AdminController
             });
 
             $filename = '分店每月銷售數量報告 '.$start.'至'.$end ;
-            $grid->export()->xlsx()->filename($filename);
+            $grid->export()->csv()->filename($filename);
 
 
         });
