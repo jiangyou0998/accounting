@@ -1,0 +1,99 @@
+@media screen and (min-width:320px) and (max-width: 576px){
+    /* For Firefox */
+    /* Navigation */
+    header span.time-open {display:none;}
+    header ul.list-social {width:200px;}
+    header ul.list-social li a {font-size:14px}
+    header .login-reg .login-reg-inner {width: 200px;margin-left: -97px;font-size:14px}
+    .Navigation {height:100px}
+    .Navigation .logo img {width:75px;margin-top: -23px;}
+    .Navigation ul.list-nav a.nav-link {color:var(--hover_color)}
+    .toggle-button {margin-top: -10px;background: var(--hover_color);border-radius:2px;border:none;}
+    .toggle-button span {color:#fff;background-image:none!important;padding-top: 4px}
+    #TopNav ul.list-nav {background:#ffffffe6;}
+    li._1block .drop-content {top: 50px;left: 0px;z-index: 99;;width:100%;}
+    .formlable1 form input[type='text']{min-width: 100%;} 
+    .formlable1 form input[type='submit']{width:100%;margin-top:5px};
+
+    /* Slide */
+    #slide,#slide ._1slide img {height: 70vh;}
+    ._1slide .caption {top: 28%;}
+    .caption h1 {font-size: 30px;}
+    .caption p {font-size: 14px;}
+    .caption a .order-button {padding: 10px 15px;margin-top: 20px;}
+    ._1slide .caption2 {transform: translateX(-50px) translateY(15%);}
+    ._1slide .caption2 img.info {width: 100vw!important;}
+
+    /* Services */
+    .title1 h3 span {font-size: 32px;}
+    ._1sv .interface span {font-size: 35px;}
+    ._1sv .interface p.title {font-size:20px;width:100px;transform: translateX(15%);letter-spacing: 0.5px;}
+    ._1sv .hover-content {transform:translateY(65%);padding:0 10px}
+    ._1sv:hover .hover-content {transform:translateY(-65%)}
+    ._1sv .hover-content p.text {font-size:12px}
+    .single-sub .cover .info a.details {font-size:18px}
+
+    /* Combo */
+    .single-sub:before{top:10px;left:10px}
+    .single-sub:after{right:10px;bottom:10px}
+    .single-sub .cover .info {font-size: 21px;}
+    .single-sub .info p.sale {font-size:16px}
+    ul.list-deal li .up {height:50%!important;margin-bottom:30px}
+    ul.list-deal li .down {height:40%!important}
+
+    /* Blog and News */
+    .news-left,.news-center,.news-right{width:100%;}
+    .news-outer .news-left,
+    .news-outer .news-center,
+    .news-outer .news-right {padding-left:15px;padding-right:15px;}
+
+    /* Sub mail */
+    #sub {padding:20px 0}
+    .newsletter-main-title span {font-size:22px;padding-left: 99px;margin-bottom: 15px;}
+    .formlable form input[type='text']{min-width:100%;margin-left:0}
+    .formlable form input[type='submit']{width:100%;margin-top:10px}
+
+    /* Footer */
+    .main-title {font-size:22px;text-align: center}
+    .infor,.list-link {padding: 0 20px;}
+
+    /* back-to-top */
+    .back-to-top {height:40px;width:40px;padding-left:10px;right:10px;bottom:20px}
+    .back-to-top span i {transform: translateY(-8px)};
+}
+
+
+@media screen and (min-width: 577px) and (max-width: 768px){
+    /* Navigation */
+    .wrapper-content {width:100%}
+    header span.time-open {font-size: 12px;margin-left: -32px;margin-right: -39px;}
+    header ul.list-social li a {font-size:14px}
+    header .login-reg .login-reg-inner {width: 200px;margin-left: 0px;font-size:14px;}
+    .Navigation {height:90px}
+    .Navigation .logo img {width:75px;margin-left:-20px;margin-right:10px}
+    .Navigation ul.list-nav a.nav-link {font-size: 14px;text-align: center;padding: 0px 13px;margin-top: 10px;}
+    li._1block .drop-content {top: 50px;z-index: 99;width: 200px;}
+    li._1block .drop-content .drop-content-inner ul li a {font-size:12px}
+    li._1block .drop-content .formlable1 {}
+    .formlable1 form input[type=text]{min-width:10!important}
+    .formlable1 form input[type='text']{font-size:12px;left:0} 
+    .formlable1 form input[type='submit']{width:100%;margin-top:5px;font-size:12px}
+    
+    /* Slide */
+    .caption h1 {font-size:25px;}
+    .caption p {font-size: 14px;}
+    .caption a .order-button {padding: 5px 10px;margin-top:-10px}
+    
+    /* Services */
+    .title1 h3 span {font-size:28px;}
+    ._1sv .interface p.title {font-size:20px}
+    ._1sv .hover-content p.text {font-size:12px}
+    ._1sv .hover-content {transform:translateY(85%);padding:0 10px}
+    ._1sv:hover .hover-content {transform:translateY(-80%)}
+    /* Combo */
+    
+    /* Blog and News */
+    /* Sub mail */
+    /* Footer */
+    /* width: 100px; */
+}

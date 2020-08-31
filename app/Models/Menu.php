@@ -18,4 +18,14 @@ class Menu extends Model
     use ModelTree;
 
     protected $table = 'menu';
+
+    public function childMenu() {
+        return $this->hasMany('App\Models\Menu', 'parent_id', 'id');
+    }
+
+    public function allChildrenMenu()
+    {
+        return $this->childMenu()->with('allChildrenMenu');
+    }
+
 }

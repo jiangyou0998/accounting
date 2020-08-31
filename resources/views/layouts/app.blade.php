@@ -1,99 +1,92 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="en">
 <head>
+    <title>Ryoyu Bakery</title>
+    <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>{{ config('app.name', 'Laravel') }}</title>
-
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/responsive.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+<!-- BEGIN -->
+<div class="wrapper-content">
+    <!-- Header-top -->
+    <div class="menu fixed-top">
+        <header>
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <nav class="navbar navbar-default navbar-fixed-top">
-                    <div class="container">
-                        <li class=""><a href="">话题</a></li>
-                        <li class=""><a href="">话题</a></li>
-
+                <div class="row">
+                    <div class="col-sm-4 col-4">
+                        <ul class="list-social row">
+                            <li><a href=""><i class="fa fa-facebook-official" aria-hidden="true"></i></a></li>
+                            <li><a href=""><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+                            <li><a href=""><i class="fa fa-google-plus-official" aria-hidden="true"></i></a></li>
+                            <li><a href=""><i class="fa fa-youtube" aria-hidden="true"></i></a></li>
+                        </ul>
                     </div>
-                </nav>
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-
-{{--                    <ul class="nav nav-pills">--}}
-{{--                        --}}
-{{--                        <li class=""><a href="">话题</a></li>--}}
-{{--                        <li class=""><a href="">话题</a></li>--}}
-{{--                        <li class=""><a href="">话题</a></li>--}}
-{{--                        <li class=""><a href="">话题</a></li>--}}
-{{--                        <li class=""><a href="">话题</a></li>--}}
-{{--                        <li class=""><a href="">话题</a></li>--}}
-{{--                        <li class=""><a href="">话题</a></li>--}}
-{{--                        <li class=""><a href="">话题</a></li>--}}
-
-
-{{--                    </ul>--}}
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
+                    <div class="col-sm-4 col-4 text-center">
+                        <span class="time-open">Opening hours: 9:00am - 10:00pm </span>
+                    </div>
+                    <!-- 登入登出 -->
+                    @guest
+                        <div class="col-sm-4 col-4 login-reg">
+                            <div class="login-reg-inner">
+                                <span><i class="fa fa-user    "></i><a href="{{route('login')}}" class="login">LOGIN</a></span>
+                            </div>
+                        </div>
+                    @else
+                        <div class="col-sm-4 col-4 login-reg">
+                            <div class="login-reg-inner">
+                                <span><i class="fa fa-user    "></i><a href="javascript:;" class="login">{{Auth::user()->txt_name}}</a></span> |
+                                <a class="fa fa-user" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
+                                    登出
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                            </div>
+                        </div>
+                @endguest
+                <!-- 登入登出 -->
                 </div>
             </div>
-        </nav>
+        </header>
 
-        <main class="py-4">
-            @yield('content')
-        </main>
+        <!-- Navigation -->
+    @include('layouts._nav')
+    <!-- Navigation -->
     </div>
+    <div style="height: 170px"></div>
+    <div class="container main">
+        <div class="col-sm-12 col-md-12 col-12">
+
+            @yield('content')
+        </div>
+    </div>
+
+    @include('layouts._footer')
+</div>
+
+@if (app()->isLocal())
+    @include('sudosu::user-selector')
+@endif
+<!-- END  -->
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
+
+{{--<script src="/js/custom.js"></script>--}}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
 </body>
 </html>
+
+
