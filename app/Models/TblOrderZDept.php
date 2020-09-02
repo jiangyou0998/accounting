@@ -15,6 +15,16 @@ class TblOrderZDept extends Model
 
     public $timestamps = false;
 
+    public function users()
+    {
+        return $this->belongsTo(TblUser::class,'int_user','int_id');
+    }
+
+    public function products()
+    {
+        return $this->belongsTo(TblOrderZMenu::class,'int_product','int_id');
+    }
+
     public static function getCartItems($shop , $dept , $advancePlusOne){
 
 

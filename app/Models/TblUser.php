@@ -14,6 +14,11 @@ class TblUser extends Model
 
     public $timestamps = false;
 
+    public function cartitems()
+    {
+        return $this->hasMany(TblOrderZDept::class,'int_id','int_user');
+    }
+
     public static function getKingBakeryShops(){
 
         $users = new TblUser();

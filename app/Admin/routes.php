@@ -21,6 +21,7 @@ Route::group([
     $router->resource('notices', 'TblNoticeController');
     $router->resource('checks', 'TblOrderCheckController');
     $router->resource('shopgroups', 'ShopGroupController');
+    $router->resource('cart', 'TblOrderZDeptController');
 //    $router->resource('report', 'ReportController');
 
     //------------------------------------------------------------------
