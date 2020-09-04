@@ -40,5 +40,22 @@ class WorkshopProduct extends Model
         return $this->hasMany(Price::class,"menu_id","id");
     }
 
+    public function allProduct()
+    {
+        $cats = new WorkshopCat();
+        $cats = $cats->with('groups')->with('products')->get();
+        foreach ($cats as $cat){
+//            dump($cat);
+            $cat->parent_id = 0;
+        }
+        return $cats;
+//        return [
+//            'id'     => 'id',
+//            'text'   => 'name',
+//            'parent' => 'parent_id',
+//        ];
+    }
+
+
 
 }

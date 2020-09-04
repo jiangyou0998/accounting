@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\RegularOrder;
-use App\Models\TblOrderSample;
-use App\Models\TblOrderZCat;
-use App\Models\TblOrderZDept;
+
+use App\Models\WorkshopSample;
+use App\Models\WorkshopCartItem;
+use App\Models\WorkshopCat;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -28,13 +28,13 @@ class OrderZDeptController extends Controller
 
 //        dd($deliDate);
 
-        $items = TblOrderZDept::getCartItems($shop, $dept, $advancePlusOne);
-        $cats = TblOrderZCat::getCatsNotExpired($deliDate);
+        $items = WorkshopCartItem::getCartItems($shop, $dept, $advancePlusOne);
+        $cats = WorkshopCat::getCatsNotExpired($deliDate);
 //        dump($deliDate);
 //        dump(count($items));
         $sampleItems = new Collection();
         if(count($items) == 0 && $dept == 'R'){
-            $sampleItems = TblOrderSample::getRegularOrderItems($shop,$week);
+            $sampleItems = WorkshopSample::getRegularOrderItems($shop,$week);
         }
 
 //        $orderInfos = [

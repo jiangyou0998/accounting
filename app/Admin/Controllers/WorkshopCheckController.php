@@ -2,7 +2,9 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Permission;
 use App\Models\WorkshopCheck;
+use App\Models\WorkshopProduct;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
@@ -28,10 +30,10 @@ class WorkshopCheckController extends AdminController
             $grid->int_main_item;
             $grid->sort;
             $grid->disabled;
-        
+
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
-        
+
             });
         });
     }
@@ -77,6 +79,37 @@ class WorkshopCheckController extends AdminController
             $form->text('int_main_item');
             $form->text('sort');
             $form->text('disabled');
+
+
+            //選擇權限(樹狀插件)
+            $form->tree('permissions')
+                ->setTitleColumn('cat_name')
+
+
+                ->setParentColumn('parent_id')
+                ->nodes(function () {
+//                    dump((new WorkshopProduct())->allProduct()->toArray());
+                    return ((new WorkshopProduct())->allProduct());
+                })
+                ->customFormat(function ($v) {
+                    if (!$v) return [];
+                    dump($v);
+
+                    // 这一步非常重要，需要把数据库中查出来的二维数组转化成一维数组
+                    return array_column($v, 'id');
+                })
+            ;
+
+            $menuModel = config('admin.database.menu_model');
+            $menuModel = new $menuModel;
+            $form->tree('form2.tree', 'tree')
+                ->setTitleColumn('title')
+                ->nodes(function () use ($menuModel) {
+//                    dump($menuModel->allNodes());
+                    return $menuModel->allNodes();
+                });
         });
     }
+
+
 }

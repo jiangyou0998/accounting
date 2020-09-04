@@ -19,8 +19,9 @@ Route::group([
 //    $router->post('menus/confirm1', 'TblOrderZMenuController@confirm1');
     $router->resource('groups', 'TblOrderZGroupController');
     $router->resource('notices', 'TblNoticeController');
-    $router->resource('checks', 'TblOrderCheckController');
+    $router->resource('checks', 'WorkshopCheckController');
     $router->resource('shopgroups', 'ShopGroupController');
+    $router->resource('mypage', 'MypageController');
 //    $router->resource('report', 'ReportController');
 
     //------------------------------------------------------------------
