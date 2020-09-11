@@ -101,19 +101,42 @@ class TotalSalesAmountByMenuReportController extends AdminController
      */
     public function generate($start,$end) {
 
+        $last_month_start = (new Carbon($start))->subMonth()->firstOfMonth()->toDateString();
+        $last_month_end = (new Carbon($start))->subMonth()->endOfMonth()->toDateString();
+
+//        dump($last_month_start);
+//        dump($last_month_end);
+
         $shops = TblUser::getKingBakeryShops();
 
         $orderzdept = new OrderZDept;
         $orderzdept = $orderzdept
             ->select('tbl_order_z_menu.chr_no as 編號' )
-            ->addSelect('tbl_order_z_menu.chr_name as 名稱')
-            ->addSelect(DB::raw('ROUND(sum(ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty)),0) as Total'));
-
+            ->addSelect('tbl_order_z_menu.chr_name as 名稱');
+//            ->addSelect(DB::raw('ROUND(sum(ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty)),0) as Total'));
+        //查詢上月
+        $sql = "ROUND(sum(
+            case when (DATE(DATE_ADD(tbl_order_z_dept.insert_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) between '$last_month_start' and '$last_month_end')
+            then ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) else 0 end),0)
+            as 上月";
+        //查詢本月
+        $orderzdept = $orderzdept
+            ->addSelect(DB::raw($sql));
+        $sql = "ROUND(sum(
+            case when (DATE(DATE_ADD(tbl_order_z_dept.insert_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) between '$start' and '$end')
+            then ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) else 0 end),0)
+            as Total";
+        $orderzdept = $orderzdept
+            ->addSelect(DB::raw($sql));
 
         foreach ($shops as $shop){
 //                $sql = "sum(case when tbl_order_z_dept.int_user = '$shop->int_id' then tbl_order_z_dept.int_qty else 0 end) as '$shop->chr_report_name'";
 //                dump($sql);
-            $sql = "ROUND(sum(case when tbl_order_z_dept.int_user = '$shop->int_id' then ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) else 0 end),0) as '$shop->chr_report_name'";
+            $sql = "ROUND(sum(
+            case when (tbl_order_z_dept.int_user = '$shop->int_id' AND
+            DATE(DATE_ADD(tbl_order_z_dept.insert_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) between '$start' and '$end')
+            then ifnull(tbl_order_z_dept.int_qty_received,tbl_order_z_dept.int_qty) else 0 end),0)
+            as '$shop->chr_report_name'";
             $orderzdept = $orderzdept
                 ->addSelect(DB::raw($sql));
         }
@@ -124,7 +147,7 @@ class TotalSalesAmountByMenuReportController extends AdminController
             ->leftJoin('tbl_user', 'tbl_user.int_id', '=', 'tbl_order_z_dept.int_user')
             ->where('tbl_user.chr_type', '=', 2)
             ->where('tbl_order_z_dept.status', '<>', 4)
-            ->whereRaw(DB::raw("DATE(DATE_ADD(tbl_order_z_dept.insert_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) between '$start' and '$end'"))
+//            ->whereRaw(DB::raw("DATE(DATE_ADD(tbl_order_z_dept.insert_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) between '$start' and '$end'"))
             ->groupBy('tbl_order_z_menu.int_id')
             ->orderBy('tbl_order_z_menu.chr_no')
             ->get();
