@@ -1,6 +1,6 @@
 <div class="topDiv">
     <div align="left">
-        <a target="_top" href="select_day_dept.php?advDays=14" style="font-size: xx-large;">返回</a>
+        <a target="_top" href="{{route('select_day')}}" style="font-size: xx-large;">返回</a>
     </div>
     <!-- <form action="order_z_dept_2.php?action=confirm&dept=烘焙" method="post" id="cart" name="cart" target="_top">-->
     <div align="right">
@@ -13,6 +13,12 @@
             <font color="#FF0000" size="+3">部門：烘焙 <br>送貨日期：{{$orderInfos->deli_date}} </font>
         </strong>
     </div>
+</div>
+
+<div style="text-align: center">
+    <img src="/images/alert.gif" width="20" height="20">已超過截單時間&nbsp
+    <img src="/images/del_3.png" width="20" height="20">不在貨期&nbsp
+    <img src="/images/help1.png" width="20" height="20">後勤落單
 </div>
 
 <table width="100%" height="89%" border="1" cellpadding="10" cellspacing="2" id="shoppingcart">

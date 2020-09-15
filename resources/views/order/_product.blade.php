@@ -1,26 +1,28 @@
-<div class="col-4 text-center">
+
+
+<div class="col-4 text-center ">
     <table class="item" width="100%"  style="background-color:#7D0101; color:white;margin: 3px;">
         <tbody>
         <tr>
             <td colspan="4" align="left" style="font-size:12px; color: white;">
-                1000001
+                {{$product->product_no}}
             </td>
         </tr>
         <tr>
             <td colspan="4" align="center" style="font-size:16px;">
-                <span style="color: white;">咸麵粒(9)
+                <span style="color: white;">{{$product->product_name}}
                     <br>
                     <span style="color: red;font-size:8px;">
-                        2日前&nbsp;12:00截單                                                            </span>
+                        {{$product->phase}}日前&nbsp;{{$product->cuttime}}截單                                                            </span>
                     <br>
                     <span style="color: red;font-size:8px;">
-                        出貨期:0,1,2,3,4,5,6                                                            </span>
+                        出貨期:{{$product->canordertime}}                                                            </span>
                 </span>
             </td>
         </tr>
         <tr>
             <td style="height:20px; width:50%; font-size:24px; text-align:center" colspan="2">
-                <a id="itm-842" href="#" onclick="add(842,1000001,'麵包','咸麵粒','個',9,9,1)">
+                <a id="itm-{{$product->id}}" href="javascript:;" onclick="add({{$product->id}},{{$product->product_no}},'麵包','咸麵粒','個',{{$product->base}},{{$product->min}},1)">
                     <button type="button" style="height:100%; width:100%; font-size:18px;">
                         +
                     </button>
@@ -28,7 +30,7 @@
             </td>
 
             <td style="height:20px; width:50%; font-size:24px; text-align:center" colspan="2">
-                <a id="itm-842" href="#" onclick="drop(1000001,9,9)" style="color:black;">
+                <a id="itm-{{$product->id}}" href="javascript:;" onclick="drop({{$product->product_no}},{{$product->base}},{{$product->min}})" style="color:black;">
                     <button type="button" style="height:100%; width:100%; font-size:18px;">
                         -
                     </button>

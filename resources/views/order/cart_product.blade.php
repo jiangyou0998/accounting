@@ -18,21 +18,9 @@
     <br>
     <div class="container-fluid">
         <div class="row">
-            @include('order._menu')
-            @include('order._menu')
-            @include('order._menu')
-            @include('order._menu')
-            @include('order._menu')
-            @include('order._menu')
-            @include('order._menu')
-            @include('order._menu')
-            @include('order._menu')
-            @include('order._menu')
-            @include('order._menu')
-            @include('order._menu')
-            @include('order._menu')
-            @include('order._menu')
-            @include('order._menu')
+            @foreach($products as $product)
+                @include('order._product')
+            @endforeach
         </div>
     </div>
 

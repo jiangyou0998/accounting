@@ -2,13 +2,17 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Permission;
+use App\Models\MyPage;
 use App\Models\WorkshopCheck;
-use App\Models\WorkshopProduct;
+use Dcat\Admin\Admin;
+use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
+use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Show;
-use Dcat\Admin\Controllers\AdminController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\Console\Input\Input;
 
 class WorkshopCheckController extends AdminController
 {
@@ -66,50 +70,136 @@ class WorkshopCheckController extends AdminController
      *
      * @return Form
      */
-    protected function form()
+//    protected function form()
+//    {
+////        return Form::view('admin.pages.my-page');
+////        return Form::make(new WorkshopCheck(), function (Form $form) {
+////            $form->display('id');
+////            $form->text('int_all_shop');
+////            $form->text('shop_list');
+////            $form->text('item_list');
+////            $form->text('report_name');
+////            $form->text('num_of_day');
+////            $form->text('int_hide');
+////            $form->text('int_main_item');
+////            $form->text('sort');
+////            $form->text('disabled');
+////
+////
+////            $form->tools(function (Form\Tools $tools) {
+////                $tools->append(new Product());
+////            });
+////
+////            //選擇權限(樹狀插件)
+////            $form->tree('permissions')
+////                ->setTitleColumn('group_name')
+////
+////                ->nodes(function () {
+////                    dump((new WorkshopProduct)->toTree());
+////                    return ((new WorkshopProduct)->toTree());
+////                })
+////
+////            ;
+////
+////            $menuModel = config('admin.database.menu_model');
+////            $menuModel = new $menuModel;
+////            $form->tree('form2.tree', 'tree')
+////                ->setTitleColumn('title')
+////                ->nodes(function () use ($menuModel) {
+////                    dump($menuModel->allNodes());
+////                    return $menuModel->allNodes();
+////                });
+////        });
+//    }
+
+
+//    protected function form()
+//    {
+//        return Form::make(new WorkshopCheck(), function (Form $form) {
+////            dump($form->repository()->eloquent());
+//            $checks = $form->repository()->eloquent();
+//            $form->view('admin.checks.edit',compact('checks'));
+//        });
+//    }
+
+    public function create(Content $content)
     {
-        return Form::make(new WorkshopCheck(), function (Form $form) {
-            $form->display('id');
-            $form->text('int_all_shop');
-            $form->text('shop_list');
-            $form->text('item_list');
-            $form->text('report_name');
-            $form->text('num_of_day');
-            $form->text('int_hide');
-            $form->text('int_main_item');
-            $form->text('sort');
-            $form->text('disabled');
 
-
-            //選擇權限(樹狀插件)
-            $form->tree('permissions')
-                ->setTitleColumn('cat_name')
-
-
-                ->setParentColumn('parent_id')
-                ->nodes(function () {
-//                    dump((new WorkshopProduct())->allProduct()->toArray());
-                    return ((new WorkshopProduct())->allProduct());
-                })
-                ->customFormat(function ($v) {
-                    if (!$v) return [];
-                    dump($v);
-
-                    // 这一步非常重要，需要把数据库中查出来的二维数组转化成一维数组
-                    return array_column($v, 'id');
-                })
-            ;
-
-            $menuModel = config('admin.database.menu_model');
-            $menuModel = new $menuModel;
-            $form->tree('form2.tree', 'tree')
-                ->setTitleColumn('title')
-                ->nodes(function () use ($menuModel) {
-//                    dump($menuModel->allNodes());
-                    return $menuModel->allNodes();
-                });
-        });
+        return $content->body(new MyPage());
     }
 
+    public function edit($id, Content $content)
+    {
+
+        return $content->body(new MyPage($id));
+    }
+
+    public function store()
+    {
+        dump(Input::all());
+
+    }
+
+    //todo 没做完
+    public function updateChecks($id, Request $request)
+    {
+//        $this->validate($request, [
+//            'name' => 'required|max:50',
+//            'password' => 'required|confirmed|min:6'
+//        ]);
+
+//        $request = Request::('report_info');
+
+//        dump($request->report_info);
+
+        $checks = WorkshopCheck::with('printtime')->find($id);
+
+        $infos = json_decode($request->report_info);
+
+//        dump($infos->hide);die();
+//
+//        $checks->int_all_shop = $infos->all_shop;
+
+        $checks->item_list = implode(', ',$infos->item);
+        $checks->report_name = $infos->name;
+        $checks->num_of_day = $infos->num_of_day;
+        $checks->int_hide = $infos->hide;
+        $checks->int_main_item = $infos->mainItem;
+        $checks->sort = $infos->sort;
+
+        $printtime = array();
+        $printtime['weekday'] = $infos->print_weekday;
+        $printtime['time'] = $infos->print_time;
+
+        // 数据库事务处理
+        DB::transaction(function () use ($checks, $printtime) {
+            $checks->save();
+            $checks->printtime->update($printtime);
+        });
+
+
+
+//
+//        dump($checks->printtime);
+
+//        $check->update([
+//            'name' => $request->name,
+//            'password' => bcrypt($request->password),
+//        ]);
+
+//        $url = admin_url('admin/checks');
+//
+//        Admin::script(
+//            <<<JS
+//        // 3秒后跳转到 admin/auth/users 页面
+//        setTimeout(function () {
+//            Dcat.reload('{$url}');
+//        }, 3000);
+//JS
+//            );
+
+//        Dcat.success('更新成功');
+        return redirect('admin/checks');
+    }
 
 }

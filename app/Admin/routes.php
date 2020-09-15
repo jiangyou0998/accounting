@@ -20,6 +20,7 @@ Route::group([
     $router->resource('groups', 'TblOrderZGroupController');
     $router->resource('notices', 'TblNoticeController');
     $router->resource('checks', 'WorkshopCheckController');
+    $router->patch('checks/update/{id}','WorkshopCheckController@updateChecks')->name('checkupdate');
     $router->resource('shopgroups', 'ShopGroupController');
     $router->resource('mypage', 'MypageController');
 //    $router->resource('report', 'ReportController');

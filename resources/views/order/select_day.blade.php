@@ -51,90 +51,14 @@
         <input type="radio" name="dept" id="radio" value="F">樓面
     </center>
     <table class="table table-bordered border-dark" width="100%" border="2" align="center" cellpadding="3" cellspacing="0">
+        @foreach($dayArray as $key => $day)
         <tr class="daylist" >
-            <td align="right" width="48%"><strong>一日後</strong></td>
+            <td align="right" width="48%"><strong>{{$day['desc']}}</strong></td>
             <td align="left" width="52%"><a
-                    href="javascript:opensupplier(0);"><strong>8月29日 (六)</strong></a>
+                    href="{{route('cart','deli_date='.$day['deli_date'])}}"><strong>{{$day['dayStr']}}</strong></a>
             </td>
         </tr>
-        <tr class="daylist" style="background-color:Red">
-            <td align="right" width="48%"><strong>兩日後</strong></td>
-            <td align="left" width="52%"><a
-                    href="javascript:opensupplier(1);"><strong>8月30日 (日)</strong></a>
-            </td>
-        </tr>
-        <tr class="daylist" >
-            <td align="right" width="48%"><strong>三日後</strong></td>
-            <td align="left" width="52%"><a
-                    href="javascript:opensupplier(2);"><strong>8月31日 (一)</strong></a>
-            </td>
-        </tr>
-        <tr class="daylist" >
-            <td align="right" width="48%"><strong>四日後</strong></td>
-            <td align="left" width="52%"><a
-                    href="javascript:opensupplier(3);"><strong>9月01日 (二)</strong></a>
-            </td>
-        </tr>
-        <tr class="daylist" >
-            <td align="right" width="48%"><strong>五日後</strong></td>
-            <td align="left" width="52%"><a
-                    href="javascript:opensupplier(4);"><strong>9月02日 (三)</strong></a>
-            </td>
-        </tr>
-        <tr class="daylist" >
-            <td align="right" width="48%"><strong>特別安排</strong></td>
-            <td align="left" width="52%"><a
-                    href="javascript:opensupplier(5);"><strong>9月03日 (四)</strong></a>
-            </td>
-        </tr>
-        <tr class="daylist" >
-            <td align="right" width="48%"><strong>特別安排</strong></td>
-            <td align="left" width="52%"><a
-                    href="javascript:opensupplier(6);"><strong>9月04日 (五)</strong></a>
-            </td>
-        </tr>
-        <tr class="daylist" >
-            <td align="right" width="48%"><strong>特別安排</strong></td>
-            <td align="left" width="52%"><a
-                    href="javascript:opensupplier(7);"><strong>9月05日 (六)</strong></a>
-            </td>
-        </tr>
-        <tr class="daylist" style="background-color:Red">
-            <td align="right" width="48%"><strong>特別安排</strong></td>
-            <td align="left" width="52%"><a
-                    href="javascript:opensupplier(8);"><strong>9月06日 (日)</strong></a>
-            </td>
-        </tr>
-        <tr class="daylist" >
-            <td align="right" width="48%"><strong>特別安排</strong></td>
-            <td align="left" width="52%"><a
-                    href="javascript:opensupplier(9);"><strong>9月07日 (一)</strong></a>
-            </td>
-        </tr>
-        <tr class="daylist" >
-            <td align="right" width="48%"><strong>特別安排</strong></td>
-            <td align="left" width="52%"><a
-                    href="javascript:opensupplier(10);"><strong>9月08日 (二)</strong></a>
-            </td>
-        </tr>
-        <tr class="daylist" >
-            <td align="right" width="48%"><strong>特別安排</strong></td>
-            <td align="left" width="52%"><a
-                    href="javascript:opensupplier(11);"><strong>9月09日 (三)</strong></a>
-            </td>
-        </tr>
-        <tr class="daylist" >
-            <td align="right" width="48%"><strong>特別安排</strong></td>
-            <td align="left" width="52%"><a
-                    href="javascript:opensupplier(12);"><strong>9月10日 (四)</strong></a>
-            </td>
-        </tr>
-        <tr class="daylist" >
-            <td align="right" width="48%"><strong>特別安排</strong></td>
-            <td align="left" width="52%"><a
-                    href="javascript:opensupplier(13);"><strong>9月11日 (五)</strong></a>
-            </td>
-        </tr>
+        @endforeach
     </table>
     <br>
     <center class="style3">不同送貨日<span class="style4">必須</span>分單</center>

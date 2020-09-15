@@ -48,6 +48,7 @@ class WorkshopSample extends Model
 
         $items = $items->orderBy('workshop_products.product_no')->get();
 
+//        dump($items);
 
         return $items;
 

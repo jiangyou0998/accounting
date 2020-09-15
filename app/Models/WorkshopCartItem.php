@@ -12,7 +12,7 @@ class WorkshopCartItem extends Model
     protected $table = 'workshop_cart_items';
     public $timestamps = false;
 
-    public static function getCartItems($shop , $dept , $advancePlusOne){
+    public static function getCartItems($shop , $dept , $deli_date){
 
 
         $items = new WorkshopCartItem();
@@ -47,7 +47,7 @@ class WorkshopCartItem extends Model
             ->whereNotIn('workshop_cart_items.status',[4])
             ->where('workshop_cart_items.qty','>=',0)
             ->where('workshop_cart_items.dept','=',$dept)
-            ->whereRaw('workshop_cart_items.deli_date = DATE(DATE_ADD(NOW(), INTERVAL ? DAY))',$advancePlusOne);
+            ->where('workshop_cart_items.deli_date','=',$deli_date);
 
         $items = $items->orderBy('workshop_products.product_no')->get();
 
