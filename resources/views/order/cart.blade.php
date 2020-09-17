@@ -3,7 +3,7 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1 ">
     <meta name="format-detection" content="telephone=no"/>
     <meta name="csrf-token" content="{{csrf_token()}}">
     ﻿​
@@ -27,6 +27,50 @@
         padding: 5px;
     }
 
+    .pre-scrollable{
+        max-height:40%;
+        overflow-y:scroll
+    }
+
+    /*.div-fixed{*/
+    /*    position: absolute;*/
+    /*    top: 0;*/
+    /*    z-index: 10;*/
+    /*    height: 20%;*/
+    /*    !*overflow: hidden;*!*/
+    /*}*/
+
+    /*.item-body{*/
+    /*    position: relative;*/
+    /*    height: 30%;*/
+    /*    top:300px;*/
+    /*}*/
+
+    /*.cart-footer{*/
+    /*    position: absolute;*/
+    /*    bottom: 0;*/
+    /*    z-index: 10;*/
+    /*    height: 10%;*/
+    /*}*/
+
+    /*.body{*/
+    /*    height: 100%;*/
+    /*}*/
+
+    .main-div{
+        overflow: hidden; position:absolute; top:20px; bottom:20px; left:20px; right:20px;
+    }
+
+    .left-div{
+        float:left; overflow:auto;height: 100%;
+
+    }
+
+    .right-div{
+        float:right; overflow:auto;height: 100%;
+
+    }
+
 
 </style>
 
@@ -37,20 +81,20 @@
 </body>
 <div class="container-fluid">
 
-    <div class="row">
-        <div class="col-6">
+    <div class="row main-div">
+        <div class="col-6 left-div">
 
             @include('order.cart_item')
 
         </div>
-        <div class="col-6" style="background-color:#697caf">
+        <div class="col-6 right-div" style="background-color:#697caf;">
             <div> @include('order.cart_cat')</div>
             <br>
 {{--                        <div class="container-fluid"> @include('order.cart_group')</div>--}}
             <div class="container-fluid group-nav"> </div>
             <hr>
             {{--            <div> @include('order.cart_menu')</div>--}}
-                        <div class="container-fluid product-nav"> </div>
+            <div class="container-fluid product-nav"> </div>
         </div>
     </div>
 </div>
@@ -220,12 +264,17 @@
             // console.log($id);
 
             var qty = $("#qty" + id).val();
+
+            var oldQty = $("#qty" + id).data('qty');
             // console.log($qty);
 
             //管理員可以把數量改成0
-            if (qty > 0 || (qty == 0 && usertype == 3)) {
-                var item = {'mysqlid': mysqlID, 'qty': qty};
-                updatearray.push(item);
+            if ((qty > 0) || (qty == 0 && usertype == 3)) {
+                //不等於舊的數量才添加
+                if(qty != oldQty){
+                    var item = {'mysqlid': mysqlID, 'qty': qty};
+                    updatearray.push(item);
+                }
             }
 
 
@@ -241,7 +290,9 @@
             delarray.push(item);
 
         });
-        // console.log(JSON.stringify(insertarray));
+        console.log(JSON.stringify(insertarray));
+        console.log(JSON.stringify(updatearray));
+        console.log(JSON.stringify(delarray));
 
         // $.ajax({
         //     type: "POST",
@@ -284,6 +335,7 @@
             }
             // qty = topWin.document.getElementById(id).style.display='none';
             var qty = $("#qty" + id).val();
+            var oldQty = $("#qty" + id).data('qty');
             console.log("#qty" + id);
             $("#qty" + id).val(parseInt(qty) + base) ;
             var qty = parseInt(qty) + base;
@@ -299,7 +351,12 @@
                 var newQty = qty - qty % base;
                 $("#qty" + id).val(newQty);
             }
-            ;
+            //與之前數值不同時,背景變為紅色
+            if ($("#qty" + id).val() != oldQty) {
+                $("#qty" + id).addClass('bg-danger');
+            } else {
+                $("#qty" + id).removeClass('bg-danger');
+            }
         } else {
             var bg = "#44BBBB";
             if (count & 1) {
@@ -344,31 +401,39 @@
 
     function drop(id, base, min) {
 
-        var topWin = window.top.document.getElementById("leftFrame").contentWindow;
+        // var topWin = window.top.document.getElementById("leftFrame").contentWindow;
         // var qty = 0;
         // var qty2 = topWin.document.$("#qty100001").val();
         //console.log($("#leftFrame").contents());
 
         // var count = $(topWin.document).find(".cart").length;
 
-        if (topWin.document.getElementById("qty" + id)) {
+        var item = $("#qty" + id);
+        if (item.length && item.length>0) {
             // qty = topWin.document.getElementById(id).style.display='none';
-            var qty = topWin.document.getElementById("qty" + id).value;
-            topWin.document.getElementById("qty" + id).value = parseInt(qty) - base;
+            var qty = $("#qty" + id).val();
+            var oldQty = $("#qty" + id).data('qty');
+            $("#qty" + id).val(parseInt(qty) - base) ;
             var qty = parseInt(qty) - base;
             var maxQty = 600;
             if (qty > maxQty) {
                 alert("每項目數量最多只可為「" + maxQty + "」");
-                topWin.document.getElementById("qty" + id).value = maxQty;
+                $("#qty" + id).val(maxQty);
             } else if (qty < min) {
                 alert("該項目最少落單數量為「" + min + "」");
-                topWin.document.getElementById("qty" + id).value = min;
+                $("#qty" + id).val(min);
             } else if (qty % base != 0) {
                 alert("該項目數量必須以「" + base + "」為單位");
                 var newQty = qty - qty % base;
-                topWin.document.getElementById("qty" + id).value = newQty;
+                console.log(qty);
+                $("#qty" + id).val(newQty);
             }
-            ;
+            //與之前數值不同時,背景變為紅色
+            if ($("#qty" + id).val() != oldQty) {
+                $("#qty" + id).addClass('bg-danger');
+            } else {
+                $("#qty" + id).removeClass('bg-danger');
+            }
         }
         // console.log(qty);
     }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -11,6 +12,17 @@ class WorkshopCartItem extends Model
 
     protected $table = 'workshop_cart_items';
     public $timestamps = false;
+
+    public function users()
+    {
+        return $this->belongsTo(User::class,'user_id','id');
+    }
+
+    public function products()
+    {
+        return $this->belongsTo(WorkshopProduct::class,'product_id','id');
+    }
+
 
     public static function getCartItems($shop , $dept , $deli_date){
 

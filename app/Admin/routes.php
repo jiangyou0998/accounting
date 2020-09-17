@@ -22,6 +22,8 @@ Route::group([
     $router->resource('checks', 'WorkshopCheckController');
     $router->patch('checks/update/{id}','WorkshopCheckController@updateChecks')->name('checkupdate');
     $router->resource('shopgroups', 'ShopGroupController');
+    $router->resource('cart', 'WorkshopCartItemController');
+    $router->resource('cartitem_log', 'WorkshopCartItemLogController');
     $router->resource('mypage', 'MypageController');
 //    $router->resource('report', 'ReportController');
 
