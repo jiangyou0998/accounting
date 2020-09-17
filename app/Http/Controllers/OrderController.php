@@ -30,7 +30,7 @@ class OrderController extends Controller
 
         $dayArray = $this->getDayArray();
 
-        dump($dayArray);
+//        dump($dayArray);
 
 
         return view('order.select_day', compact('menus', 'dayArray', 'isSun'));

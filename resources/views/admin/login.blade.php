@@ -150,7 +150,7 @@
                                     class="form-control {{ $errors->has('username') ? 'is-invalid' : '' }}"
                                     name="username"
                                     placeholder="{{ trans('admin.username') }}"
-                                    value="admin"
+                                    value=""
                                     required
                                     autofocus
                                 >
@@ -181,7 +181,7 @@
                                     name="password"
                                     placeholder="{{ trans('admin.password') }}"
                                     required
-                                    value="admin"
+                                    value=""
                                     autocomplete="current-password"
                                 >
 
@@ -233,10 +233,10 @@
         <div class="content-front"></div>
         <div class="login-description">
             <p class="lead">
-                十分钟内构建一个功能完善的高颜值后台系统。
+{{--                十分钟内构建一个功能完善的高颜值后台系统。--}}
             </p>
             <p>
-                Dcat Admin
+                Ryoyu Bakery Admin
             </p>
         </div>
     </div>

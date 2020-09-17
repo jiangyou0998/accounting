@@ -15,7 +15,7 @@ class HomeController extends Controller
 {
     public function index(Content $content)
     {
-        return $content->body(new MyPage());
+        return $content->description('首頁...');
     }
 
 }

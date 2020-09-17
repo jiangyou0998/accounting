@@ -43,7 +43,7 @@ Route::get('email/verify', 'Auth\VerificationController@show')->name('verificati
 Route::get('email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
 Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 
-Route::get('/order', 'OrderController@index')->middleware('auth');
+Route::get('/order', 'OrderController@index')->middleware('auth')->name('order');
 Route::get('/order/select_day', 'OrderController@select_day')->middleware('auth')->name('select_day');
 Route::get('order/cart','OrderZDeptController@cart')->middleware('auth')->name('cart')
 //    ->middleware('permission:visit_home')

@@ -14,11 +14,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/js/bootstrap.min.js"
             integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
             crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css" id="theme-styles">
+
+    <!-- Include a polyfill for ES6 Promises (optional) for IE11 and Android browser -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"
-          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-
+{{--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css"--}}
+{{--          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">--}}
+    <!-- Styles -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <title>下單-內聯網</title>
 </head>
 
@@ -129,13 +135,16 @@
         var oldQty = $(this).data('qty');
         var usertype = 2;
         if (qty > maxQty && usertype == 2) {
-            alert("每項目數量最多只可為「" + maxQty + "」");
+            alertMax(maxQty);
+            // alert("每項目數量最多只可為「" + maxQty + "」");
             $(this).val(maxQty);
         } else if (qty < min && usertype == 2) {
-            alert("該項目最少落單數量為「" + min + "」");
+            alertMin(min);
+            // alert("該項目最少落單數量為「" + min + "」");
             $(this).val(min);
         } else if (qty % base != 0 && usertype == 2) {
-            alert("該項目數量必須以「" + base + "」為單位");
+            alertBase(base);
+            // alert("該項目數量必須以「" + base + "」為單位");
             var newQty = qty - qty % base;
             $(this).val(newQty);
         }
@@ -227,7 +236,6 @@
 
     //點擊完成按鈕提交修改
     function sss() {
-
         //禁止按鈕重複點擊
         // $("#btnsubmit").attr('disabled', true);
         var insertarray = [];
@@ -311,6 +319,7 @@
 
     }
 
+    //product item +按鈕
     function add(itemid, id, suppName, itemName, uom, base, min, overtime) {
 
         // var topWin = window.top.document.getElementById("leftFrame").contentWindow;
@@ -341,13 +350,16 @@
             var qty = parseInt(qty) + base;
             var maxQty = 600;
             if (qty > maxQty) {
-                alert("每項目數量最多只可為「" + maxQty + "」");
+                alertMax(maxQty);
+                // alert("每項目數量最多只可為「" + maxQty + "」");
                 $("#qty" + id).val(maxQty);
             } else if (qty < min) {
-                alert("該項目最少落單數量為「" + min + "」");
+                alertMin(min);
+                // alert("該項目最少落單數量為「" + min + "」");
                 $("#qty" + id).val(min);
             } else if (qty % base != 0) {
-                alert("該項目數量必須以「" + base + "」為單位");
+                alertBase(base);
+                // alert("該項目數量必須以「" + base + "」為單位");
                 var newQty = qty - qty % base;
                 $("#qty" + id).val(newQty);
             }
@@ -399,14 +411,8 @@
         // console.log(qty);
     }
 
+    //product item -按鈕
     function drop(id, base, min) {
-
-        // var topWin = window.top.document.getElementById("leftFrame").contentWindow;
-        // var qty = 0;
-        // var qty2 = topWin.document.$("#qty100001").val();
-        //console.log($("#leftFrame").contents());
-
-        // var count = $(topWin.document).find(".cart").length;
 
         var item = $("#qty" + id);
         if (item.length && item.length>0) {
@@ -417,15 +423,17 @@
             var qty = parseInt(qty) - base;
             var maxQty = 600;
             if (qty > maxQty) {
-                alert("每項目數量最多只可為「" + maxQty + "」");
+                alertMax(maxQty);
+                // alert("每項目數量最多只可為「" + maxQty + "」");
                 $("#qty" + id).val(maxQty);
             } else if (qty < min) {
-                alert("該項目最少落單數量為「" + min + "」");
+                alertMin(min);
+                // alert("該項目最少落單數量為「" + min + "」");
                 $("#qty" + id).val(min);
             } else if (qty % base != 0) {
-                alert("該項目數量必須以「" + base + "」為單位");
+                alertBase(base);
+                // alert("該項目數量必須以「" + base + "」為單位");
                 var newQty = qty - qty % base;
-                console.log(qty);
                 $("#qty" + id).val(newQty);
             }
             //與之前數值不同時,背景變為紅色
@@ -436,6 +444,28 @@
             }
         }
         // console.log(qty);
+    }
+
+    //sweetalert
+    function alertMax(maxQty) {
+        Swal.fire({
+            icon: 'error',
+            title: "每項目數量最多只可為「" + maxQty + "」",
+        });
+    }
+
+    function alertMin(min) {
+        Swal.fire({
+            icon: 'error',
+            title: "該項目最少落單數量為「" + min + "」",
+        });
+    }
+
+    function alertBase(base) {
+        Swal.fire({
+            icon: 'error',
+            title: "該項目數量必須以「" + base + "」為單位",
+        });
     }
 </script>
 
