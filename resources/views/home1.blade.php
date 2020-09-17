@@ -40,6 +40,6 @@
 </div>
 @endsection
 
-@if (app()->isLocal())
+@if (config('app.debug'))
     @include('sudosu::user-selector')
 @endif
