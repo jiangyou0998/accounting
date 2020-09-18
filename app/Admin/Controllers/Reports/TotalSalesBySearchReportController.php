@@ -131,6 +131,9 @@ class TotalSalesBySearchReportController extends AdminController
         //分店名
         $sql = "tbl_user.chr_report_name as 分店";
         $orderzdept = $orderzdept->addSelect(DB::raw($sql));
+        //產品編號
+        $sql = "tbl_order_z_menu.chr_no as 產品編號";
+        $orderzdept = $orderzdept->addSelect(DB::raw($sql));
         //產品名
         $sql = "tbl_order_z_menu.chr_name as 產品名";
         $orderzdept = $orderzdept->addSelect(DB::raw($sql));
@@ -166,7 +169,7 @@ class TotalSalesBySearchReportController extends AdminController
             ->where('tbl_order_z_dept.status', '<>', 4)
             ->whereNotIn('tbl_user.int_id', $testids)
             ->whereRaw("DATE(DATE_ADD(tbl_order_z_dept.insert_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) between '$start' and '$end'")
-            ->groupBy(DB::raw('tbl_user.chr_report_name , tbl_order_z_menu.chr_name , day , tbl_user.txt_login , tbl_order_z_menu.chr_no'))
+            ->groupBy(DB::raw('tbl_user.chr_report_name ,tbl_order_z_menu.chr_no , tbl_order_z_menu.chr_name , day , tbl_user.txt_login , tbl_order_z_menu.chr_no'))
             ->orderBy('tbl_user.txt_login')
             ->orderBy('tbl_order_z_menu.chr_no')
             ->orderBy('day')
