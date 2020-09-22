@@ -107,11 +107,11 @@
 
 <script>
 
-    // $.ajaxSetup({
-    //     headers: {
-    //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    //     }
-    // });
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
 
     $(document).on('click', '.qty', function () {
 
@@ -193,9 +193,9 @@
             url: "/order/cart/show_group/"+catid,
             data: "",
             dataType:'html',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
+            // headers: {
+            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            // },
             success: function (data) {
                 // console.log(data);
                 $(".group-nav").html(data);
@@ -212,14 +212,16 @@
 
     function showProduct(groupid) {
         // alert("order/cart/show_group/"+catid);
+        var deli_date = '{{$_REQUEST['deli_date']}}';
+        console.log(deli_date);
         $.ajax({
             type: "POST",
             url: "/order/cart/show_product/"+groupid,
-            data: "",
+            data: {'deli_date':deli_date},
             dataType:'html',
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
+            // headers: {
+            //     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            // },
             success: function (data) {
                 // console.log(data);
                 $(".product-nav").html(data);
@@ -280,7 +282,7 @@
             if ((qty > 0) || (qty == 0 && usertype == 3)) {
                 //不等於舊的數量才添加
                 if(qty != oldQty){
-                    var item = {'mysqlid': mysqlID, 'qty': qty};
+                    var item = {'mysqlid': mysqlID, 'qty': qty ,'oldqty': oldQty};
                     updatearray.push(item);
                 }
             }
@@ -302,20 +304,21 @@
         console.log(JSON.stringify(updatearray));
         console.log(JSON.stringify(delarray));
 
-        // $.ajax({
-        //     type: "POST",
-        //     url: "order_z_dept_insert.php",
-        //     data: {
-        //         'insertData': JSON.stringify(insertarray),
-        //         'updateData': JSON.stringify(updatearray),
-        //         'delData': JSON.stringify(delarray)
-        //     },
-        //     success: function (msg) {
-        //         alert('已落貨!');
-        //         window.location.reload();
-        //         // console.log(msg);
-        //     }
-        // });
+        {{--shopid = {{$_REQUEST['shop']}};--}}
+        $.ajax({
+            type: "PUT",
+            url: "{{route('cart.update',$_REQUEST['shop'])}}",
+            data: {
+                'insertData': JSON.stringify(insertarray),
+                'updateData': JSON.stringify(updatearray),
+                'delData': JSON.stringify(delarray)
+            },
+            success: function (msg) {
+                alert('已落貨!');
+                // window.location.reload();
+                // console.log(msg);
+            }
+        });
 
     }
 
@@ -450,7 +453,7 @@
     function alertMax(maxQty) {
         Swal.fire({
             icon: 'error',
-            title: "每項目數量最多只可為「" + maxQty + "」",
+            title: "該項目數量最多只可為「" + maxQty + "」",
         });
     }
 
@@ -471,4 +474,7 @@
 
 </html>
 
+@if (config('app.debug'))
+    @include('sudosu::user-selector')
+@endif
 

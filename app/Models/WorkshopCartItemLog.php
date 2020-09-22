@@ -11,6 +11,8 @@ class WorkshopCartItemLog extends Model
 
     protected $table = 'workshop_cart_item_logs';
 
+    protected $guarded = [];
+
     public function operate_users()
     {
         return $this->belongsTo(User::class,"operate_user_id","id");

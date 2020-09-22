@@ -71,6 +71,8 @@
         </div>
     </div>
 
+    @yield('script')
+
     @include('layouts._footer')
 </div>
 

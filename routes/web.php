@@ -45,8 +45,9 @@ Route::post('email/resend', 'Auth\VerificationController@resend')->name('verific
 
 Route::get('/order', 'OrderController@index')->middleware('auth')->name('order');
 Route::get('/order/select_day', 'OrderController@select_day')->middleware('auth')->name('select_day');
-Route::get('order/cart','OrderZDeptController@cart')->middleware('auth')->name('cart')
+Route::get('order/cart','WorkshopCartItemController@cart')->middleware('auth')->name('cart')
 //    ->middleware('permission:visit_home')
 ;
-Route::post('order/cart/show_group/{catid}', 'OrderZDeptController@showGroup')->middleware('auth')->name('show_group');
-Route::post('order/cart/show_product/{groupid}', 'OrderZDeptController@showProduct')->middleware('auth')->name('show_product');
+Route::post('order/cart/show_group/{catid}', 'WorkshopCartItemController@showGroup')->middleware('auth')->name('show_group');
+Route::post('order/cart/show_product/{groupid}', 'WorkshopCartItemController@showProduct')->middleware('auth')->name('show_product');
+Route::put('order/cart/{shopid}', 'WorkshopCartItemController@update')->middleware('auth')->name('cart.update');

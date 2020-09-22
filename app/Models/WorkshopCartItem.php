@@ -23,6 +23,11 @@ class WorkshopCartItem extends Model
         return $this->belongsTo(WorkshopProduct::class,'product_id','id');
     }
 
+    public function cart_item_logs()
+    {
+        return $this->hasMany(WorkshopCartItemLog::class,"id","cart_item_id");
+    }
+
 
     public static function getCartItems($shop , $dept , $deli_date){
 

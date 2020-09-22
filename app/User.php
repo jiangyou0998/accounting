@@ -72,6 +72,17 @@ class User extends Authenticatable
         return $shops;
     }
 
+    public static function getRyoyuBakeryShops(){
+
+        $users = new User();
+        $shops = $users->where('type', 2)
+            ->where('name','like','rb%')
+            ->orderBy('name')
+            ->get(['id','report_name']);
+
+        return $shops;
+    }
+
     public static function getTestUserIDs(){
 
         $testUserIDs = [1,2,3,4,77,82];

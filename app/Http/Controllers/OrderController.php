@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use App\Models\Order;
+use App\User;
 use Carbon\Carbon;
 
 class OrderController extends Controller
@@ -30,10 +31,11 @@ class OrderController extends Controller
 
         $dayArray = $this->getDayArray();
 
+        $shops = User::getRyoyuBakeryShops();
 //        dump($dayArray);
 
 
-        return view('order.select_day', compact('menus', 'dayArray', 'isSun'));
+        return view('order.select_day', compact('menus', 'dayArray', 'isSun','shops'));
     }
 
     public static function getDayArray($advDays = 14)
