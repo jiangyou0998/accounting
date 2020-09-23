@@ -252,10 +252,12 @@
 
             var qty = $("#qty" + id).val();
             // console.log($qty);
+            var deli_date = '{{$_REQUEST['deli_date']}}';
+            var dept = '{{$_REQUEST['dept']}}';
 
             //管理員可以把數量改成0
             if (qty > 0 || (qty == 0 && usertype == 3)) {
-                var item = {'itemid': itemid, 'qty': qty};
+                var item = {'itemid': itemid, 'qty': qty ,'deli_date' : deli_date , 'dept' : dept};
                 insertarray.push(item);
             }
 
