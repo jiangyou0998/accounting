@@ -43,15 +43,17 @@ class WorkshopCartItemController extends Controller
             $delDatas = json_decode($request->delData, true);
             $ip = $request->ip();
             $cartItemModel = new WorkshopCartItem();
+            $cartItemLogsModel = new WorkshopCartItemLog();
             $now = Carbon::now()->toDateTimeString();
 
 //            dump($insertDatas);
 //            dump($delDatas);
 
             //新增
-            $insertArr = array();
+//            $insertArr = array();
             foreach ($insertDatas as $insertData) {
-                $insertArr[] = [
+                //插入數據
+                $insertArr = [
                     'order_date' => $now,
                     'user_id' => $shopid,
                     'product_id' => $insertData['itemid'],
@@ -63,43 +65,34 @@ class WorkshopCartItemController extends Controller
                     'insert_date' => $now,
                     'deli_date' => $insertData['deli_date']
                 ];
+                $cartItemId = $cartItemModel->insertGetId($insertArr);
+
+                //寫入LOG
+                $insertLogsArr= [
+                    'operate_user_id' => $user->id,
+                    'shop_id' => $shopid,
+                    'product_id' => $insertData['itemid'],
+                    'cart_item_id' => $cartItemId,
+                    'method' => 'INSERT',
+                    'ip' => $ip,
+                    'input' => '新增數量'.$insertData['qty'],
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+
+                $cartItemLogsModel->insert($insertLogsArr);
 
             }
 
-            $cartItemModel->insert($insertArr);
-//
-//            $insertLogsArr = array();
-//            foreach ($insertDatas as $insertData) {
-//                $cartItemID = $cartItemModel::where('product_id',$insertData['itemid'])
-//                    ->where('deli_date',$insertData['deli_date'])
-//                    ->where('dept',$insertData['dept'])
-//                    ->where('user_id',$insertData['itemid'])
-//                    ->get();
-//                dump($cartItemID);
-//                $insertLogsArr[] = [
-//                    'operate_user_id' => $user->id,
-//                    'shop_id' => $shopid,
-//                    'product_id' => $insertData['itemid'],
-//                    'cart_item_id' => $cartItemID,
-//                    'method' => 'INSERT',
-//                    'ip' => $ip,
-//                    'input' => '新增數量'.$insertData['qty'],
-//                ];
-//
-//            }
-//
-//            //插入新增Log
-//            $cartItemLogsModel = new WorkshopCartItemLog();
-//            $cartItemLogsModel->insert($insertLogsArr);
 
-//            dump($insertArr);
+//            dump($updateLogsArr);
 
-            //修改
+            //更新
             $updateLogsArr = array();
             foreach ($updateDatas as $updateData) {
                 $cartItemModel::where('id', $updateData['mysqlid'])->update(['qty' => $updateData['qty']]);
 //                $productModel = new WorkshopProduct();
-                $updateLog = [
+                $updateLogsArr[] = [
                     'operate_user_id' => $user->id,
                     'shop_id' => $shopid,
                     'product_id' => $cartItemModel::find($updateData['mysqlid'])->product_id,
@@ -110,12 +103,32 @@ class WorkshopCartItemController extends Controller
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];
-                array_push($updateLogsArr, $updateLog);
             }
-//            dump($updateLogsArr);
-            //插入更新Log
-            $cartItemLogsModel = new WorkshopCartItemLog();
+
+            //插入更新LOG
             $cartItemLogsModel->insert($updateLogsArr);
+
+            //刪除
+            $delLogsArr = array();
+            foreach ($delDatas as $delData) {
+                $cartItemModel::where('id', $delData['mysqlid'])->update(['status' => 4]);
+//                $productModel = new WorkshopProduct();
+                $delLogsArr[] = [
+                    'operate_user_id' => $user->id,
+                    'shop_id' => $shopid,
+                    'product_id' => $cartItemModel::find($delData['mysqlid'])->product_id,
+                    'cart_item_id' => $delData['mysqlid'],
+                    'method' => 'DELETE',
+                    'ip' => $ip,
+                    'input' => '刪除',
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+
+            }
+
+            //插入刪除LOG
+            $cartItemLogsModel->insert($delLogsArr);
 
         });
 
