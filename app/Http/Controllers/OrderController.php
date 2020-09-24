@@ -19,7 +19,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return view('order.index', compact('menus'));
+        return view('order.index');
     }
 
     public function select_day()
@@ -32,7 +32,7 @@ class OrderController extends Controller
 //        dump($dayArray);
 
 
-        return view('order.select_day', compact('menus', 'dayArray', 'isSun','shops'));
+        return view('order.select_day', compact('dayArray', 'isSun','shops'));
     }
 
     public static function getDayArray($advDays = 14)
