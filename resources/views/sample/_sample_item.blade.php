@@ -1,16 +1,16 @@
-{{--购物车Item--}}
-<tr @if($itemCount % 2) bgcolor="#A2A2A2" @else bgcolor="#FFFFFF" @endif
-    class="cartold" id="{{$item->product_no}} "
-    data-itemid="{{$item->itemID}}" data-mysqlid="{{$item->orderID}}">
+{{--範本Item--}}
+<tr @if($itemCount % 2) bgcolor="#ff9933" @else bgcolor="#ffcc33" @endif
+    class="cart" id="{{$item->product_no}}"
+    data-itemid="{{$item->itemID}}">
     <td width="10" align="right">{{$itemCount + 1}}.</td>
     <td><font
               size=-1>{{$item->suppName}} </font>{{$item->itemName}}, {{$item->product_no}}                        </td>
     <td align="center">
-        <img title='已超過截單時間' src='/images/alert.gif' width='20' height='20'>                        </td>
+                                </td>
     <td width="100" align="center">x
         <input class="qty" type="tel"
                id="qty{{$item->product_no}}"
-               name="{{$item->orderID}}"
+               name=""
                type="text" value="{{round($item->qty,2)}}"
                data-base="{{$item->base}}"
                data-min="{{$item->min}}"
@@ -21,6 +21,8 @@
     </td>
     <td align="center">{{$item->UoM}}</td>
     <td align="center">
-        <a href="javascript:void(0);" class="del"><span style="color: #FF6600; ">X</span></a>
+        <a href="javascript:void(0);" style="cursor: pointer;" class="delnew">
+            <span style="color: #FF6600; ">X</span>
+        </a>
     </td>
 </tr>

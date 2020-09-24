@@ -19,14 +19,11 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $menus = Menu::with('allChildrenMenu')->get();
         return view('order.index', compact('menus'));
     }
 
     public function select_day()
     {
-        $menus = Menu::with('allChildrenMenu')->get();
-
         $isSun = $this->isSunday();
 
         $dayArray = $this->getDayArray();

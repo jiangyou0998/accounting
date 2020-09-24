@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Menu;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        //導航欄傳遞數據
+        view()->composer('layouts._nav', function ($view) {
+            $menus = Menu::with('allChildrenMenu')->get();
+            $view->with('menus', $menus);
+        });
     }
 }

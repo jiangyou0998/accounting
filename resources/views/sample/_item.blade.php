@@ -6,7 +6,7 @@
     <td><font
               size=-1>{{$item->suppName}} </font>{{$item->itemName}}, {{$item->product_no}}                        </td>
     <td align="center">
-        <img title='已超過截單時間' src='/images/alert.gif' width='20' height='20'>                        </td>
+                              </td>
     <td width="100" align="center">x
         <input class="qty" type="tel"
                id="qty{{$item->product_no}}"
@@ -21,6 +21,6 @@
     </td>
     <td align="center">{{$item->UoM}}</td>
     <td align="center">
-        <a href="javascript:void(0);" class="del"><span style="color: #FF6600; ">X</span></a>
+        <a href="#" class="del"><span style="color: #FF6600; ">X</span></a>
     </td>
 </tr>

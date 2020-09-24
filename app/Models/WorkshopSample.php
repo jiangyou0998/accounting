@@ -20,6 +20,7 @@ class WorkshopSample extends Model
         //設置select
         $items = $items
             ->select('workshop_products.id as itemID')
+            ->addSelect('workshop_order_sample_item.id as orderID')
             ->addSelect('workshop_products.product_name as itemName')
             ->addSelect('workshop_products.product_no')
             ->addSelect('workshop_units.unit_name as UoM')

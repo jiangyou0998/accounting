@@ -42,6 +42,29 @@
                 </table>
             </td>
         </tr>
+        <tr>
+            <!-- <td colspan="3" valign="middle">分店：共食薈(慧霖)<br>柯打日期：2020/8/5<br>柯打合共：11</td> -->
+            <td colspan="6" align="center">
+                {{--            <input id="btnsubmit" name="Input" type="image"--}}
+                {{--                   src="/images/Confirm.jpg" border="0" onClick="sss();">--}}
+                {{--            <input type="image"--}}
+                {{--                   src="/images/Return.jpg" border="0"--}}
+                {{--                   onclick="top.location.href='select_day_dept.php?advDays=14'">--}}
+                <a class="btn btn-primary btn-lg" href="#" role="button" onClick="sss();">落貨</a>
+                <a class="btn btn-success btn-lg" href="{{route('select_day')}}" role="button">返回</a>
+                <div align="right">
+                    <strong>
+                        <font color="#FF0000" size="-2">分店：共食薈(慧霖)</font>
+                    </strong>
+                </div>
+
+                <div align="right">
+                    <strong><font color="#FF0000" size="-2">部門：烘焙 <br>送貨日期：8月06日 (四)</font>
+                    </strong>
+                </div>
+            </td>
+
+        </tr>
     </table>
     <!-- </form>-->
 
@@ -49,27 +72,4 @@
 
 </div>
 
-<div class="cart-footer">
-    <tr>
-        <!-- <td colspan="3" valign="middle">分店：共食薈(慧霖)<br>柯打日期：2020/8/5<br>柯打合共：11</td> -->
-        <td colspan="6" align="center">
-            <input id="btnsubmit" name="Input" type="image"
-                   src="/images/Confirm.jpg" border="0" onClick="sss();">
-            <input type="image"
-                   src="/images/Return.jpg" border="0"
-                   onclick="top.location.href='select_day_dept.php?advDays=14'">
-            <div align="right">
-                <strong>
-                    <font color="#FF0000" size="-2">分店：共食薈(慧霖)</font>
-                </strong>
-            </div>
-
-            <div align="right">
-                <strong><font color="#FF0000" size="-2">部門：烘焙 <br>送貨日期：8月06日 (四)</font>
-                </strong>
-            </div>
-        </td>
-
-    </tr>
-</div>
 

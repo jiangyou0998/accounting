@@ -57,6 +57,7 @@ class WorkshopCat extends Model
                 $query->whereNull('start_date')
                     ->whereNull('end_date');
             })
+            ->orderby('sort')
             ->get();
 
         return $cats;

@@ -43,11 +43,27 @@ Route::get('email/verify', 'Auth\VerificationController@show')->name('verificati
 Route::get('email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
 Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 
-Route::get('/order', 'OrderController@index')->middleware('auth')->name('order');
-Route::get('/order/select_day', 'OrderController@select_day')->middleware('auth')->name('select_day');
-Route::get('order/cart','WorkshopCartItemController@cart')->middleware('auth')->name('cart')
-//    ->middleware('permission:visit_home')
-;
-Route::post('order/cart/show_group/{catid}', 'WorkshopCartItemController@showGroup')->middleware('auth')->name('show_group');
-Route::post('order/cart/show_product/{groupid}', 'WorkshopCartItemController@showProduct')->middleware('auth')->name('show_product');
-Route::put('order/cart/{shopid}', 'WorkshopCartItemController@update')->middleware('auth')->name('cart.update');
+Route::group(['middleware' => ['auth','permission:shop|workshop|operation']], function () {
+    Route::get('/order', 'OrderController@index')->name('order');
+    Route::get('/order/select_day', 'OrderController@select_day')->name('select_day');
+    Route::get('order/cart','WorkshopCartItemController@cart')->name('cart');
+    Route::post('order/cart/show_group/{catid}', 'WorkshopCartItemController@showGroup')->name('show_group');
+    Route::post('order/cart/show_product/{groupid}', 'WorkshopCartItemController@showProduct')->name('show_product');
+    Route::put('order/cart/{shopid}', 'WorkshopCartItemController@update')->name('cart.update');
+});
+
+
+
+
+Route::group(['middleware' => ['auth','permission:shop']], function () {
+    Route::get('sample', 'WorkshopOrderSampleController@index')->name('sample');
+    Route::get('sample/create', 'WorkshopOrderSampleController@create')->name('sample.create');
+    Route::get('sample/{sample}/edit', 'WorkshopOrderSampleController@edit')->name('sample.edit');
+    Route::post('sample', 'WorkshopOrderSampleController@store')->name('sample.store');
+    Route::put('sample/{sampleid}', 'WorkshopOrderSampleController@update')->name('sample.update');
+    Route::delete('sample/{sampleid}', 'WorkshopOrderSampleController@destroy')->name('sample.destroy');
+});
+
+
+Route::post('/sample/show_group/{catid}', 'WorkshopOrderSampleController@showGroup')->middleware('auth')->name('sample.show_group');
+Route::post('/sample/show_product/{groupid}', 'WorkshopOrderSampleController@showProduct')->middleware('auth')->name('sample.show_product');
