@@ -61,7 +61,7 @@ class WorkshopOrderSampleController extends Controller
         $orderInfos->shop_name = User::find($shopid)->txt_name;
 
 //        dump($sample->id);
-        return view('sample.cart', compact( 'sample','cats', 'sampleItems', 'orderInfos' ,'checkHtml' ,'sampledate'));
+        return view('sample.cart', compact( 'sample','cats',  'orderInfos' ,'checkHtml' ,'sampledate'));
     }
 
     public function edit(WorkshopOrderSample $sample)
