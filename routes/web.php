@@ -46,6 +46,10 @@ Route::post('email/resend', 'Auth\VerificationController@resend')->name('verific
 Route::group(['middleware' => ['auth','permission:shop|workshop|operation']], function () {
     Route::get('/order', 'OrderController@index')->name('order');
     Route::get('/order/select_day', 'OrderController@select_day')->name('select_day');
+    Route::get('order/deli', 'OrderController@order_deli')->name('order.deli');
+    Route::get('order/select_deli', 'OrderController@select_deli')->name('order.select_deli');
+
+
     Route::get('order/cart','WorkshopCartItemController@cart')->name('cart');
     Route::post('order/cart/show_group/{catid}', 'WorkshopCartItemController@showGroup')->name('show_group');
     Route::post('order/cart/show_product/{groupid}', 'WorkshopCartItemController@showProduct')->name('show_product');

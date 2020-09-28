@@ -72,4 +72,119 @@ class WorkshopCartItem extends Model
 
     }
 
+    public static function getDeliDetail($deli_date, $shop)
+    {
+        $items = new WorkshopCartItem();
+
+        //設置select
+        $items = $items
+            ->select('workshop_cart_items.id as orderID')
+            ->addSelect('workshop_products.product_name as itemName')
+            ->addSelect('workshop_products.product_no')
+            ->addSelect('workshop_units.unit_name as UoM')
+            ->addSelect('workshop_cart_items.qty')
+            ->addSelect(DB::raw('if(workshop_cart_items.qty_received is not null , workshop_cart_items.qty_received, workshop_cart_items.qty) as qty_received'))
+            ->addSelect('workshop_products.default_price')
+            ->addSelect('workshop_cats.id as cat_id')
+            ->addSelect('workshop_cats.cat_name')
+            ->addSelect('workshop_products.id as itemID');
+
+        //設置關聯表
+        $items = $items
+            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
+            ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
+            ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
+            ->leftJoin('workshop_units', 'workshop_products.unit_id', '=', 'workshop_units.id');
+
+        //設置查詢條件
+        $items = $items
+            ->where('workshop_cart_items.user_id','=',$shop)
+            ->whereNotIn('workshop_cart_items.status',[4])
+            ->where('workshop_cart_items.qty','>=',0)
+            ->where('workshop_cart_items.deli_date','=',$deli_date);
+
+        $items = $items->orderBy('workshop_products.product_no')->get();
+
+        return $items;
+
+    }
+
+    public static function getDeliTotal($deli_date, $shop)
+    {
+        $items = new WorkshopCartItem();
+
+        //設置select
+        $items = $items
+            ->select('workshop_cats.id as cat_id')
+            ->addSelect('workshop_cats.cat_name')
+            //計算總數量
+            ->addSelect(DB::raw('SUM(if(workshop_cart_items.qty_received is not null , workshop_cart_items.qty_received, workshop_cart_items.qty)) as qty_total'))
+            //計算總價
+            ->addSelect(DB::raw('SUM(if(workshop_cart_items.qty_received is not null , workshop_cart_items.qty_received, workshop_cart_items.qty) * workshop_products.default_price) as total'));
+
+        //設置關聯表
+        $items = $items
+            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
+            ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
+            ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
+            ->leftJoin('workshop_units', 'workshop_products.unit_id', '=', 'workshop_units.id');
+
+        //設置查詢條件
+        $items = $items
+            ->where('workshop_cart_items.user_id','=',$shop)
+            ->whereNotIn('workshop_cart_items.status',[4])
+            ->where('workshop_cart_items.qty','>=',0)
+            ->where('workshop_cart_items.deli_date','=',$deli_date);
+
+        $items = $items->groupBy('workshop_cats.id')
+            ->orderBy('workshop_cats.sort')
+            ->get();
+
+        return $items;
+    }
+
+    public static function getDeliItem($deli_date, $shop)
+    {
+        $items = new WorkshopCartItem();
+
+        //設置select
+        $items = $items
+            ->select('workshop_cart_items.id as orderID')
+            ->addSelect('workshop_cart_items.deli_date')
+            ->addSelect('workshop_cart_items.user_id')
+            ->addSelect('workshop_cart_items.product_id')
+            ->addSelect('workshop_cart_items.qty as dept_qty')
+            ->addSelect('workshop_cart_items.dept')
+            ->addSelect('workshop_products.default_price')
+            ->addSelect('workshop_units.unit_name as UoM')
+            ->addSelect(DB::raw('if(workshop_cart_items.qty_received is not null , workshop_cart_items.qty_received, workshop_cart_items.qty) as qty_received'))
+            ->addSelect('workshop_cats.id as cat_id')
+            ->addSelect('workshop_cart_items.reason')
+            ->addSelect('workshop_cats.cat_name')
+            ->addSelect('workshop_products.product_name as item_name')
+            ->addSelect('workshop_products.id as itemID');
+
+        //設置關聯表
+        $items = $items
+            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
+            ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
+            ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
+            ->leftJoin('workshop_units', 'workshop_products.unit_id', '=', 'workshop_units.id');
+
+        //設置查詢條件
+        $items = $items
+            ->where('workshop_cart_items.user_id','=',$shop)
+            ->whereNotIn('workshop_cart_items.status',[4])
+            ->where('workshop_cart_items.qty','>=',0)
+            ->where('workshop_cart_items.deli_date','=',$deli_date);
+
+        $items = $items->orderBy('workshop_products.product_no')->get();
+
+        return $items;
+
+    }
+
+
+
+
 }

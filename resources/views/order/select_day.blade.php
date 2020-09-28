@@ -1,18 +1,34 @@
 @extends('layouts.app')
 
 @section('content')
+    <style type="text/css">
+
+        body {
+            background-color: #FFFFCC;
+        }
+
+        .style4 {
+            font-size: 300%;
+        }
+
+        .red-font{
+            color: #FF0000;
+        }
+
+    </style>
 
     <div align="left"><a target="_top" href="{{route('order')}}" style="font-size: xx-large;">返回</a></div>
-    <center class="style5">
-        請選<span class="style4">送貨日</span>及<span class="style4">部門</span>
-
-
+    <div class="style5" style="text-align: center;">
+        <span class="style4">請選</span>
+        <span class="style4 red-font">送貨日</span>
+        <span class="style4">及</span>
+        <span class="style4 red-font">部門</span>
 
         @if(Auth::user()->can('workshop') or Auth::user()->can('operation'))
             <br>
             <br>
             落貨分店
-        <select class="custom-select d-block w-25" id="shop" required>
+        <select class="custom-select w-25" id="shop" required>
             <option value="0">請選擇分店</option>
             @foreach($shops as $shop)
                 <option value="{{$shop->id}}">{{$shop->report_name}}</option>
@@ -26,7 +42,7 @@
         <input type="radio" name="dept" id="radio" value="B">水吧
         <input type="radio" name="dept" id="radio" value="K">廚房
         <input type="radio" name="dept" id="radio" value="F">樓面
-    </center>
+    </div>
     <table class="table table-bordered border-dark" width="100%" border="2" align="center" cellpadding="3" cellspacing="0">
         @foreach($dayArray as $key => $day)
         <tr class="daylist" >
@@ -42,7 +58,11 @@
         @endforeach
     </table>
     <br>
-    <center class="style3">不同送貨日<span class="style4">必須</span>分單</center>
+    <div class="style3" style="text-align: center;">
+        <span class="style4">不同送貨日</span>
+        <span class="style4 red-font">必須</span>
+        <span class="style4">分單</span>
+    </div>
 
 @endsection
 

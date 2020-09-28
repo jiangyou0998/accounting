@@ -5,8 +5,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use App\Models\Order;
+use App\Models\WorkshopCartItem;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+
 
 class OrderController extends Controller
 {
@@ -84,6 +88,47 @@ class OrderController extends Controller
             $isSun = true;
 
         return $isSun;
+    }
+
+    //送貨單
+    public function order_deli(Request $request)
+    {
+        $now = Carbon::now();
+        //如果URL沒有送貨日期,使用當日日期
+        if(isset($request->deli_date)){
+            $deli_date = $request->deli_date;
+        }else{
+            $deli_date = $now->toDateString();
+        }
+
+        //根據權限獲取商店id
+        $shop = User::getShopId($request->shop);
+
+        //送貨單詳細數據
+        $details = WorkshopCartItem::getDeliDetail($deli_date,$shop);
+        //合計數據
+        $totals = WorkshopCartItem::getDeliTotal($deli_date,$shop);
+
+//        dump($details->toArray());
+//        dd($totals->toArray());
+
+        //頁面顯示數據
+        $infos = new Collection();
+        $infos->deli_date = $deli_date;
+        $infos->shop = $shop;
+        $infos->shop_name = User::find($shop)->txt_name;
+        $infos->now = $now->toDateTimeString();
+//        dump($infos);
+
+        return view('order.deli.index',compact('details','totals','infos'));
+    }
+
+    //工場,營運選擇送貨單
+    public function select_deli()
+    {
+        $shops = User::getRyoyuBakeryShops();
+
+        return view('order.deli.select_deli',compact('shops'));
     }
 
 }

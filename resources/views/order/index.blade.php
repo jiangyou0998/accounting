@@ -15,7 +15,7 @@
             <br/>
             <a href='select_day_by_time.php' class='styleA'>改舊單</a>
             <br/>
-            <a href='select_deli_by_shop.php' class='styleA'>送貨單查詢</a>
+            <a href='{{route('order.select_deli')}}' class='styleA'>送貨單查詢</a>
         @endcan
 
         @can('operation')
@@ -29,9 +29,9 @@
         @can('shop')
             <a href="order_check.php?head=5" class="styleA">翻查柯打</a>
             <br/>
-            <a href='{{route('sample')}}' class='styleA' target='view_window'>創建範本</a>
+            <a href='{{route('sample')}}' class='styleA'>創建範本</a>
             <br/>
-            <a href='select_deli_by_shop.php' class='styleA'>查看落貨單</a>
+            <a href='{{route('order.deli')}}' class='styleA' target='view_window'>查看落貨單</a>
         @endcan
 
     </div>

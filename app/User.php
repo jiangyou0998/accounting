@@ -8,6 +8,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -88,6 +89,17 @@ class User extends Authenticatable
         $testUserIDs = [1,2,3,4,77,82];
 
         return $testUserIDs;
+    }
+
+    public static function getShopId($shop){
+
+        //商店獲取商店id,不管傳的是什麼id
+        $users = Auth::user();
+        if ($users->can('shop')){
+            $shop = $users->id;
+        }
+
+        return $shop;
     }
 
 
