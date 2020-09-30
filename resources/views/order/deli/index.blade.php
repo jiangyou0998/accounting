@@ -1,6 +1,6 @@
 <html>
 <head>
-    <META name="ROBOTS" content="NOINDEX,NOFOLLOW">
+    <meta name="ROBOTS" content="NOINDEX,NOFOLLOW">
         <meta name="format-detection" content="telephone=no" />
         <title>送貨表-內聯網</title>
         <link href="/js/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" type="text/css">

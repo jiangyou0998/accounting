@@ -184,28 +184,21 @@ class WorkshopCartItemController extends Controller
         $items = WorkshopCartItem::getCartItems($shopid, $dept, $deli_date);
         $cats = WorkshopCat::getCatsNotExpired($deli_date);
 //        dump($deliDate);
-//        dump(count($items));
         $sampleItems = new Collection();
         if (count($items) == 0 && $dept == 'R') {
             $sampleItems = WorkshopSample::getRegularOrderItems($shopid, $deliW);
         }
 
-        foreach ($sampleItems as $sampleItem) {
-            $sampleItem->haveoutdate = false;
-            //後勤落單
-            if ($sampleItem->phase <= 0) {
-                $sampleItem->haveoutdate = true;
-            }
-
-            $canOrderTime = explode(",", $sampleItem->canordertime);
-            //送貨日期不在可下單日期時
-            if (!in_array($deliW, $canOrderTime)) {
-                $sampleItem->haveoutdate = true;
-            }
-
-//            dump($sampleItem);
+        foreach ($items as $item) {
+            $this->checkInvalidOrder($item,$deli_date);
         }
 
+        foreach ($sampleItems as $sampleItem) {
+            $this->checkInvalidOrder($sampleItem,$deli_date);
+        }
+
+//        dump($items->toArray());
+//        dump($sampleItems->toArray());
 //        $orderInfos = [
 //            'date' => '2020-09-27'
 //        ];
@@ -220,6 +213,7 @@ class WorkshopCartItemController extends Controller
         return view('order.cart', compact('items', 'cats', 'sampleItems', 'orderInfos'));
     }
 
+    //ajax加載分組
     public function showGroup($catid)
     {
         $groups = WorkshopGroup::where('cat_id', $catid)->get();
@@ -227,48 +221,62 @@ class WorkshopCartItemController extends Controller
         return view('order.cart_group', compact('groups'))->render();
     }
 
+    //ajax加載產品
     public function showProduct($groupid, Request $request)
     {
         $products = WorkshopProduct::where('group_id', $groupid)->where('status', '!=', 4)->get();
 //        dump($products);
         $deli_date = $request->deli_date;
+
+        $group = WorkshopGroup::find($groupid);
+        $infos = new Collection();
+        $infos->group_name = $group->group_name;
+        $infos->cat_name = $group->cats->cat_name;
+//        dump($infos);
         foreach ($products as $product) {
 //            dump($deli_date.$product->cuttime);
-            $product->order_by_workshop = false;
-            $product->cut_order = false;
-            $product->not_deli_time = false;
-
-            //判斷是否後台落單
-            if ($product->phase <= 0) {
-                $product->order_by_workshop = true;
-            }
-
-            //判斷是否已截單
-            if ($product->phase > 0) {
-                $cuttime = $deli_date . " " . $product->cuttime . "00";
-                $deliTime = Carbon::parse($cuttime)->subDay($product->phase);
-                $now = Carbon::now();
-                $product->cut_order = $deliTime->lt($now);
-            }
-
-            //判斷是否在出貨期
-            $deliW = Carbon::parse($deli_date)->isoFormat('d');
-            $canOrderTime = explode(",", $product->canordertime);
-            //送貨日期不在可下單日期時
-            if (!in_array($deliW, $canOrderTime)) {
-                $product->not_deli_time = true;
-            }
-
-            //todo 判斷跳過週末不出貨
-
-            //只要有一個是true,分店就不能下單
-            $product->invalid_order =
-                $product->order_by_workshop ||
-                $product->cut_order ||
-                $product->not_deli_time;
+            $this->checkInvalidOrder($product,$deli_date);
 
         }
 //          dump($products->toArray());
-        return view('order.cart_product', compact('products'))->render();
+        return view('order.cart_product', compact('products','infos'))->render();
+    }
+
+    //判斷是否能下單
+    //$product必須有phase,cuttime,canordertime
+    private function checkInvalidOrder($product,$deli_date)
+    {
+        $product->order_by_workshop = false;
+        $product->cut_order = false;
+        $product->not_deli_time = false;
+
+        //判斷是否後台落單
+        if ($product->phase <= 0) {
+            $product->order_by_workshop = true;
+        }
+
+        //判斷是否已截單
+        if ($product->phase > 0) {
+            $cuttime = $deli_date . " " . $product->cuttime . "00";
+            $deliTime = Carbon::parse($cuttime)->subDay($product->phase);
+            $now = Carbon::now();
+            $product->cut_order = $deliTime->lt($now);
+        }
+
+        //判斷是否在出貨期
+        $deliW = Carbon::parse($deli_date)->isoFormat('d');
+        $canOrderTime = explode(",", $product->canordertime);
+        //送貨日期不在可下單日期時
+        if (!in_array($deliW, $canOrderTime)) {
+            $product->not_deli_time = true;
+        }
+
+        //todo 判斷跳過週末不出貨
+
+        //只要有一個是true,分店就不能下單
+        $product->invalid_order =
+            $product->order_by_workshop ||
+            $product->cut_order ||
+            $product->not_deli_time;
     }
 }

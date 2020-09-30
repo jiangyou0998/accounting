@@ -38,6 +38,12 @@
         overflow-y:scroll
     }
 
+    .group{
+        background-image: url('/images/10.jpg');
+        background-size:100% 100%;
+
+    }
+
     /*.div-fixed{*/
     /*    position: absolute;*/
     /*    top: 0;*/

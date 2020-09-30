@@ -16,6 +16,12 @@
           id="theme-styles">
 
     <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
         $(function () {
             $(".dept-input").click(function () {
 
@@ -139,24 +145,25 @@
 
             });
 
-            console.log(updatearray);return true;
+            console.log(updatearray);
 
-            // $.ajax({
-            //     type: "POST",
-            //     url: "grpo_confirm.php",
-            //     data: {
-            //         'updateData': JSON.stringify(updatearray)
-            //     },
-            //     success: function (msg) {
-            //         if (msg) {
-            //             alert('發生錯誤!\n');
-            //             console.log(msg);
-            //         } else {
-            //             alert('已確認收貨!\n');
-            //             location.href = "";
-            //         }
-            //     }
-            // });
+            $.ajax({
+                type: "POST",
+                url: "{{route('deli.update')}}",
+                data: {
+                    'updateData': JSON.stringify(updatearray),
+                    'shopid' : '{{$_REQUEST['shop']}}'
+                },
+                success: function (msg) {
+                    if (msg) {
+                        alert('發生錯誤!\n');
+                        console.log(msg);
+                    } else {
+                        alert('已確認收貨!\n');
+                        location.href = "";
+                    }
+                }
+            });
 
             // console.log(updatearray);
 

@@ -3,12 +3,17 @@
 namespace App\Admin\Controllers;
 
 use App\Models\WorkshopCartItem;
+use App\Models\WorkshopCartItemLog;
+use App\Models\WorkshopOrderSample;
+use App\Models\WorkshopOrderSampleItem;
 use Carbon\Carbon;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class DeliController extends AdminController
 {
@@ -93,4 +98,52 @@ class DeliController extends AdminController
 
         return view('admin.deli.edit',compact('po' , 'reasonArr' , 'dept_price' , 'total_price'));
     }
+
+    public function deli_update(Request $request)
+    {
+        $user = Auth::User();
+//        dd($user);
+
+        // 数据库事务处理
+        DB::transaction(function () use ($user, $request) {
+
+
+            $updateDatas = json_decode($request->updateData, true);
+
+            $ip = $request->ip();
+            $shopid = $request->shopid;
+            $cartItemModel = new WorkshopCartItem();
+            $cartItemLogsModel = new WorkshopCartItemLog();
+            $now = Carbon::now()->toDateTimeString();
+
+//            dump($updateDatas);
+//            dump($updateDatas);
+//            dump($delDatas);
+
+            //更新
+            $updateLogsArr = array();
+            foreach ($updateDatas as $updateData) {
+                $cartItemModel::where('id', $updateData['mysqlid'])->update(['qty' => $updateData['receivedqty']]);
+//                $productModel = new WorkshopProduct();
+                $updateLogsArr[] = [
+                    'operate_user_id' => $user->id,
+                    'shop_id' => $shopid,
+                    'product_id' => $cartItemModel::find($updateData['mysqlid'])->product_id,
+                    'cart_item_id' => $updateData['mysqlid'],
+                    'method' => 'UPDATE',
+                    'ip' => $ip,
+                    'input' => '後台修改數量,從' . $updateData['oldqty'] . '變為' . $updateData['receivedqty'].',原因:'.$updateData['reason'],
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
+
+            //插入更新LOG
+            $cartItemLogsModel->insert($updateLogsArr);
+
+
+        });
+
+    }
+
 }

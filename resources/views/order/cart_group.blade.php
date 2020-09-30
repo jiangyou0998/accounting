@@ -1,12 +1,12 @@
 <div class="row">
-    <table id="tblist" border="0" cellpadding="0" cellspacing="2">
-        <tbody>
-        <tr>
-            @foreach($groups as $group)
+{{--    <table id="tblist" border="0" cellpadding="0" cellspacing="2">--}}
+{{--        <tbody>--}}
+{{--        <tr>--}}
+            @foreach($groups as $key=>$group)
                 @include('order._group')
             @endforeach
-        </tr>
-        </tbody>
-    </table>
+{{--        </tr>--}}
+{{--        </tbody>--}}
+{{--    </table>--}}
 
 </div>
