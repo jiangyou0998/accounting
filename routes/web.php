@@ -71,3 +71,5 @@ Route::group(['middleware' => ['auth','permission:shop']], function () {
 
 Route::post('/sample/show_group/{catid}', 'WorkshopOrderSampleController@showGroup')->middleware('auth')->name('sample.show_group');
 Route::post('/sample/show_product/{groupid}', 'WorkshopOrderSampleController@showProduct')->middleware('auth')->name('sample.show_product');
+
+//Route::get('/import', 'ImportController@import');

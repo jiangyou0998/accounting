@@ -24,9 +24,9 @@ class WorkshopCartItemLogController extends AdminController
                 ->with('products');
 
 //            $grid->column('id')->sortable();
-            $grid->column('operate_users.name');
-            $grid->column('shops.name');
-            $grid->column('products.product_name');
+            $grid->column('operate_users.txt_name','操作人');
+            $grid->column('shops.txt_name','分店');
+            $grid->column('products.product_name','產品名稱');
             $grid->column('method')->filter();
             $grid->column('ip')->filter();
             $grid->column('input');

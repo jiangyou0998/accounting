@@ -291,13 +291,25 @@
                 'delData'   : JSON.stringify(delarray)
             },
             success: function (msg) {
+
                 Swal.fire({
                     icon: 'success',
                     title: "範本設置成功!",
+                    showDenyButton: true,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: '確定',
+                    denyButtonText: '返回',
+                }).then((result) => {
+                    if (result.isDenied) {
+                        window.location.href = '{{route('sample')}}';
+                    } else {
+                        window.location.reload();
+                    }
+
                 });
                 // $(location).attr('href', 'order_sample.php');
                 // window.location.reload('order_sample.php');
-                {{--top.location.href = '{{route('sample')}}';--}}
+                {{--window.location.href = '{{route('sample')}}';--}}
                 console.log(msg);
             }
         });

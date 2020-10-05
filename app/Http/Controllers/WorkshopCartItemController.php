@@ -205,6 +205,7 @@ class WorkshopCartItemController extends Controller
 
         $orderInfos = new Collection();
         $orderInfos->date = $deli_date;
+        $orderInfos->shopid = $shopid;
 
         $orderInfos->shop_name = User::find($shopid)->txt_name;
         $orderInfos->dept = $dept;

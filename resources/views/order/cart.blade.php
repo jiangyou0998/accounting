@@ -322,7 +322,27 @@
                 'delData': JSON.stringify(delarray)
             },
             success: function (msg) {
-                alert('已落貨!');
+                // alert('已落貨!');
+                Swal.fire({
+                    icon: 'success',
+                    title: "已落貨!",
+                    showDenyButton: true,
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: '確定',
+                    denyButtonText: '送貨單預覽',
+                    cancelButtonText: '返回',
+                }).then((result) => {
+                    if (result.isDenied) {
+                        window.open('{!! route('order.deli',['shop'=>$orderInfos->shopid,'deli_date'=>$orderInfos->deli_date]) !!}');
+                        window.location.reload();
+                    } else if(result.isDismissed){
+                        window.location.href = '{{route('select_day')}}';
+                    } else {
+                        window.location.reload();
+                    }
+
+                });
                 // window.location.reload();
                 // console.log(msg);
             }
