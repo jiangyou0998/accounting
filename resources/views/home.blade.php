@@ -6,11 +6,11 @@
 <!-- Banner Intro -->
 
 
-<!-- services -->
+<!-- 快捷進入 -->
 <section id="services">
     <div class="container">
         <div class="col-sm-6 col-md-6 col-12 title1 text-center mx-auto">
-            <h3><span>Services</span></h3>
+            <h3><span>快捷進入</span></h3>
 
         </div>
         <ul class="row list-services">

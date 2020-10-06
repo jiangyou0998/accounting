@@ -1,6 +1,6 @@
 
 
-<div class="col-4 text-center">
+<div class="col-xl-4 col-sm-12 text-center">
     <table class="item" width="100%"
         @if($product->invalid_order)
            style="background-color:#7D0101;margin: 3px;"

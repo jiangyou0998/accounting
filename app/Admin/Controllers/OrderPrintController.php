@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\OrderZDept;
 use App\Models\TblOrderCheck;
 use App\Models\TblUser;
+use App\Models\WorkshopCartItem;
+use App\Models\WorkshopCat;
+use App\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 
@@ -14,58 +18,64 @@ class OrderPrintController extends Controller
 
     public function test()
     {
-        $checks = new TblOrderCheck();
-        $check = $checks::find(49);
-
-        $checkArr = array();
-
-        $menuIdArr = explode(',',$check->chr_item_list);
-        foreach ($menuIdArr as $menu){
-            $tempArr =  explode(':', $menu);
-            array_push($checkArr,$tempArr[1]);
-        }
+//        $checks = new TblOrderCheck();
+//        $check = $checks::find(49);
+//
+//        $checkArr = array();
+//
+//        $menuIdArr = explode(',',$check->chr_item_list);
+//        foreach ($menuIdArr as $menu){
+//            $tempArr =  explode(':', $menu);
+//            array_push($checkArr,$tempArr[1]);
+//        }
 
 //        $checkIds = implode($checkArr,',');
 
 //        dd($checkArr);
 //        dd($checkIds);
 
-        $shops = TblUser::getKingBakeryShops();
+        $cat_id = 1;
+        $deli_date = '2020-10-09';
 
-        $datas = new OrderZDept;
+        $shops = User::getRyoyuBakeryShops();
+
+        $datas = new WorkshopCartItem();
         $datas = $datas
-            ->select('tbl_order_z_menu.chr_no as 編號' )
-            ->addSelect('tbl_order_z_menu.chr_name as 名稱')
-            ->addSelect(DB::raw('ROUND(SUM(tbl_order_z_dept.int_qty) , 0) as Total'));
+            ->select('workshop_products.product_no as 編號' )
+            ->addSelect('workshop_products.product_name as 名稱')
+            ->addSelect(DB::raw('ROUND(SUM(ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty)) , 0) as Total'));
 
         foreach ($shops as $shop){
-//                $sql = "sum(case when tbl_order_z_dept.int_user = '$shop->int_id' then tbl_order_z_dept.int_qty else 0 end) as '$shop->chr_report_name'";
+//                $sql = "sum(case when workshop_cart_items.user_id = '$shop->id' then workshop_cart_items.qty else 0 end) as '$shop->chr_report_name'";
 //                dump($sql);
-            $sql = "ROUND(sum(case when tbl_order_z_dept.int_user = '$shop->int_id' then tbl_order_z_dept.int_qty else 0 end),0) as '$shop->chr_report_name'";
+            $sql = "ROUND(sum(case when workshop_cart_items.user_id = '$shop->id' then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '$shop->report_name'";
             $datas = $datas
                 ->addSelect(DB::raw($sql));
         }
 
         $datas = $datas
-            ->leftJoin('tbl_order_z_menu', 'tbl_order_z_menu.int_id', '=', 'tbl_order_z_dept.int_product')
-            ->leftJoin('tbl_order_z_group', 'tbl_order_z_menu.int_group', '=', 'tbl_order_z_group.int_id')
-            ->leftJoin('tbl_order_z_cat', 'tbl_order_z_group.int_cat', '=', 'tbl_order_z_cat.int_id')
-            ->leftJoin('tbl_user', 'tbl_user.int_id', '=', 'tbl_order_z_dept.int_user')
-            ->where('tbl_user.chr_type', '=', 2)
-            ->where('tbl_order_z_dept.status', '<>', 4)
-            ->whereIn('tbl_order_z_menu.int_id',$checkArr)
-            ->whereRaw("DATE(DATE_ADD(tbl_order_z_dept.insert_date, INTERVAL 1+tbl_order_z_dept.chr_phase DAY)) between '2020-07-11' and '2020-07-11'")
-            ->groupBy('tbl_order_z_menu.int_id')
-            ->orderBy('tbl_order_z_menu.chr_no')
-            ->orderBy('tbl_order_z_group.int_id')
+            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
+            ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
+            ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
+            ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
+            ->where('users.type', '=', 2)
+            ->where('workshop_cart_items.status', '<>', 4)
+            ->where('workshop_cats.id',$cat_id)
+            ->where('workshop_cart_items.deli_date', $deli_date)
+            ->groupBy('workshop_products.id')
+            ->orderBy('workshop_products.product_no')
+            ->orderBy('workshop_groups.id')
             ->get();
 
 //        dump($datas->toArray());
 
         $headings = $datas->first()->toArray();
 //        dump($datas->toArray());
+        $checkInfos = new Collection();
+        $checkInfos->title = WorkshopCat::find($cat_id)->cat_name;
+        $checkInfos->deli_date = $deli_date;
 
-        return view('admin.order_print.index',compact('datas' ,'headings'));
+        return view('admin.order_print.index',compact('datas' ,'headings', 'checkInfos'));
     }
 
 

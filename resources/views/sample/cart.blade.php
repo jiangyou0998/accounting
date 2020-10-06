@@ -38,6 +38,12 @@
         overflow-y:scroll
     }
 
+    .group{
+        background-image: url('/images/10.jpg');
+        background-size:100% 100%;
+
+    }
+
     .main-div{
         overflow: hidden; position:absolute; top:20px; bottom:20px; left:20px; right:20px;
     }
@@ -108,16 +114,16 @@
         var base = $(this).data('base');
         var min = $(this).data('min');
         var oldQty = $(this).data('qty');
-        var usertype = 2;
-        if (qty > maxQty && usertype == 2) {
+
+        if (qty > maxQty) {
             alertMax(maxQty);
             // alert("每項目數量最多只可為「" + maxQty + "」");
             $(this).val(maxQty);
-        } else if (qty < min && usertype == 2) {
+        } else if (qty < min) {
             alertMin(min);
             // alert("該項目最少落單數量為「" + min + "」");
             $(this).val(min);
-        } else if (qty % base != 0 && usertype == 2) {
+        } else if (qty % base != 0) {
             alertBase(base);
             // alert("該項目數量必須以「" + base + "」為單位");
             var newQty = qty - qty % base;
@@ -310,7 +316,7 @@
                 // $(location).attr('href', 'order_sample.php');
                 // window.location.reload('order_sample.php');
                 {{--window.location.href = '{{route('sample')}}';--}}
-                console.log(msg);
+                // console.log(msg);
             }
         });
 

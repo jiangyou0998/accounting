@@ -2,8 +2,8 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light static-top">
     <div class="container">
-        <a class="navbar-brand" href="#">
-            <img src="http://placehold.it/150x50?text=Logo" alt="">
+        <a class="navbar-brand" href="/">
+            <img src="/images/ryoyu_logo.png" alt="" width="50%" height="50%">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

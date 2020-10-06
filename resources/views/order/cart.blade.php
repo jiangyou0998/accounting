@@ -139,16 +139,21 @@
         var base = $(this).data('base');
         var min = $(this).data('min');
         var oldQty = $(this).data('qty');
-        var usertype = 2;
-        if (qty > maxQty && usertype == 2) {
+        var isworkshop = false;
+
+        @can('workshop')
+            isworkshop = true;
+        @endcan
+
+        if (qty > maxQty && !isworkshop) {
             alertMax(maxQty);
             // alert("每項目數量最多只可為「" + maxQty + "」");
             $(this).val(maxQty);
-        } else if (qty < min && usertype == 2) {
+        } else if (qty < min) {
             alertMin(min);
             // alert("該項目最少落單數量為「" + min + "」");
             $(this).val(min);
-        } else if (qty % base != 0 && usertype == 2) {
+        } else if (qty % base != 0 && !isworkshop) {
             alertBase(base);
             // alert("該項目數量必須以「" + base + "」為單位");
             var newQty = qty - qty % base;
@@ -181,16 +186,6 @@
         console.log(parent.attr("class"));
 
     });
-
-    // function aaa(id) {
-    //     // alert(666);
-    //     // var parent = $(this).parents(".cart");
-    //     // var parentClass = parent.attr("class");
-    //     // parent.remove();
-    //
-    //     alert($('#'+id).html());
-    //     $('#'+id).remove();
-    // }
 
     function showGroup(catid) {
         // alert("order/cart/show_group/"+catid);
@@ -247,7 +242,12 @@
         //禁止按鈕重複點擊
         // $("#btnsubmit").attr('disabled', true);
         var insertarray = [];
-        var usertype = 3;
+
+        var isworkshop = false;
+
+        @can('workshop')
+            isworkshop = true;
+        @endcan
         //insert
         $(".cart").each(function () {
 
@@ -262,7 +262,7 @@
             var dept = '{{$_REQUEST['dept']}}';
 
             //管理員可以把數量改成0
-            if (qty > 0 || (qty == 0 && usertype == 3)) {
+            if (qty > 0 || (qty == 0 && isworkshop)) {
                 var item = {'itemid': itemid, 'qty': qty ,'deli_date' : deli_date , 'dept' : dept};
                 insertarray.push(item);
             }
@@ -287,7 +287,7 @@
             // console.log($qty);
 
             //管理員可以把數量改成0
-            if ((qty > 0) || (qty == 0 && usertype == 3)) {
+            if ((qty > 0) || (qty == 0 && isworkshop)) {
                 //不等於舊的數量才添加
                 if(qty != oldQty){
                     var item = {'mysqlid': mysqlID, 'qty': qty ,'oldqty': oldQty};
@@ -336,7 +336,7 @@
                     if (result.isDenied) {
                         window.open('{!! route('order.deli',['shop'=>$orderInfos->shopid,'deli_date'=>$orderInfos->deli_date]) !!}');
                         window.location.reload();
-                    } else if(result.isDismissed){
+                    } else if (result.isDismissed) {
                         window.location.href = '{{route('select_day')}}';
                     } else {
                         window.location.reload();
@@ -380,6 +380,7 @@
             $("#qty" + id).val(parseInt(qty) + base) ;
             var qty = parseInt(qty) + base;
             var maxQty = 600;
+
             if (qty > maxQty) {
                 alertMax(maxQty);
                 // alert("每項目數量最多只可為「" + maxQty + "」");

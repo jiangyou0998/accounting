@@ -32,8 +32,9 @@
                             <li><a href=""><i class="fa fa-youtube" aria-hidden="true"></i></a></li>
                         </ul>
                     </div>
+                    <!-- 頂部中間 -->
                     <div class="col-sm-4 col-4 text-center">
-                        <span class="time-open">Opening hours: 9:00am - 10:00pm </span>
+                        <span class="time-open"></span>
                     </div>
                     <!-- 登入登出 -->
                     @guest

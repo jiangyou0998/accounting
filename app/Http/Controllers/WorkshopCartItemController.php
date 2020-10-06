@@ -203,12 +203,15 @@ class WorkshopCartItemController extends Controller
 //            'date' => '2020-09-27'
 //        ];
 
+        $deptArr= ['R'=>'烘焙','B'=>'水吧','K'=>'廚房','F'=>'樓面'];
+
         $orderInfos = new Collection();
         $orderInfos->date = $deli_date;
         $orderInfos->shopid = $shopid;
 
         $orderInfos->shop_name = User::find($shopid)->txt_name;
         $orderInfos->dept = $dept;
+        $orderInfos->dept_name = $deptArr[$dept];
         $orderInfos->deli_date = $deli_date;
 
         return view('order.cart', compact('items', 'cats', 'sampleItems', 'orderInfos'));

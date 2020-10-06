@@ -3,8 +3,8 @@
     class="cartold" id="{{$item->product_no}} "
     data-itemid="{{$item->itemID}}" data-mysqlid="{{$item->orderID}}">
     <td width="10" align="right">{{$itemCount + 1}}.</td>
-    <td><font
-              size=-1>{{$item->suppName}} </font>{{$item->itemName}}, {{$item->product_no}}                        </td>
+    <td><span
+            style="font-size: smaller; color:blue">{{$item->suppName}} </span>{{$item->itemName}}, {{$item->product_no}}                        </td>
     <td align="center">
 
         @if($item->cut_order)
