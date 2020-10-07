@@ -15,14 +15,14 @@
         </div>
         <ul class="row list-services">
             <li class="col-6 col-md-3 col-sm-6">
-                <div class="_1sv text-center">
+                <div class="_1sv text-center" onclick="window.location.href='{{route('order.deli')}}'">
                     <div class="interface">
                         <span><i class="fa fa-truck" aria-hidden="true"></i></span>
-                        <p class="title">Fastest Delivery</p>
+                        <p class="title">送貨單</p>
                     </div>
                     <div class="hover-content">
                         <span><i class="fa fa-truck" aria-hidden="true"></i></span>
-                        <p class="title">Fastest Delivery</p>
+                        <p class="title">送貨單</p>
                         <p class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, modi</p>
                     </div>
                 </div>

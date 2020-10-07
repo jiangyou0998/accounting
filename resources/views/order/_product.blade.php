@@ -50,7 +50,7 @@
             !$product->invalid_order
             )
                 <td style="height:20px; width:50%; font-size:24px; text-align:center" colspan="2">
-                    <a id="itm-{{$product->id}}" href="javascript:;" onclick="add({{$product->id}},'{{$product->product_no}}','麵包','{{$product->product_name}}','個',{{$product->base}},{{$product->min}},1)">
+                    <a id="itm-{{$product->id}}" href="javascript:;" onclick="add({{$product->id}},'{{$product->product_no}}','{{mb_substr($product->cats->cat_name,0,2)}}','{{$product->product_name}}','{{$product->units->unit_name}}',{{$product->base}},{{$product->min}},'{{$product->cut_order}}','{{$product->not_deli_time}}','{{$product->order_by_workshop}}')">
                         <button type="button" style="height:100%; width:100%; font-size:18px;">
                             +
                         </button>

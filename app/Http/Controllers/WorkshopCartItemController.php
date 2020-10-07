@@ -228,7 +228,11 @@ class WorkshopCartItemController extends Controller
     //ajax加載產品
     public function showProduct($groupid, Request $request)
     {
-        $products = WorkshopProduct::where('group_id', $groupid)->where('status', '!=', 4)->get();
+        $products = WorkshopProduct::with('cats')
+            ->with('units')
+            ->where('group_id', $groupid)
+            ->where('status', '!=', 4)
+            ->get();
 //        dump($products);
         $deli_date = $request->deli_date;
 
@@ -240,9 +244,11 @@ class WorkshopCartItemController extends Controller
         foreach ($products as $product) {
 //            dump($deli_date.$product->cuttime);
             $this->checkInvalidOrder($product,$deli_date);
+//            dump(mb_substr($product->cats->cat_name,0,4));
 
         }
 //          dump($products->toArray());
+
         return view('order.cart_product', compact('products','infos'))->render();
     }
 

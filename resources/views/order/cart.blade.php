@@ -351,7 +351,7 @@
     }
 
     //product item +按鈕
-    function add(itemid, id, suppName, itemName, uom, base, min, overtime) {
+    function add(itemid, id, suppName, itemName, uom, base, min, cut_order, not_deli_time, invalid_order) {
 
         // var topWin = window.top.document.getElementById("leftFrame").contentWindow;
         // var qty = 0;
@@ -415,13 +415,23 @@
                 "        <td align=\"center\">\n";
 
             //超過截單時間
-            if (overtime) {
-                tr += "<img src=\"images/alert.gif\" width=\"20\" height=\"20\"> ";
+            if (cut_order) {
+                tr += "<img src=\"/images/alert.gif\" width=\"20\" height=\"20\"> ";
+            }
+
+            //不在貨期
+            if (not_deli_time) {
+                tr += "<img src=\"/images/del_3.png\" width=\"20\" height=\"20\"> ";
+            }
+
+            //後勤下單
+            if (invalid_order) {
+                tr += "<img src=\"/images/help1.png\" width=\"20\" height=\"20\"> ";
             }
             // "        <img src="images/alert.gif" width="20" height="20">        \n" +
             tr += "\t\t</td>\n" +
                 "        <td width=\"100\" align=\"center\">x \n" +
-                "          <input class=\"qty\" type=\"tel\" id=\"qty" + id + "\" name=\"1136\" type=\"text\" value=" + min + " data-base=" + base + " data-min=" + min + " size=\"3\" maxlength=\"4\" autocomplete=\"off\"></td>\n" +
+                "          <input class=\"qty bg-danger\" type=\"tel\" id=\"qty" + id + "\" name=\"1136\" type=\"text\" value=" + min + " data-base=" + base + " data-min=" + min + " size=\"3\" maxlength=\"4\" autocomplete=\"off\"></td>\n" +
                 "        <td align=\"center\">" + uom + "</td>\n" +
                 "        <td align=\"center\">\n" +
                 "\t\t\t<a href=\"#\" class=\"delnew\"><font color=\"#FF6600\">X</font></a>\n" +

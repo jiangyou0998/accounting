@@ -9,7 +9,7 @@
         <a href="{{route('select_day')}}"><span class="btn" style="font-size: 40px;line-height: 50px;">中央<br/>工場</span></a>
         <br/>
         @can('workshop')
-            <a href="order_check.php?head=5" class="styleA">翻查柯打</a>
+{{--            <a href="order_check.php?head=5" class="styleA">翻查柯打</a>--}}
             <br/>
             <a href='check_order_number.php' class='styleA' target='view_window'>翻查已下單數目</a>
             <br/>
@@ -19,7 +19,7 @@
         @endcan
 
         @can('operation')
-            <a href="order_check.php?head=5" class="styleA">翻查柯打</a>
+{{--            <a href="order_check.php?head=5" class="styleA">翻查柯打</a>--}}
             <br/>
             <a href='check_order_number.php' class='styleA' target='view_window'>翻查已下單數目</a>
             <br/>
@@ -27,7 +27,7 @@
         @endcan
 
         @can('shop')
-            <a href="order_check.php?head=5" class="styleA">翻查柯打</a>
+{{--            <a href="order_check.php?head=5" class="styleA">翻查柯打</a>--}}
             <br/>
             <a href='{{route('sample')}}' class='styleA'>創建範本</a>
             <br/>

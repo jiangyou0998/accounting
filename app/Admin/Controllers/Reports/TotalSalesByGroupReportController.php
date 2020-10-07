@@ -94,7 +94,7 @@ class TotalSalesByGroupReportController extends AdminController
      */
     public function generate($start,$end) {
 
-        $shops = User::getKingBakeryShops();
+        $shops = User::getRyoyuBakeryShops();
 
         $cartitem = new WorkshopCartItem();
         $cartitem = $cartitem

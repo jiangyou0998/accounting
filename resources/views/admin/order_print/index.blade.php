@@ -1,12 +1,11 @@
-
 <html>
 <head>
     <META name="ROBOTS" content="NOINDEX,NOFOLLOW">
         <title>內聯網</title>
-{{--        <link href="/js/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" type="text/css">--}}
-{{--        <script src="/js/jquery.min.js"></script>--}}
-{{--        <script src="/js/My97DatePicker/WdatePicker.js"></script>--}}
-{{--        <script src="/js/parser.js"></script>--}}
+        {{--        <link href="/js/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" type="text/css">--}}
+        {{--        <script src="/js/jquery.min.js"></script>--}}
+        {{--        <script src="/js/My97DatePicker/WdatePicker.js"></script>--}}
+        {{--        <script src="/js/parser.js"></script>--}}
         <style>
             <!--
             .style1 {
@@ -80,64 +79,45 @@
 
 <body>
 
-<div class="page">
-    <div width="100%">
+@foreach($datas as $data)
+{{--    每14個一頁,生成表頭和頂部--}}
+    @if(($loop->index % 14) == 0)
+
+        <div class="page">
+            <div width="100%">
 
 
+                <div width="100%">
+                    <div width="50%" align="left">列印時間: {{\Carbon\Carbon::now()->toDateTimeString()}}</div>
+                    <div width="50%" align="right">1/2</div>
+                </div>
 
-        <div width="100%">
-            <div width="50%" align="left">列印時間: {{\Carbon\Carbon::now()->toDateTimeString()}}</div>
-            <div width="50%" align="right">1/2</div>
-        </div>
+                <br/>
+                <div class="box">
 
-        <br/>
-        <div class="box">
-
-            <span class="style1">{{$checkInfos->title}}</span>
-            <span class="style1"
->出貨日期：
+                    <span class="style1">{{$checkInfos->title}}</span>
+                    <span class="style1"
+                    >出貨日期：
                             {{$checkInfos->deli_date}} ({{\Carbon\Carbon::parse($checkInfos->deli_date)->isoFormat('dd')}})
                         </span>
-        </div>
+                </div>
 
 
+                <hr/>
 
-        <hr/>
-        <table border="1" cellpadding="0" cellspacing="0">
-            @include('admin.order_print._table_head')
-
-                @foreach($datas as $data)
-
+                <table border="1" cellpadding="0" cellspacing="0">
+                    @include('admin.order_print._table_head')
+    @endif
+{{--    加載數據--}}
                     @include('admin.order_print._table_data')
 
-                @endforeach
-
-
-
-
-{{--        <div style="page-break-after:always;"></div>--}}
-{{--    </div>--}}
-
-{{--    <div class="page">--}}
-{{--        <div width="100%">--}}
-
-
-
-{{--            <div width="100%">--}}
-{{--                <div width="50%" align="left">列印時間: 2020-08-12 10:30</div>--}}
-{{--                <div width="50%" align="right">2/2</div>--}}
-{{--            </div>--}}
-
-{{--            <br/>--}}
-{{--            <span class="style1">麵包部 - 生包 - 麵粒、酥 </span>--}}
-{{--            <span class="style1"--}}
-{{--                  style="margin-left:400px;">出貨日期：--}}
-{{--                            1/8/2020 (六)--}}
-{{--                        </span>--}}
-{{--            <hr/>--}}
-{{--            <table border="1" cellpadding="0" cellspacing="0">--}}
-
-            </table>
-            <div style="page-break-after:always;"></div>
+{{--    第14個,生成打印分頁div--}}
+    @if(($loop->index % 14) == 13 || $loop->last)
+                </table>
+                <div style="page-break-after:always;"></div>
+            </div>
         </div>
+    @endif
+@endforeach
+
 </body>
