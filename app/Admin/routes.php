@@ -45,9 +45,6 @@ Route::group([
     $router->resource('front/roles', 'RoleController');
     $router->resource('pages/front_users', 'UserController');
 
-    $router->get('deli/edit', 'DeliController@deli_edit');
-    $router->post('deli/update', 'DeliController@deli_update')->name('deli.update');
-
     //api
     $router->get('api/group', 'ApiController@group');
     $router->get('api/group2', 'ApiController@group2');

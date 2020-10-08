@@ -184,6 +184,36 @@ class WorkshopCartItem extends Model
 
     }
 
+    public static function getDeliLists($deli_date){
+
+        $items = new WorkshopCartItem();
+
+        //設置select
+        $items = $items
+            ->select('deli_date')
+            ->addSelect('users.report_name')
+            ->addSelect('workshop_cart_items.user_id')
+            ->addSelect(DB::raw('SUM(default_price * ifnull(qty_received,qty)) as po_total'))
+        ;
+
+        //設置關聯表
+        $items = $items
+            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
+            ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id');
+
+        //設置查詢條件
+        $items = $items
+            ->whereNotIn('workshop_cart_items.status',[4])
+            ->where('workshop_cart_items.deli_date','=',$deli_date);
+
+        $items = $items
+            ->groupBy('workshop_cart_items.deli_date','workshop_cart_items.user_id')
+            ->orderBy('workshop_cart_items.deli_date')->get();
+
+        return $items;
+
+    }
+
 
 
 

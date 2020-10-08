@@ -136,7 +136,7 @@
 
                     //實收與落單數不同時寫入原因
                     if (receivedqty != qty) {
-                        var item = {'mysqlid': mysqlid, 'receivedqty': receivedqty};
+                        var item = {'mysqlid': mysqlid, 'receivedqty': receivedqty ,'oldqty': qty};
                         item.reason = $(".reason[data-id=" + id + "] option:selected").text();
                         updatearray.push(item);
                     }
@@ -272,19 +272,19 @@
         <tbody>
         <tr>
             <td align="center"><span class="style3"><u>分店收貨</u></span></td>
-            <td rowspan="2" colspan="3" align="center"><span class="style4">xxx</span></td>
-            <td align="right"><span class="style6">送貨日期:2020-xx-xx</span></td>
+            <td rowspan="2" colspan="3" align="center"><span class="style4">{{$infos->shop}}</span></td>
+            <td align="right"><span class="style6">送貨日期:{{$infos->deli_date}}</span></td>
         </tr>
         <tr>
-            <td width="25%" align="center"><span class="style3">PO#</span><span class="style10">2020xxxx</span>
+            <td width="25%" align="center"><span class="style3">PO#</span><span class="style10">{{\Carbon\Carbon::parse($infos->deli_date)->isoFormat('YYMMDD')}}</span>
             </td>
-            <td width="25%" align="right"><span class="style3">PO日期:2020-xx-xx</span></td>
+            <td width="25%" align="right"><span class="style3">PO日期:{{$infos->deli_date}}</span></td>
         </tr>
     </table>
 
     <table class="table1" border="1" cellspacing="0" cellpadding="0" style="width:995px; margin:auto; margin-left:1%;">
         {{--        表頭--}}
-        @include('admin.deli._table_head')
+        @include('order.deli.edit._table_head')
     </table>
     <form>
         <div style="width:995px;  padding-right:30px; margin-right:10px;">
@@ -292,14 +292,14 @@
                 <table class="table table-bordered table-striped" id="GrpoData" cellspacing="0" cellpadding="0"
                        style="width:993px; border-left:0px; border-right:0px; border-top:0px;">
                     @foreach($po as $product_id => $row)
-                        @include('admin.deli._table_data')
+                        @include('order.deli.edit._table_data')
                     @endforeach
                 </table>
             </div>
 
         </div>
 
-                @include('admin.deli._total')
+                @include('order.deli.edit._total')
 
         </br>
         <input type="hidden" name="po" value="2020xxxx"/>

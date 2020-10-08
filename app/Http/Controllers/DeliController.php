@@ -1,30 +1,38 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Http\Controllers;
 
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopCartItemLog;
-use App\Models\WorkshopOrderSample;
-use App\Models\WorkshopOrderSampleItem;
+use App\User;
 use Carbon\Carbon;
-use Dcat\Admin\Form;
-use Dcat\Admin\Grid;
-use Dcat\Admin\Show;
-use Dcat\Admin\Controllers\AdminController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class DeliController extends AdminController
+class DeliController extends Controller
 {
-    /**
-     * Make a grid builder.
-     *
-     * @return Grid
-     */
-    protected function grid()
-    {
 
+    public function list(Request $request)
+    {
+        $now = Carbon::now();
+        //如果URL沒有送貨日期,使用當日日期
+        if(isset($request->deli_date)){
+            $deli_date = $request->deli_date;
+        }else{
+            $deli_date = $now->toDateString();
+        }
+
+//        $deli_date = '2020-10-09';
+        $lists = WorkshopCartItem::getDeliLists($deli_date);
+
+        dump($lists->toArray());
+
+        $infos = new Collection();
+        $infos->deli_date = $deli_date;
+
+        return view('order.deli.edit.list',compact('lists','infos'));
     }
 
     protected function deli_edit(Request $request)
@@ -90,13 +98,11 @@ class DeliController extends AdminController
             13=>'不明原因'
         ];
 
-//        dump($items->toArray());
-//        dump($po);
-//        dump($dept_price);
-//        dump($total_price);
-//        die();
+        $infos = new Collection();
+        $infos->deli_date = $deli_date;
+        $infos->shop = User::find($shop)->txt_name;
 
-        return view('admin.deli.edit',compact('po' , 'reasonArr' , 'dept_price' , 'total_price'));
+        return view('order.deli.edit.edit',compact('po' ,'infos', 'reasonArr' , 'dept_price' , 'total_price'));
     }
 
     public function deli_update(Request $request)
@@ -123,16 +129,21 @@ class DeliController extends AdminController
             //更新
             $updateLogsArr = array();
             foreach ($updateDatas as $updateData) {
-                $cartItemModel::where('id', $updateData['mysqlid'])->update(['qty' => $updateData['receivedqty']]);
+                $cartItemModel::where('id', $updateData['mysqlid'])
+                    ->update([
+                        'qty_received' => $updateData['receivedqty'],
+                        'received_date'=> $now,
+                        'reason' => $updateData['reason'],
+                    ]);
 //                $productModel = new WorkshopProduct();
                 $updateLogsArr[] = [
                     'operate_user_id' => $user->id,
                     'shop_id' => $shopid,
                     'product_id' => $cartItemModel::find($updateData['mysqlid'])->product_id,
                     'cart_item_id' => $updateData['mysqlid'],
-                    'method' => 'UPDATE',
+                    'method' => 'MODIFY',
                     'ip' => $ip,
-                    'input' => '後台修改數量,從' . $updateData['oldqty'] . '變為' . $updateData['receivedqty'].',原因:'.$updateData['reason'],
+                    'input' => '後台修改數量，從' . $updateData['oldqty'] . '變為' . $updateData['receivedqty'].'，原因：'.$updateData['reason'],
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];

@@ -49,11 +49,16 @@ Route::group(['middleware' => ['auth','permission:shop|workshop|operation']], fu
     Route::get('order/deli', 'OrderController@order_deli')->name('order.deli');
     Route::get('order/select_deli', 'OrderController@select_deli')->name('order.select_deli');
 
-
     Route::get('order/cart','WorkshopCartItemController@cart')->name('cart');
     Route::post('order/cart/show_group/{catid}', 'WorkshopCartItemController@showGroup')->name('show_group');
     Route::post('order/cart/show_product/{groupid}', 'WorkshopCartItemController@showProduct')->name('show_product');
     Route::put('order/cart/{shopid}', 'WorkshopCartItemController@update')->name('cart.update');
+});
+
+Route::group(['middleware' => ['auth','permission:workshop']], function () {
+    Route::get('order/deli/list', 'DeliController@list')->name('order.deli.list');
+    Route::get('order/deli/edit', 'DeliController@deli_edit')->name('order.deli.edit');
+    Route::post('order/deli/update', 'DeliController@deli_update')->name('deli.update');
 });
 
 
@@ -73,3 +78,6 @@ Route::post('/sample/show_group/{catid}', 'WorkshopOrderSampleController@showGro
 Route::post('/sample/show_product/{groupid}', 'WorkshopOrderSampleController@showProduct')->middleware('auth')->name('sample.show_product');
 
 //Route::get('/import', 'ImportController@import');
+
+
+

@@ -43,7 +43,7 @@
                                    data-qty="0"
                                    value="0"
                                    class="dept-input" type="number" autocomplete="off"
-                                   style="width:95%; margin:auto;">
+                                   style="width:95%; margin:auto;" disabled>
                         </td>
                     @endif
 
