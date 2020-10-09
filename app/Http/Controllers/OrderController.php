@@ -110,7 +110,7 @@ class OrderController extends Controller
         $totals = WorkshopCartItem::getDeliTotal($deli_date,$shop);
 
 //        dump($details->toArray());
-//        dd($totals->toArray());
+//        dump($totals->toArray());
 
         //頁面顯示數據
         $infos = new Collection();

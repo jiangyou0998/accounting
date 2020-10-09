@@ -43,7 +43,7 @@ class WorkshopCat extends Model
     }
 
     //获取所有大類(生效)
-    public static function getCatsNotExpired($date)
+    public static function getCatsNotExpired($date , $dept)
     {
         $cats = new WorkshopCat();
         $cats = $cats
@@ -56,7 +56,16 @@ class WorkshopCat extends Model
             })->orWhere(function ($query) use ($date){
                 $query->whereNull('start_date')
                     ->whereNull('end_date');
-            })
+            });
+
+        //A第一車,B第二車,C麵頭
+        if($dept == 'A' || $dept == 'B'){
+            $cats = $cats->whereIn('cat_name',['熟細包','熟大包']);
+        }else if($dept == 'C'){
+            $cats = $cats->whereIn('cat_name',['麵頭']);
+        }
+
+        $cats = $cats
             ->orderby('sort')
             ->get();
 

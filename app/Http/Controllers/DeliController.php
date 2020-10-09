@@ -51,24 +51,35 @@ class DeliController extends Controller
         $items = WorkshopCartItem::getDeliItem($deli_date,$shop);
 
         $dept_price = array();
-        foreach(array("R", "B", "K", "F") as $dept){
+        foreach(array("A", "B", "C") as $dept){
             $dept_price[$dept] = 0;
         }
 
         $po = array();
         $total_price = 0;
+//        dump($items);
 
         //處理查詢數據用於頁面顯示
         foreach ($items as $item){
 //    var_dump($po);
-            $po[$item->product_id]['totalqty'] = 0;
-            $po[$item->product_id]['totalreceivedqty'] = 0;
+//            $po[$item->product_id]['totalqty'] = 0;
+//            $po[$item->product_id]['totalreceivedqty'] = 0;
 
             $po[$item->product_id]['unit'] = $item->UoM;
             $po[$item->product_id]['name'] = $item->item_name;
             $po[$item->product_id]['price'] = $item->default_price;
-            $po[$item->product_id]['totalqty'] += $item->dept_qty;
-            $po[$item->product_id]['totalreceivedqty'] += $item->qty_received;
+            if(isset($po[$item->product_id]['totalqty'])){
+                $po[$item->product_id]['totalqty'] += $item->dept_qty;
+            }else{
+                $po[$item->product_id]['totalqty'] = $item->dept_qty;
+            }
+
+            if(isset($po[$item->product_id]['totalreceivedqty'])){
+                $po[$item->product_id]['totalreceivedqty'] += $item->qty_received;
+            }else{
+                $po[$item->product_id]['totalreceivedqty'] = $item->qty_received;
+            }
+
             $po[$item->product_id]['reason'] = $item->reason;
             $po[$item->product_id]['qty'][$item->dept]["qty"] = $item->qty_received;
             $po[$item->product_id]['qty'][$item->dept]["deptqty"] = $item->dept_qty;

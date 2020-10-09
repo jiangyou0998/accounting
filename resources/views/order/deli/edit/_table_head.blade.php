@@ -9,10 +9,10 @@
             <tbody>
             <tr>
                 <td width="24%" align="center"><strong>實收</strong></td>
-                <td width="19%" align="center">烘焙</td>
-                <td width="19%" align="center">水吧</td>
-                <td width="19%" align="center">廚房</td>
-                <td width="19%" align="center">樓面</td>
+                <td width="19%" align="center">第一車</td>
+                <td width="19%" align="center">第二車</td>
+                <td width="19%" align="center">麵頭</td>
+{{--                <td width="19%" align="center">樓面</td>--}}
             </tr>
             </tbody>
         </table>

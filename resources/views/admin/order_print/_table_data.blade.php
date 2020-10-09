@@ -17,8 +17,7 @@
             <td class="data style6" align="center" bgcolor="#FFFFCC">{{$v}}</td>
         @endif
 
-
-        @if($loop->iteration > 3)
+        @if($loop->iteration > 3 && in_array($k,$heading_shops))
             <td class="data style6" align="center">
 
                 @if($v != "0")

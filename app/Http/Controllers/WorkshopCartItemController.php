@@ -182,11 +182,11 @@ class WorkshopCartItemController extends Controller
 //        dd($deliDate);
 
         $items = WorkshopCartItem::getCartItems($shopid, $dept, $deli_date);
-        $cats = WorkshopCat::getCatsNotExpired($deli_date);
+        $cats = WorkshopCat::getCatsNotExpired($deli_date , $dept);
 //        dump($deliDate);
         $sampleItems = new Collection();
-        if (count($items) == 0 && $dept == 'R') {
-            $sampleItems = WorkshopSample::getRegularOrderItems($shopid, $deliW);
+        if (count($items) == 0) {
+            $sampleItems = WorkshopSample::getRegularOrderItems($shopid, $deliW ,$dept);
         }
 
         foreach ($items as $item) {
@@ -203,7 +203,7 @@ class WorkshopCartItemController extends Controller
 //            'date' => '2020-09-27'
 //        ];
 
-        $deptArr= ['R'=>'烘焙','B'=>'水吧','K'=>'廚房','F'=>'樓面'];
+        $deptArr= ['A'=>'第一車','B'=>'第二車','C'=>'麵頭'];
 
         $orderInfos = new Collection();
         $orderInfos->date = $deli_date;

@@ -78,16 +78,30 @@ class WorkshopCartItem extends Model
 
         //設置select
         $items = $items
-            ->select('workshop_cart_items.id as orderID')
             ->addSelect('workshop_products.product_name as itemName')
             ->addSelect('workshop_products.product_no')
             ->addSelect('workshop_units.unit_name as UoM')
-            ->addSelect('workshop_cart_items.qty')
-            ->addSelect(DB::raw('if(workshop_cart_items.qty_received is not null , workshop_cart_items.qty_received, workshop_cart_items.qty) as qty_received'))
+            ->addSelect(DB::raw('SUM(workshop_cart_items.qty) as qty'))
+            ->addSelect(DB::raw('SUM(ifnull(workshop_cart_items.qty_received, workshop_cart_items.qty)) as qty_received'))
             ->addSelect('workshop_products.default_price')
             ->addSelect('workshop_cats.id as cat_id')
             ->addSelect('workshop_cats.cat_name')
             ->addSelect('workshop_products.id as itemID');
+
+        foreach (['A','B','C'] as $dept) {
+            $sql = "ROUND(sum(case when workshop_cart_items.dept = '$dept' then workshop_cart_items.qty else 0 end),2) as '".$dept."_total'";
+            $items = $items
+                ->addSelect(DB::raw($sql));
+        }
+
+        foreach (['A','B','C'] as $dept) {
+            $sql = "ROUND(sum(case when workshop_cart_items.dept = '$dept' then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty)) else 0 end),2) as '".$dept."_total_received'";
+            $items = $items
+                ->addSelect(DB::raw($sql));
+        }
+
+        //todo
+        //foreach ABC聚合試試
 
         //設置關聯表
         $items = $items
@@ -103,7 +117,9 @@ class WorkshopCartItem extends Model
             ->where('workshop_cart_items.qty','>=',0)
             ->where('workshop_cart_items.deli_date','=',$deli_date);
 
-        $items = $items->orderBy('workshop_products.product_no')->get();
+        $items = $items
+            ->groupBy('workshop_products.id')
+            ->orderBy('workshop_products.product_no')->get();
 
         return $items;
 
@@ -153,11 +169,11 @@ class WorkshopCartItem extends Model
             ->addSelect('workshop_cart_items.deli_date')
             ->addSelect('workshop_cart_items.user_id')
             ->addSelect('workshop_cart_items.product_id')
-            ->addSelect('workshop_cart_items.qty as dept_qty')
+            ->addSelect(DB::raw('ROUND(workshop_cart_items.qty,0) as dept_qty'))
             ->addSelect('workshop_cart_items.dept')
             ->addSelect('workshop_products.default_price')
             ->addSelect('workshop_units.unit_name as UoM')
-            ->addSelect(DB::raw('if(workshop_cart_items.qty_received is not null , workshop_cart_items.qty_received, workshop_cart_items.qty) as qty_received'))
+            ->addSelect(DB::raw('ROUND(ifnull(workshop_cart_items.qty_received , workshop_cart_items.qty),0) as qty_received'))
             ->addSelect('workshop_cats.id as cat_id')
             ->addSelect('workshop_cart_items.reason')
             ->addSelect('workshop_cats.cat_name')

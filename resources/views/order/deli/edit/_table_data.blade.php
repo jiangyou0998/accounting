@@ -20,7 +20,7 @@
 					{{$row['totalreceivedqty']}}</span>
                     {{$row['unit']}}
                 </td>
-                @foreach(array("R", "B", "K", "F") as $dept)
+                @foreach(array("A", "B", "C") as $dept)
                     @if(isset($row['qty'][$dept]))
                         <td width="19%" align="center">
                             <input name="item[{{$product_id}}][{{$dept}}]"

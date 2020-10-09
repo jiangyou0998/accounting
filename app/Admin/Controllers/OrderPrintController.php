@@ -9,6 +9,8 @@ use App\Models\TblUser;
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopCat;
 use App\User;
+
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -16,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 class OrderPrintController extends Controller
 {
 
-    public function test()
+    public function test(Request $request)
     {
 //        $checks = new TblOrderCheck();
 //        $check = $checks::find(49);
@@ -34,22 +36,32 @@ class OrderPrintController extends Controller
 //        dd($checkArr);
 //        dd($checkIds);
 
-        $cat_id = 1;
-        $deli_date = '2020-10-09';
+        $cat_id = $request->cat_id;
+        $deli_date = $request->deli_date;
 
         $shops = User::getRyoyuBakeryShops();
 
-        $datas = new WorkshopCartItem();
-        $datas = $datas
+        $cartitemModel = new WorkshopCartItem();
+        $datas = $cartitemModel
             ->select('workshop_products.product_no as 編號' )
             ->addSelect('workshop_products.product_name as 名稱')
             ->addSelect(DB::raw('ROUND(SUM(ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty)) , 0) as Total'));
 
+        $totals = $cartitemModel;
+
         foreach ($shops as $shop){
 //                $sql = "sum(case when workshop_cart_items.user_id = '$shop->id' then workshop_cart_items.qty else 0 end) as '$shop->chr_report_name'";
 //                dump($sql);
-            $sql = "ROUND(sum(case when workshop_cart_items.user_id = '$shop->id' then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '$shop->report_name'";
+            $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '$shop->id' and workshop_cart_items.dept != 'B') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '$shop->report_name'";
             $datas = $datas
+                ->addSelect(DB::raw($sql));
+            $totals = $totals
+                ->addSelect(DB::raw($sql));
+
+            $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '$shop->id' and workshop_cart_items.dept = 'B') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '$shop->report_name"."2'";
+            $datas = $datas
+                ->addSelect(DB::raw($sql));
+            $totals = $totals
                 ->addSelect(DB::raw($sql));
         }
 
@@ -68,14 +80,38 @@ class OrderPrintController extends Controller
             ->get();
 
 //        dump($datas->toArray());
+        $totals = $totals
+            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
+            ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
+            ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
+            ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
+            ->where('users.type', '=', 2)
+            ->where('workshop_cart_items.status', '<>', 4)
+            ->where('workshop_cats.id',$cat_id)
+            ->where('workshop_cart_items.deli_date', $deli_date)
+            ->first();
 
-        $headings = $datas->first()->toArray();
+        $heading_shops = array();
+//        dump($totals->toArray());
+        foreach ($totals->toArray() as $key=>$total){
+//            dump($total);
+            if($total != '0'){
+                $heading_shops[] = $key;
+            }
+        }
+//        dump(in_array('奧海城2',$heading_shops));
+
+        $headings = [];
+        if($datas->first()){
+            $headings = $datas->first()->toArray();
+        }
+
 //        dump($datas->toArray());
         $checkInfos = new Collection();
         $checkInfos->title = WorkshopCat::find($cat_id)->cat_name;
         $checkInfos->deli_date = $deli_date;
 
-        return view('admin.order_print.index',compact('datas' ,'headings', 'checkInfos'));
+        return view('admin.order_print.index',compact('datas' ,'headings', 'heading_shops','checkInfos'));
     }
 
 
