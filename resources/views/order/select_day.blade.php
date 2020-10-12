@@ -82,7 +82,11 @@
 
             @if(Auth::user()->can('workshop') or Auth::user()->can('operation'))
             if ((shop = $("#shop").val()) == '0') {
-                alert("請先選擇分店");
+                // alert("請先選擇分店");
+                Swal.fire({
+                    icon: 'warning',
+                    title: "請先選擇分店",
+                });
                 return;
             }
             @endif
@@ -91,7 +95,11 @@
                 location.href = "{{route('cart')}}"+"?shop=" + shop + "&dept=" + Obj[i].value + "&deli_date=" + deli_date;
                 //this.close();
             } else {
-                alert("請先選擇部門");
+                // alert("請先選擇部門");
+                Swal.fire({
+                    icon: 'warning',
+                    title: "請先選擇部門",
+                });
             }
 
         }

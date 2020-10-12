@@ -10,6 +10,7 @@ use App\Models\WorkshopProduct;
 use App\Models\WorkshopSample;
 use App\User;
 use Carbon\Carbon;
+use Dcat\Admin\Grid\Column\Filter\Input;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +26,7 @@ class WorkshopOrderSampleController extends Controller
 
         $sampleModel = new WorkshopOrderSample();
         $samples = $sampleModel
-            ->select('id', 'sampledate')
+            ->select('id', 'sampledate','dept')
             ->where('user_id', $shopid)
             ->where('disabled', 0)
             ->get();
@@ -35,11 +36,11 @@ class WorkshopOrderSampleController extends Controller
 
 //            dump($sampledate);
         }
-
+    dump($samples->toArray());
         return view('sample.index', compact('samples'));
     }
 
-    public function create(WorkshopOrderSample $sample)
+    public function create(WorkshopOrderSample $sample ,Request $request)
     {
         $user = Auth::User();
 
@@ -53,6 +54,7 @@ class WorkshopOrderSampleController extends Controller
         $sampledate = $sampleModel
             ->select(DB::raw('group_concat(sampledate) as sampledate'))
             ->where('user_id', $shopid)
+            ->where('dept', $request->dept)
             ->where('disabled', 0)
             ->first()->sampledate;
 
@@ -60,7 +62,7 @@ class WorkshopOrderSampleController extends Controller
 
         $orderInfos->shop_name = User::find($shopid)->txt_name;
 
-//        dump($sample->id);
+        dump($request->dept);
         return view('sample.cart', compact( 'sample','cats',  'orderInfos' ,'checkHtml' ,'sampledate'));
     }
 
@@ -71,10 +73,14 @@ class WorkshopOrderSampleController extends Controller
         $shopid = $user->id;
 
         $sampleModel = new WorkshopOrderSample();
+
+//        dump($sample);
+
         $sampledate = $sampleModel
             ->select(DB::raw('group_concat(sampledate) as sampledate'))
             ->where('user_id', $shopid)
             ->where('id' ,'<>' , $sample->id)
+            ->where('dept' , $sample->dept)
             ->where('disabled', 0)
             ->first()->sampledate;
 
@@ -82,6 +88,7 @@ class WorkshopOrderSampleController extends Controller
             ->select(DB::raw('group_concat(sampledate) as sampledate'))
             ->where('user_id', $shopid)
             ->where('id'  , $sample->id)
+            ->where('dept' , $sample->dept)
             ->where('disabled', 0)
             ->first()->sampledate;
 
@@ -89,7 +96,7 @@ class WorkshopOrderSampleController extends Controller
 
         $cats = WorkshopCat::getCats();
 
-        $sampleItems = WorkshopSample::getRegularOrderItems($shopid, $sampledate);
+        $sampleItems = WorkshopSample::getRegularOrderItems($shopid, $sampledate ,$sample->dept);
 
         $orderInfos = new Collection();
 
@@ -114,6 +121,7 @@ class WorkshopOrderSampleController extends Controller
             $sampleId = $sampleModel::insertGetId([
                 'user_id' => $shopid,
                 'sampledate' => $request->sampledate,
+                'dept' => $request->dept,
                 'disabled' => 0
             ]);
 

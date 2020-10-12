@@ -27,7 +27,7 @@ class DeliController extends Controller
 //        $deli_date = '2020-10-09';
         $lists = WorkshopCartItem::getDeliLists($deli_date);
 
-        dump($lists->toArray());
+//        dump($lists->toArray());
 
         $infos = new Collection();
         $infos->deli_date = $deli_date;

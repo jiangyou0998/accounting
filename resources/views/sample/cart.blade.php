@@ -281,7 +281,7 @@
             url = '{{route('sample.update',$sample->id)}}';
             type = 'PUT';
         @else
-            url = '{{route('sample.store')}}';
+            url = '{{route('sample.store',['dept'=> Request()->dept])}}';
             type = 'POST';
         @endif
 

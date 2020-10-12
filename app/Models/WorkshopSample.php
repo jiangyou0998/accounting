@@ -13,7 +13,7 @@ class WorkshopSample extends Model
     public $timestamps = false;
 
     //獲取固定柯打item
-    public static function getRegularOrderItems($shop ,$dateofweek ,$dept)
+    public static function getRegularOrderItems($shop ,$dateofweek ,$dept = '')
     {
         $items = new WorkshopSample();
 
@@ -43,10 +43,14 @@ class WorkshopSample extends Model
         //設置查詢條件
         $items = $items
             ->where('workshop_order_sample.user_id','=',$shop)
-            ->where('workshop_order_sample.dept','=',$dept)
+//            ->where('workshop_order_sample.dept','=',$dept)
             ->where('workshop_order_sample.sampledate','like', "%$dateofweek%")
             ->where('workshop_order_sample_item.disabled','=',0)
             ->where('workshop_order_sample.disabled','=',0);
+
+        if($dept){
+            $items = $items->where('workshop_order_sample.dept','=',$dept);
+        }
 
         $items = $items->orderBy('workshop_products.product_no')->get();
 

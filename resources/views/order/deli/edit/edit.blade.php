@@ -101,7 +101,6 @@
         });
 
         function checkSubmit() {
-            // alert('1111');
 
             //原因選擇完畢再提交
             var reasonfinish = true;
@@ -152,15 +151,31 @@
                 url: "{{route('deli.update')}}",
                 data: {
                     'updateData': JSON.stringify(updatearray),
-                    'shopid' : '{{$_REQUEST['shop']}}'
+                    'shopid' : '{{Request()->shop}}'
                 },
                 success: function (msg) {
                     if (msg) {
                         alert('發生錯誤!\n');
                         console.log(msg);
                     } else {
-                        alert('已確認收貨!\n');
-                        location.href = "";
+                        // alert('已確認收貨!\n');
+
+                        Swal.fire({
+                            icon: 'success',
+                            title: "已確認收貨!",
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: '確定',
+                            cancelButtonText: '返回',
+                        }).then((result) => {
+                            if (result.isDismissed) {
+                                window.location.href = '{{route('order.deli.list')}}';
+                            } else {
+                                window.location.reload();
+                            }
+
+                        });
+
                     }
                 }
             });

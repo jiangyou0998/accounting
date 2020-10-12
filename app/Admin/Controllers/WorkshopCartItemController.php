@@ -65,10 +65,9 @@ class WorkshopCartItemController extends AdminController
             $grid->column('chr_phase')->hide();
             $grid->column('po_no');
             $grid->column('dept')->using(
-                ['R' => '烘焙',
-                    'B' => '水吧',
-                    'K' => '廚房',
-                    'F' => '樓面']);
+                ['A' => '第一車',
+                    'B' => '第二車',
+                    'C' => '麵頭',]);
             $grid->column('insert_date');
             $grid->column('order_date')->hide();
             $grid->column('received_date');
@@ -76,10 +75,10 @@ class WorkshopCartItemController extends AdminController
 
             $grid->selector(function (Grid\Tools\Selector $selector) {
 
-                $kbshop = User::getKingBakeryShops()->toArray();
-                $kbshops = array_column($kbshop, 'report_name', 'id');
+                $shop = User::getRyoyuBakeryShops()->toArray();
+                $shops = array_column($shop, 'report_name', 'id');
 
-                $selector->select('user_id', '分店', $kbshops);
+                $selector->select('user_id', '分店', $shops);
 
                 $selector->selectOne('status', '狀態', [
                     1 => '正常',
@@ -97,10 +96,9 @@ class WorkshopCartItemController extends AdminController
                 });
 
                 $selector->select('dept', '部門', [
-                    'R' => '烘焙',
-                    'B' => '水吧',
-                    'K' => '廚房',
-                    'F' => '樓面',
+                    'A' => '第一車',
+                    'B' => '第二車',
+                    'C' => '麵頭',
                 ]);
 
                 $selector->select('change', '修改過', [

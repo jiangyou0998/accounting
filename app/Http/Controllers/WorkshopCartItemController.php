@@ -150,7 +150,7 @@ class WorkshopCartItemController extends Controller
         $deliW = Carbon::parse($deli_date)->isoFormat('d');
 
         if ($user->can('shop')) {
-            dump('shop');
+//            dump('shop');
             $shopid = $user->id;
             //分店無法修改明日之前的訂單
             if ($deli_date <= now()) {
@@ -158,11 +158,11 @@ class WorkshopCartItemController extends Controller
             }
         }
         if ($user->can('workshop')) {
-            dump('workshop');
+//            dump('workshop');
             $shopid = $request->shop;
         }
         if ($user->can('operation')) {
-            dump('operation');
+//            dump('operation');
             $shopid = $request->shop;
             if ($deli_date <= now()) {
                 return "權限不足";

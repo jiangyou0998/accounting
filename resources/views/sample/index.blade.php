@@ -2,60 +2,94 @@
 
 @section('content')
 
-            <style type="text/css">
-                <!--
-                body {
-                    background-color: #FFFFCC;
-                }
+    <style type="text/css">
+        <!--
+        body {
+            background-color: #FFFFCC;
+        }
 
-                .style4 {
-                    color: #FF0000;
-                    font-size:50px;
-                }
+        .style4 {
+            color: #FF0000;
+            font-size: 50px;
+        }
 
-                .style5 {
-                    font-size: medium;
-                    font-weight: bold;
-                }
+        .style5 {
+            font-size: medium;
+            font-weight: bold;
+        }
 
-                .sizefont {
-                    font-size: 130%;
-                }
+        .sizefont {
+            font-size: 130%;
+        }
 
-                -->
-            </style>
+        -->
+    </style>
 
 
 
 
     <div align="left"><a target="_top" href="{{route('order')}}" style="font-size: xx-large;">返回</a></div>
-    <center class="style5">
+    <div class="style5" style="text-align: center;">
         <span class="style4">創建範本</span>
-    </center>
-    <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0">
-        <div style="margin-bottom: 10px;"><button class="sizefont"><a class="btn btn-primary" href="{{route('sample.create')}}">新建範本</a></button></div>
-        @foreach($samples as $sample)
-            <tr style="margin-top: 60px" class="sizefont">
-                <td align="right" width="4%"><strong>#</strong></td>
+    </div>
 
-                <td align="left"><a
-                        href="{{route('sample.edit',$sample->id)}}"><strong>{{$sample->sampledate}}</strong></a>
-                </td>
-                <td align="middle" width="10%"><strong>
-                        <button onclick="delsample({{$sample->id}});">刪除範本</button>
-                    </strong></td>
-            </tr>
+{{--    第一車--}}
+    <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0">
+        <div class="style5" style="text-align: center;">
+            <span class="style4">第一車</span>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <button class="sizefont"><a class="btn btn-primary" href="{{route('sample.create',['dept'=>'A'])}}">新建第一車範本</a></button>
+        </div>
+        @foreach($samples as $sample)
+            @if($sample->dept == 'A')
+                <tr style="margin-top: 60px" class="sizefont">
+                    <td align="right" width="4%"><strong>#</strong></td>
+
+                    <td align="left"><a
+                            href="{{route('sample.edit',$sample->id)}}"><strong>{{$sample->sampledate}}</strong></a>
+                    </td>
+                    <td align="middle" width="10%"><strong>
+                            <button onclick="delsample({{$sample->id}});">刪除範本</button>
+                        </strong></td>
+                </tr>
+            @endif
+        @endforeach
+
+{{--第二車--}}
+    </table>
+    <br>
+
+    <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0">
+        <div class="style5" style="text-align: center;">
+            <span class="style4">第二車</span>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <button class="sizefont"><a class="btn btn-primary" href="{{route('sample.create',['dept'=>'B'])}}">新建第二車範本</a></button>
+        </div>
+        @foreach($samples as $sample)
+            @if($sample->dept == 'B')
+                <tr style="margin-top: 60px" class="sizefont">
+                    <td align="right" width="4%"><strong>#</strong></td>
+
+                    <td align="left"><a
+                            href="{{route('sample.edit',$sample->id)}}"><strong>{{$sample->sampledate}}</strong></a>
+                    </td>
+                    <td align="middle" width="10%"><strong>
+                            <button onclick="delsample({{$sample->id}});">刪除範本</button>
+                        </strong></td>
+                </tr>
+            @endif
         @endforeach
 
 
     </table>
-    <br>
 
     <script>
-        function delsample(id){
+        function delsample(id) {
 
             Swal.fire({
-                title:"您確定要刪除該範本嗎?",
+                title: "您確定要刪除該範本嗎?",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -88,7 +122,7 @@
 
                             // top.location.href = 'order_sample.php';
                         },
-                        error:function (msg) {
+                        error: function (msg) {
                             // console.log(msg);
                             Swal.fire({
                                 icon: 'error',
