@@ -36,7 +36,7 @@ class WorkshopOrderSampleController extends Controller
 
 //            dump($sampledate);
         }
-    dump($samples->toArray());
+//    dump($samples->toArray());
         return view('sample.index', compact('samples'));
     }
 
@@ -61,8 +61,9 @@ class WorkshopOrderSampleController extends Controller
         $checkHtml = $this->getCheckboxHtml($sampledate);
 
         $orderInfos->shop_name = User::find($shopid)->txt_name;
+        $orderInfos->dept_name = $request->dept;
 
-        dump($request->dept);
+//        dump($request->dept);
         return view('sample.cart', compact( 'sample','cats',  'orderInfos' ,'checkHtml' ,'sampledate'));
     }
 
@@ -102,8 +103,7 @@ class WorkshopOrderSampleController extends Controller
 
 
         $orderInfos->shop_name = User::find($shopid)->txt_name;
-
-
+        $orderInfos->dept_name = $sample->dept;
 
 //        dump($sampleItems);
         return view('sample.cart', compact( 'sample','cats', 'sampleItems', 'orderInfos' ,'checkHtml' ,'currentdate','sampleItems'));

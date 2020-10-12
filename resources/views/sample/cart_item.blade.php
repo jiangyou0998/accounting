@@ -26,11 +26,21 @@
     <!-- <form action="order_z_dept_2.php?action=confirm&dept=烘焙" method="post" id="cart" name="cart" target="_top">-->
     <div align="right">
         <strong>
-            <font color="#FF0000" size="+3">分店：{{$orderInfos->shop_name}} </font>
+            <span style="color: #FF0000; font-size: 172%; ">分店：{{$orderInfos->shop_name}} </span>
         </strong>
     </div>
-    <div align="left" style="padding-top: 15px;"><strong><font color="#FF0000" size="+3">選擇星期:
-            </font></strong>
+    <div align="right">
+        <strong>
+            @if($orderInfos->dept_name == 'A')
+                <span style="color: #FF0000; font-size: 172%; ">第一車</span>
+            @elseif($orderInfos->dept_name == 'B')
+                <span style="color: #FF0000; font-size: 172%; ">第二車</span>
+            @endif
+
+        </strong>
+    </div>
+    <div align="left" style="padding-top: 15px;"><strong><span style="color: #FF0000; font-size: 172%; ">選擇星期:
+            </span></strong>
 
     </div>
     {!! $checkHtml !!}
