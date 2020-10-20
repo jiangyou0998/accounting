@@ -228,6 +228,7 @@ return [
         'directory' => [
             'image' => 'images',
             'file'  => 'files',
+            'notice'=>'notices',
         ],
     ],
 

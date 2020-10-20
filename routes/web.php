@@ -78,6 +78,6 @@ Route::post('/sample/show_group/{catid}', 'WorkshopOrderSampleController@showGro
 Route::post('/sample/show_product/{groupid}', 'WorkshopOrderSampleController@showProduct')->middleware('auth')->name('sample.show_product');
 
 //Route::get('/import', 'ImportController@import');
-
-
+Route::get('notice', 'NoticeController@index')->middleware('auth')->name('notice');
+Route::get('dept_form', 'FormController@index')->middleware('auth')->name('form');
 

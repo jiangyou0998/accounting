@@ -65,6 +65,27 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
         ],
 
+        'admin' => [
+            'driver' => 'local',
+            'root' => public_path('uploads'),
+            'visibility' => 'public',
+            'url' => env('APP_URL').'/uploads',
+        ],
+
+        'notice' => [
+            'driver' => 'local',
+            'root' => public_path('notices'),
+            'visibility' => 'public',
+            'url' => env('APP_URL').'/notices',
+        ],
+
+        'forms' => [
+            'driver' => 'local',
+            'root' => public_path('forms'),
+            'visibility' => 'public',
+            'url' => env('APP_URL').'/forms',
+        ],
+
     ],
 
 ];
