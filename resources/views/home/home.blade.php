@@ -12,9 +12,9 @@
             </div>
 
                 <div class="col-md-4 mb-4">
-                    <h4 class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="text-muted">部門</span>
-                    </h4>
+                    <h6 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">快捷進入</span>
+                    </h6>
                     <ul class="list-group mb-3">
 
 
@@ -51,17 +51,7 @@
                             </div>
 
                         </li>
-                        <li class="list-group-item d-flex justify-content-between lh-condensed">
-                            <div>
-                                <h6 class="my-0">
-                                    <a href="{{route('notice')}}">
-                                        全部
-                                    </a>
-                                </h6>
 
-                            </div>
-
-                        </li>
 {{--                        @foreach($dept_names as $key => $dept_name)--}}
 {{--                            <li class="list-group-item d-flex justify-content-between lh-condensed">--}}
 {{--                                <div>--}}
@@ -81,33 +71,7 @@
     </div>
 
     <!-- 最新通告 -->
-    <section id="services">
-        <div class="container">
-            <div class="col-md-12 mb-12">
-                <h4 class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="text-muted">最新通告</span>
-                </h4>
-                <ul class="list-group mb-3">
-
-
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-                        <div>
-                            <h6 class="my-0">
-                                <a href="{{route('notice')}}">
-                                    全部
-                                </a>
-                            </h6>
-
-                        </div>
-                        <span class="text-muted">$12</span>
-
-                    </li>
-
-                </ul>
-
-            </div>
-        </div>
-    </section>
+    @include('home._notice')
 
 <!-- 快捷進入 -->
 <section id="services">

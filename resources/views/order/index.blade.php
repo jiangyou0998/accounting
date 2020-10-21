@@ -35,10 +35,10 @@
         @endcan
 
     </div>
-    <div class="col-sm-6">
-        <!-- <a href="#"><img src="images/Order_Button_Supplier.jpg" width="150" height="150" border="0"></a> -->
-        <a href="#"><span class="btn" style="font-size: 30px;line-height: 100px;">供應商</span></a>
-    </div>
+{{--    <div class="col-sm-6">--}}
+{{--        <!-- <a href="#"><img src="images/Order_Button_Supplier.jpg" width="150" height="150" border="0"></a> -->--}}
+{{--        <a href="#"><span class="btn" style="font-size: 30px;line-height: 100px;">供應商</span></a>--}}
+{{--    </div>--}}
 </div>
 
 

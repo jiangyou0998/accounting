@@ -69,7 +69,7 @@
     @include('layouts._nav')
     <!-- Navigation -->
     </div>
-    <div style="height: 170px"></div>
+    <div style="height: 120px"></div>
     <div class="container main">
         <div class="col-sm-12 col-md-12 col-12">
 

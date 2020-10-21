@@ -24,15 +24,15 @@ class FormController extends AdminController
             $roleIds = Admin::user()->roles->pluck('id');
             $grid->model()->whereIn('admin_role_id',$roleIds);
             $grid->column('id')->sortable();
-            $grid->column('notice_name');
+            $grid->column('form_name');
             $grid->column('admin_role_id');
             $grid->column('file_path');
             $grid->column('user_id');
             $grid->column('created_date');
             $grid->column('modify_date');
-            $grid->column('deleted_date');
-            $grid->column('notice_no');
-            $grid->column('expired_date');
+//            $grid->column('deleted_date');
+            $grid->column('sample_path');
+            $grid->column('form_no');
             $grid->column('first_path');
 
             $grid->filter(function (Grid\Filter $filter) {
@@ -87,8 +87,8 @@ class FormController extends AdminController
                 $form->display('form_no');
             }
 
-            $form->text('form_name');
-            $form->select('admin_role_id')->options($roles);
+            $form->text('form_name')->required();
+            $form->select('admin_role_id')->options($roles)->required();
             $form->file('file_path')
                 ->disk('forms')
                 ->accept('xls,xlsx,csv,pdf')
@@ -123,14 +123,14 @@ class FormController extends AdminController
                 // 判断是否是新增操作
                 if ($form->isCreating()) {
                     $form->input('created_date', $now);
-                    $notice_no = DB::table('notices')->max('notice_no');
-                    //最小編號10001
-                    if($notice_no <= 10000){
-                        $notice_no = 10001;
-                    }else{
-                        $notice_no++ ;
-                    }
-                    $form->input('notice_no', $notice_no);
+//                    $notice_no = DB::table('notices')->max('notice_no');
+//                    //最小編號10001
+//                    if($notice_no <= 10000){
+//                        $notice_no = 10001;
+//                    }else{
+//                        $notice_no++ ;
+//                    }
+//                    $form->input('notice_no', $notice_no);
                 }
 
                 $form->input('modify_date', $now);

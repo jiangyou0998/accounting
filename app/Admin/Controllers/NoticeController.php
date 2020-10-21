@@ -85,8 +85,8 @@ class NoticeController extends AdminController
                 $form->display('notice_no');
             }
 
-            $form->text('notice_name');
-            $form->select('admin_role_id')->options($roles);
+            $form->text('notice_name')->required();
+            $form->select('admin_role_id')->options($roles)->required();
             $form->file('file_path')
                 ->disk('notice')
                 ->accept('xls,xlsx,csv,pdf')

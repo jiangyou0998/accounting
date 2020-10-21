@@ -36,6 +36,18 @@ class Notice extends Model
             ->pluck('admin_roles.name','notices.admin_role_id');
     }
 
+    public static function getNoticesForHome($limit = 6)
+    {
+        $notices = Notice::where('expired_date','>',now());
+
+        $notices = $notices
+            ->orderByDesc('modify_date')
+            ->limit($limit)
+            ->get();
+
+        return $notices;
+    }
+
 //    public static function setAdminRoles()
 //    {
 //        $depts = DB::table('tbl_dept')->get();
