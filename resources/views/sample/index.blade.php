@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    範本
+@stop
+
 @section('content')
 
     <style type="text/css">

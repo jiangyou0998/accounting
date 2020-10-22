@@ -29,23 +29,24 @@ Route::post('login', 'Auth\LoginController@login');
 Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
 // 用户注册相关路由
-Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-Route::post('register', 'Auth\RegisterController@register');
+//Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+//Route::post('register', 'Auth\RegisterController@register');
 
 // 密码重置相关路由
-Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+//Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+//Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+//Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+//Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
 
 // Email 认证相关路由
-Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
-Route::get('email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
-Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
+//Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
+//Route::get('email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
+//Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 
 Route::group(['middleware' => ['auth','permission:shop|workshop|operation']], function () {
     Route::get('/order', 'OrderController@index')->name('order');
     Route::get('/order/select_day', 'OrderController@select_day')->name('select_day');
+    Route::get('/order/select_old_order', 'OrderController@select_old_order')->name('order.select_old_order');
     Route::get('order/deli', 'OrderController@order_deli')->name('order.deli');
     Route::get('order/select_deli', 'OrderController@select_deli')->name('order.select_deli');
 
@@ -78,6 +79,6 @@ Route::post('/sample/show_group/{catid}', 'WorkshopOrderSampleController@showGro
 Route::post('/sample/show_product/{groupid}', 'WorkshopOrderSampleController@showProduct')->middleware('auth')->name('sample.show_product');
 
 //Route::get('/import', 'ImportController@import');
-Route::get('notice', 'NoticeController@index')->middleware('auth')->name('notice');
-Route::get('dept_form', 'FormController@index')->middleware('auth')->name('form');
+Route::any('notice', 'NoticeController@index')->middleware('auth')->name('notice');
+Route::any('dept_form', 'FormController@index')->middleware('auth')->name('form');
 

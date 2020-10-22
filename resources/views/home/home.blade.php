@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    首頁
+@stop
+
 @section('content')
 
 
@@ -12,59 +16,9 @@
             </div>
 
                 <div class="col-md-4 mb-4">
-                    <h6 class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="text-muted">快捷進入</span>
-                    </h6>
-                    <ul class="list-group mb-3">
-
-
-                        <li class="list-group-item d-flex justify-content-between lh-condensed">
-                            <div>
-                                <h6 class="my-0">
-                                    <a href="{{route('notice')}}">
-                                        全部
-                                    </a>
-                                </h6>
-
-                            </div>
-
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between lh-condensed">
-                            <div>
-                                <h6 class="my-0">
-                                    <a href="{{route('notice')}}">
-                                        全部
-                                    </a>
-                                </h6>
-
-                            </div>
-
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between lh-condensed">
-                            <div>
-                                <h6 class="my-0">
-                                    <a href="{{route('notice')}}">
-                                        全部
-                                    </a>
-                                </h6>
-
-                            </div>
-
-                        </li>
-
-{{--                        @foreach($dept_names as $key => $dept_name)--}}
-{{--                            <li class="list-group-item d-flex justify-content-between lh-condensed">--}}
-{{--                                <div>--}}
-{{--                                    <h6 class="my-0">--}}
-{{--                                        <a href="{{route('notice',['dept' => $key])}}">{{$dept_name}}</a>--}}
-{{--                                    </h6>--}}
-{{--                                </div>--}}
-
-{{--                            </li>--}}
-{{--                        @endforeach--}}
-
-                    </ul>
-
+                    <!-- 快速進入 -->
+                    @include('home._quick_link')
+                    <!-- 快速進入 -->
                 </div>
             </div>
 
@@ -74,88 +28,88 @@
     @include('home._notice')
 
 <!-- 快捷進入 -->
-<section id="services">
-    <div class="container">
-        <div class="col-sm-6 col-md-6 col-12 title1 text-center mx-auto">
-            <h3><span>快捷進入</span></h3>
+{{--<section id="services">--}}
+{{--    <div class="container">--}}
+{{--        <div class="col-sm-6 col-md-6 col-12 title1 text-center mx-auto">--}}
+{{--            <h3><span>快捷進入</span></h3>--}}
 
-        </div>
-        <ul class="row list-services">
-            <li class="col-6 col-md-3 col-sm-6">
-                <div class="_1sv text-center" onclick="window.location.href='{{route('order.deli')}}'">
-                    <div class="interface">
-                        <span><i class="fa fa-truck" aria-hidden="true"></i></span>
-                        <p class="title">送貨單</p>
-                    </div>
-                    <div class="hover-content">
-                        <span><i class="fa fa-truck" aria-hidden="true"></i></span>
-                        <p class="title">送貨單</p>
-                        <p class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, modi</p>
-                    </div>
-                </div>
-            </li>
-            <!-- end 1 service -->
-            <li class="col-6 col-md-3 col-sm-6">
-                <div class="_1sv text-center">
-                    <div class="interface">
-                        <span><i class="fa fa-money" aria-hidden="true"></i></span>
-                        <p class="title">Cheap Price</p>
-                    </div>
-                    <div class="hover-content">
-                        <span><i class="fa fa-money" aria-hidden="true"></i></span>
-                        <p class="title">Cheap Price</p>
-                        <p class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, modi</p>
-                    </div>
-                </div>
-            </li>
-            <!-- end 1 service -->
-            <li class="col-6 col-md-3 col-sm-6">
-                <div class="_1sv text-center">
-                    <div class="interface">
-                        <span><i class="fa fa-heart" aria-hidden="true"></i></span>
-                        <p class="title">Good Support</p>
-                    </div>
-                    <div class="hover-content">
-                        <span><i class="fa fa-heart" aria-hidden="true"></i></span>
-                        <p class="title">Good Support</p>
-                        <p class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, modi</p>
-                    </div>
-                </div>
-            </li>
-            <!-- end 1 service -->
-            <li class="col-6 col-md-3 col-sm-6">
-                <div class="_1sv text-center">
-                    <div class="interface">
-                        <span><i class="fa fa-credit-card" aria-hidden="true"></i></span>
-                        <p class="title">Quick Payment</p>
-                    </div>
-                    <div class="hover-content">
-                        <span><i class="fa fa-credit-card" aria-hidden="true"></i></span>
-                        <p class="title">Quick Payment</p>
-                        <p class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, modi</p>
-                    </div>
-                </div>
-            </li>
-            <!-- end 1 service -->
-            <!-- end 1 service -->
-            <li class="col-6 col-md-3 col-sm-6">
-                <div class="_1sv text-center">
-                    <div class="interface">
-                        <span><i class="fa fa-credit-card" aria-hidden="true"></i></span>
-                        <p class="title">Quick Payment</p>
-                    </div>
-                    <div class="hover-content">
-                        <span><i class="fa fa-credit-card" aria-hidden="true"></i></span>
-                        <p class="title">Quick Payment</p>
-                        <p class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, modi</p>
-                    </div>
-                </div>
-            </li>
-            <!-- end 1 service -->
-        </ul>
-        <!-- end ul -->
-    </div>
-</section>
+{{--        </div>--}}
+{{--        <ul class="row list-services">--}}
+{{--            <li class="col-6 col-md-3 col-sm-6">--}}
+{{--                <div class="_1sv text-center" onclick="window.location.href='{{route('order.deli')}}'">--}}
+{{--                    <div class="interface">--}}
+{{--                        <span><i class="fa fa-truck" aria-hidden="true"></i></span>--}}
+{{--                        <p class="title">送貨單</p>--}}
+{{--                    </div>--}}
+{{--                    <div class="hover-content">--}}
+{{--                        <span><i class="fa fa-truck" aria-hidden="true"></i></span>--}}
+{{--                        <p class="title">送貨單</p>--}}
+{{--                        <p class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, modi</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </li>--}}
+{{--            <!-- end 1 service -->--}}
+{{--            <li class="col-6 col-md-3 col-sm-6">--}}
+{{--                <div class="_1sv text-center">--}}
+{{--                    <div class="interface">--}}
+{{--                        <span><i class="fa fa-money" aria-hidden="true"></i></span>--}}
+{{--                        <p class="title">Cheap Price</p>--}}
+{{--                    </div>--}}
+{{--                    <div class="hover-content">--}}
+{{--                        <span><i class="fa fa-money" aria-hidden="true"></i></span>--}}
+{{--                        <p class="title">Cheap Price</p>--}}
+{{--                        <p class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, modi</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </li>--}}
+{{--            <!-- end 1 service -->--}}
+{{--            <li class="col-6 col-md-3 col-sm-6">--}}
+{{--                <div class="_1sv text-center">--}}
+{{--                    <div class="interface">--}}
+{{--                        <span><i class="fa fa-heart" aria-hidden="true"></i></span>--}}
+{{--                        <p class="title">Good Support</p>--}}
+{{--                    </div>--}}
+{{--                    <div class="hover-content">--}}
+{{--                        <span><i class="fa fa-heart" aria-hidden="true"></i></span>--}}
+{{--                        <p class="title">Good Support</p>--}}
+{{--                        <p class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, modi</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </li>--}}
+{{--            <!-- end 1 service -->--}}
+{{--            <li class="col-6 col-md-3 col-sm-6">--}}
+{{--                <div class="_1sv text-center">--}}
+{{--                    <div class="interface">--}}
+{{--                        <span><i class="fa fa-credit-card" aria-hidden="true"></i></span>--}}
+{{--                        <p class="title">Quick Payment</p>--}}
+{{--                    </div>--}}
+{{--                    <div class="hover-content">--}}
+{{--                        <span><i class="fa fa-credit-card" aria-hidden="true"></i></span>--}}
+{{--                        <p class="title">Quick Payment</p>--}}
+{{--                        <p class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, modi</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </li>--}}
+{{--            <!-- end 1 service -->--}}
+{{--            <!-- end 1 service -->--}}
+{{--            <li class="col-6 col-md-3 col-sm-6">--}}
+{{--                <div class="_1sv text-center">--}}
+{{--                    <div class="interface">--}}
+{{--                        <span><i class="fa fa-credit-card" aria-hidden="true"></i></span>--}}
+{{--                        <p class="title">Quick Payment</p>--}}
+{{--                    </div>--}}
+{{--                    <div class="hover-content">--}}
+{{--                        <span><i class="fa fa-credit-card" aria-hidden="true"></i></span>--}}
+{{--                        <p class="title">Quick Payment</p>--}}
+{{--                        <p class="text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate, modi</p>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </li>--}}
+{{--            <!-- end 1 service -->--}}
+{{--        </ul>--}}
+{{--        <!-- end ul -->--}}
+{{--    </div>--}}
+{{--</section>--}}
 
 {{--<!-- Hot Deal -->--}}
 {{--<section id="combo">--}}

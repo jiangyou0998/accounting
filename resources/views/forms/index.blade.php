@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    表格
+@stop
+
 @section('content')
 
 <div class="container">
@@ -40,11 +44,12 @@
 
             </ul>
 
-            <form class="card p-2">
+            <form class="card p-2" method="POST" action="{{route('form')}}">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Promo code">
+                    @csrf
+                    <input id="search" name="search" type="text" class="form-control" placeholder="根據編號或主旨查詢">
                     <div class="input-group-append">
-                        <button type="submit" class="btn btn-secondary">Redeem</button>
+                        <button type="submit" class="btn btn-primary">查詢</button>
                     </div>
                 </div>
             </form>
@@ -57,6 +62,7 @@
                     <th scope="col">編號</th>
                     <th scope="col">主旨</th>
                     <th scope="col">部門</th>
+                    <th scope="col">鏈接</th>
                 </tr>
                 </thead>
                 <tbody class="table-striped" style="background-color: white">
@@ -64,13 +70,18 @@
                 <tr>
                     <th scope="row" width="20%">{{$form->modify_date}}</th>
                     <td width="10%">{{$form->form_no}}</td>
-                    <td width="45%">
-                        <a href="{{'/forms/'.$form->file_path}}">
+                    <td width="40%">
+                        <a href="{{'/forms/'.$form->file_path}}" target="_blank">
                             {{$form->form_name}}
                         </a>
 
                     </td>
-                    <td width="25%">{{$dept_names[$form->admin_role_id]}}</td>
+                    <td width="20%">{{$dept_names[$form->admin_role_id]}}</td>
+                    <td width="10%">
+                        @if($form->sample_path)
+                            <a href="{{$form->sample_path}}" target="_blank">樣本</a>
+                        @endif
+                    </td>
                 </tr>
                 @endforeach
                 </tbody>

@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    改舊單
+@stop
+
 @section('css')
     <link href="/js/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" type="text/css">
 @endsection

@@ -25,7 +25,7 @@
 {{--          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">--}}
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <title>範本-內聯網</title>
+    <title>範本-Ryoyu Bakery</title>
 </head>
 
 <style type="text/css">

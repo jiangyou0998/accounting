@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\DB;
 class OrderPrintController extends Controller
 {
 
-    public function test(Request $request)
+    public function print(Request $request)
     {
 //        $checks = new TblOrderCheck();
 //        $check = $checks::find(49);

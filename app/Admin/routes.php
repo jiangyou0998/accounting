@@ -13,7 +13,7 @@ Route::group([
 ], function (Router $router) {
 
     $router->get('/', [\App\Admin\Controllers\HomeController::class , 'index'])->name('home');
-    $router->resource('users', 'UserController');
+
     $router->resource('cats', 'WorkshopCatController');
     $router->resource('menus', 'WorkshopProductController');
 //    $router->post('menus/confirm1', 'TblOrderZMenuController@confirm1');
@@ -21,7 +21,8 @@ Route::group([
     $router->resource('notices', 'NoticeController');
     $router->resource('forms', 'FormController');
     $router->resource('checks', 'WorkshopCheckController');
-    $router->resource('production_order', 'ProductionOrderController');
+    $router->get('production_order', 'ProductionOrderController@index');
+    $router->get('production_order/print', 'OrderPrintController@print')->name('admin.order_print');
     $router->patch('checks/update/{id}','WorkshopCheckController@updateChecks')->name('checkupdate');
     $router->resource('shopgroups', 'ShopGroupController');
     $router->resource('cart', 'WorkshopCartItemController');
@@ -41,7 +42,7 @@ Route::group([
     $router->resource('reports/total_sales_by_day_combine', 'Reports\TotalSalesByDayCombineReportController');
 
     //前台
-    $router->get('order/test', 'OrderPrintController@test')->name('admin.order_print');
+    $router->resource('users', 'UserController');
     $router->resource('front/menu', 'MenuController');
     $router->resource('front/permissions', 'PermissionController');
     $router->resource('front/roles', 'RoleController');

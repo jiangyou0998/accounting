@@ -13,8 +13,10 @@ class NoticeController extends Controller
     {
         $noticeModel = new Notice();
         $dept = $request->dept;
+        $search = $request->search;
+//        dump($search);
 
-        $notices = Notice::getNotices($dept);
+        $notices = Notice::getNotices($dept , $search);
 //        $notices = $noticeModel
 //            ->where('expired_date','>',now())
 //            ->orderByDesc('modify_date')

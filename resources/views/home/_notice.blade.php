@@ -10,9 +10,16 @@
                     <div>
                         <h6 class="my-0">
                             <small class="text-muted">{{$notice->modify_date}}</small>
+                            @guest
+                                <a href="{{route('login')}}">
+                                    {{$notice->notice_name}}
+                                </a>
+                            @endguest
+                            @auth
                             <a href="{{'/notices/'.$notice->file_path}}">
                                 {{$notice->notice_name}}
                             </a>
+                            @endauth
                             @if($notice->isNew)
                             <span class="badge badge-danger">New</span>
                             @endif

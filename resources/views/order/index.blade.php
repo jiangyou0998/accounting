@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('title')
+    柯打
+@stop
+
 @section('content')
 
 
@@ -13,17 +17,13 @@
             <br/>
             <a href='{{route('order.deli.list')}}' class='styleA'>改發票</a>
             <br/>
-            <a href='select_day_by_time.php' class='styleA'>改舊單</a>
+            <a href='{{route('order.select_old_order')}}' class='styleA'>改舊單</a>
             <br/>
             <a href='{{route('order.select_deli')}}' class='styleA'>送貨單查詢</a>
         @endcan
 
         @can('operation')
-{{--            <a href="order_check.php?head=5" class="styleA">翻查柯打</a>--}}
-            <br/>
-            <a href='check_order_number.php' class='styleA' target='view_window'>翻查已下單數目</a>
-            <br/>
-            <a href='select_deli_by_shop.php' class='styleA'>送貨單查詢</a>
+            <a href='{{route('order.select_deli')}}' class='styleA'>送貨單查詢</a>
         @endcan
 
         @can('shop')

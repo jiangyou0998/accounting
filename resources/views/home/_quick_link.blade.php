@@ -1,0 +1,86 @@
+<!-- 快速進入 -->
+<h6 class="d-flex justify-content-between align-items-center mb-3">
+    <span class="text-muted">快捷進入</span>
+</h6>
+<ul class="list-group mb-3">
+
+    @can('shop')
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+                <h6 class="my-0">
+                    <a href="{{route('select_day')}}">
+                        下單
+                    </a>
+                </h6>
+
+            </div>
+
+        </li>
+
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+                <h6 class="my-0">
+                    <a href="{{route('order.deli')}}" target="_blank" ﻿​>
+                        查詢送貨單
+                    </a>
+                </h6>
+
+            </div>
+
+        </li>
+    @endcan
+
+    @can('workshop')
+
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+                <h6 class="my-0">
+                    <a href="{{route('order.deli.list')}}">
+                        改舊單
+                    </a>
+                </h6>
+
+            </div>
+
+        </li>
+
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+                <h6 class="my-0">
+                    <a href="{{route('order.select_deli')}}" target="_blank" ﻿​>
+                        查詢送貨單
+                    </a>
+                </h6>
+
+            </div>
+
+        </li>
+    @endcan
+
+    @can('operation')
+
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+                <h6 class="my-0">
+                    <a href="{{route('order.select_deli')}}" target="_blank" ﻿​>
+                        查詢送貨單
+                    </a>
+                </h6>
+
+            </div>
+
+        </li>
+    @endcan
+
+    {{--                        @foreach($dept_names as $key => $dept_name)--}}
+    {{--                            <li class="list-group-item d-flex justify-content-between lh-condensed">--}}
+    {{--                                <div>--}}
+    {{--                                    <h6 class="my-0">--}}
+    {{--                                        <a href="{{route('notice',['dept' => $key])}}">{{$dept_name}}</a>--}}
+    {{--                                    </h6>--}}
+    {{--                                </div>--}}
+
+    {{--                            </li>--}}
+    {{--                        @endforeach--}}
+
+</ul>

@@ -13,12 +13,18 @@ class Notice extends Model
 
     public $timestamps = false;
 
-    public static function getNotices($dept = null)
+    public static function getNotices($dept = null ,$search = null)
     {
         $notices = Notice::where('expired_date','>',now());
 
         if($dept != null){
             $notices = $notices->where('admin_role_id',$dept);
+        }
+
+        if($search != null){
+            $notices = $notices
+                ->where('notice_name','like',"%".$search."%")
+                ->orWhere('notice_no','like',"%".$search."%");
         }
 
         $notices = $notices

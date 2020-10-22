@@ -39,6 +39,19 @@ class OrderController extends Controller
         return view('order.select_day', compact('dayArray', 'isSun','shops'));
     }
 
+    public function select_old_order()
+    {
+        $isSun = $this->isSunday();
+
+        $dayArray = $this->getDayArray();
+
+        $shops = User::getRyoyuBakeryShops();
+//        dump($dayArray);
+
+
+        return view('order.select_old_order', compact('dayArray', 'isSun','shops'));
+    }
+
     public static function getDayArray($advDays = 14)
     {
         for ($count = 1; $count <= $advDays; $count++) {

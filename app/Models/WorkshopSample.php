@@ -45,6 +45,8 @@ class WorkshopSample extends Model
             ->where('workshop_order_sample.user_id','=',$shop)
 //            ->where('workshop_order_sample.dept','=',$dept)
             ->where('workshop_order_sample.sampledate','like', "%$dateofweek%")
+            //20.10.22 判斷範本產品是否已暫停
+            ->where('workshop_products.status','!=',2)
             ->where('workshop_order_sample_item.disabled','=',0)
             ->where('workshop_order_sample.disabled','=',0);
 

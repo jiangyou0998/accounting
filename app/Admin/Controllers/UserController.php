@@ -12,6 +12,7 @@ use Dcat\Admin\IFrameGrid;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Show;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends AdminController
 {
@@ -42,19 +43,19 @@ class UserController extends AdminController
 
             $grid->id->sortable();
             $grid->name;
-            $grid->roles()->pluck('name')->label();
             $grid->txt_name;
+            $grid->report_name;
+            $grid->roles()->pluck('name')->label();
             $grid->email;
-            $grid->chr_report_name;
-            $grid->int_dept;
-            $grid->int_district;
-
-            $grid->chr_type;
-
-
-
-            $grid->chr_pocode;
-            $grid->int_sort;
+//            $grid->int_dept;
+//            $grid->int_district;
+//
+//            $grid->chr_type;
+//
+//
+//
+//            $grid->chr_pocode;
+//            $grid->int_sort;
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
@@ -80,20 +81,15 @@ class UserController extends AdminController
             ]);
 //            $form->text('password');
             $form->text('txt_name');
-            $form->text('chr_report_name');
-            $form->text('int_dept');
+            $form->text('report_name');
+//            $form->text('int_dept');
+            $form->password('password','新密碼');
+            // 设置错误信息
+            $form->password('password_confirm','確認密碼')->same('password', '两次密码输入不一致');
 
-            $form->text('email');
-            $form->text('chr_type');
+            $form->email('email');
 
-
-            $form->text('chr_ename');
-
-
-
-
-            $form->text('chr_pocode');
-            $form->text('int_sort');
+//            $form->text('int_sort');
 
             //選擇角色
             $form->selectResource('roles')
@@ -108,8 +104,26 @@ class UserController extends AdminController
                 })->customFormat(function ($v) {
                     if (!$v) return [];
                     return array_column($v, 'id');
-                })
-            ;
+                });
+
+            $form->saving(function (Form $form) {
+                // 判断是否是新增操作
+                if ($form->isCreating()) {
+
+                }
+
+                $password = $form->input('password');
+                if ($password){
+                    // 加密
+                    $form->input('password', Hash::make($password));
+                }else{
+                    $form->deleteInput('password');
+                }
+
+                // 删除用户提交的数据
+                $form->deleteInput('password_confirm');
+
+            });
 
             //保存完後刷新權限
             $form->saved(function (Form $form, $result) {

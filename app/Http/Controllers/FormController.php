@@ -13,8 +13,9 @@ class FormController extends Controller
     {
         $formModel = new Form();
         $dept = $request->dept;
+        $search = $request->search;
 
-        $forms = Form::getForms($dept);
+        $forms = Form::getForms($dept , $search);
 //        $notices = $noticeModel
 //            ->where('expired_date','>',now())
 //            ->orderByDesc('modify_date')

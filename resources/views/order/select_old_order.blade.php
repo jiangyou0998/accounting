@@ -13,6 +13,7 @@
 
         .style4 {
             font-size: 300%;
+            color: red;
         }
 
         .red-font{
@@ -23,12 +24,10 @@
 
     <div align="left"><a target="_top" href="{{route('order')}}" style="font-size: xx-large;">返回</a></div>
     <div class="style5" style="text-align: center;">
-        <span class="style4">請選</span>
-        <span class="style4 red-font">送貨日</span>
-        <span class="style4">及</span>
-        <span class="style4 red-font">部門</span>
+        <span class="style4">按日期修改訂單</span>
 
-        @if(Auth::user()->can('workshop') or Auth::user()->can('operation'))
+
+    @if(Auth::user()->can('workshop') or Auth::user()->can('operation'))
             <br>
             <br>
             落貨分店
@@ -38,7 +37,7 @@
                 <option value="{{$shop->id}}">{{$shop->report_name}}</option>
             @endforeach
         </select>
-        @endif
+    @endif
         <br>
         <br>
 
@@ -47,33 +46,22 @@
         <input type="radio" name="dept" id="radio" value="C">麵頭
 
     </div>
-    <table class="table table-bordered border-dark" width="100%" border="2" align="center" cellpadding="3" cellspacing="0">
-        @foreach($dayArray as $key => $day)
-        <tr class="daylist" >
-            <td align="right" width="48%"><strong>{{$day['desc']}}</strong></td>
-            <td align="left" width="52%">
-                <div>
 
-                </div>
-                <a
-                    href="javascript:opencart('{{$day['deli_date']}}');"><strong>{{$day['dayStr']}}</strong></a>
-            </td>
-        </tr>
-        @endforeach
-    </table>
-    <br>
-    <div class="style3" style="text-align: center;">
-        <span class="style4">不同送貨日</span>
-        <span class="style4 red-font">必須</span>
-        <span class="style4">分單</span>
+    <hr>
+    <div valign="middle" align="center">
+        日期:
+        <input type="text" name="checkDate" value="" id="datepicker"
+               onclick="WdatePicker({maxDate:'',isShowClear:false})" style="width:125px" readonly>
+
+        <button class="btn btn-primary" onclick="opensupplier()">查詢</button>
     </div>
+
 
 @endsection
 
 @section('script')
     <script>
-        function opencart(deli_date) {
-            // console.log(deli_date);return;
+        function opensupplier() {
             var Obj = document.getElementsByName("dept");
             var bool = false;
             for (var i = 0; i < Obj.length; i++) {
@@ -82,24 +70,30 @@
                     break;
                 }
             }
-            var shop = 0;
+            var shop = $("#shop").val();
+            var deli_date = $("#datepicker").val();
 
-            @if(Auth::user()->can('workshop') or Auth::user()->can('operation'))
-            if ((shop = $("#shop").val()) == '0') {
-                // alert("請先選擇分店");
+            // alert(deli_date);return;
+            if (shop == '0') {
                 Swal.fire({
                     icon: 'warning',
                     title: "請先選擇分店",
                 });
                 return;
             }
-            @endif
+
+            if (!deli_date) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: "請先選擇日期",
+                });
+                return;
+            }
 
             if (bool) {
-                location.href = "{{route('cart')}}"+"?shop=" + shop + "&dept=" + Obj[i].value + "&deli_date=" + deli_date;
+                window.open("{{route('cart')}}"+"?shop=" + shop + "&dept=" + Obj[i].value + "&deli_date=" + deli_date);
                 //this.close();
             } else {
-                // alert("請先選擇部門");
                 Swal.fire({
                     icon: 'warning',
                     title: "請先選擇部門",
@@ -110,4 +104,8 @@
 
     </script>
 
+@endsection
+
+@section('js')
+    <script src="/js/My97DatePicker/WdatePicker.js"></script>
 @endsection
