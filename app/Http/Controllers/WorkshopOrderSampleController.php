@@ -18,6 +18,17 @@ use Illuminate\Support\Facades\DB;
 
 class WorkshopOrderSampleController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+//    public function __construct()
+//    {
+//        $this->middleware('guest')->except('logout');
+//    }
+
+
     public function index()
     {
         $user = Auth::User();
@@ -40,8 +51,49 @@ class WorkshopOrderSampleController extends Controller
         return view('sample.index', compact('samples'));
     }
 
+    public function regular()
+    {
+        $user = Auth::User();
+
+        $shopid = $user->id;
+
+        $shops = User::getRyoyuBakeryShops();
+
+        $sampleModel = new WorkshopOrderSample();
+        $samples = $sampleModel
+            ->select('id', 'sampledate','dept')
+            ->where('user_id', $shopid)
+            ->where('disabled', 0)
+            ->get();
+
+        foreach ($samples as $sample) {
+            $sample->sampledate = $this->transSampleDate($sample->sampledate);
+
+//            dump($sampledate);
+        }
+//    dump($samples->toArray());
+        return view('sample.regular', compact('samples','shops'));
+    }
+
+
     public function create(WorkshopOrderSample $sample ,Request $request)
     {
+        if($request->dept = 'D'){
+            $this->middleware('permission:operation');
+        }
+
+        $user = Auth::User();
+
+        if ($user->can('shop')) {
+//            dump('shop');
+            $shopid = $user->id;
+        }
+        if ($user->can('workshop')) {
+//            dump('workshop');
+
+        }
+
+
         $user = Auth::User();
 
         $shopid = $user->id;

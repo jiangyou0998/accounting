@@ -144,4 +144,42 @@ class OrderController extends Controller
         return view('order.deli.select_deli',compact('shops'));
     }
 
+    public function regular_order()
+    {
+        $shops = User::getRyoyuBakeryShops();
+
+        $shopids = $shops->pluck('id');
+        $shop_names = $shops->pluck('report_name','id')->toArray();
+
+
+        $start_date = '2020-11-01';
+        $end_date = '2020-11-30';
+        $items = WorkshopCartItem::getRegularOrderCount($shopids,$start_date,$end_date);
+//        dump($shops->toArray());
+//        dump($shops->pluck('id'));
+
+        $countArr = array();
+
+        if($end_date > $start_date){
+            $start = Carbon::parse($start_date);
+            $end = Carbon::parse($end_date);
+            $time = $start;
+            while($end->gte($time)) {
+                foreach ($shopids as $shopid){
+                    $countArr[$time->toDateString()][$shopid] = 0;
+                }
+                $time = $time->addDay();
+            }
+        }
+
+        foreach ($items as $item){
+            $countArr[$item->deli_date][$item->user_id] = $item->count;
+        }
+
+//        dump($countArr);
+//        dump($items->toArray());
+//        dump($shop_names);
+        return view('order.regular.index',compact('countArr','shop_names'));
+    }
+
 }
