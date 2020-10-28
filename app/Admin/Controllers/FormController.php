@@ -5,11 +5,10 @@ namespace App\Admin\Controllers;
 use App\Models\Form as FormModel;
 use Carbon\Carbon;
 use Dcat\Admin\Admin;
+use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
-use Dcat\Admin\Controllers\AdminController;
-use Illuminate\Support\Facades\DB;
 
 class FormController extends AdminController
 {
@@ -22,18 +21,25 @@ class FormController extends AdminController
     {
         return Grid::make(new FormModel(), function (Grid $grid) {
             $roleIds = Admin::user()->roles->pluck('id');
-            $grid->model()->whereIn('admin_role_id',$roleIds);
-            $grid->column('id')->sortable();
-            $grid->column('form_name');
-            $grid->column('admin_role_id');
-            $grid->column('file_path');
-            $grid->column('user_id');
+            $grid->model()
+                ->with('roles')
+                ->with('users')
+                ->whereIn('admin_role_id',$roleIds);
+//            $grid->column('id')->sortable();
+            $grid->column('form_no');
+            $grid->column('form_name')->limit(20);
+            $grid->column('roles.name','部門');
+            $grid->column('users.name','操作人');
+            $grid->column('file_path')->display(function ($file_path) {
+                return '<a href="/forms/' . $file_path . '" target="_blank">' . $file_path . '</a>';
+            });
+            $grid->column('sample_path')->display(function ($sample_path) {
+                return '<a href="/forms/' . $sample_path . '" target="_blank">' . $sample_path . '</a>';
+            });
+            $grid->column('first_path');
             $grid->column('created_date');
             $grid->column('modify_date');
 //            $grid->column('deleted_date');
-            $grid->column('sample_path');
-            $grid->column('form_no');
-            $grid->column('first_path');
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
@@ -79,13 +85,17 @@ class FormController extends AdminController
             $roles = Admin::user()->roles->pluck('name','id');
 //            $forms->display('id');
 
-            if ($form->isCreating()) {
-                $form->hidden('form_no');
-            }
+//            if ($form->isCreating()) {
+//                $form->hidden('form_no');
+//            }
+//
+//            if ($form->isEditing()) {
+//                $form->display('form_no');
+//            }
 
-            if ($form->isEditing()) {
-                $form->display('form_no');
-            }
+            $form->text('form_no')->required();
+
+            $form->hidden('user_id');
 
             $form->text('form_name')->required();
             $form->select('admin_role_id')->options($roles)->required();
@@ -133,6 +143,7 @@ class FormController extends AdminController
 //                    $form->input('notice_no', $notice_no);
                 }
 
+                $form->input('user_id', Admin::user()->id);
                 $form->input('modify_date', $now);
 
                 if($form->expired_date == ''){

@@ -22,18 +22,25 @@ class NoticeController extends AdminController
     {
         return Grid::make(new Notice(), function (Grid $grid) {
             $roleIds = Admin::user()->roles->pluck('id');
-            $grid->model()->whereIn('admin_role_id',$roleIds);
-            $grid->column('id')->sortable();
-            $grid->column('notice_name');
-            $grid->column('admin_role_id');
-            $grid->column('file_path');
-            $grid->column('user_id');
-            $grid->column('created_date');
-            $grid->column('modify_date');
-            $grid->column('deleted_date');
             $grid->column('notice_no');
+            $grid->model()
+                ->with('roles')
+                ->with('users')
+                ->whereIn('admin_role_id',$roleIds);
+//            $grid->column('id')->sortable();
+            $grid->column('notice_name')->limit(20);
+            $grid->column('roles.name','部門');
+            $grid->column('users.name','操作人');
+            $grid->column('file_path')->display(function ($file_path) {
+                return '<a href="/notices/' . $file_path . '" target="_blank">' . $file_path . '</a>';
+            });
+            $grid->column('first_path')->display(function ($first_path) {
+                return '<a href="http://' . $first_path . '" target="_blank">' . $first_path . '</a>';
+            });
+            $grid->column('created_date')->hide();
+            $grid->column('modify_date');
+//            $grid->column('deleted_date');
             $grid->column('expired_date');
-            $grid->column('first_path');
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
@@ -85,12 +92,15 @@ class NoticeController extends AdminController
                 $form->display('notice_no');
             }
 
+            $form->hidden('user_id');
+
             $form->text('notice_name')->required();
             $form->select('admin_role_id')->options($roles)->required();
             $form->file('file_path')
                 ->disk('notice')
-                ->accept('xls,xlsx,csv,pdf')
+                ->accept('xls,xlsx,csv,pdf,mp4,mov')
                 ->uniqueName()
+                ->maxSize(204800)
                 ->autoUpload();
 //            $forms->text('user_id');
 
@@ -126,6 +136,7 @@ class NoticeController extends AdminController
                     $form->input('notice_no', $notice_no);
                 }
 
+                $form->input('user_id', Admin::user()->id);
                 $form->input('modify_date', $now);
 
                 if($form->expired_date == ''){

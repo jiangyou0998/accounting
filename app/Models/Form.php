@@ -10,6 +10,20 @@ class Form extends Model
 
     public $timestamps = false;
 
+    public function roles()
+    {
+        $roleModel = config('admin.database.roles_model');
+
+        return $this->belongsTo($roleModel,"admin_role_id","id");
+    }
+
+    public function users()
+    {
+        $userModel = config('admin.database.users_model');
+
+        return $this->belongsTo($userModel,"user_id","id");
+    }
+
     public static function getForms($dept = null , $search = null)
     {
         $forms = new Form();
@@ -26,6 +40,7 @@ class Form extends Model
 
         $forms = $forms
             ->orderByDesc('modify_date')
+            ->orderByDesc('id')
             ->paginate(10);
 
         return $forms;
