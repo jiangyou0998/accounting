@@ -23,11 +23,6 @@ class WorkshopOrderSampleController extends Controller
      *
      * @return void
      */
-//    public function __construct()
-//    {
-//        $this->middleware('guest')->except('logout');
-//    }
-
 
     public function index()
     {
@@ -45,17 +40,14 @@ class WorkshopOrderSampleController extends Controller
         foreach ($samples as $sample) {
             $sample->sampledate = $this->transSampleDate($sample->sampledate);
 
-//            dump($sampledate);
         }
 //    dump($samples->toArray());
         return view('sample.index', compact('samples'));
     }
 
-    public function regular()
+    public function regular(Request $request)
     {
-        $user = Auth::User();
-
-        $shopid = $user->id;
+        $shopid = $request->shopid;
 
         $shops = User::getRyoyuBakeryShops();
 
@@ -69,36 +61,23 @@ class WorkshopOrderSampleController extends Controller
         foreach ($samples as $sample) {
             $sample->sampledate = $this->transSampleDate($sample->sampledate);
 
-//            dump($sampledate);
         }
 //    dump($samples->toArray());
+
         return view('sample.regular', compact('samples','shops'));
     }
 
 
     public function create(WorkshopOrderSample $sample ,Request $request)
     {
-        if($request->dept = 'D'){
-            $this->middleware('permission:operation');
+        $shopid = $this->getShopidByRoles($request);
+
+        if($shopid === false){
+            return '權限不足';
         }
+//        $shopid = $user->id;
 
-        $user = Auth::User();
-
-        if ($user->can('shop')) {
-//            dump('shop');
-            $shopid = $user->id;
-        }
-        if ($user->can('workshop')) {
-//            dump('workshop');
-
-        }
-
-
-        $user = Auth::User();
-
-        $shopid = $user->id;
-
-        $cats = WorkshopCat::getCats();
+        $cats = WorkshopCat::getSampleCats($request->dept);
 
         $orderInfos = new Collection();
 
@@ -121,35 +100,45 @@ class WorkshopOrderSampleController extends Controller
 
     public function edit(WorkshopOrderSample $sample)
     {
-        $user = Auth::User();
+        $dept = $sample->dept;
+        $shopid = $sample->user_id;
 
-        $shopid = $user->id;
+        $hasPermission = $this->checkEditPermission($dept , $shopid);
+
+//        dump($hasPermission);
+//        dump($dept);
+        if($hasPermission === false) return '權限不足';
+        //disabled範本不能查看
+        if($sample->disabled === 1) return '範本已刪除';
+
 
         $sampleModel = new WorkshopOrderSample();
-
-//        dump($sample);
 
         $sampledate = $sampleModel
             ->select(DB::raw('group_concat(sampledate) as sampledate'))
             ->where('user_id', $shopid)
             ->where('id' ,'<>' , $sample->id)
-            ->where('dept' , $sample->dept)
+            ->where('dept' , $dept)
             ->where('disabled', 0)
             ->first()->sampledate;
+
+//        dump($sampledate);
 
         $currentdate = $sampleModel
             ->select(DB::raw('group_concat(sampledate) as sampledate'))
             ->where('user_id', $shopid)
             ->where('id'  , $sample->id)
-            ->where('dept' , $sample->dept)
+            ->where('dept' , $dept)
             ->where('disabled', 0)
             ->first()->sampledate;
 
+//        dump($currentdate);
+
         $checkHtml = $this->getCheckboxHtml($sampledate , $currentdate);
 
-        $cats = WorkshopCat::getCats();
+        $cats = WorkshopCat::getSampleCats($dept);
 
-        $sampleItems = WorkshopSample::getRegularOrderItems($shopid, $sampledate ,$sample->dept);
+        $sampleItems = WorkshopSample::getRegularOrderItems($shopid, $currentdate ,$sample->dept);
 
         $orderInfos = new Collection();
 
@@ -163,9 +152,16 @@ class WorkshopOrderSampleController extends Controller
 
     public function store(Request $request)
     {
-        DB::transaction(function () use($request){
-            $user = Auth::User();
+        $user = Auth::User();
+        if($request->dept == 'D' && $user->can('operation')){
+            $shopid = $request->shopid;
+        }else if(($request->dept == 'A' || $request->dept == 'B') && $user->can('shop')){
             $shopid = $user->id;
+        }else{
+            return '權限不足';
+        }
+
+        DB::transaction(function () use($request ,$shopid){
             $insertDatas = json_decode($request->insertData, true);
 
 //            dd($insertDatas);
@@ -350,5 +346,34 @@ class WorkshopOrderSampleController extends Controller
         }
 
         return $sampledate;
+    }
+
+    private function getShopidByRoles($request)
+    {
+        $user = Auth::User();
+
+        if($request->dept == 'D' && $user->can('operation')){
+            $shopid = $request->shopid;
+        }else if(($request->dept == 'A' || $request->dept == 'B') && $user->can('shop')){
+            $shopid = $user->id;
+        }else{
+            return false;
+        }
+
+        return $shopid;
+    }
+
+    private function checkEditPermission($dept ,$shopid)
+    {
+        $user = Auth::User();
+
+        if($dept == 'D' && $user->can('operation')){
+            return true;
+        }else if(($dept == 'A' || $dept == 'B') && $user->can('shop') && $shopid == $user->id){
+            return true;
+        }else{
+            return false;
+        }
+
     }
 }

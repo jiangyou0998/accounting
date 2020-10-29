@@ -34,22 +34,34 @@
     <select class="custom-select w-25" id="shop" required>
         <option value="0">請選擇分店</option>
         @foreach($shops as $shop)
-            <option value="{{$shop->id}}">{{$shop->report_name}}</option>
+            <option value="{{$shop->id}}"
+            @if(request()->input('shopid') == $shop->id) selected @endif
+            >{{$shop->report_name}}</option>
         @endforeach
     </select>
 
     <div class="style5" style="text-align: center;">
         <span class="style4">創建範本</span>
+
     </div>
 
 {{--    方包--}}
     <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0">
         <div class="style5" style="text-align: center;">
-            <span class="style4">第一車</span>
+            @foreach($shops as $shop)
+                @if(request()->input('shopid') == $shop->id)
+                    <span class="style4">{{$shop->report_name}}-</span>
+                @endif
+
+            @endforeach
+            <span class="style4">方包</span>
         </div>
-        <div style="margin-bottom: 10px;">
-            <button class="sizefont"><a class="btn btn-primary" href="{{route('sample.create',['dept'=>'D'])}}">新建方包範本</a></button>
-        </div>
+        @if(request()->input('shopid'))
+            <div style="margin-bottom: 10px;">
+                <button class="sizefont"><a class="btn btn-primary" href="{!! route('sample.create',['dept'=>'D','shopid'=>request()->input('shopid')])!!}">新建方包範本</a></button>
+            </div>
+        @endif
+
         @foreach($samples as $sample)
             @if($sample->dept == 'D')
                 <tr style="margin-top: 60px" class="sizefont">
@@ -67,8 +79,9 @@
 
 @endsection
 
-@section('script')
-    <script>
+@section('js')
+    <script type="text/javascript">
+
         function delsample(id) {
 
             Swal.fire({
@@ -113,5 +126,14 @@
             })
 
         }
+
+        $(document).on('change', '#shop', function () {
+            var shopid = $(this).val()
+            if(shopid != 0){
+                window.location.href = "{{route('sample.regular')}}?shopid="+shopid;
+            }
+
+        });
+
     </script>
 @endsection

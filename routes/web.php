@@ -71,15 +71,20 @@ Route::group(['middleware' => ['auth','permission:operation']], function () {
 
 Route::group(['middleware' => ['auth','permission:shop']], function () {
     Route::get('sample', 'WorkshopOrderSampleController@index')->name('sample');
+
+
+});
+
+Route::group(['middleware' => ['auth','permission:operation']], function () {
+    Route::get('sample/regular', 'WorkshopOrderSampleController@regular')->name('sample.regular');
+});
+
+Route::group(['middleware' => ['auth']], function () {
     Route::get('sample/create', 'WorkshopOrderSampleController@create')->name('sample.create');
     Route::get('sample/{sample}/edit', 'WorkshopOrderSampleController@edit')->name('sample.edit');
     Route::post('sample', 'WorkshopOrderSampleController@store')->name('sample.store');
     Route::put('sample/{sampleid}', 'WorkshopOrderSampleController@update')->name('sample.update');
     Route::delete('sample/{sampleid}', 'WorkshopOrderSampleController@destroy')->name('sample.destroy');
-});
-
-Route::group(['middleware' => ['auth','permission:operation']], function () {
-    Route::get('sample/regular', 'WorkshopOrderSampleController@regular')->name('sample.regular');
 });
 
 

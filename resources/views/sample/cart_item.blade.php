@@ -10,9 +10,19 @@
 </style>
 
 <div class="topDiv div-fixed">
-    <div align="left">
-        <a target="_top" href="{{route('sample')}}" style="font-size: xx-large;">返回</a>
-    </div>
+
+    @can('shop')
+        <div align="left">
+            <a target="_top" href="{{route('sample')}}" style="font-size: xx-large;">返回</a>
+        </div>
+    @endcan
+
+    @can('operation')
+        <div align="left">
+            <a target="_top" href="{{route('sample.regular',['shopid'=>request()->input('shopid') ? request()->input('shopid') : $sample->user_id])}}" style="font-size: xx-large;">返回</a>
+        </div>
+    @endcan
+
     @if($sample->id)
         <div align="middle"><strong><font color="#FF0000" size="+15">修改範本
                 </font></strong></div>
@@ -35,6 +45,8 @@
                 <span style="color: #FF0000; font-size: 172%; ">第一車</span>
             @elseif($orderInfos->dept_name == 'B')
                 <span style="color: #FF0000; font-size: 172%; ">第二車</span>
+            @elseif($orderInfos->dept_name == 'D')
+                <span style="color: #FF0000; font-size: 172%; ">方包</span>
             @endif
 
         </strong>
@@ -81,7 +93,13 @@
 {{--                       src="/images/Return.jpg" border="0"--}}
 {{--                       onclick="{{route('sample')}}">--}}
                 <a class="btn btn-primary btn-lg" href="#" role="button" onClick="sss();">落貨</a>
-                <a class="btn btn-success btn-lg" href="{{route('sample')}}" role="button">返回</a>
+                @can('shop')
+                    <a class="btn btn-success btn-lg" href="{{route('sample')}}" role="button">返回</a>
+                @endcan
+
+                @can('operation')
+                    <a class="btn btn-success btn-lg" href="{{route('sample.regular',['shopid'=>request()->input('shopid') ? request()->input('shopid') : $sample->user_id])}}" role="button">返回</a>
+                @endcan
             </td>
 
         </tr>

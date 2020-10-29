@@ -37,7 +37,7 @@ class FormController extends AdminController
                 return '<a href="/forms/' . $sample_path . '" target="_blank">' . $sample_path . '</a>';
             });
             $grid->column('first_path');
-            $grid->column('created_date');
+            $grid->column('created_date')->hide();
             $grid->column('modify_date');
 //            $grid->column('deleted_date');
 
