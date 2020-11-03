@@ -63,16 +63,12 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
 });
 
 Route::group(['middleware' => ['auth','permission:operation']], function () {
-    Route::get('order/regular', 'OrderController@regular_order')->name('order.regular');
+    Route::get('order/regular', 'RegularOrderController@index')->name('order.regular');
+    Route::post('order/regular', 'RegularOrderController@store')->name('order.regular.store');
 });
-
-
-
 
 Route::group(['middleware' => ['auth','permission:shop']], function () {
     Route::get('sample', 'WorkshopOrderSampleController@index')->name('sample');
-
-
 });
 
 Route::group(['middleware' => ['auth','permission:operation']], function () {

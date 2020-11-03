@@ -13,6 +13,8 @@ class WorkshopCartItem extends Model
     protected $table = 'workshop_cart_items';
     public $timestamps = false;
 
+    protected $guarded = [];
+
     public function users()
     {
         return $this->belongsTo(User::class,'user_id','id');
@@ -88,13 +90,13 @@ class WorkshopCartItem extends Model
             ->addSelect('workshop_cats.cat_name')
             ->addSelect('workshop_products.id as itemID');
 
-        foreach (['A','B','C'] as $dept) {
+        foreach (['A','B','C','D'] as $dept) {
             $sql = "ROUND(sum(case when workshop_cart_items.dept = '$dept' then workshop_cart_items.qty else 0 end),2) as '".$dept."_total'";
             $items = $items
                 ->addSelect(DB::raw($sql));
         }
 
-        foreach (['A','B','C'] as $dept) {
+        foreach (['A','B','C','D'] as $dept) {
             $sql = "ROUND(sum(case when workshop_cart_items.dept = '$dept' then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty)) else 0 end),2) as '".$dept."_total_received'";
             $items = $items
                 ->addSelect(DB::raw($sql));
@@ -230,7 +232,7 @@ class WorkshopCartItem extends Model
 
     }
 
-    public static function getRegularOrderCount($shopids , $start_date ,$end_date)
+    public static function getRegularOrderCount($shopids , $start_date ,$end_date ,$dept)
     {
         $items = new WorkshopCartItem();
 
@@ -242,17 +244,18 @@ class WorkshopCartItem extends Model
         ;
 
         //設置關聯表
-        $items = $items
-            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
-            ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
-            ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
-            ->leftJoin('workshop_units', 'workshop_products.unit_id', '=', 'workshop_units.id');
+//        $items = $items
+//            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
+//            ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
+//            ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
+//            ->leftJoin('workshop_units', 'workshop_products.unit_id', '=', 'workshop_units.id');
 
         //設置查詢條件
         $items = $items
             ->whereIn('workshop_cart_items.user_id',$shopids)
             ->whereNotIn('workshop_cart_items.status',[4])
             ->where('workshop_cart_items.qty','>=',0)
+            ->where('workshop_cart_items.dept', $dept)
             ->where('workshop_cart_items.deli_date','>=',$start_date)
             ->where('workshop_cart_items.deli_date','<=',$end_date)
         ;

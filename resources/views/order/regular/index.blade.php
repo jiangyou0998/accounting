@@ -4,38 +4,26 @@
     固定柯打
 @stop
 
+@section('js')
+    <script src="/js/My97DatePicker/WdatePicker.js"></script>
+@endsection
+
 @section('content')
     <div class="container">
         <div class="py-5 text-center">
 
             <h2>固定柯打</h2>
-            {{--        <p class="lead">Below is an example forms built entirely with Bootstrap's forms controls. Each required forms group has a validation state that can be triggered by attempting to submit the forms without completing it.</p>--}}
+            <div valign="middle" align="center">
+                日期:
+                <input id="start" class="Wdate" type="text" value="{{request()->start}}" onclick="WdatePicker({minDate:'%y-%M-{%d+1}',maxDate:'#F{$dp.$D(\'end\')}'})" autocomplete="off"/>到
+                <input id="end" class="Wdate" type="text" value="{{request()->end}}" onclick="WdatePicker({minDate:'#F{$dp.$D(\'start\')}'})" autocomplete="off"/>
+                <button class="btn btn-primary" onclick="search()">查詢</button>
+                <button class="btn btn-danger" onclick="order()">批量下單</button>
+            </div>
+
         </div>
         <div class="row">
-{{--            <div class="col-md-4 mb-4">--}}
-{{--                <h4 class="d-flex justify-content-between align-items-center mb-3">--}}
-{{--                    <span class="text-muted">部門</span>--}}
-{{--                </h4>--}}
-{{--                <ul class="list-group mb-3">--}}
 
-
-{{--                    <li class="list-group-item d-flex justify-content-between lh-condensed">--}}
-{{--                        <div>--}}
-{{--                            <h6 class="my-0">--}}
-{{--                                <a href="{{route('notice')}}">--}}
-{{--                                    全部--}}
-{{--                                </a>--}}
-{{--                            </h6>--}}
-
-{{--                        </div>--}}
-
-{{--                    </li>--}}
-
-
-{{--                </ul>--}}
-
-
-{{--            </div>--}}
             <div class="col-md-12 order-md-1">
                 <table class="table">
                     <thead class="thead-dark">
@@ -55,5 +43,96 @@
             </div>
         </div>
 
+
+@endsection
+
+@section('script')
+    <script>
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        function search() {
+
+            var start = $("#start").val();
+            var end = $("#end").val();
+
+            if(start == ""){
+                Swal.fire({
+                    icon: 'warning',
+                    title: "請選擇開始日期",
+                });
+                return;
+            }
+
+            if(end == ""){
+                Swal.fire({
+                    icon: 'warning',
+                    title: "請選擇結束日期",
+                });
+                return;
+            }
+
+            window.location.href = "{{route('order.regular')}}" + "?start=" + start + "&end=" + end;
+
+        }
+
+        function order() {
+            var start = $("#start").val();
+            var end = $("#end").val();
+
+            if(start == ""){
+                Swal.fire({
+                    icon: 'warning',
+                    title: "請選擇開始日期",
+                });
+                return;
+            }
+
+            if(end == ""){
+                Swal.fire({
+                    icon: 'warning',
+                    title: "請選擇結束日期",
+                });
+                return;
+            }
+
+            Swal.fire({
+                icon: 'warning',
+                title: "確定要批量下單嗎?",
+                html: "下單時間: " + start + " 到 " + end + "</br></br>" + "批量操作會為未下單日進行批量下單" + "</br>" + "已下單日將不會下單",
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: '確定',
+                cancelButtonText: '返回',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{route('order.regular.store')}}",
+                        data: {
+                            'start': start,
+                            'end' : end
+                        },
+                        success: function (msg) {
+                            if (msg) {
+                                alert('發生錯誤!\n');
+                                console.log(msg);
+                            } else {
+                                // alert('已確認收貨!\n');
+                                window.location.href = "{{route('order.regular')}}" + "?start=" + start + "&end=" + end;
+                            }
+                        }
+                    });
+                }
+
+            });
+
+        }
+
+    </script>
 
 @endsection

@@ -138,12 +138,8 @@ class WorkshopCartItemController extends Controller
     {
         $user = Auth::User();
 
-
-//        dd(Auth::User());
-//        $advance = 20;
         $dept = $request->dept;
 
-//        $advancePlusOne = $advance + 1;
         //送貨日期(格式:2020-09-14)
         $deli_date = $request->deli_date;
         //送貨日期的星期几（格式:从0（星期日）到6（星期六））
@@ -154,6 +150,11 @@ class WorkshopCartItemController extends Controller
             $shopid = $user->id;
             //分店無法修改明日之前的訂單
             if ($deli_date <= now()) {
+                return "權限不足";
+            }
+
+            //分店不能下單方包
+            if($dept == 'D'){
                 return "權限不足";
             }
         }
@@ -168,18 +169,6 @@ class WorkshopCartItemController extends Controller
                 return "權限不足";
             }
         }
-
-//        $shop_name = User::find($shop)->txt_name;
-
-//        dump($shop_name);
-
-//        $now = Carbon::now();
-//        $deliDate = $now->add($advancePlusOne . 'day')->toDateString();
-//        $week = $now->add($advancePlusOne . 'day')->dayOfWeek;
-
-//        dd($week);
-
-//        dd($deliDate);
 
         $items = WorkshopCartItem::getCartItems($shopid, $dept, $deli_date);
         $cats = WorkshopCat::getCatsNotExpired($deli_date , $dept);
@@ -199,11 +188,8 @@ class WorkshopCartItemController extends Controller
 
 //        dump($items->toArray());
 //        dump($sampleItems->toArray());
-//        $orderInfos = [
-//            'date' => '2020-09-27'
-//        ];
 
-        $deptArr= ['A'=>'第一車','B'=>'第二車','C'=>'麵頭'];
+        $deptArr= ['A'=>'第一車','B'=>'第二車','C'=>'麵頭','D'=>'方包'];
 
         $orderInfos = new Collection();
         $orderInfos->date = $deli_date;

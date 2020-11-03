@@ -59,6 +59,18 @@
 
     @can('operation')
 
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+                <div>
+                    <h6 class="my-0">
+                        <a href="{{route('order.regular')}}"﻿​>
+                            批量下單
+                        </a>
+                    </h6>
+
+                </div>
+
+            </li>
+
         <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
                 <h6 class="my-0">

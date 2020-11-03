@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 
-use App\Models\Menu;
 use App\Models\Order;
 use App\Models\WorkshopCartItem;
+use App\Models\WorkshopOrderSample;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -39,17 +39,61 @@ class OrderController extends Controller
         return view('order.select_day', compact('dayArray', 'isSun','shops'));
     }
 
-    public function select_old_order()
+//    public function select_old_order()
+//    {
+//        $isSun = $this->isSunday();
+//
+//        $dayArray = $this->getDayArray();
+//
+//        $shops = User::getRyoyuBakeryShops();
+////        dump($dayArray);
+//
+//
+//        return view('order.select_old_order', compact('dayArray', 'isSun','shops'));
+//    }
+
+    public function select_old_order(Request $request)
     {
-        $isSun = $this->isSunday();
-
-        $dayArray = $this->getDayArray();
-
         $shops = User::getRyoyuBakeryShops();
-//        dump($dayArray);
 
+        $shopids = $shops->pluck('id');
+        $shop_names = $shops->pluck('report_name','id')->toArray();
 
-        return view('order.select_old_order', compact('dayArray', 'isSun','shops'));
+        $start_date = $request->start;
+        if($start_date == ''){
+            $start_date = Carbon::now()->toDateString();
+        }
+
+        $end_date = $request->end;
+        if($end_date == ''){
+            $end_date = Carbon::parse($start_date)->addDay(10)->toDateString();
+        }
+
+        $dept = $request->dept;
+
+        $items = WorkshopCartItem::getRegularOrderCount($shopids,$start_date,$end_date,$dept);
+//        dump($shops->toArray());
+//        dump($shops->pluck('id'));
+
+        $countArr = array();
+
+        if($end_date >= $start_date){
+            $start = Carbon::parse($start_date);
+            $end = Carbon::parse($end_date);
+            $time = $start;
+            while($end->gte($time)) {
+                foreach ($shopids as $shopid){
+                    $countArr[$time->toDateString()][$shopid] = 0;
+                }
+                $time = $time->addDay();
+            }
+        }
+
+        foreach ($items as $item){
+            $countArr[$item->deli_date][$item->user_id] = $item->count;
+        }
+
+        return view('order.select_order.index', compact('countArr','shop_names'));
     }
 
     public static function getDayArray($advDays = 14)
@@ -144,29 +188,85 @@ class OrderController extends Controller
         return view('order.deli.select_deli',compact('shops'));
     }
 
-    public function regular_order()
+    //查看方包下單
+    public function regular_order(Request $request)
     {
         $shops = User::getRyoyuBakeryShops();
 
         $shopids = $shops->pluck('id');
         $shop_names = $shops->pluck('report_name','id')->toArray();
 
-
-        $start_date = '2020-11-01';
-        $end_date = '2020-11-30';
-        $items = WorkshopCartItem::getRegularOrderCount($shopids,$start_date,$end_date);
+        $start_date = $request->start;
+        $end_date = $request->end;
+        $dept = 'D';
+        $items = WorkshopCartItem::getRegularOrderCount($shopids,$start_date,$end_date,$dept);
 //        dump($shops->toArray());
 //        dump($shops->pluck('id'));
 
-        $countArr = array();
+//        dump($items->toArray());
+//        dump($shop_names);
+//        $counts = WorkshopCartItem::getRegularOrderCount($shops,$start_date,$end_date,$dept);
 
-        if($end_date > $start_date){
+        $counts = $items;
+
+        $counts = $counts->mapToGroups(function ($item, $key) {
+            return [$item['user_id'] => $item['deli_date']];
+        });
+
+        $sampleItems = WorkshopOrderSample::getSampleByDept($dept);
+
+//        dump($sampleItems->toArray());
+
+        foreach ($sampleItems as $sampleItem){
+            $sampledate =  $sampleItem['sampledate'];
+            $sampledateArr = explode(',',$sampledate);
+
+            foreach ($sampledateArr as $value){
+                $sampleArr[$sampleItem['user_id']][$value] = $sampleItem->toArray();
+            }
+
+        }
+        dump($sampleArr);
+//        dump(isset($sampleArr[44][1]));
+////        dump($sampleItems->toArray());
+        dump($counts->toArray());
+
+        $countArr = array();
+        $insertArr = array();
+        if($end_date >= $start_date){
             $start = Carbon::parse($start_date);
             $end = Carbon::parse($end_date);
+            $now = Carbon::now()->toDateTimeString();
             $time = $start;
             while($end->gte($time)) {
                 foreach ($shopids as $shopid){
-                    $countArr[$time->toDateString()][$shopid] = 0;
+                    $deli_date =$time->toDateString();
+                    $week = $time->isoFormat('d');
+                    $countArr[$deli_date][$shopid] = 0;
+
+                    //已經下單,false未下單,true已下單
+                    $is_order = false;
+
+                    if(isset($counts->toArray()[$shopid])
+                        && in_array($deli_date,$counts->toArray()[$shopid])){
+                        $is_order = true;
+                    }
+
+                    if (isset($sampleArr[$shopid][$week])
+                        && !$is_order){
+                        $insertArr[] = [
+                            'user_id' => $shopid,
+                            'product_id' => $sampleArr[$shopid][$week]['product_id'],
+                            'qty' => $sampleArr[$shopid][$week]['qty'],
+                            'dept' => $dept,
+                            'ip' => $request->ip(),
+                            'status' => 1,
+                            'deli_date' => $deli_date,
+                            'order_date' => $now,
+                            'insert_date' => $now,
+
+                        ];
+                    }
                 }
                 $time = $time->addDay();
             }
@@ -176,9 +276,11 @@ class OrderController extends Controller
             $countArr[$item->deli_date][$item->user_id] = $item->count;
         }
 
-//        dump($countArr);
-//        dump($items->toArray());
-//        dump($shop_names);
+
+        dump($countArr);
+        var_dump($insertArr);
+
+
         return view('order.regular.index',compact('countArr','shop_names'));
     }
 

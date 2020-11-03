@@ -258,8 +258,8 @@
 
             var qty = $("#qty" + id).val();
             // console.log($qty);
-            var deli_date = '{{$_REQUEST['deli_date']}}';
-            var dept = '{{$_REQUEST['dept']}}';
+            var deli_date = '{{request()->deli_date}}';
+            var dept = '{{request()->dept}}';
 
             //管理員可以把數量改成0
             if (qty > 0 || (qty == 0 && isworkshop)) {
@@ -315,7 +315,7 @@
         {{--shopid = {{$_REQUEST['shop']}};--}}
         $.ajax({
             type: "PUT",
-            url: "{{route('cart.update',$_REQUEST['shop'])}}",
+            url: "{{route('cart.update',request()->shop)}}",
             data: {
                 'insertData': JSON.stringify(insertarray),
                 'updateData': JSON.stringify(updatearray),
