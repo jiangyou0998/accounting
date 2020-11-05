@@ -12,6 +12,7 @@
                 <td width="19%" align="center">第一車</td>
                 <td width="19%" align="center">第二車</td>
                 <td width="19%" align="center">麵頭</td>
+                <td width="19%" align="center">方包</td>
 {{--                <td width="19%" align="center">樓面</td>--}}
             </tr>
             </tbody>

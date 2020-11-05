@@ -36,7 +36,7 @@
             <div>
                 <h6 class="my-0">
                     <a href="{{route('order.deli.list')}}">
-                        改舊單
+                        改發票
                     </a>
                 </h6>
 

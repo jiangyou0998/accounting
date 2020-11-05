@@ -8,6 +8,14 @@
     <script src="/js/My97DatePicker/WdatePicker.js"></script>
 @endsection
 
+@section('style')
+    <style>
+        .Wdate {
+            height: 35px;
+        }
+    </style>
+@endsection
+
 @section('content')
     <div class="container">
         <div class="py-5 text-center">

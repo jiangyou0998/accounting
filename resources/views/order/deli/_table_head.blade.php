@@ -6,6 +6,7 @@
     <th style="font-weight:bold;" width="8%" align="center">一車</th>
     <th style="font-weight:bold;" width="8%" align="center">二車</th>
     <th style="font-weight:bold;" width="8%" align="center">麵頭</th>
+    <th style="font-weight:bold;" width="8%" align="center">方包</th>
     <th style="font-weight:bold;" width="8%" align="center">收貨</th>
     <th style="font-weight:bold;" width="6%" align="center">單位</th>
     <th style="font-weight:bold;" width="16%" align="center">單價</th>

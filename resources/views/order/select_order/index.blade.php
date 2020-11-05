@@ -8,6 +8,14 @@
     <script src="/js/My97DatePicker/WdatePicker.js"></script>
 @endsection
 
+@section('style')
+    <style>
+        .Wdate {
+            height: 35px;
+        }
+    </style>
+@endsection
+
 @section('content')
     <style type="text/css">
 
@@ -103,6 +111,22 @@
 
                     var start = $("#start").val();
                     var end = $("#end").val();
+
+                    if(start == ""){
+                        Swal.fire({
+                            icon: 'warning',
+                            title: "請選擇開始日期",
+                        });
+                        return;
+                    }
+
+                    if(end == ""){
+                        Swal.fire({
+                            icon: 'warning',
+                            title: "請選擇結束日期",
+                        });
+                        return;
+                    }
 
                     if (bool) {
                         window.location.href = "{{route('order.select_old_order')}}"+"?dept=" + Obj[i].value + "&start=" + start + "&end=" + end ;
