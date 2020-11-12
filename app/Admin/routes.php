@@ -48,6 +48,9 @@ Route::group([
     $router->resource('front/roles', 'RoleController');
     $router->resource('pages/front_users', 'UserController');
 
+    //商店分組
+    $router->resource('shopgroup', 'ShopGroupController');
+
     //api
     $router->get('api/group', 'ApiController@group');
     $router->get('api/group2', 'ApiController@group2');

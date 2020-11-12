@@ -135,6 +135,8 @@ class ImportController extends Controller
                     'min' => $product[11],
                     'base' => $product[12],
                     'canordertime' => $product[13],
+                    'selling_price' => $product[14],
+                    'cost_price' => $product[15],
                     'sort' => $product_sort,
                     'status' => 1,
                     'created_at' => $now,

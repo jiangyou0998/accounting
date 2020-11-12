@@ -3,8 +3,8 @@
 namespace App;
 
 use App\Models\Role;
-use App\Models\TblUser;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\ShopAddress;
+use App\Models\ShopGroup;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -44,6 +44,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function address()
+    {
+        return $this->hasOne(ShopAddress::class,'id','address_id');
+    }
+
     public function roles(): BelongsToMany
     {
         $pivotTable = 'model_has_roles'; // 中间表
@@ -52,6 +57,15 @@ class User extends Authenticatable
 
         return $this->belongsToMany($relatedModel, $pivotTable, 'model_id', 'role_id')
             ->withPivot('model_type')->withPivotValue('model_type','App\User');
+    }
+
+    public function shop_groups(): BelongsToMany
+    {
+        $pivotTable = 'shop_group_has_users'; // 中间表
+
+        $relatedModel = ShopGroup::class; // 关联模型类名
+
+        return $this->belongsToMany($relatedModel, $pivotTable, 'user_id', 'shop_group_id');
     }
 
     public function allNodes()

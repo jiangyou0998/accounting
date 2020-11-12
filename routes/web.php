@@ -91,3 +91,5 @@ Route::post('/sample/show_product/{groupid}', 'WorkshopOrderSampleController@sho
 Route::any('notice', 'NoticeController@index')->middleware('auth')->name('notice');
 Route::any('dept_form', 'FormController@index')->middleware('auth')->name('form');
 
+Route::get('addressbook', 'AddressBookController@index')->name('addressbook');
+

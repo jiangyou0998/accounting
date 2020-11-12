@@ -2,16 +2,12 @@
 
 namespace App\Admin\Controllers;
 
-
-
 use App\Models\Role;
 use App\User;
 use Dcat\Admin\Form;
-use Dcat\Admin\Models\Administrator;
 use Dcat\Admin\IFrameGrid;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Controllers\AdminController;
-use Dcat\Admin\Show;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends AdminController
@@ -47,18 +43,11 @@ class UserController extends AdminController
             $grid->report_name;
             $grid->roles()->pluck('name')->label();
             $grid->email;
-//            $grid->int_dept;
-//            $grid->int_district;
-//
-//            $grid->chr_type;
-//
-//
-//
-//            $grid->chr_pocode;
-//            $grid->int_sort;
 
             $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
+                $rolesModel = config('front.database.roles_model');
+                $roles = $rolesModel::all()->pluck('name','name');
+                $filter->equal('roles.name','角色')->select($roles);
 
             });
         });
@@ -72,9 +61,12 @@ class UserController extends AdminController
      */
     protected function form()
     {
-        $user = User::with('roles');
+        $user = User::with('roles')
+            ->with('address');
         return Form::make($user, function (Form $form) {
             $form->display('id');
+            $id = $form->getKey();
+//            dump(User::find($id)->can('shop'));
             $form->text('name')->required()->rules("required|
                 unique:users,name,{$form->getKey()},id", [
                 'unique'   => '用戶名已存在',
@@ -89,12 +81,23 @@ class UserController extends AdminController
 
             $form->email('email');
 
+            if (User::find($id)->can('shop')){
+                $form->divider();
+                $form->text('address.shop_name','分店名');
+                $form->text('address.address','地址');
+                $form->text('address.eng_address','英文地址');
+                $form->text('address.tel','電話');
+                $form->text('address.fax','FAX');
+                $form->text('address.oper_time','營業時間');
+                $form->divider();
+            }
+
 //            $form->text('int_sort');
 
             //選擇角色
             $form->selectResource('roles')
                 ->path('front/roles') // 设置表格页面链接
-                ->multiple() // 设置为多选
+//                ->multiple() // 设置为多选
                 ->options(function () { // 显示已选中的数据
 
                     $v = Role::all()->pluck('name','id')->toArray();
@@ -124,6 +127,7 @@ class UserController extends AdminController
                 $form->deleteInput('password_confirm');
 
             });
+
 
             //保存完後刷新權限
             $form->saved(function (Form $form, $result) {

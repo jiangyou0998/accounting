@@ -16,6 +16,8 @@
                                  data-sum="{{$dept_price['B']}}">{{number_format($dept_price['B'], 1, '.', ',')}}</span>
                         麵頭:$<span class="dept-total" data-dept="C"
                                  data-sum="{{$dept_price['C']}}">{{number_format($dept_price['C'], 1, '.', ',')}}</span>
+                        方包:$<span class="dept-total" data-dept="D"
+                                  data-sum="{{$dept_price['D']}}">{{number_format($dept_price['D'], 1, '.', ',')}}</span>
 {{--                        樓:$<span class="dept-total" data-dept="F"--}}
 {{--                                 data-sum="{{$dept_price['F']}}">{{number_format($dept_price['F'], 1, '.', ',')}}</span>--}}
                     </div>
