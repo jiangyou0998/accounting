@@ -44,18 +44,22 @@ class TotalSalesBySearchReportController extends AdminController
             $start = $this->getStartTime();
             $end = $this->getEndTime();
 
-            if (isset($_REQUEST['chr_no']['start'])) {
-                $no_start = $_REQUEST['chr_no']['start'];
+            if (isset($_REQUEST['start_no'])) {
+                $no_start = $_REQUEST['start_no'];
             } else {
-                //上个月第一天
                 $no_start = "";
             }
 
-            if (isset($_REQUEST['chr_no']['end'])) {
-                $no_end = $_REQUEST['chr_no']['end'];
+            if (isset($_REQUEST['end_no'])) {
+                $no_end = $_REQUEST['end_no'];
             } else {
-                //上个月第一天
-                $no_end = "";
+                $no_end = $no_start;
+            }
+
+            if($no_start > $no_end){
+                $temp = $no_start;
+                $no_start = $no_end;
+                $no_end = $temp;
             }
 //
 //            $no_start = request()->chr_no->start;
@@ -115,7 +119,22 @@ class TotalSalesBySearchReportController extends AdminController
                     ->model(TblUser::class, 'int_id', 'txt_name'); // 设置编辑数据显示
 
                 $filter->between('between', '報表日期')->date();
-                $filter->between('chr_no', '編號範圍');
+
+                $product_nos = TblOrderZMenu::all()
+                    ->where('status','!=' ,4)
+                    ->sortBy('chr_no')
+                    ->pluck('chr_name','chr_no');
+
+
+                $product_nos = $product_nos->map(function ($item, $key) {
+                    return $key.'-'.$item;
+                });
+
+                $filter->equal('start_no', '開始編號')
+                    ->select($product_nos);
+
+                $filter->equal('end_no', '結束編號')
+                    ->select($product_nos);
 
             });
 

@@ -14,7 +14,8 @@ class ProductTable extends LazyRenderable
         $id = $this->id;
 
         return Grid::make(new TblOrderZMenu(), function (Grid $grid) {
-            $grid->model()->where('status','!=' , 4);
+            $grid->model()->where('status','!=' , 4)
+                ->orderBy('chr_no');
 
             $grid->column('chr_no','編號');
             $grid->column('chr_name','產品名');
