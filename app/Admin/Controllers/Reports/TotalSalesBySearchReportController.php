@@ -43,13 +43,31 @@ class TotalSalesBySearchReportController extends AdminController
 
             $start = $this->getStartTime();
             $end = $this->getEndTime();
+
+            if (isset($_REQUEST['chr_no']['start'])) {
+                $no_start = $_REQUEST['chr_no']['start'];
+            } else {
+                //上个月第一天
+                $no_start = "";
+            }
+
+            if (isset($_REQUEST['chr_no']['end'])) {
+                $no_end = $_REQUEST['chr_no']['end'];
+            } else {
+                //上个月第一天
+                $no_end = "";
+            }
+//
+//            $no_start = request()->chr_no->start;
+//            $no_end = request()->chr_no->end;
+
             //當前產品id
             $product_id = isset($_REQUEST['product_id']) ? $_REQUEST['product_id'] : "";
             //選中的商店id
             $shop_id = isset($_REQUEST['shop_id']) ? $_REQUEST['shop_id'] : "";
             $shop = isset($_REQUEST['shop']) ? $_REQUEST['shop'] : "";
 
-            $data = $this->generate($start, $end, $product_id, $shop_id);
+            $data = $this->generate($start, $end,$no_start,$no_end, $product_id, $shop_id);
 
             if (count($data) > 0) {
                 $keys = $data->first()->toArray();
@@ -97,6 +115,7 @@ class TotalSalesBySearchReportController extends AdminController
                     ->model(TblUser::class, 'int_id', 'txt_name'); // 设置编辑数据显示
 
                 $filter->between('between', '報表日期')->date();
+                $filter->between('chr_no', '編號範圍');
 
             });
 
@@ -114,7 +133,7 @@ class TotalSalesBySearchReportController extends AdminController
      *
      * @return array
      */
-    public function generate($start, $end, $product_id, $shop_id)
+    public function generate($start, $end,$no_start,$no_end, $product_id, $shop_id)
     {
         $product_ids = explode(',', $product_id);
 //        dump($product_ids);
@@ -162,6 +181,10 @@ class TotalSalesBySearchReportController extends AdminController
 //        dump($shop_ids);
         if ($shop_id) {
             $orderzdept = $orderzdept->whereIn('tbl_user.int_id', $shop_ids);
+        }
+
+        if($no_start && $no_end){
+            $orderzdept = $orderzdept->whereBetween('tbl_order_z_menu.chr_no', [$no_start , $no_end]);
         }
 
         $orderzdept = $orderzdept

@@ -23,3 +23,5 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')
 //    ->middleware('permission:visit_home')
     ->name('home');
+
+Route::get('/import', 'ImportController@import');
