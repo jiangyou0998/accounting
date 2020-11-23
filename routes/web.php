@@ -81,6 +81,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('sample', 'WorkshopOrderSampleController@store')->name('sample.store');
     Route::put('sample/{sampleid}', 'WorkshopOrderSampleController@update')->name('sample.update');
     Route::delete('sample/{sampleid}', 'WorkshopOrderSampleController@destroy')->name('sample.destroy');
+    Route::get('itsupport', 'ItSupportController@index')->name('itsupport');
+    Route::post('itsupport', 'ItSupportController@store')->name('itsupport.store');
 });
 
 
@@ -92,5 +94,6 @@ Route::any('notice', 'NoticeController@index')->middleware('auth')->name('notice
 Route::any('dept_form', 'FormController@index')->middleware('auth')->name('form');
 
 Route::get('addressbook', 'AddressBookController@index')->name('addressbook');
-Route::get('itsupport', 'ItSupportController@index')->name('addressbook');
+
+
 

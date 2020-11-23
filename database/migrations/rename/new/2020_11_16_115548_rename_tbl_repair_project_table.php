@@ -30,8 +30,10 @@ class RenameTblRepairProjectTable extends Migration
             $table->renameColumn('int_status','status');
             $table->renameColumn('chr_machine_code','machine_code');
             $table->renameColumn('chr_other','other');
-            $table->renameColumn('chr_pic','picture_path');
+            $table->renameColumn('chr_pic','file_path');
             $table->renameColumn('txt_comment','comment');
+            $table->renameColumn('report_date','created_at');
+            $table->renameColumn('last_update_date','updated_at');
         });
     }
 
