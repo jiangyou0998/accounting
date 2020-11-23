@@ -45,7 +45,7 @@ class DeliController extends Controller
             $deli_date = $now->toDateString();
         }
 
-        $shop = $request->shop;;
+        $shop = $request->shop;
 
         //送貨單詳細數據
         $items = WorkshopCartItem::getDeliItem($deli_date,$shop);

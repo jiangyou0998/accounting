@@ -49,6 +49,10 @@ class WorkshopCartItemController extends Controller
 //            dump($insertDatas);
 //            dump($delDatas);
 
+            //2020-11-23 新增下單時候的價格
+            $prices = WorkshopProduct::all()->pluck('default_price','id');
+//            dump($prices);
+
             //新增
 //            $insertArr = array();
             foreach ($insertDatas as $insertData) {
@@ -58,6 +62,8 @@ class WorkshopCartItemController extends Controller
                     'user_id' => $shopid,
                     'product_id' => $insertData['itemid'],
                     'qty' => $insertData['qty'],
+                    //2020-11-23 新增下單時候的價格
+                    'order_price' => $prices[$insertData['itemid']],
                     'ip' => $ip,
                     'status' => 1,
 //                    'po_no' => ,
@@ -75,7 +81,7 @@ class WorkshopCartItemController extends Controller
                     'cart_item_id' => $cartItemId,
                     'method' => 'INSERT',
                     'ip' => $ip,
-                    'input' => '新增數量'.$insertData['qty'],
+                    'input' => '新增數量'.$insertData['qty'].',價格:'.$prices[$insertData['itemid']],
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];

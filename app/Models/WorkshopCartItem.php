@@ -85,7 +85,8 @@ class WorkshopCartItem extends Model
             ->addSelect('workshop_units.unit_name as UoM')
             ->addSelect(DB::raw('SUM(workshop_cart_items.qty) as qty'))
             ->addSelect(DB::raw('SUM(ifnull(workshop_cart_items.qty_received, workshop_cart_items.qty)) as qty_received'))
-            ->addSelect('workshop_products.default_price')
+            //2020-11-23 workshop_products.default_price改為workshop_cart_items.order_price
+            ->addSelect(DB::raw('SUM(workshop_cart_items.order_price) as default_price'))
             ->addSelect('workshop_cats.id as cat_id')
             ->addSelect('workshop_cats.cat_name')
             ->addSelect('workshop_products.id as itemID');
@@ -138,7 +139,8 @@ class WorkshopCartItem extends Model
             //計算總數量
             ->addSelect(DB::raw('SUM(if(workshop_cart_items.qty_received is not null , workshop_cart_items.qty_received, workshop_cart_items.qty)) as qty_total'))
             //計算總價
-            ->addSelect(DB::raw('SUM(if(workshop_cart_items.qty_received is not null , workshop_cart_items.qty_received, workshop_cart_items.qty) * workshop_products.default_price) as total'));
+            //2020-11-23 workshop_products.default_price改為workshop_cart_items.order_price
+            ->addSelect(DB::raw('SUM(if(workshop_cart_items.qty_received is not null , workshop_cart_items.qty_received, workshop_cart_items.qty) * workshop_cart_items.order_price) as total'));
 
         //設置關聯表
         $items = $items
@@ -173,7 +175,8 @@ class WorkshopCartItem extends Model
             ->addSelect('workshop_cart_items.product_id')
             ->addSelect(DB::raw('ROUND(workshop_cart_items.qty,0) as dept_qty'))
             ->addSelect('workshop_cart_items.dept')
-            ->addSelect('workshop_products.default_price')
+            //2020-11-23 workshop_products.default_price改為workshop_cart_items.order_price
+            ->addSelect('workshop_cart_items.order_price as default_price' )
             ->addSelect('workshop_units.unit_name as UoM')
             ->addSelect(DB::raw('ROUND(ifnull(workshop_cart_items.qty_received , workshop_cart_items.qty),0) as qty_received'))
             ->addSelect('workshop_cats.id as cat_id')
