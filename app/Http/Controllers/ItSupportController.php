@@ -12,6 +12,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\Input;
 
 
@@ -43,6 +44,7 @@ class ItSupportController extends Controller
     public function store(Request $request, FileUploadHandler $uploader)
     {
         $user = Auth::user();
+        $itSupportNo = Itsupport::getMaxSupportNo();
 
         $data['importance'] = $request->importance;
         $data['itsupport_item_id'] = $request->items;
@@ -53,8 +55,11 @@ class ItSupportController extends Controller
         $data['user_id'] = $user->id;
         $data['last_update_user'] = $user->id;
         //todo 設計一個編號
-        $data['it_support_no'] = '20IT0001';
+        $data['it_support_no'] = $itSupportNo;
         $data['ip'] = $request->ip();
+
+
+//        dd($itSupportNo);
 
 //        dump($request);
 //        dd($data);
@@ -67,10 +72,9 @@ class ItSupportController extends Controller
             }
         }
 
-        Itsupport::create($data);
+        $itSupport = Itsupport::create($data);
 
-        $itSupport = new Itsupport();
-        Mail::to('jianli@kingbakery.com.hk')->send(new ItSupportShipped($itSupport));
+        Mail::to(['jianli@kingbakery.com.hk','fs378354476@outlook.com'])->send(new ItSupportShipped($itSupport->id));
 //        return redirect()->route('users.show', $user->id)->with('success', '个人资料更新成功！');
         return redirect()->route('itsupport');
     }
