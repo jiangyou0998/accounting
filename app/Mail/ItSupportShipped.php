@@ -18,7 +18,7 @@ class ItSupportShipped extends Mailable
      *
      * @var Order
      */
-    public $itSupport;
+    public $itsupport;
 
 //    public $ical;
 
@@ -29,16 +29,16 @@ class ItSupportShipped extends Mailable
      */
     public function __construct($id)
     {
-        $itSupport = Itsupport::with('items')
+        $itsupport = Itsupport::with('items')
             ->with('details')
             ->with('users')
             ->find($id);
-        $this->itSupport = $itSupport;
+        $this->itsupport = $itsupport;
     }
 
     public function ical()
     {
-        $itSupport = $this->itSupport;
+        $itsupport = $this->itsupport;
         //ical文件時間要用UTC
         $now = Carbon::now('UTC');
         $date = $now->isoFormat('YYYYMMDD');
@@ -54,8 +54,8 @@ UID:
 DTSTAMP:".$date."T".$startTime."0000Z
 DTSTART:".$date."T".$startTime."0000Z
 DTEND:".$date."T".$endTime."0000Z
-SUMMARY:" . $itSupport->items->name . $itSupport->details->name . "
-LOCATION:" . $itSupport->users->txt_name . "
+SUMMARY:" . $itsupport->items->name . $itsupport->details->name . "
+LOCATION:" . $itsupport->users->txt_name . "
 DESCRIPTION:有新的IT求助
 END:VEVENT
 END:VCALENDAR";
@@ -70,32 +70,21 @@ END:VCALENDAR";
      */
     public function build()
     {
-//        dump($this->itSupport->toArray());
+//        dump($this->itsupport->toArray());
         $user = Auth::user();
         $ical = $this->ical();
-//        if($this->itSupport->file_path){
-//            return $this->from($user->email,$user->txt_name)
-//                ->view('emails.orders.shipped')
-//                ->attach($this->itSupport->file_path)
-//                ->subject($user->txt_name.'18IT0082');
-//        }else{
-//            return $this->from($user->email,$user->txt_name)
-//                ->view('emails.orders.shipped')
-//                ->subject($user->txt_name.'18IT0082');
-//        }
-        $mail = $this->from($user->email,$user->txt_name)
-            ->view('emails.orders.shipped')
-            ->attachData($ical,'ical.ics')
-            ->subject($user->txt_name.$this->itSupport->it_support_no);
 
-        if($this->itSupport->file_path){
-            $attachment = public_path($this->itSupport->file_path);
+        $mail = $this->from($user->email,$user->txt_name)
+            ->view('emails.itsupport.shipped')
+            ->attachData($ical,'ical.ics')
+            ->subject($user->txt_name.$this->itsupport->it_support_no);
+
+        if($this->itsupport->file_path){
+            $attachment = public_path($this->itsupport->file_path);
             $mail = $mail->attach($attachment);
         }
 
         return $mail;
-
-
 
     }
 }

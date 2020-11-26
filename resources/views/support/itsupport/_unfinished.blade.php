@@ -62,11 +62,10 @@
             </td>
 
             <td align="center" style="padding:5px;">
-                <button type="button" onclick="_func_show('98', '1')" style="background-color:#ADFFAD;">補充資料
+                <button type="button" class="open-modal" data-toggle="modal" data-target="#exampleModal" data-id="{{$unfinished->id}}" style="background-color:#ADFFAD;">補充資料
                 </button>
 
-
-                <button type="button" onclick="_func_delete('98', '18IT0098');" style="background-color:#FFADAD;">刪除
+                <button type="button" data-id="{{$unfinished->id}}" style="background-color:#FFADAD;">刪除
                 </button>
             </td>
 

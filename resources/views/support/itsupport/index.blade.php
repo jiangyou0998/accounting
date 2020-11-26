@@ -85,6 +85,12 @@
             </form>
         </div>
         <!-- /. PAGE WRAPPER  -->
+        <hr class="mb-4">
+        <button type="button" class="btn btn-primary open-modal" data-toggle="modal" data-target="#exampleModal" data-id="3">Open modal for @mdo</button>
+        <button type="button" class="btn btn-primary open-modal" data-toggle="modal" data-target="#exampleModal" data-id="4">Open modal for @fat</button>
+        <button type="button" class="btn btn-primary open-modal" data-toggle="modal" data-target="#exampleModal" data-id="5">Open modal for @getbootstrap</button>
+
+        @include('support.itsupport._modal')
 
         <hr class="mb-4">
         @include('support.itsupport._unfinished')
@@ -162,6 +168,16 @@
                     trigger: 'hover'
                 });
             });
+
+            $(function(){
+                $(".open-modal").click(function(){
+                    var itsupportid = $(this).data('id');
+                    var frameSrc = "/itsupport/"+ itsupportid +"/edit";
+                    $("#updateFrame").attr("src", frameSrc);
+                    $('#exampleModal').modal({ show: true, backdrop: 'static' });
+                });
+            });
+
 
 
         </script>

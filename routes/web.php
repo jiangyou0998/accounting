@@ -81,8 +81,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('sample', 'WorkshopOrderSampleController@store')->name('sample.store');
     Route::put('sample/{sampleid}', 'WorkshopOrderSampleController@update')->name('sample.update');
     Route::delete('sample/{sampleid}', 'WorkshopOrderSampleController@destroy')->name('sample.destroy');
+
     Route::get('itsupport', 'ItSupportController@index')->name('itsupport');
     Route::post('itsupport', 'ItSupportController@store')->name('itsupport.store');
+    Route::get('itsupport/{itsupport}/edit', 'ItSupportController@edit')->name('itsupport.edit');
+    Route::patch('itsupport/{itsupportid}', 'ItSupportController@update')->name('itsupport.update');
 });
 
 

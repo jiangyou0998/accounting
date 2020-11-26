@@ -79,4 +79,31 @@ class ItSupportController extends Controller
         return redirect()->route('itsupport');
     }
 
+    public function edit($id)
+    {
+        $itsupport = Itsupport::with('users')
+            ->with('items')
+            ->with('details')
+            ->find($id);
+        return view('support.itsupport.edit',compact('itsupport'));
+    }
+
+    public function update(Request $request, $itsupportid)
+    {
+        $data['id'] = $itsupportid;
+        $data['comment'] = $request->comment;
+        $data['complete_date'] = $request->cDate;
+        $data['finished_start_time'] = $request->start;
+        $data['finished_end_time'] = $request->end;
+        $data['handle_staff'] = $request->staff;
+
+        //已完成狀態改為99
+        if($request->complete){
+            $data['status'] = 99;
+        }
+
+        dump($data);
+        dump($request->toArray());
+    }
+
 }
