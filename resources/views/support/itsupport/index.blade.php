@@ -11,6 +11,7 @@
     <script src="/vendors/bootstrap-fileinput/js/locales/zh-TW.js" type="text/javascript"></script>
     <script src="/vendors/bootstrap-fileinput/themes/fas/theme.js" type="text/javascript"></script>
     <script src="/vendors/bootstrap-fileinput/themes/explorer-fas/theme.js" type="text/javascript"></script>
+    <script src="../layui/layui.all.js"></script>
 @endsection
 
 @section('content')
@@ -86,14 +87,26 @@
         </div>
         <!-- /. PAGE WRAPPER  -->
         <hr class="mb-4">
-        <button type="button" class="btn btn-primary open-modal" data-toggle="modal" data-target="#exampleModal" data-id="3">Open modal for @mdo</button>
-        <button type="button" class="btn btn-primary open-modal" data-toggle="modal" data-target="#exampleModal" data-id="4">Open modal for @fat</button>
-        <button type="button" class="btn btn-primary open-modal" data-toggle="modal" data-target="#exampleModal" data-id="5">Open modal for @getbootstrap</button>
+{{--        <button type="button" class="btn btn-primary open-layui" data-id="3">Open modal for @mdo</button>--}}
+{{--        <button type="button" class="btn btn-primary open-modal" data-toggle="modal" data-target="#exampleModal" data-id="4">Open modal for @fat</button>--}}
+{{--        <button type="button" class="btn btn-primary open-modal" data-toggle="modal" data-target="#exampleModal" data-id="5">Open modal for @getbootstrap</button>--}}
 
         @include('support.itsupport._modal')
 
+        <div class="text-center">
+            <h2>未完成</h2>
+        </div>
+
         <hr class="mb-4">
         @include('support.itsupport._unfinished')
+        <hr class="mb-4">
+
+        <div class="text-center">
+            <h2>已完成</h2>
+        </div>
+
+        <hr class="mb-4">
+        @include('support.itsupport._finished')
         <hr class="mb-4">
 
         <script type="text/javascript">
@@ -128,6 +141,14 @@
                     });
 
             });
+
+            ;!function(){
+                //无需再执行layui.use()方法加载模块，直接使用即可
+                var form = layui.form
+                    ,layer = layui.layer;
+
+                //…
+            }();
 
             (function () {
                 'use strict';
@@ -178,9 +199,35 @@
                 });
             });
 
+            $(function(){
+                $(".open-layui").click(function(){
+                    var itsupportid = $(this).data('id');
+                    var frameSrc = "/itsupport/"+ itsupportid +"/edit";
+                    layer.open({
+                        type: 2,
+                        content: frameSrc, //这里content是一个普通的String
+                        area: ['550px', '600px'],
+                        zIndex: layer.zIndex, //重点1
+                        success: function(layero){
+                            layer.setTop(layero); //重点2
+                        },
+                        cancel: function(index, layero){
+                            layer.close(index);
+                            document.body.style.overflow='';//出现滚动条
+                            document.removeEventListener("touchmove",mo,false);
+                        },
+                        // end: function () {
+                        //     window.location.reload();
+                        // }
+
+                    });
+                    document.body.style.overflow='hidden';
+                    document.addEventListener("touchmove",mo,false);//禁止页面滑动
+                });
+            });
+
 
 
         </script>
-
 
 @endsection

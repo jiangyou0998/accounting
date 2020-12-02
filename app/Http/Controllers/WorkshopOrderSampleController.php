@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class WorkshopOrderSampleController extends Controller
 {
@@ -73,7 +74,8 @@ class WorkshopOrderSampleController extends Controller
         $shopid = $this->getShopidByRoles($request);
 
         if($shopid === false){
-            return '權限不足';
+            //                return "權限不足";
+            throw new AccessDeniedHttpException('權限不足');
         }
 //        $shopid = $user->id;
 
@@ -158,7 +160,8 @@ class WorkshopOrderSampleController extends Controller
         }else if(($request->dept == 'A' || $request->dept == 'B') && $user->can('shop')){
             $shopid = $user->id;
         }else{
-            return '權限不足';
+            //                return "權限不足";
+            throw new AccessDeniedHttpException('權限不足');
         }
 
         DB::transaction(function () use($request ,$shopid){

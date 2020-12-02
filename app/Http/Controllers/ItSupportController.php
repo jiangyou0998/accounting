@@ -31,6 +31,15 @@ class ItSupportController extends Controller
             ->with('items')
             ->with('details')
             ->where('status',1)
+            ->CurrUser()
+            ->orderByDesc('created_at')
+            ->get();
+
+        $finisheds =  Itsupport::with('users')
+            ->with('items')
+            ->with('details')
+            ->where('status',99)
+            ->CurrUser()
             ->orderByDesc('created_at')
             ->get();
 
@@ -38,7 +47,7 @@ class ItSupportController extends Controller
 
 //        dump($items->toArray());
 
-        return view('support.itsupport.index',compact('items','details' ,'unfinisheds'));
+        return view('support.itsupport.index',compact('items','details' ,'unfinisheds' ,'finisheds'));
     }
 
     public function store(Request $request, FileUploadHandler $uploader)
@@ -90,20 +99,26 @@ class ItSupportController extends Controller
 
     public function update(Request $request, $itsupportid)
     {
-        $data['id'] = $itsupportid;
-        $data['comment'] = $request->comment;
-        $data['complete_date'] = $request->cDate;
-        $data['finished_start_time'] = $request->start;
-        $data['finished_end_time'] = $request->end;
-        $data['handle_staff'] = $request->staff;
+        $user = Auth::user();
+        $itsupport = Itsupport::find($itsupportid);
+
+//        $itsupport->id = $itsupportid;
+        $itsupport->comment = $request->comment;
+        $itsupport->complete_date = $request->cDate;
+        $itsupport->finished_start_time = $request->start;
+        $itsupport->finished_end_time = $request->end;
+        $itsupport->handle_staff = $request->staff;
+        $itsupport->last_update_user = $user->id;
 
         //已完成狀態改為99
         if($request->complete){
-            $data['status'] = 99;
+            $itsupport->status = 99;
         }
 
-        dump($data);
-        dump($request->toArray());
+        $itsupport->save();
+
+        return redirect()->route('redirect','ITSUPPORT_UPDATE_SUCCESS');
+
     }
 
 }

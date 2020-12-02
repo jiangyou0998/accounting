@@ -5,6 +5,7 @@ namespace App\Models\Itsupport;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use function Sodium\increment;
 
@@ -43,6 +44,21 @@ class Itsupport extends Model
         }
 
         return $itSupportNo;
+    }
+
+    public function scopeCurrUser($query)
+    {
+        if(Auth::user()->can('shop')){
+            //分店獲取當前登錄id
+            return $query->where('user_id', Auth::id());
+        }else if(Auth::user()->can('IT')){
+            //IT獲取全部
+            return $query;
+        }else{
+            //其他獲取不存在的id
+            return $query->where('user_id', 0);
+        }
+
     }
 
 

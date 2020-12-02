@@ -82,21 +82,29 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put('sample/{sampleid}', 'WorkshopOrderSampleController@update')->name('sample.update');
     Route::delete('sample/{sampleid}', 'WorkshopOrderSampleController@destroy')->name('sample.destroy');
 
+    Route::post('sample/show_group/{catid}', 'WorkshopOrderSampleController@showGroup')->name('sample.show_group');
+    Route::post('sample/show_product/{groupid}', 'WorkshopOrderSampleController@showProduct')->name('sample.show_product');
+
     Route::get('itsupport', 'ItSupportController@index')->name('itsupport');
     Route::post('itsupport', 'ItSupportController@store')->name('itsupport.store');
     Route::get('itsupport/{itsupport}/edit', 'ItSupportController@edit')->name('itsupport.edit');
     Route::patch('itsupport/{itsupportid}', 'ItSupportController@update')->name('itsupport.update');
+
+    Route::any('notice', 'NoticeController@index')->middleware('auth')->name('notice');
+    Route::any('dept_form', 'FormController@index')->middleware('auth')->name('form');
+
+    Route::get('addressbook', 'AddressBookController@index')->name('addressbook');
+
+    //通过redirect页面实现框架跳转
+    Route::get('redirect/{message}', 'RedirectController@index')->name('redirect');
+
 });
 
 
-Route::post('/sample/show_group/{catid}', 'WorkshopOrderSampleController@showGroup')->middleware('auth')->name('sample.show_group');
-Route::post('/sample/show_product/{groupid}', 'WorkshopOrderSampleController@showProduct')->middleware('auth')->name('sample.show_product');
+
 
 //Route::get('/import', 'ImportController@import');
-Route::any('notice', 'NoticeController@index')->middleware('auth')->name('notice');
-Route::any('dept_form', 'FormController@index')->middleware('auth')->name('form');
 
-Route::get('addressbook', 'AddressBookController@index')->name('addressbook');
 
 
 

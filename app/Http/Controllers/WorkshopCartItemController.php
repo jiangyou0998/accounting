@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class WorkshopCartItemController extends Controller
 {
@@ -156,12 +157,14 @@ class WorkshopCartItemController extends Controller
             $shopid = $user->id;
             //分店無法修改明日之前的訂單
             if ($deli_date <= now()) {
-                return "權限不足";
+//                return "權限不足";
+                throw new AccessDeniedHttpException('權限不足');
             }
 
             //分店不能下單方包
             if($dept == 'D'){
-                return "權限不足";
+//                return "權限不足";
+                throw new AccessDeniedHttpException('權限不足');
             }
         }
         if ($user->can('workshop')) {
@@ -172,7 +175,8 @@ class WorkshopCartItemController extends Controller
 //            dump('operation');
             $shopid = $request->shop;
             if ($deli_date <= now()) {
-                return "權限不足";
+//                return "權限不足";
+                throw new AccessDeniedHttpException('權限不足');
             }
         }
 
