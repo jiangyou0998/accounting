@@ -11,6 +11,7 @@
             <td align="center" width="6%"><b>編號</b></td>
 
             <td align="center" width="14%"><b>維修單日期</b></td>
+            <td align="center" width="13%"><b>取消時間</b></td>
 
             <td align="center" width="10%"><b>分店/用戶</b></td>
             <td align="center" width="5%"><b>緊急性</b></td>
@@ -21,28 +22,28 @@
             <td align="center" width="6%"><b>上傳文檔</b></td>
 
 
-            <td align="center" width="15%"><b></b></td>
-
-
         </tr>
 
-        @foreach($allUnfinished as $unfinished)
+        @foreach($allCanceled as $canceled)
         <tr bgcolor="#ffffff">
             <td rowspan="1" align="center"><b>{{$loop->iteration}}</b></td>
-            <td align="center">{{$unfinished->it_support_no}}</td>
+            <td align="center">{{$canceled->it_support_no}}</td>
             <td align="center" height="25">
-                {{\Carbon\Carbon::parse($unfinished->created_at)->toDateString()}}(<span style="color: red; ">{{\Carbon\Carbon::parse($unfinished->created_at)->diffInDays(\Carbon\Carbon::now())}}</span>)
+                {{\Carbon\Carbon::parse($canceled->created_at)->toDateString()}}(<span style="color: red; ">{{\Carbon\Carbon::parse($canceled->created_at)->diffInDays(\Carbon\Carbon::now())}}</span>)
             </td>
-            <td align="center" height="25">{{$unfinished->users->txt_name}}</td>
+            <td align="center" height="25">
+                {{\Carbon\Carbon::parse($canceled->updated_at)->toDateString()}}
+            </td>
+            <td align="center" height="25">{{$canceled->users->txt_name}}</td>
             <td align="center">高                </td>
-            <td align="center">{{$unfinished->items->name}}</td>
-            <td align="center">{{$unfinished->details->name}}</td>
+            <td align="center">{{$canceled->items->name}}</td>
+            <td align="center">{{$canceled->details->name}}</td>
 
-            <td align="center">{{$unfinished->machine_code}}</td>
-            @if($unfinished->other)
-                <td data-toggle="popover" data-trigger="hover" title="{{$unfinished->it_support_no}}" data-content="{{$unfinished->other}}">
+            <td align="center">{{$canceled->machine_code}}</td>
+            @if($canceled->other)
+                <td data-toggle="popover" data-trigger="hover" title="{{$canceled->it_support_no}}" data-content="{{$canceled->other}}">
                     <span>
-                    {{\Illuminate\Support\Str::limit($unfinished->other,8)}}
+                    {{\Illuminate\Support\Str::limit($canceled->other,8)}}
                     </span>
                 </td>
             @else
@@ -53,21 +54,15 @@
                 <table>
                     <tbody>
                         <tr>
-                            @if($unfinished->file_path)
-                                <a href="{{$unfinished->file_path}}" target="_blank">附檔</a>
+                            @if($canceled->file_path)
+                                <a href="{{$canceled->file_path}}" target="_blank">附檔</a>
                             @endif
                         </tr>
                     </tbody>
                 </table>
             </td>
 
-            <td align="center" style="padding:5px;">
-                <button type="button" class="open-layui" data-id="{{$unfinished->id}}" style="background-color:#ADFFAD;">補充資料
-                </button>
 
-                <button type="button" data-id="{{$unfinished->id}}" style="background-color:#FFADAD;">刪除
-                </button>
-            </td>
 
         </tr>
         @endforeach

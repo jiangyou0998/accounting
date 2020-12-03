@@ -10,30 +10,30 @@
             <td align="center" width="3%"><b>#</b></td>
             <td align="center" width="6%"><b>編號</b></td>
 
-            <td align="center" width="10%"><b>維修單日期</b></td>
+            <td align="center" width="14%"><b>維修單日期</b></td>
 
-            <td align="center" width="8%"><b>分店/部門</b></td>
+            <td align="center" width="10%"><b>分店/用戶</b></td>
             <td align="center" width="5%"><b>緊急性</b></td>
             <td align="center" width="12%"><b>器材</b></td>
-            <td align="center" width="14%"><b>求助事宜</b></td>
+            <td align="center" width="12%"><b>求助事宜</b></td>
             <td align="center" width="7%"><b>機器號碼#</b></td>
             <td align="center" width="10%"><b>其他資料提供</b></td>
             <td align="center" width="6%"><b>上傳文檔</b></td>
 
 
-            <td align="center" width="18%"><b></b></td>
+            <td align="center" width="15%"><b></b></td>
 
 
         </tr>
 
-        @foreach($finisheds as $finished)
+        @foreach($allFinished as $finished)
         <tr bgcolor="#ffffff">
             <td rowspan="1" align="center"><b>{{$loop->iteration}}</b></td>
             <td align="center">{{$finished->it_support_no}}</td>
             <td align="center" height="25">
-                {{$finished->created_at}}                    (<font color="red">6</font>)
+                {{\Carbon\Carbon::parse($finished->created_at)->toDateString()}}(<span style="color: red; ">{{\Carbon\Carbon::parse($finished->created_at)->diffInDays(\Carbon\Carbon::now())}}</span>)
             </td>
-            <td align="left" height="25">{{$finished->users->txt_name}}</td>
+            <td align="center" height="25">{{$finished->users->txt_name}}</td>
             <td align="center">高                </td>
             <td align="center">{{$finished->items->name}}</td>
             <td align="center">{{$finished->details->name}}</td>

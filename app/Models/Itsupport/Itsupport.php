@@ -46,17 +46,68 @@ class Itsupport extends Model
         return $itSupportNo;
     }
 
+    public static function getUnfinishedSupport()
+    {
+        $allUnfinished = Itsupport::with('users')
+            ->with('items')
+            ->with('details')
+            ->where('status',1)
+            ->CurrUser()
+            ->orderByDesc('created_at')
+            ->get();
+
+        return $allUnfinished;
+
+    }
+
+    public static function getFinishedSupport()
+    {
+        $allFinished =  Itsupport::with('users')
+            ->with('items')
+            ->with('details')
+            ->where('status',99)
+            ->CurrUser()
+            ->orderByDesc('created_at')
+            ->get();
+
+        return $allFinished;
+
+    }
+
+    public static function getCanceledSupport()
+    {
+        $allCanceled =  Itsupport::with('users')
+            ->with('items')
+            ->with('details')
+            ->where('status',4)
+            ->CurrUser()
+            ->orderByDesc('created_at')
+            ->get();
+
+        return $allCanceled;
+
+    }
+
+
     public function scopeCurrUser($query)
     {
-        if(Auth::user()->can('shop')){
-            //分店獲取當前登錄id
-            return $query->where('user_id', Auth::id());
-        }else if(Auth::user()->can('IT')){
+//        if(Auth::user()->can('shop')){
+//            //分店獲取當前登錄id
+//            return $query->where('user_id', Auth::id());
+//        }else if(Auth::user()->can('IT')){
+//            //IT獲取全部
+//            return $query;
+//        }else{
+//            //其他獲取不存在的id
+//            return $query->where('user_id', 0);
+//        }
+
+        if(Auth::user()->can('IT')){
             //IT獲取全部
             return $query;
         }else{
-            //其他獲取不存在的id
-            return $query->where('user_id', 0);
+            //其他獲取當前登錄id
+            return $query->where('user_id', Auth::id());
         }
 
     }

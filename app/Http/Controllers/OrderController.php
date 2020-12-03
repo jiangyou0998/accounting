@@ -226,10 +226,10 @@ class OrderController extends Controller
             }
 
         }
-        dump($sampleArr);
+//        dump($sampleArr);
 //        dump(isset($sampleArr[44][1]));
 ////        dump($sampleItems->toArray());
-        dump($counts->toArray());
+//        dump($counts->toArray());
 
         $countArr = array();
         $insertArr = array();

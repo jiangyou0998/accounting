@@ -29,9 +29,9 @@
                         <label for="country">緊急性</label>
                         <select class="custom-select d-block w-100" name="importance" id="importance" required="">
                             <option value="">請選擇</option>
-                            <option value="3">高</option>
-                            <option value="4">中</option>
-                            <option value="5">低</option>
+                            <option value="1">高</option>
+                            <option value="2">中</option>
+                            <option value="3">低</option>
                         </select>
                         <div class="invalid-feedback">
                             請選擇「緊急性」
@@ -107,6 +107,14 @@
 
         <hr class="mb-4">
         @include('support.itsupport._finished')
+        <hr class="mb-4">
+
+        <div class="text-center">
+            <h2>已取消</h2>
+        </div>
+
+        <hr class="mb-4">
+        @include('support.itsupport._canceled')
         <hr class="mb-4">
 
         <script type="text/javascript">

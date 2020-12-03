@@ -27,27 +27,17 @@ class ItSupportController extends Controller
             return [$item['id'] => $item['details']->pluck('name','id')];
         });
 
-        $unfinisheds = Itsupport::with('users')
-            ->with('items')
-            ->with('details')
-            ->where('status',1)
-            ->CurrUser()
-            ->orderByDesc('created_at')
-            ->get();
+        $allUnfinished = Itsupport::getUnfinishedSupport();
 
-        $finisheds =  Itsupport::with('users')
-            ->with('items')
-            ->with('details')
-            ->where('status',99)
-            ->CurrUser()
-            ->orderByDesc('created_at')
-            ->get();
+        $allFinished =  Itsupport::getFinishedSupport();
+
+        $allCanceled =  Itsupport::getCanceledSupport();
 
 //        dump($unfinisheds->toArray());
 
 //        dump($items->toArray());
 
-        return view('support.itsupport.index',compact('items','details' ,'unfinisheds' ,'finisheds'));
+        return view('support.itsupport.index',compact('items','details' ,'allUnfinished' ,'allFinished','allCanceled'));
     }
 
     public function store(Request $request, FileUploadHandler $uploader)
