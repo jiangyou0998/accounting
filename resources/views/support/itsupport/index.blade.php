@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('js')
+{{--    bootstrap-fileinput--}}
     <link href="/vendors/bootstrap-fileinput/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
     <link href="/vendors/bootstrap-fileinput/themes/explorer-fas/theme.css" media="all" rel="stylesheet"
@@ -29,9 +30,9 @@
                         <label for="country">緊急性</label>
                         <select class="custom-select d-block w-100" name="importance" id="importance" required="">
                             <option value="">請選擇</option>
-                            <option value="1">高</option>
-                            <option value="2">中</option>
-                            <option value="3">低</option>
+                            @foreach($importances as $key => $importance)
+                                <option value="{{$key}}">{{$importance}} </option>
+                            @endforeach
                         </select>
                         <div class="invalid-feedback">
                             請選擇「緊急性」
@@ -94,7 +95,7 @@
         @include('support.itsupport._modal')
 
         <div class="text-center">
-            <h2>未完成</h2>
+            <h2>未完成處理</h2>
         </div>
 
         <hr class="mb-4">
@@ -102,7 +103,7 @@
         <hr class="mb-4">
 
         <div class="text-center">
-            <h2>已完成</h2>
+            <h2>最近14天內完成處理之申請</h2>
         </div>
 
         <hr class="mb-4">
@@ -110,7 +111,7 @@
         <hr class="mb-4">
 
         <div class="text-center">
-            <h2>已取消</h2>
+            <h2>最近14天內取消之申請</h2>
         </div>
 
         <hr class="mb-4">
@@ -135,7 +136,7 @@
                         var projectsMap = {};
                         var projectsMap = details[items];
 
-                        console.log(projectsMap);
+                        // console.log(projectsMap);
 
 
                         var option = "";
@@ -232,7 +233,61 @@
                     document.body.style.overflow='hidden';
                     document.addEventListener("touchmove",mo,false);//禁止页面滑动
                 });
+
+                $(".open-layui-finish").click(function(){
+                    var itsupportid = $(this).data('id');
+                    var frameSrc = "/itsupport/"+ itsupportid;
+                    layer.open({
+                        type: 2,
+                        content: frameSrc, //这里content是一个普通的String
+                        area: ['550px', '600px'],
+                        zIndex: layer.zIndex, //重点1
+                        success: function(layero){
+                            layer.setTop(layero); //重点2
+                        },
+                        cancel: function(index, layero){
+                            layer.close(index);
+                            document.body.style.overflow='';//出现滚动条
+                            document.removeEventListener("touchmove",mo,false);
+                        },
+                        // end: function () {
+                        //     window.location.reload();
+                        // }
+
+                    });
+                    document.body.style.overflow='hidden';
+                    document.addEventListener("touchmove",mo,false);//禁止页面滑动
+                });
             });
+
+            $(document).on('click','.delete-btn',function(){
+                Swal.fire({
+                    title: '確定取消編號為【' + $(this).data('no') + '】的IT求助項目嗎？?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '確認刪除',
+                    cancelButtonText: '取消'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                            $.ajax({
+                                type: "DELETE",
+                                url: "/itsupport/" + $(this).data('id'),
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                },
+                                success: function (msg) {
+                                    // console.log(msg);
+                                    // alert('範本刪除成功!');
+                                    window.location.reload();
+                                }
+                            });
+                        }
+
+                })
+
+            })
 
 
 

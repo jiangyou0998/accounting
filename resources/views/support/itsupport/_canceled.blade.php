@@ -35,7 +35,7 @@
                 {{\Carbon\Carbon::parse($canceled->updated_at)->toDateString()}}
             </td>
             <td align="center" height="25">{{$canceled->users->txt_name}}</td>
-            <td align="center">高                </td>
+            <td align="center">{{$canceled->importance}}</td>
             <td align="center">{{$canceled->items->name}}</td>
             <td align="center">{{$canceled->details->name}}</td>
 

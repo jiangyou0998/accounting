@@ -85,10 +85,14 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('sample/show_group/{catid}', 'WorkshopOrderSampleController@showGroup')->name('sample.show_group');
     Route::post('sample/show_product/{groupid}', 'WorkshopOrderSampleController@showProduct')->name('sample.show_product');
 
+    Route::get('support', 'SupportController@index')->name('support');
+
     Route::get('itsupport', 'ItSupportController@index')->name('itsupport');
     Route::post('itsupport', 'ItSupportController@store')->name('itsupport.store');
     Route::get('itsupport/{itsupport}/edit', 'ItSupportController@edit')->name('itsupport.edit');
+    Route::get('itsupport/{itsupport}', 'ItSupportController@show')->name('itsupport.show');
     Route::patch('itsupport/{itsupportid}', 'ItSupportController@update')->name('itsupport.update');
+    Route::delete('itsupport/{itsupport}', 'ItSupportController@destroy')->name('itsupport.destroy');
 
     Route::any('notice', 'NoticeController@index')->middleware('auth')->name('notice');
     Route::any('dept_form', 'FormController@index')->middleware('auth')->name('form');

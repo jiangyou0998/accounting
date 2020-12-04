@@ -6,7 +6,7 @@
 
 
 <div>
-    分店:{{$itsupport->users->txt_name}}
+    分店/用戶:{{$itsupport->users->txt_name}}
 </div>
 
 <div>
@@ -14,7 +14,7 @@
 </div>
 
 <div>
-    緊急性:
+    緊急性:{{$itsupport->importance}}
 </div>
 
 <div>

@@ -33,6 +33,14 @@ class ItSupportShipped extends Mailable
             ->with('details')
             ->with('users')
             ->find($id);
+
+        $importanceArr = Itsupport::IMPORTANCE;
+        if(isset($importanceArr[$itsupport->importance])){
+            $itsupport->importance = $importanceArr[$itsupport->importance];
+        }else{
+            $itsupport->importance = "";
+        }
+
         $this->itsupport = $itsupport;
     }
 

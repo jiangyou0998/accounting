@@ -7,12 +7,14 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use function Sodium\increment;
+use SebastianBergmann\CodeCoverage\TestFixture\C;
 
 class Itsupport extends Model
 {
 
     protected $guarded = [];
+
+    public const IMPORTANCE = [1 => '高', 2 => '中', 3 => '低', 4 => '定期性'];
 
     public function users()
     {
@@ -53,8 +55,10 @@ class Itsupport extends Model
             ->with('details')
             ->where('status',1)
             ->CurrUser()
-            ->orderByDesc('created_at')
+            ->orderByDesc('updated_at')
             ->get();
+
+        $allUnfinished = Itsupport::setImportance($allUnfinished);
 
         return $allUnfinished;
 
@@ -67,8 +71,11 @@ class Itsupport extends Model
             ->with('details')
             ->where('status',99)
             ->CurrUser()
-            ->orderByDesc('created_at')
+            ->NotExpired(14)
+            ->orderByDesc('updated_at')
             ->get();
+
+        $allFinished = Itsupport::setImportance($allFinished);
 
         return $allFinished;
 
@@ -81,11 +88,30 @@ class Itsupport extends Model
             ->with('details')
             ->where('status',4)
             ->CurrUser()
-            ->orderByDesc('created_at')
+            ->NotExpired(14)
+            ->orderByDesc('updated_at')
             ->get();
+
+        $allCanceled = Itsupport::setImportance($allCanceled);
 
         return $allCanceled;
 
+    }
+
+    //將importance改成文字描述
+    public static function setImportance($itsupports)
+    {
+        foreach ($itsupports as &$value)
+        {
+            $importanceArr = Itsupport::IMPORTANCE;
+            if(isset($importanceArr[$value->importance])){
+                $value->importance = $importanceArr[$value->importance];
+            }else{
+                $value->importance = "";
+            }
+        }
+
+        return $itsupports;
     }
 
 
@@ -109,6 +135,14 @@ class Itsupport extends Model
             //其他獲取當前登錄id
             return $query->where('user_id', Auth::id());
         }
+
+    }
+
+    public function scopeNotExpired($query,int $expiredDay)
+    {
+        $expired = Carbon::now()->subDay($expiredDay)->toDateString();
+
+        return $query->whereDate('updated_at', '>' , $expired);
 
     }
 

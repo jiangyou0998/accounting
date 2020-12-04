@@ -1,4 +1,4 @@
-<form name="form_CaseUpdate" id="form2" action="itsupport.php" method="post">
+
 
 
     <table border="1" bordercolor="#ccc" cellspacing="0" cellpadding="0">
@@ -10,7 +10,7 @@
             <td align="center" width="3%"><b>#</b></td>
             <td align="center" width="6%"><b>編號</b></td>
 
-            <td align="center" width="14%"><b>維修單日期</b></td>
+            <td align="center" width="14%"><b>最近更新日期</b></td>
 
             <td align="center" width="10%"><b>分店/用戶</b></td>
             <td align="center" width="5%"><b>緊急性</b></td>
@@ -31,10 +31,10 @@
             <td rowspan="1" align="center"><b>{{$loop->iteration}}</b></td>
             <td align="center">{{$unfinished->it_support_no}}</td>
             <td align="center" height="25">
-                {{\Carbon\Carbon::parse($unfinished->created_at)->toDateString()}}(<span style="color: red; ">{{\Carbon\Carbon::parse($unfinished->created_at)->diffInDays(\Carbon\Carbon::now())}}</span>)
+                {{\Carbon\Carbon::parse($unfinished->updated_at)->toDateString()}}(<span style="color: red; ">{{\Carbon\Carbon::parse($unfinished->updated_at)->diffInDays(\Carbon\Carbon::now())}}</span>)
             </td>
             <td align="center" height="25">{{$unfinished->users->txt_name}}</td>
-            <td align="center">高                </td>
+            <td align="center">{{$unfinished->importance}}</td>
             <td align="center">{{$unfinished->items->name}}</td>
             <td align="center">{{$unfinished->details->name}}</td>
 
@@ -65,7 +65,7 @@
                 <button type="button" class="open-layui" data-id="{{$unfinished->id}}" style="background-color:#ADFFAD;">補充資料
                 </button>
 
-                <button type="button" data-id="{{$unfinished->id}}" style="background-color:#FFADAD;">刪除
+                <button type="button" class="delete-btn" data-id="{{$unfinished->id}}" data-no="{{$unfinished->it_support_no}}" style="background-color:#FFADAD;">刪除
                 </button>
             </td>
 
@@ -74,4 +74,4 @@
 
         </tbody>
     </table>
-</form>
+

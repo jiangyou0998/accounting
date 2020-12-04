@@ -7,13 +7,9 @@ use App\Handlers\FileUploadHandler;
 use App\Mail\ItSupportShipped;
 use App\Models\Itsupport\Itsupport;
 use App\Models\Itsupport\ItsupportItem;
-use App\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
-use Symfony\Component\Console\Input\Input;
 
 
 class ItSupportController extends Controller
@@ -33,11 +29,13 @@ class ItSupportController extends Controller
 
         $allCanceled =  Itsupport::getCanceledSupport();
 
+        $importances = Itsupport::IMPORTANCE;
+
 //        dump($unfinisheds->toArray());
 
 //        dump($items->toArray());
 
-        return view('support.itsupport.index',compact('items','details' ,'allUnfinished' ,'allFinished','allCanceled'));
+        return view('support.itsupport.index',compact('items','details' , 'importances' ,'allUnfinished' ,'allFinished','allCanceled'));
     }
 
     public function store(Request $request, FileUploadHandler $uploader)
@@ -53,7 +51,6 @@ class ItSupportController extends Controller
         $data['status'] = 1;
         $data['user_id'] = $user->id;
         $data['last_update_user'] = $user->id;
-        //todo 設計一個編號
         $data['it_support_no'] = $itSupportNo;
         $data['ip'] = $request->ip();
 
@@ -76,6 +73,15 @@ class ItSupportController extends Controller
         Mail::to(['jianli@kingbakery.com.hk','fs378354476@outlook.com'])->send(new ItSupportShipped($itSupport->id));
 //        return redirect()->route('users.show', $user->id)->with('success', '个人资料更新成功！');
         return redirect()->route('itsupport');
+    }
+
+    public function show($id)
+    {
+        $itsupport = Itsupport::with('users')
+            ->with('items')
+            ->with('details')
+            ->find($id);
+        return view('support.itsupport.show',compact('itsupport'));
     }
 
     public function edit($id)
@@ -109,6 +115,14 @@ class ItSupportController extends Controller
 
         return redirect()->route('redirect','ITSUPPORT_UPDATE_SUCCESS');
 
+    }
+
+    public function destroy($id)
+    {
+        $itsupport = Itsupport::find($id);
+        $itsupport->last_update_user = Auth::id();
+        $itsupport->status = 4;
+        $itsupport->save();
     }
 
 }
