@@ -14,8 +14,9 @@
 
             <td align="center" width="10%"><b>分店/用戶</b></td>
             <td align="center" width="5%"><b>緊急性</b></td>
-            <td align="center" width="12%"><b>器材</b></td>
-            <td align="center" width="12%"><b>求助事宜</b></td>
+            <td align="center" width="8%"><b>位置</b></td>
+            <td align="center" width="8%"><b>維修項目</b></td>
+            <td align="center" width="8%"><b>求助事宜</b></td>
             <td align="center" width="7%"><b>機器號碼#</b></td>
             <td align="center" width="10%"><b>其他資料提供</b></td>
             <td align="center" width="6%"><b>上傳文檔</b></td>
@@ -29,12 +30,13 @@
         @foreach($allUnfinished as $unfinished)
         <tr bgcolor="#ffffff">
             <td rowspan="1" align="center"><b>{{$loop->iteration}}</b></td>
-            <td align="center">{{$unfinished->it_support_no}}</td>
+            <td align="center">{{$unfinished->repair_project_no}}</td>
             <td align="center" height="25">
                 {{\Carbon\Carbon::parse($unfinished->updated_at)->toDateString()}}(<span style="color: red; ">{{\Carbon\Carbon::parse($unfinished->updated_at)->diffInDays(\Carbon\Carbon::now())}}</span>)
             </td>
             <td align="center" height="25">{{$unfinished->users->txt_name}}</td>
             <td align="center">{{$unfinished->importance}}</td>
+            <td align="center">{{$unfinished->locations->name ?? ''}}</td>
             <td align="center">{{$unfinished->items->name ?? ''}}</td>
             <td align="center">{{$unfinished->details->name ?? ''}}</td>
 
@@ -65,7 +67,7 @@
                 <button type="button" class="open-layui" data-id="{{$unfinished->id}}" style="background-color:#ADFFAD;">補充資料
                 </button>
 
-                <button type="button" class="delete-btn" data-id="{{$unfinished->id}}" data-no="{{$unfinished->it_support_no}}" style="background-color:#FFADAD;">刪除
+                <button type="button" class="delete-btn" data-id="{{$unfinished->id}}" data-no="{{$unfinished->repair_project_no}}" style="background-color:#FFADAD;">刪除
                 </button>
             </td>
 

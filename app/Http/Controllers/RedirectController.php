@@ -8,10 +8,16 @@ class RedirectController extends Controller
     {
         $message = "";
         switch ($info) {
-            case "ITSUPPORT_UPDATE_SUCCESS":   //强制登出
+            case "ITSUPPORT_UPDATE_SUCCESS":
                 $message = "IT維修「補充資料」提交成功!";
                 $url = route('itsupport');
                 break;
+
+            case "REPAIR_UPDATE_SUCCESS":
+                $message = "維修項目「補充資料」提交成功!";
+                $url = route('repair');
+                break;
+
             default:
                 $message = "";
                 break;

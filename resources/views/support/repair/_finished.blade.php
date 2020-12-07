@@ -12,8 +12,9 @@
 
             <td align="center" width="10%"><b>分店/用戶</b></td>
             <td align="center" width="5%"><b>緊急性</b></td>
-            <td align="center" width="12%"><b>器材</b></td>
-            <td align="center" width="12%"><b>求助事宜</b></td>
+            <td align="center" width="8%"><b>位置</b></td>
+            <td align="center" width="8%"><b>維修項目</b></td>
+            <td align="center" width="8%"><b>求助事宜</b></td>
             <td align="center" width="7%"><b>機器號碼#</b></td>
             <td align="center" width="10%"><b>其他資料提供</b></td>
             <td align="center" width="6%"><b>上傳文檔</b></td>
@@ -27,12 +28,13 @@
         @foreach($allFinished as $finished)
         <tr bgcolor="#ffffff">
             <td rowspan="1" align="center"><b>{{$loop->iteration}}</b></td>
-            <td align="center">{{$finished->it_support_no}}</td>
+            <td align="center">{{$finished->repair_project_no}}</td>
             <td align="center" height="25">
                 {{\Carbon\Carbon::parse($finished->updated_at)->toDateString()}}(<span style="color: red; ">{{\Carbon\Carbon::parse($finished->updated_at)->diffInDays(\Carbon\Carbon::now())}}</span>)
             </td>
             <td align="center" height="25">{{$finished->users->txt_name}}</td>
             <td align="center">{{$finished->importance}}</td>
+            <td align="center">{{$finished->locations->name ?? ''}}</td>
             <td align="center">{{$finished->items->name ?? ''}}</td>
             <td align="center">{{$finished->details->name ?? ''}}</td>
 

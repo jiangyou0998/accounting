@@ -17,7 +17,7 @@
     </div>
 
     <div class="col-sm-6">
-        <a href="{{route('itsupport')}}"><span class="btn" style="font-size: 40px;line-height: 50px;">維修<br/>報告</span></a>
+        <a href="{{route('repair')}}"><span class="btn" style="font-size: 40px;line-height: 50px;">維修<br/>報告</span></a>
         <br/>
 
         <br/>
