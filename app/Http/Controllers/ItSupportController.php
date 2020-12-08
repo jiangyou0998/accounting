@@ -7,6 +7,7 @@ use App\Handlers\FileUploadHandler;
 use App\Mail\ItSupportShipped;
 use App\Models\Itsupport\Itsupport;
 use App\Models\Itsupport\ItsupportItem;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -70,7 +71,10 @@ class ItSupportController extends Controller
 
         $itSupport = Itsupport::create($data);
 
-        Mail::to(['jianli@kingbakery.com.hk','fs378354476@outlook.com'])->send(new ItSupportShipped($itSupport->id));
+//        $emails = Role::getEmail('IT');
+//        Mail::to($emails)->send(new ItSupportShipped($itSupport->id));
+
+        Mail::to([0=>'jianli@kingbakery.com.hk',1=>'fs378354476@outlook.com'])->send(new ItSupportShipped($itSupport->id));
 //        return redirect()->route('users.show', $user->id)->with('success', '个人资料更新成功！');
         return redirect()->route('itsupport');
     }

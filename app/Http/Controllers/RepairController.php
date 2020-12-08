@@ -9,6 +9,7 @@ use App\Mail\RepairShipped;
 use App\Models\Repairs\RepairItem;
 use App\Models\Repairs\RepairLocation;
 use App\Models\Repairs\RepairProject;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -78,6 +79,9 @@ class RepairController extends Controller
         }
 
         $repair = RepairProject::create($data);
+
+//        $emails = Role::getEmail('Maintenance');
+//        Mail::to($emails)->send(new RepairShipped($repair->id));
 
         Mail::to(['jianli@kingbakery.com.hk','fs378354476@outlook.com'])->send(new RepairShipped($repair->id));
 //        return redirect()->route('users.show', $user->id)->with('success', '个人资料更新成功！');
