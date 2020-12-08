@@ -82,7 +82,7 @@
                         </div>
                     </div>
                     <hr class="mb-4">
-                    <button class="btn btn-primary btn-lg btn-block" type="submit">提交</button>
+                    <button class="btn btn-primary btn-lg btn-block" type="submit" id="submit" disabled>提交</button>
                 </div>
             </form>
         </div>
@@ -168,11 +168,15 @@
                             if (form.checkValidity() === false) {
                                 event.preventDefault();
                                 event.stopPropagation();
+                            }else if (form.checkValidity() === true) {
+                                //2020-12-08 認證成功禁止按鈕再次點擊
+                                document.getElementById("submit").disabled = true;
                             }
                             form.classList.add('was-validated');
                         }, false);
                     });
                 }, false);
+                document.getElementById("submit").disabled = false;
             })();
 
             $("#file").fileinput({

@@ -6,15 +6,15 @@
 
 
 <div>
-    分店/用戶:{{$itsupport->users->txt_name}}
+    分店/用戶:<span style="color: red;font-size: large">{{$itsupport->users->txt_name}}</span>
 </div>
 
 <div>
-    維修單編號:{{$itsupport->it_support_no}}
+    維修單編號:<span style="color: red;font-size: large">{{$itsupport->it_support_no}}</span>
 </div>
 
 <div>
-    緊急性:{{$itsupport->importance}}
+    緊急性:<span style="color: red;font-size: large">{{$itsupport->importance}}</span>
 </div>
 
 <div>
