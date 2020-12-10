@@ -28,5 +28,20 @@ class Role extends Model
             ->withPivot('model_type')->withPivotValue('model_type','App\User');
     }
 
+    public static function getEmail($roleName)
+    {
+        $roles = Role::with('users')->where('name', $roleName)->get();
+
+        $emails = array();
+
+        foreach ($roles as $role){
+            foreach ($role->users as $user){
+                $emails[] = $user->email;
+            }
+        }
+
+        return $emails;
+    }
+
 
 }

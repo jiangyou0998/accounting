@@ -4,6 +4,20 @@
 </h6>
 <ul class="list-group mb-3">
 
+    @guest()
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+                <h6 class="my-0">
+                    <a href="{{route('login')}}">
+                        登錄
+                    </a>
+                </h6>
+
+            </div>
+
+        </li>
+    @endguest
+
     @can('shop')
         <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>

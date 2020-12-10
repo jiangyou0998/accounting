@@ -81,14 +81,42 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('sample', 'WorkshopOrderSampleController@store')->name('sample.store');
     Route::put('sample/{sampleid}', 'WorkshopOrderSampleController@update')->name('sample.update');
     Route::delete('sample/{sampleid}', 'WorkshopOrderSampleController@destroy')->name('sample.destroy');
+
+    Route::post('sample/show_group/{catid}', 'WorkshopOrderSampleController@showGroup')->name('sample.show_group');
+    Route::post('sample/show_product/{groupid}', 'WorkshopOrderSampleController@showProduct')->name('sample.show_product');
+
+    Route::get('support', 'SupportController@index')->name('support');
+
+    Route::get('itsupport', 'ItSupportController@index')->name('itsupport');
+    Route::post('itsupport', 'ItSupportController@store')->name('itsupport.store');
+    Route::get('itsupport/{itsupport}/edit', 'ItSupportController@edit')->name('itsupport.edit');
+    Route::get('itsupport/{itsupport}', 'ItSupportController@show')->name('itsupport.show');
+    Route::patch('itsupport/{itsupportid}', 'ItSupportController@update')->name('itsupport.update');
+    Route::delete('itsupport/{itsupport}', 'ItSupportController@destroy')->name('itsupport.destroy');
+
+    Route::get('repair', 'RepairController@index')->name('repair');
+    Route::post('repair', 'RepairController@store')->name('repair.store');
+    Route::get('repair/{repair}/edit', 'RepairController@edit')->name('repair.edit');
+    Route::get('repair/{repair}', 'RepairController@show')->name('repair.show');
+    Route::patch('repair/{repairid}', 'RepairController@update')->name('repair.update');
+    Route::delete('repair/{repair}', 'RepairController@destroy')->name('repair.destroy');
+
+    Route::any('notice', 'NoticeController@index')->middleware('auth')->name('notice');
+    Route::any('dept_form', 'FormController@index')->middleware('auth')->name('form');
+
+    Route::get('addressbook', 'AddressBookController@index')->name('addressbook');
+
+    //通过redirect页面实现框架跳转
+    Route::get('redirect/{message}', 'RedirectController@index')->name('redirect');
+
 });
 
 
-Route::post('/sample/show_group/{catid}', 'WorkshopOrderSampleController@showGroup')->middleware('auth')->name('sample.show_group');
-Route::post('/sample/show_product/{groupid}', 'WorkshopOrderSampleController@showProduct')->middleware('auth')->name('sample.show_product');
+
 
 //Route::get('/import', 'ImportController@import');
-Route::any('notice', 'NoticeController@index')->middleware('auth')->name('notice');
-Route::any('dept_form', 'FormController@index')->middleware('auth')->name('form');
+
+
+
 
 Route::get('addressbook', 'AddressBookController@index')->name('addressbook');

@@ -81,15 +81,19 @@ class UserController extends AdminController
 
             $form->email('email');
 
-            if (User::find($id)->can('shop')){
-                $form->divider();
-                $form->text('address.shop_name','分店名');
-                $form->text('address.address','地址');
-                $form->text('address.eng_address','英文地址');
-                $form->text('address.tel','電話');
-                $form->text('address.fax','FAX');
-                $form->text('address.oper_time','營業時間');
-                $form->divider();
+
+            if ($form->isEditing()) {
+                if (User::find($id)->can('shop')){
+                    $form->divider();
+                    $form->text('address.shop_name','分店名');
+                    $form->text('address.address','地址');
+                    $form->text('address.eng_address','英文地址');
+                    $form->text('address.tel','電話');
+                    $form->text('address.fax','FAX');
+                    $form->text('address.oper_time','營業時間');
+                    $form->divider();
+                }
+
             }
 
 //            $form->text('int_sort');

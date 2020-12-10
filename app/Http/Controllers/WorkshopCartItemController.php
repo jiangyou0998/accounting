@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class WorkshopCartItemController extends Controller
 {
@@ -49,6 +50,10 @@ class WorkshopCartItemController extends Controller
 //            dump($insertDatas);
 //            dump($delDatas);
 
+            //2020-11-23 新增下單時候的價格
+            $prices = WorkshopProduct::all()->pluck('default_price','id');
+//            dump($prices);
+
             //新增
 //            $insertArr = array();
             foreach ($insertDatas as $insertData) {
@@ -58,6 +63,8 @@ class WorkshopCartItemController extends Controller
                     'user_id' => $shopid,
                     'product_id' => $insertData['itemid'],
                     'qty' => $insertData['qty'],
+                    //2020-11-23 新增下單時候的價格
+                    'order_price' => $prices[$insertData['itemid']],
                     'ip' => $ip,
                     'status' => 1,
 //                    'po_no' => ,
@@ -75,7 +82,7 @@ class WorkshopCartItemController extends Controller
                     'cart_item_id' => $cartItemId,
                     'method' => 'INSERT',
                     'ip' => $ip,
-                    'input' => '新增數量'.$insertData['qty'],
+                    'input' => '新增數量'.$insertData['qty'].',價格:'.$prices[$insertData['itemid']],
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];
@@ -150,12 +157,14 @@ class WorkshopCartItemController extends Controller
             $shopid = $user->id;
             //分店無法修改明日之前的訂單
             if ($deli_date <= now()) {
-                return "權限不足";
+//                return "權限不足";
+                throw new AccessDeniedHttpException('權限不足');
             }
 
             //分店不能下單方包
             if($dept == 'D'){
-                return "權限不足";
+//                return "權限不足";
+                throw new AccessDeniedHttpException('權限不足');
             }
         }
         if ($user->can('workshop')) {
@@ -166,7 +175,8 @@ class WorkshopCartItemController extends Controller
 //            dump('operation');
             $shopid = $request->shop;
             if ($deli_date <= now()) {
-                return "權限不足";
+//                return "權限不足";
+                throw new AccessDeniedHttpException('權限不足');
             }
         }
 

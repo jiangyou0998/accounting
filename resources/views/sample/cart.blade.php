@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1 ">
     <meta name="format-detection" content="telephone=no"/>
     <meta name="csrf-token" content="{{csrf_token()}}">
-    ﻿​
     <script src="/js/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
             integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"

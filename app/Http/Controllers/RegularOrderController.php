@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopOrderSample;
+use App\Models\WorkshopProduct;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -169,6 +170,9 @@ class RegularOrderController extends Controller
                         $is_order = true;
                     }
 
+                    //2020-12-03 新增下單時候的價格
+                    $prices = WorkshopProduct::all()->pluck('default_price','id');
+
                     if (isset($sampleArr[$shopid][$week])
                         && !$is_order){
                         foreach ($sampleArr[$shopid][$week] as $temp){
@@ -176,6 +180,8 @@ class RegularOrderController extends Controller
                                 'user_id' => $shopid,
                                 'product_id' => $temp['product_id'],
                                 'qty' => $temp['qty'],
+                                //2020-12-03 新增下單時候的價格
+                                'order_price' => $prices[$temp['product_id']],
                                 'dept' => $dept,
                                 'ip' => $request->ip(),
                                 'status' => 1,

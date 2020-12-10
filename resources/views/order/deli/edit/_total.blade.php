@@ -18,6 +18,7 @@
                                  data-sum="{{$dept_price['K']}}">{{number_format($dept_price['K'], 1, '.', ',')}}</span>
                         樓面:$<span class="dept-total" data-dept="F"
                                   data-sum="{{$dept_price['F']}}">{{number_format($dept_price['F'], 1, '.', ',')}}</span>
+
 {{--                        樓:$<span class="dept-total" data-dept="F"--}}
 {{--                                 data-sum="{{$dept_price['F']}}">{{number_format($dept_price['F'], 1, '.', ',')}}</span>--}}
                     </div>

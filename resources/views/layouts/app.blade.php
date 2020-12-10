@@ -7,6 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{csrf_token()}}">
 
+{{--    標題欄： --}}
+    <link rel="icon" href="/images/ryoyu_title_logo.ico" type="image/x-icon" />
+{{--    收藏夾：--}}
+    <link rel="shortcut icon" href="/images/ryoyu_title_logo.ico" type="image/x-icon" />
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
     <link rel="stylesheet" href="/css/style.css">
@@ -85,6 +90,13 @@
             @yield('content')
         </div>
     </div>
+    <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    </script>
 
     @yield('script')
 

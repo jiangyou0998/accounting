@@ -5,6 +5,7 @@
     <td align="right">{{ $detail->B_total != 0 ? $detail->B_total :'/' }}</td>
     <td align="right">{{ $detail->K_total != 0 ? $detail->K_total :'/' }}</td>
     <td align="right">{{ $detail->F_total != 0 ? $detail->F_total :'/' }}</td>
+
     @if($detail->qty == $detail->qty_received)
         <td align="right">{{ $detail->qty_received }}</td>
         @else
