@@ -189,7 +189,7 @@ class WorkshopCartItemController extends Controller
 //        dump($items->toArray());
 //        dump($sampleItems->toArray());
 
-        $deptArr= ['A'=>'第一車','B'=>'第二車','C'=>'麵頭','D'=>'方包'];
+        $deptArr= ['R'=>'烘焙','B'=>'水吧','K'=>'廚房','F'=>'樓面'];
 
         $orderInfos = new Collection();
         $orderInfos->date = $deli_date;

@@ -11,7 +11,7 @@ return [
     | login page.
     |
     */
-    'name' => 'Ryoyu Bakery Admin',
+    'name' => 'King Bakery Admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -23,7 +23,7 @@ return [
     |
     */
 //    'logo' => '<img src="/vendors/dcat-admin/images/logo.png" width="35"> &nbsp;Ryoyu Bakery',
-    'logo' => '&nbsp;Ryoyu Bakery Admin',
+    'logo' => '&nbsp;King Bakery Admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -316,7 +316,7 @@ return [
     */
     'layout' => [
         // indigo, blue, blue-light, blue-dark, green
-        'color' => 'green',
+        'color' => 'blue-dark',
 
         // 支持 light、primary、dark
         'sidebar_style' => 'primary',

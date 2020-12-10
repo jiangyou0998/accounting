@@ -23,7 +23,7 @@ class RegularOrderController extends Controller
      */
     public function index(Request $request)
     {
-        $shops = User::getRyoyuBakeryShops();
+        $shops = User::getKingBakeryShops();
 
         $shopids = $shops->pluck('id');
         $shop_names = $shops->pluck('report_name','id')->toArray();
@@ -121,7 +121,7 @@ class RegularOrderController extends Controller
 
     public function store(Request $request){
 
-        $shops = User::getRyoyuBakeryShops();
+        $shops = User::getKingBakeryShops();
 
         $shopids = $shops->pluck('id');
 

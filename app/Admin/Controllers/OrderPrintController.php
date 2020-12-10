@@ -39,7 +39,7 @@ class OrderPrintController extends Controller
         $cat_id = $request->cat_id;
         $deli_date = $request->deli_date;
 
-        $shops = User::getRyoyuBakeryShops();
+        $shops = User::getKingBakeryShops();
 
         $cartitemModel = new WorkshopCartItem();
         $datas = $cartitemModel

@@ -49,7 +49,7 @@ class WorkshopOrderSampleController extends Controller
     {
         $shopid = $request->shopid;
 
-        $shops = User::getRyoyuBakeryShops();
+        $shops = User::getKingBakeryShops();
 
         $sampleModel = new WorkshopOrderSample();
         $samples = $sampleModel
@@ -153,9 +153,9 @@ class WorkshopOrderSampleController extends Controller
     public function store(Request $request)
     {
         $user = Auth::User();
-        if($request->dept == 'D' && $user->can('operation')){
+        if($request->dept == 'F' && $user->can('operation')){
             $shopid = $request->shopid;
-        }else if(($request->dept == 'A' || $request->dept == 'B') && $user->can('shop')){
+        }else if(($request->dept == 'R') && $user->can('shop')){
             $shopid = $user->id;
         }else{
             return '權限不足';
@@ -352,9 +352,9 @@ class WorkshopOrderSampleController extends Controller
     {
         $user = Auth::User();
 
-        if($request->dept == 'D' && $user->can('operation')){
+        if($request->dept == 'F' && $user->can('workshop')){
             $shopid = $request->shopid;
-        }else if(($request->dept == 'A' || $request->dept == 'B') && $user->can('shop')){
+        }else if(($request->dept == 'R') && $user->can('shop')){
             $shopid = $user->id;
         }else{
             return false;
@@ -367,9 +367,9 @@ class WorkshopOrderSampleController extends Controller
     {
         $user = Auth::User();
 
-        if($dept == 'D' && $user->can('operation')){
+        if($dept == 'F' && $user->can('workshop')){
             return true;
-        }else if(($dept == 'A' || $dept == 'B') && $user->can('shop') && $shopid == $user->id){
+        }else if(($dept == 'R') && $user->can('shop') && $shopid == $user->id){
             return true;
         }else{
             return false;

@@ -32,7 +32,7 @@ class OrderController extends Controller
 
         $dayArray = $this->getDayArray();
 
-        $shops = User::getRyoyuBakeryShops();
+        $shops = User::getKingBakeryShops();
 //        dump($dayArray);
 
 
@@ -54,7 +54,7 @@ class OrderController extends Controller
 
     public function select_old_order(Request $request)
     {
-        $shops = User::getRyoyuBakeryShops();
+        $shops = User::getKingBakeryShops();
 
         $shopids = $shops->pluck('id');
         $shop_names = $shops->pluck('report_name','id')->toArray();
@@ -183,7 +183,7 @@ class OrderController extends Controller
     //工場,營運選擇送貨單
     public function select_deli()
     {
-        $shops = User::getRyoyuBakeryShops();
+        $shops = User::getKingBakeryShops();
 
         return view('order.deli.select_deli',compact('shops'));
     }
@@ -191,7 +191,7 @@ class OrderController extends Controller
     //查看方包下單
     public function regular_order(Request $request)
     {
-        $shops = User::getRyoyuBakeryShops();
+        $shops = User::getKingBakeryShops();
 
         $shopids = $shops->pluck('id');
         $shop_names = $shops->pluck('report_name','id')->toArray();

@@ -236,7 +236,7 @@
 {{--                十分钟内构建一个功能完善的高颜值后台系统。--}}
             </p>
             <p>
-                Ryoyu Bakery Admin
+                King Bakery Admin
             </p>
         </div>
     </div>

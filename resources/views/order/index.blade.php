@@ -17,7 +17,7 @@
             <br/>
             <a href='{{route('order.deli.list')}}' class='styleA'>改發票</a>
             <br/>
-            <a href='{{route('order.select_old_order',['dept'=>'A'])}}' class='styleA'>改舊單</a>
+            <a href='{{route('order.select_old_order',['dept'=>'R'])}}' class='styleA'>改舊單</a>
             <br/>
             <a href='{{route('order.select_deli')}}' class='styleA'>送貨單查詢</a>
         @endcan

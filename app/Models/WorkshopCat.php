@@ -48,13 +48,13 @@ class WorkshopCat extends Model
         $cats = new WorkshopCat();
 
         //A第一車,B第二車,C麵頭,D方包
-        if($dept == 'A' || $dept == 'B'){
-            $cats = $cats->whereIn('cat_name',['熟細包','熟大包']);
-        }else if($dept == 'C'){
-            $cats = $cats->whereIn('cat_name',['麵頭']);
-        }else if($dept == 'D'){
-            $cats = $cats->whereIn('cat_name',['方包']);
-        }
+//        if($dept == 'A' || $dept == 'B'){
+//            $cats = $cats->whereIn('cat_name',['熟細包','熟大包']);
+//        }else if($dept == 'C'){
+//            $cats = $cats->whereIn('cat_name',['麵頭']);
+//        }else if($dept == 'D'){
+//            $cats = $cats->whereIn('cat_name',['方包']);
+//        }
 
         $cats = $cats
             ->orderby('sort')
@@ -80,13 +80,13 @@ class WorkshopCat extends Model
             });
 
         //A第一車,B第二車,C麵頭,D方包
-        if($dept == 'A' || $dept == 'B'){
-            $cats = $cats->whereIn('cat_name',['熟細包','熟大包']);
-        }else if($dept == 'C'){
-            $cats = $cats->whereIn('cat_name',['麵頭']);
-        }else if($dept == 'D'){
-            $cats = $cats->whereIn('cat_name',['方包']);
-        }
+//        if($dept == 'A' || $dept == 'B'){
+//            $cats = $cats->whereIn('cat_name',['熟細包','熟大包']);
+//        }else if($dept == 'C'){
+//            $cats = $cats->whereIn('cat_name',['麵頭']);
+//        }else if($dept == 'D'){
+//            $cats = $cats->whereIn('cat_name',['方包']);
+//        }
 
         $cats = $cats
             ->orderby('sort')

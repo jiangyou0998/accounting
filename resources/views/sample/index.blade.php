@@ -37,16 +37,16 @@
         <span class="style4">創建範本</span>
     </div>
 
-{{--    第一車--}}
+{{--    烘焙--}}
     <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0">
         <div class="style5" style="text-align: center;">
             <span class="style4">第一車</span>
         </div>
         <div style="margin-bottom: 10px;">
-            <button class="sizefont"><a class="btn btn-primary" href="{{route('sample.create',['dept'=>'A'])}}">新建第一車範本</a></button>
+            <button class="sizefont"><a class="btn btn-primary" href="{{route('sample.create',['dept'=>'R'])}}">新建烘焙範本</a></button>
         </div>
         @foreach($samples as $sample)
-            @if($sample->dept == 'A')
+            @if($sample->dept == 'R')
                 <tr style="margin-top: 60px" class="sizefont">
                     <td align="right" width="4%"><strong>#</strong></td>
 
@@ -60,34 +60,34 @@
             @endif
         @endforeach
 
-{{--第二車--}}
     </table>
     <br>
 
-    <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0">
-        <div class="style5" style="text-align: center;">
-            <span class="style4">第二車</span>
-        </div>
-        <div style="margin-bottom: 10px;">
-            <button class="sizefont"><a class="btn btn-primary" href="{{route('sample.create',['dept'=>'B'])}}">新建第二車範本</a></button>
-        </div>
-        @foreach($samples as $sample)
-            @if($sample->dept == 'B')
-                <tr style="margin-top: 60px" class="sizefont">
-                    <td align="right" width="4%"><strong>#</strong></td>
+    {{--第二車--}}
+{{--    <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0">--}}
+{{--        <div class="style5" style="text-align: center;">--}}
+{{--            <span class="style4">第二車</span>--}}
+{{--        </div>--}}
+{{--        <div style="margin-bottom: 10px;">--}}
+{{--            <button class="sizefont"><a class="btn btn-primary" href="{{route('sample.create',['dept'=>'B'])}}">新建第二車範本</a></button>--}}
+{{--        </div>--}}
+{{--        @foreach($samples as $sample)--}}
+{{--            @if($sample->dept == 'B')--}}
+{{--                <tr style="margin-top: 60px" class="sizefont">--}}
+{{--                    <td align="right" width="4%"><strong>#</strong></td>--}}
 
-                    <td align="left"><a
-                            href="{{route('sample.edit',$sample->id)}}"><strong>{{$sample->sampledate}}</strong></a>
-                    </td>
-                    <td align="middle" width="10%"><strong>
-                            <button onclick="delsample({{$sample->id}});">刪除範本</button>
-                        </strong></td>
-                </tr>
-            @endif
-        @endforeach
+{{--                    <td align="left"><a--}}
+{{--                            href="{{route('sample.edit',$sample->id)}}"><strong>{{$sample->sampledate}}</strong></a>--}}
+{{--                    </td>--}}
+{{--                    <td align="middle" width="10%"><strong>--}}
+{{--                            <button onclick="delsample({{$sample->id}});">刪除範本</button>--}}
+{{--                        </strong></td>--}}
+{{--                </tr>--}}
+{{--            @endif--}}
+{{--        @endforeach--}}
 
 
-    </table>
+{{--    </table>--}}
 
     <script>
         function delsample(id) {

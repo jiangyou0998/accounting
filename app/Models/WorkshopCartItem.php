@@ -90,13 +90,13 @@ class WorkshopCartItem extends Model
             ->addSelect('workshop_cats.cat_name')
             ->addSelect('workshop_products.id as itemID');
 
-        foreach (['A','B','C','D'] as $dept) {
+        foreach (['R','B','K','F'] as $dept) {
             $sql = "ROUND(sum(case when workshop_cart_items.dept = '$dept' then workshop_cart_items.qty else 0 end),2) as '".$dept."_total'";
             $items = $items
                 ->addSelect(DB::raw($sql));
         }
 
-        foreach (['A','B','C','D'] as $dept) {
+        foreach (['R','B','K','F'] as $dept) {
             $sql = "ROUND(sum(case when workshop_cart_items.dept = '$dept' then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty)) else 0 end),2) as '".$dept."_total_received'";
             $items = $items
                 ->addSelect(DB::raw($sql));

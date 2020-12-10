@@ -42,9 +42,10 @@
         <br>
         <br>
 
-        <input type="radio" name="dept" id="radio" value="A" checked>第一車
-        <input type="radio" name="dept" id="radio" value="B">第二車
-        <input type="radio" name="dept" id="radio" value="C">麵頭
+        <input type="radio" name="dept" id="radio" value="R" checked>烘焙
+        <input type="radio" name="dept" id="radio" value="B">水吧
+        <input type="radio" name="dept" id="radio" value="K">廚房
+        <input type="radio" name="dept" id="radio" value="F">樓面
 
     </div>
     <table class="table table-bordered border-dark" width="100%" border="2" align="center" cellpadding="3" cellspacing="0">

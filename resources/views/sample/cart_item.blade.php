@@ -41,12 +41,14 @@
     </div>
     <div align="right">
         <strong>
-            @if($orderInfos->dept_name == 'A')
-                <span style="color: #FF0000; font-size: 172%; ">第一車</span>
+            @if($orderInfos->dept_name == 'R')
+                <span style="color: #FF0000; font-size: 172%; ">烘焙</span>
             @elseif($orderInfos->dept_name == 'B')
-                <span style="color: #FF0000; font-size: 172%; ">第二車</span>
-            @elseif($orderInfos->dept_name == 'D')
-                <span style="color: #FF0000; font-size: 172%; ">方包</span>
+                <span style="color: #FF0000; font-size: 172%; ">水吧</span>
+            @elseif($orderInfos->dept_name == 'K')
+                <span style="color: #FF0000; font-size: 172%; ">廚房</span>
+            @elseif($orderInfos->dept_name == 'F')
+                <span style="color: #FF0000; font-size: 172%; ">樓面</span>
             @endif
 
         </strong>

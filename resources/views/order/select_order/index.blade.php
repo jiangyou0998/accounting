@@ -41,9 +41,11 @@
         <br>
         <br>
 
-        <input type="radio" name="dept" id="radio" value="A" @if(request()->dept == 'A') checked @endif>第一車
-        <input type="radio" name="dept" id="radio" value="B" @if(request()->dept == 'B') checked @endif>第二車
-        <input type="radio" name="dept" id="radio" value="C" @if(request()->dept == 'C') checked @endif>麵頭
+        <input type="radio" name="dept" id="radio" value="R" @if(request()->dept == 'R') checked @endif>烘焙
+        <input type="radio" name="dept" id="radio" value="B" @if(request()->dept == 'B') checked @endif>水吧
+        <input type="radio" name="dept" id="radio" value="K" @if(request()->dept == 'K') checked @endif>廚房
+        <input type="radio" name="dept" id="radio" value="F" @if(request()->dept == 'F') checked @endif>樓面
+
 
     </div>
 
@@ -62,12 +64,14 @@
         <div class="py-5 text-center">
 
             <h2>
-                @if(request()->dept == 'A')
-                    第一車
+                @if(request()->dept == 'R')
+                    烘焙
                 @elseif(request()->dept == 'B')
-                    第二車
-                @elseif(request()->dept == 'C')
-                    麵頭
+                    水吧
+                @elseif(request()->dept == 'K')
+                    廚房
+                @elseif(request()->dept == 'F')
+                    樓面
                 @endif
 
             </h2>

@@ -14,6 +14,8 @@ class Notice extends Model
 
     public $timestamps = false;
 
+    protected $guarded = [];
+
     public function roles()
     {
         $roleModel = config('admin.database.roles_model');

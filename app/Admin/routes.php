@@ -48,6 +48,9 @@ Route::group([
     $router->resource('front/roles', 'RoleController');
     $router->resource('pages/front_users', 'UserController');
 
+    //商店分組
+    $router->resource('shopgroup', 'ShopGroupController');
+
     //api
     $router->get('api/group', 'ApiController@group');
     $router->get('api/group2', 'ApiController@group2');
@@ -55,5 +58,9 @@ Route::group([
     $router->get('api/unit', 'ApiController@unit');
     $router->get('api/shopgroup', 'ApiController@shop_group');
 
+    //test
+//    $router->get('data/', 'DataChangeController@index');
+//    $router->put('data/test', 'DataChangeController@test');
+//    $router->put('data/form', 'DataChangeController@changeForms');
 
 });

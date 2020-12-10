@@ -10,14 +10,14 @@
                     <div style="color:red">
                         &nbsp;&nbsp;
 
-                        第一車:$<span class="dept-total" data-dept="A"
-                                 data-sum="{{$dept_price['A']}}">{{number_format($dept_price['A'], 1, '.', ',')}}</span>
-                        第二車:$<span class="dept-total" data-dept="B"
+                        烘焙:$<span class="dept-total" data-dept="R"
+                                 data-sum="{{$dept_price['R']}}">{{number_format($dept_price['R'], 1, '.', ',')}}</span>
+                        水吧:$<span class="dept-total" data-dept="B"
                                  data-sum="{{$dept_price['B']}}">{{number_format($dept_price['B'], 1, '.', ',')}}</span>
-                        麵頭:$<span class="dept-total" data-dept="C"
-                                 data-sum="{{$dept_price['C']}}">{{number_format($dept_price['C'], 1, '.', ',')}}</span>
-                        方包:$<span class="dept-total" data-dept="D"
-                                  data-sum="{{$dept_price['D']}}">{{number_format($dept_price['D'], 1, '.', ',')}}</span>
+                        廚房:$<span class="dept-total" data-dept="K"
+                                 data-sum="{{$dept_price['K']}}">{{number_format($dept_price['K'], 1, '.', ',')}}</span>
+                        樓面:$<span class="dept-total" data-dept="F"
+                                  data-sum="{{$dept_price['F']}}">{{number_format($dept_price['F'], 1, '.', ',')}}</span>
 {{--                        樓:$<span class="dept-total" data-dept="F"--}}
 {{--                                 data-sum="{{$dept_price['F']}}">{{number_format($dept_price['F'], 1, '.', ',')}}</span>--}}
                     </div>
