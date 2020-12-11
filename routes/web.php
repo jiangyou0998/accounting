@@ -44,6 +44,7 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 //Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 
 Route::group(['middleware' => ['auth','permission:shop|workshop|operation']], function () {
+    //糧友工場
     Route::get('/order', 'OrderController@index')->name('order');
     Route::get('/order/select_day', 'OrderController@select_day')->name('select_day');
     Route::get('/order/select_old_order', 'OrderController@select_old_order')->name('order.select_old_order');
@@ -54,6 +55,18 @@ Route::group(['middleware' => ['auth','permission:shop|workshop|operation']], fu
     Route::post('order/cart/show_group/{catid}', 'WorkshopCartItemController@showGroup')->name('show_group');
     Route::post('order/cart/show_product/{groupid}', 'WorkshopCartItemController@showProduct')->name('show_product');
     Route::put('order/cart/{shopid}', 'WorkshopCartItemController@update')->name('cart.update');
+
+    //蛋撻王工場
+    Route::get('kb/order/select_day', 'KB\KBOrderController@select_day')->name('kb.select_day');
+    Route::get('kb/order/select_old_order', 'KB\KBOrderController@select_old_order')->name('kb.order.select_old_order');
+    Route::get('kb/order/deli', 'KB\KBOrderController@order_deli')->name('kb.order.deli');
+    Route::get('kb/order/select_deli', 'KB\KBOrderController@select_deli')->name('kb.order.select_deli');
+
+    Route::get('kb/order/cart','KB\KBWorkshopCartItemController@cart')->name('kb.cart');
+    Route::post('kb/order/cart/show_group/{catid}', 'KB\KBWorkshopCartItemController@showGroup')->name('kb.show_group');
+    Route::post('kb/order/cart/show_product/{groupid}', 'KB\KBWorkshopCartItemController@showProduct')->name('kb.show_product');
+    Route::put('kb/order/cart/{shopid}', 'KB\KBWorkshopCartItemController@update')->name('kb.cart.update');
+
 });
 
 Route::group(['middleware' => ['auth','permission:workshop']], function () {
