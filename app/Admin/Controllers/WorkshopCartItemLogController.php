@@ -6,7 +6,7 @@ use App\Models\WorkshopCartItemLog;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
-use Dcat\Admin\Controllers\AdminController;
+use Dcat\Admin\Http\Controllers\AdminController;
 
 class WorkshopCartItemLogController extends AdminController
 {

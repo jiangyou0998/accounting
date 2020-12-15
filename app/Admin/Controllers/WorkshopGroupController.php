@@ -6,7 +6,7 @@ use App\Models\WorkshopGroup;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
-use Dcat\Admin\Controllers\AdminController;
+use Dcat\Admin\Http\Controllers\AdminController;
 
 class WorkshopGroupController extends AdminController
 {
@@ -25,10 +25,10 @@ class WorkshopGroupController extends AdminController
             $grid->cat_id;
             $grid->short_name;
             $grid->last_modify;
-        
+
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
-        
+
             });
         });
     }

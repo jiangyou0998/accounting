@@ -3,7 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Menu;
-use Dcat\Admin\Controllers\AdminController;
+use Dcat\Admin\Http\Controllers\AdminController;
 
 use Dcat\Admin\Form;
 use Dcat\Admin\Layout\Column;

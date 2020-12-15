@@ -4,7 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\MyPage;
-use Dcat\Admin\Controllers\AdminController;
+use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Layout\Content;
 
 

@@ -7,7 +7,7 @@ use App\User;
 use Dcat\Admin\Form;
 use Dcat\Admin\IFrameGrid;
 use Dcat\Admin\Grid;
-use Dcat\Admin\Controllers\AdminController;
+use Dcat\Admin\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends AdminController

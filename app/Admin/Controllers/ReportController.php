@@ -5,7 +5,7 @@ namespace App\Admin\Controllers;
 use App\Models\OrderZDept;
 use App\Models\TblUser;
 use Carbon\Carbon;
-use Dcat\Admin\Controllers\AdminController;
+use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Grid;
 use Illuminate\Support\Facades\DB;
 

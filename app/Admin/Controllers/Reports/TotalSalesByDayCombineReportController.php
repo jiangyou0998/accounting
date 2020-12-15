@@ -10,7 +10,7 @@ use App\Models\WorkshopCartItem;
 use App\Models\WorkshopCat;
 use App\User;
 use Carbon\Carbon;
-use Dcat\Admin\Controllers\AdminController;
+use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Card;

@@ -5,7 +5,7 @@ namespace App\Admin\Controllers;
 use App\Models\MyPage;
 use App\Models\WorkshopCheck;
 use Dcat\Admin\Admin;
-use Dcat\Admin\Controllers\AdminController;
+use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Layout\Content;

@@ -5,7 +5,7 @@ namespace App\Admin\Controllers;
 use App\Models\Form as FormModel;
 use Carbon\Carbon;
 use Dcat\Admin\Admin;
-use Dcat\Admin\Controllers\AdminController;
+use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;

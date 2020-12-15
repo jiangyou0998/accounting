@@ -9,7 +9,7 @@ use App\Models\TblOrderZMenu;
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopProduct;
 use App\User;
-use Dcat\Admin\Controllers\AdminController;
+use Dcat\Admin\Http\Controllers\AdminController;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Widgets\Alert;

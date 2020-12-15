@@ -12,7 +12,7 @@
         "barryvdh/laravel-debugbar": "^3.3",
         "box/spout": "^3.1",
         "dcat/easy-excel": "^1.0",
-        "dcat/laravel-admin": "^1.5",
+        "dcat/laravel-admin": "2.*",
         "fideloper/proxy": "^4.0",
         "germey/geetest": "^3.1",
         "laravel/framework": "^6.2",

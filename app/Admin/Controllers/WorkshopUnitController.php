@@ -6,7 +6,7 @@ use App\Models\WorkshopUnit;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
-use Dcat\Admin\Controllers\AdminController;
+use Dcat\Admin\Http\Controllers\AdminController;
 
 class WorkshopUnitController extends AdminController
 {
@@ -20,10 +20,10 @@ class WorkshopUnitController extends AdminController
         return Grid::make(new WorkshopUnit(), function (Grid $grid) {
             $grid->id->sortable();
             $grid->unit_name;
-        
+
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
-        
+
             });
         });
     }
