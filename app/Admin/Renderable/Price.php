@@ -16,7 +16,7 @@ class Price extends LazyRenderable
         // 获取其他自定义参数
 //        $type = $this->post_type;
 
-        $data = PriceModel::where('menu_id', $id)
+        $data = PriceModel::where('product_id', $id)
 //            ->where('type', $type)
             ->join('shop_groups','shop_groups.id','=','prices.shop_group_id')
             ->orderBy('shop_groups.sort')

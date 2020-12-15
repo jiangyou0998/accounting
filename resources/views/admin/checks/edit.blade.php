@@ -1,294 +1,264 @@
+<style type="text/css">
+    <!--
+    .cssTable1 {
+        border-collapse: collapse;
+        border: 2px solid black;
+        position: absolute;
+        left: 80px;
+        top: 70px;
+    }
+
+    .cssTable1 .cssTableField {
+        width: 150px;
+        border: 2px solid black;
+        padding: 10px;
+    }
+
+    .cssTable1 .cssTableInput {
+        width: 300px;
+        border: 2px solid black;
+        padding: 10px;
+    }
+
+    .cssTable2 {
+        border-collapse: collapse;
+        border: 2px solid black;
+        position: absolute;
+        left: 585px;
+        top: 70px;
+        margin-left: 10px;
+        background-color: #697CAF;
+        cursor: default;
+    }
+
+    .cssTable2 .cssTableField {
+        width: 150px;
+        border: 2px solid black;
+        padding: 10px;
+    }
+
+    .cssTable2 .cssTableInput {
+        width: 600px;
+        border: 2px solid black;
+        padding: 5px;
+    }
+
+    .cssTable3 {
+        border-collapse: collapse;
+        border: 2px solid black;
+        position: absolute;
+        left: 595px;
+        top: 70px;
+        background-color: #697CAF;
+        cursor: default;
+        display: none;
+    }
+
+    .cssTable3 .cssTableInput {
+        width: 600px;
+        border: 2px solid black;
+        padding: 5px;
+    }
+
+    .brand {
+        text-align: center;
+        cursor: pointer;
+        color: white;
+        background: url("/images/2.jpg");
+        width: 106px;
+        height: 35px;
+        text-align: center;
+        float: left;
+        padding-top: 5px;
+    }
+
+    .brand_all {
+        float: left;
+        text-align: center;
+        cursor: pointer;
+        color: white;
+        background: url("/images/3.jpg");
+        width: 106px;
+        height: 35px;
+        text-align: center;
+        margin: 1px;
+        display: none;
+        padding-top: 5px;
+    }
+
+    .shop {
+        float: left;
+        text-align: center;
+        cursor: pointer;
+        color: white;
+        background: url("/images/1.jpg");
+        width: 106px;
+        height: 60px;
+        text-align: center;
+        margin: 1px;
+        display: none;
+        padding-top: 5px;
+    }
+
+    .shop_select {
+        background: url("/images/6.jpg");
+    }
+
+    .cat {
+        text-align: center;
+        cursor: pointer;
+        color: white;
+        background: url("/images/2.jpg");
+        width: 106px;
+        height: 35px;
+        text-align: center;
+        padding-top: 5px;
+    }
+
+    .gp {
+        float: left;
+        text-align: center;
+        cursor: pointer;
+        color: white;
+        background: url("/images/3.jpg");
+        width: 106px;
+        height: 35px;
+        text-align: center;
+        margin: 1px;
+        display: none;
+        padding-top: 5px;
+    }
+
+    .item {
+        float: left;
+        text-align: center;
+        cursor: pointer;
+        color: white;
+        background: url("/images/1.jpg");
+        width: 106px;
+        height: 65px;
+        text-align: center;
+        margin: 1px;
+        display: none;
+        padding-top: 5px;
+    }
+
+    .item_selected {
+        background: url("/images/6.jpg");
+    }
 
 
+    #item_list {
+        width: 100%;
+    }
 
-        <style type="text/css">
-            <!--
-            .cssTable1 {
-                border-collapse: collapse;
-                border: 2px solid black;
-                position: absolute;
-                left: 80px;
-                top: 70px;
-            }
+    .item_list_th {
+        text-align: center;
+        font-weight: bold;
+    }
 
-            .cssTable1 .cssTableField {
-                width: 150px;
-                border: 2px solid black;
-                padding: 10px;
-            }
+    .item_list_td {
+        width: 150px;
+    }
 
-            .cssTable1 .cssTableInput {
-                width: 300px;
-                border: 2px solid black;
-                padding: 10px;
-            }
+    .item_list_td_1 {
+        text-align: center;
+    }
 
-            .cssTable2 {
-                border-collapse: collapse;
-                border: 2px solid black;
-                position: absolute;
-                left: 585px;
-                top: 70px;
-                margin-left: 10px;
-                background-color: #697CAF;
-                cursor: default;
-            }
+    .item_delete {
+        width: 25px;
+        text-align: center;
+    }
 
-            .cssTable2 .cssTableField {
-                width: 150px;
-                border: 2px solid black;
-                padding: 10px;
-            }
+    .tab1 {
+        position: absolute;
+        left: 595px;
+        top: 30px;
+        width: 100px;
+        height: 38px;
+        border: 2px solid black;
+        text-align: center;
+        cursor: pointer;
+        padding: 0px;
+    }
 
-            .cssTable2 .cssTableInput {
-                width: 600px;
-                border: 2px solid black;
-                padding: 5px;
-            }
+    .tab2 {
+        position: absolute;
+        left: 697px;
+        top: 30px;
+        width: 100px;
+        height: 38px;
+        border: 2px solid black;
+        text-align: center;
+        cursor: pointer;
+        padding: 0px;
+    }
 
-            .cssTable3 {
-                border-collapse: collapse;
-                border: 2px solid black;
-                position: absolute;
-                left: 595px;
-                top: 70px;
-                background-color: #697CAF;
-                cursor: default;
-                display: none;
-            }
+    .active {
+        background-color: yellow;
+    }
 
-            .cssTable3 .cssTableInput {
-                width: 600px;
-                border: 2px solid black;
-                padding: 5px;
-            }
+    .cssMenu {
+        list-style-type: none;
+        padding: 0;
+        overflow: hidden;
+        background-color: #ECECEC;
+    }
 
-            .brand {
-                text-align: center;
-                cursor: pointer;
-                color: white;
-                background: url("/images/2.jpg");
-                width: 106px;
-                height: 35px;
-                text-align: center;
-                float: left;
-                padding-top: 5px;
-            }
+    .cssMenuItem {
+        float: right;
+        width: 140px;
+        border-right: 2px solid white;
+    }
 
-            .brand_all {
-                float: left;
-                text-align: center;
-                cursor: pointer;
-                color: white;
-                background: url("/images/3.jpg");
-                width: 106px;
-                height: 35px;
-                text-align: center;
-                margin: 1px;
-                display: none;
-                padding-top: 5px;
-            }
+    .cssMenuItem a {
+        display: block;
+        color: black;
+        text-align: center;
+        padding: 4px;
+        text-decoration: none;
+    }
 
-            .shop {
-                float: left;
-                text-align: center;
-                cursor: pointer;
-                color: white;
-                background: url("/images/1.jpg");
-                width: 106px;
-                height: 60px;
-                text-align: center;
-                margin: 1px;
-                display: none;
-                padding-top: 5px;
-            }
+    .cssMenuItem a:hover {
+        background-color: #BBBBBB;
+        color: white;
+    }
 
-            .shop_select {
-                background: url("/images/6.jpg");
-            }
+    .cssImportant {
+        background-color: #CCFFFF;
+    }
 
-            .cat {
-                text-align: center;
-                cursor: pointer;
-                color: white;
-                background: url("/images/2.jpg");
-                width: 106px;
-                height: 35px;
-                text-align: center;
-                padding-top: 5px;
-            }
+    .ms-drop .container.checkbox-help {
+        top: 0px;
+        left: 0px;
+    }
 
-            .gp {
-                float: left;
-                text-align: center;
-                cursor: pointer;
-                color: white;
-                background: url("/images/3.jpg");
-                width: 106px;
-                height: 35px;
-                text-align: center;
-                margin: 1px;
-                display: none;
-                padding-top: 5px;
-            }
+    .ms-drop span.text {
+        margin-left: 25px;
+    }
 
-            .item {
-                float: left;
-                text-align: center;
-                cursor: pointer;
-                color: white;
-                background: url("/images/1.jpg");
-                width: 106px;
-                height: 65px;
-                text-align: center;
-                margin: 1px;
-                display: none;
-                padding-top: 5px;
-            }
+    .checkmark {
+        height: 18px;
+        width: 18px;
+    }
 
-            .item_selected {
-                background: url("/images/6.jpg");
-            }
+    .container .checkmark:after {
+        left: 6px;
+        top: 1px;
+        width: 5px;
+        height: 11px;
+    }
 
+    .ms-drop ul > li {
+        height: 25px;
+    }
 
-            #item_list {
-                width: 100%;
-            }
+    .ms-drop ul > li.multiple label {
+        height: 25px;
+    }
 
-            .item_list_th {
-                text-align: center;
-                font-weight: bold;
-            }
-
-            .item_list_td {
-                width: 150px;
-            }
-
-            .item_list_td_1 {
-                text-align: center;
-            }
-
-            .item_delete {
-                width: 25px;
-                text-align: center;
-            }
-
-            .tab1 {
-                position: absolute;
-                left: 595px;
-                top: 30px;
-                width: 100px;
-                height: 38px;
-                border: 2px solid black;
-                text-align: center;
-                cursor: pointer;
-                padding: 0px;
-            }
-
-            .tab2 {
-                position: absolute;
-                left: 697px;
-                top: 30px;
-                width: 100px;
-                height: 38px;
-                border: 2px solid black;
-                text-align: center;
-                cursor: pointer;
-                padding: 0px;
-            }
-
-            .active {
-                background-color: yellow;
-            }
-
-            .cssMenu {
-                list-style-type: none;
-                padding: 0;
-                overflow: hidden;
-                background-color: #ECECEC;
-            }
-
-            .cssMenuItem {
-                float: right;
-                width: 140px;
-                border-right: 2px solid white;
-            }
-
-            .cssMenuItem a {
-                display: block;
-                color: black;
-                text-align: center;
-                padding: 4px;
-                text-decoration: none;
-            }
-
-            .cssMenuItem a:hover {
-                background-color: #BBBBBB;
-                color: white;
-            }
-
-            .cssImportant {
-                background-color: #CCFFFF;
-            }
-
-            .ms-drop .container.checkbox-help {
-                top: 0px;
-                left: 0px;
-            }
-
-            .ms-drop span.text {
-                margin-left: 25px;
-            }
-
-            .checkmark {
-                height: 18px;
-                width: 18px;
-            }
-
-            .container .checkmark:after {
-                left: 6px;
-                top: 1px;
-                width: 5px;
-                height: 11px;
-            }
-
-            .ms-drop ul > li {
-                height: 25px;
-            }
-
-            .ms-drop ul > li.multiple label {
-                height: 25px;
-            }
-
-            -->
-        </style>
-        <script>
-            $(function () {
-                $("#email_week").multipleSelect({
-                    selectAllText: '所有',
-                    allSelected: '每天',
-                    countSelected: '已選擇 # 項',
-                    minimumCountSelected: 6,
-                    multiple: true,
-                    multipleWidth: 85,
-                    onClose: function () {
-                        $("#email_weel_val").val($("#email_week").multipleSelect('getSelects').join(','));
-                    }
-                });
-                $("#email_week").multipleSelect('setSelects', [0,1,2,3,4,5,6]);
-            });
-            var WdatePickerOpt2 = {
-                dateFmt: 'HH:mm',
-                isShowClear: false,
-                vel: 'time',
-                onpicked: function (dp) {
-
-                }
-            };
-        </script>
-
-
-
+    -->
+</style>
 
 <div style="width:95%;">
 
@@ -417,7 +387,8 @@
                         @endforeach
 
 
-                    </tr><tr>                                            </tr>
+                    </tr>
+                    <tr></tr>
                 </table>
             </td>
         </tr>
@@ -485,83 +456,83 @@
             </td>
         </tr>
 
-{{--        <tr>--}}
-{{--            <td class="cssTableInput" valign="top">--}}
-{{--                <div style="float:left; height:20px; width:30px; background-color:#00356B"></div>--}}
-{{--                <span style="float:left; color:white">可選擇</span>--}}
-{{--                <div style="float:left; height:20px; width:30px; margin-left:50px; background-color:#717171"></div>--}}
-{{--                <span style="color:white">已選擇</span><br><br>--}}
+        {{--        <tr>--}}
+        {{--            <td class="cssTableInput" valign="top">--}}
+        {{--                <div style="float:left; height:20px; width:30px; background-color:#00356B"></div>--}}
+        {{--                <span style="float:left; color:white">可選擇</span>--}}
+        {{--                <div style="float:left; height:20px; width:30px; margin-left:50px; background-color:#717171"></div>--}}
+        {{--                <span style="color:white">已選擇</span><br><br>--}}
 
-{{--                <div class="custom">--}}
-{{--                    <div style="height:461px; overflow:scroll; overflow-y:scroll; overflow-x:hidden;">--}}
-{{--                        <div id="38" class="shop area_1 shop_select">--}}
-{{--                            蛋撻王(利東街)                            </div>--}}
-{{--                        <div id="1" class="shop area_1 shop_select">--}}
-{{--                            KB13 蛋撻王(愛東)                            </div>--}}
-{{--                        <div id="2" class="shop area_2 shop_select">--}}
-{{--                            KB01 蛋撻王(大業)                            </div>--}}
-{{--                        <div id="3" class="shop area_2 shop_select">--}}
-{{--                            KB02 蛋撻王(宏開)                            </div>--}}
-{{--                        <div id="4" class="shop area_2 shop_select">--}}
-{{--                            KB03 蛋撻王(宏啟)                            </div>--}}
-{{--                        <div id="10" class="shop area_2 shop_select">--}}
-{{--                            KB06 蛋撻王(油塘)                            </div>--}}
-{{--                        <div id="11" class="shop area_2 shop_select">--}}
-{{--                            KB09 蛋撻王(欣榮)                            </div>--}}
-{{--                        <div id="13" class="shop area_2 shop_select">--}}
-{{--                            KB11 蛋撻王(樂富)                            </div>--}}
-{{--                        <div id="12" class="shop area_2 shop_select">--}}
-{{--                            KB14 蛋撻王(泓景匯)                            </div>--}}
-{{--                        <div id="32" class="shop area_2 shop_select">--}}
-{{--                            kb16 蛋撻王(東南樓)                            </div>--}}
-{{--                        <div id="34" class="shop area_3 shop_select">--}}
-{{--                            B&B01 一口烘焙(長發)                            </div>--}}
-{{--                        <div id="14" class="shop area_3 shop_select">--}}
-{{--                            KB08 蛋撻王(逸東)                            </div>--}}
-{{--                        <div id="15" class="shop area_3 shop_select">--}}
-{{--                            KB10 蛋撻王(禾輋)                            </div>--}}
-{{--                        <div id="16" class="shop area_3 shop_select">--}}
-{{--                            KB12 蛋撻王(新都城II)                            </div>--}}
-{{--                        <div id="17" class="shop area_3 shop_select">--}}
-{{--                            KB15 蛋撻王(天晉)                            </div>--}}
-{{--                        <div id="33" class="shop area_3 shop_select">--}}
-{{--                            kb17 蛋撻王(光華)                            </div>--}}
-{{--                        <div id="18" class="shop area_4 shop_select">--}}
-{{--                            RB01 糧友(荃灣)                            </div>--}}
-{{--                        <div id="28" class="shop area_4 shop_select">--}}
-{{--                            RB03 糧友(黃埔)                            </div>--}}
-{{--                        <div id="29" class="shop area_4 shop_select">--}}
-{{--                            RB04 糧友(東港)                            </div>--}}
-{{--                        <div id="30" class="shop area_4 shop_select">--}}
-{{--                            RB05 糧友(將中)                            </div>--}}
-{{--                        <div id="31" class="shop area_4 shop_select">--}}
-{{--                            RB06 糧友(YOHO)                            </div>--}}
-{{--                        <div id="35" class="shop area_4 shop_select">--}}
-{{--                            RB07 糧友(上中)                            </div>--}}
-{{--                        <div id="19" class="shop area_4 shop_select">--}}
-{{--                            RB08 糧友(MOKO)                            </div>--}}
-{{--                        <div id="41" class="shop area_4 shop_select">--}}
-{{--                            RB09 糧友(梭椏道)                            </div>--}}
-{{--                        <div id="43" class="shop area_4 shop_select">--}}
-{{--                            RB10 糧友(奧海城)                            </div>--}}
-{{--                        <div id="25" class="shop area_5 shop_select">--}}
-{{--                        </div>--}}
-{{--                        <div id="26" class="shop area_5 shop_select">--}}
-{{--                        </div>--}}
-{{--                        <div id="27" class="shop area_5 shop_select">--}}
-{{--                        </div>--}}
-{{--                        <div id="36" class="shop area_5 shop_select">--}}
-{{--                            2cafe01 貳號冰室(華欣樓)                            </div>--}}
-{{--                        <div id="9" class="shop area_6 shop_select">--}}
-{{--                            CES01 共食薈(開源道)                            </div>--}}
-{{--                        <div id="7" class="shop area_6 shop_select">--}}
-{{--                            CES02 共食薈(慧霖)                            </div>--}}
-{{--                        <div id="24" class="shop area_999 shop_select">--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </td>--}}
-{{--        </tr>--}}
+        {{--                <div class="custom">--}}
+        {{--                    <div style="height:461px; overflow:scroll; overflow-y:scroll; overflow-x:hidden;">--}}
+        {{--                        <div id="38" class="shop area_1 shop_select">--}}
+        {{--                            蛋撻王(利東街)                            </div>--}}
+        {{--                        <div id="1" class="shop area_1 shop_select">--}}
+        {{--                            KB13 蛋撻王(愛東)                            </div>--}}
+        {{--                        <div id="2" class="shop area_2 shop_select">--}}
+        {{--                            KB01 蛋撻王(大業)                            </div>--}}
+        {{--                        <div id="3" class="shop area_2 shop_select">--}}
+        {{--                            KB02 蛋撻王(宏開)                            </div>--}}
+        {{--                        <div id="4" class="shop area_2 shop_select">--}}
+        {{--                            KB03 蛋撻王(宏啟)                            </div>--}}
+        {{--                        <div id="10" class="shop area_2 shop_select">--}}
+        {{--                            KB06 蛋撻王(油塘)                            </div>--}}
+        {{--                        <div id="11" class="shop area_2 shop_select">--}}
+        {{--                            KB09 蛋撻王(欣榮)                            </div>--}}
+        {{--                        <div id="13" class="shop area_2 shop_select">--}}
+        {{--                            KB11 蛋撻王(樂富)                            </div>--}}
+        {{--                        <div id="12" class="shop area_2 shop_select">--}}
+        {{--                            KB14 蛋撻王(泓景匯)                            </div>--}}
+        {{--                        <div id="32" class="shop area_2 shop_select">--}}
+        {{--                            kb16 蛋撻王(東南樓)                            </div>--}}
+        {{--                        <div id="34" class="shop area_3 shop_select">--}}
+        {{--                            B&B01 一口烘焙(長發)                            </div>--}}
+        {{--                        <div id="14" class="shop area_3 shop_select">--}}
+        {{--                            KB08 蛋撻王(逸東)                            </div>--}}
+        {{--                        <div id="15" class="shop area_3 shop_select">--}}
+        {{--                            KB10 蛋撻王(禾輋)                            </div>--}}
+        {{--                        <div id="16" class="shop area_3 shop_select">--}}
+        {{--                            KB12 蛋撻王(新都城II)                            </div>--}}
+        {{--                        <div id="17" class="shop area_3 shop_select">--}}
+        {{--                            KB15 蛋撻王(天晉)                            </div>--}}
+        {{--                        <div id="33" class="shop area_3 shop_select">--}}
+        {{--                            kb17 蛋撻王(光華)                            </div>--}}
+        {{--                        <div id="18" class="shop area_4 shop_select">--}}
+        {{--                            RB01 糧友(荃灣)                            </div>--}}
+        {{--                        <div id="28" class="shop area_4 shop_select">--}}
+        {{--                            RB03 糧友(黃埔)                            </div>--}}
+        {{--                        <div id="29" class="shop area_4 shop_select">--}}
+        {{--                            RB04 糧友(東港)                            </div>--}}
+        {{--                        <div id="30" class="shop area_4 shop_select">--}}
+        {{--                            RB05 糧友(將中)                            </div>--}}
+        {{--                        <div id="31" class="shop area_4 shop_select">--}}
+        {{--                            RB06 糧友(YOHO)                            </div>--}}
+        {{--                        <div id="35" class="shop area_4 shop_select">--}}
+        {{--                            RB07 糧友(上中)                            </div>--}}
+        {{--                        <div id="19" class="shop area_4 shop_select">--}}
+        {{--                            RB08 糧友(MOKO)                            </div>--}}
+        {{--                        <div id="41" class="shop area_4 shop_select">--}}
+        {{--                            RB09 糧友(梭椏道)                            </div>--}}
+        {{--                        <div id="43" class="shop area_4 shop_select">--}}
+        {{--                            RB10 糧友(奧海城)                            </div>--}}
+        {{--                        <div id="25" class="shop area_5 shop_select">--}}
+        {{--                        </div>--}}
+        {{--                        <div id="26" class="shop area_5 shop_select">--}}
+        {{--                        </div>--}}
+        {{--                        <div id="27" class="shop area_5 shop_select">--}}
+        {{--                        </div>--}}
+        {{--                        <div id="36" class="shop area_5 shop_select">--}}
+        {{--                            2cafe01 貳號冰室(華欣樓)                            </div>--}}
+        {{--                        <div id="9" class="shop area_6 shop_select">--}}
+        {{--                            CES01 共食薈(開源道)                            </div>--}}
+        {{--                        <div id="7" class="shop area_6 shop_select">--}}
+        {{--                            CES02 共食薈(慧霖)                            </div>--}}
+        {{--                        <div id="24" class="shop area_999 shop_select">--}}
+        {{--                        </div>--}}
+        {{--                    </div>--}}
+        {{--                </div>--}}
+        {{--            </td>--}}
+        {{--        </tr>--}}
     </table>
 
 
@@ -571,7 +542,7 @@
     {{ method_field('PATCH') }}
     {{ csrf_field() }}
     <input type="hidden" id="type" name="type" value="">
-{{--    <input type="hidden" id="action" name="action">--}}
+    {{--    <input type="hidden" id="action" name="action">--}}
     <input type="hidden" id="report_id" name="report_id">
     <input type="hidden" id="report_info" name="report_info">
 </form>
@@ -698,20 +669,24 @@
         $("#num_of_day").val("{{$checks->num_of_day}}")
         $("#sort").val("{{$checks->sort}}")
 
-        if ({{$checks->int_hide}} == 0){
+        if ({{$checks->int_hide}} == 0
+    )
+        {
             $("#hide_f").prop("checked", true);
         }
-        if ({{$checks->int_main_item}} == 0) {
+        if ({{$checks->int_main_item}} == 0
+    )
+        {
             $("#main_shop").prop("checked", true);
         }
 
         @foreach($checkArr as $key => $item)
-            var item_id = "item_" + {{$key}} ;
-            var item = document.getElementById(item_id);
-            if (item != null) {
-                addToItemList(document.getElementById(item_id), 1);
-                $("#" + item_id).addClass("item_selected");
-            }
+        var item_id = "item_" + {{$key}} ;
+        var item = document.getElementById(item_id);
+        if (item != null) {
+            addToItemList(document.getElementById(item_id), 1);
+            $("#" + item_id).addClass("item_selected");
+        }
         @endforeach
 
         $(".shop").addClass("shop_select");
@@ -808,6 +783,29 @@
         // 写你的逻辑
         // Dcat.success('更新成功');
         $("#title").html("修改報告");
+        $("footer").hide();
+
+        $("#email_week").multipleSelect({
+            selectAllText: '所有',
+            allSelected: '每天',
+            countSelected: '已選擇 # 項',
+            minimumCountSelected: 6,
+            multiple: true,
+            multipleWidth: 85,
+            onClose: function () {
+                $("#email_weel_val").val($("#email_week").multipleSelect('getSelects').join(','));
+            }
+        });
+        $("#email_week").multipleSelect('setSelects', [0, 1, 2, 3, 4, 5, 6]);
+
+        var WdatePickerOpt2 = {
+            dateFmt: 'HH:mm',
+            isShowClear: false,
+            vel: 'time',
+            onpicked: function (dp) {
+
+            }
+        };
 
         $(".cssTable2").show();
         $(".cssTable3").hide();

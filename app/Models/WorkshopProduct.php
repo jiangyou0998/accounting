@@ -37,7 +37,7 @@ class WorkshopProduct extends Model
 
     public function price()
     {
-        return $this->hasMany(Price::class,"menu_id","id");
+        return $this->hasMany(Price::class,"product_id","id");
     }
 
     public function allProduct()

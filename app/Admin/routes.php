@@ -63,4 +63,8 @@ Route::group([
 //    $router->put('data/test', 'DataChangeController@test');
 //    $router->put('data/form', 'DataChangeController@changeForms');
 
+//    $router->get('test',function (){
+//       return view('admin.checks.layout');
+//    });
+
 });

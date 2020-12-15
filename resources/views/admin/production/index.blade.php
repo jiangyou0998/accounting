@@ -147,19 +147,6 @@
             <div class='col-sm-4'></div>
         </div>
 
-        <script type="text/javascript">
-            $(function () {
-                $('#datepicker').datetimepicker({
-                    format: 'YYYY-MM-DD',
-                    "locale":"zh-TW",
-                    defaultDate : '{{\Carbon\Carbon::now()->addDay('2')->toDateString()}}',
-                    // icon : 'glyphicon glyphicon-calendar',
-
-                });
-            });
-
-        </script>
-
     </div>
     <input type="hidden" name="downstr" id="downstr" value=""/>
 </div>
@@ -280,6 +267,18 @@
 
     $(document).ready(function () {
         $('#loading').hide();
+    });
+
+    Dcat.ready(function () {
+        $(function () {
+            $('#datepicker').datetimepicker({
+                format: 'YYYY-MM-DD',
+                "locale":"zh-TW",
+                defaultDate : '{{\Carbon\Carbon::now()->addDay('2')->toDateString()}}',
+                // icon : 'glyphicon glyphicon-calendar',
+
+            });
+        });
     });
 
     // $(window).load(function () {
