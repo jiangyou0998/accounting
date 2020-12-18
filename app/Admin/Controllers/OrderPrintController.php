@@ -3,11 +3,11 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\OrderZDept;
-use App\Models\TblOrderCheck;
-use App\Models\TblUser;
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopCat;
+use App\Models\WorkshopCheck;
+use App\Models\WorkshopGroup;
+use App\Models\WorkshopProduct;
 use App\User;
 
 use Illuminate\Http\Request;
@@ -20,22 +20,6 @@ class OrderPrintController extends Controller
 
     public function print(Request $request)
     {
-//        $checks = new TblOrderCheck();
-//        $check = $checks::find(49);
-//
-//        $checkArr = array();
-//
-//        $menuIdArr = explode(',',$check->chr_item_list);
-//        foreach ($menuIdArr as $menu){
-//            $tempArr =  explode(':', $menu);
-//            array_push($checkArr,$tempArr[1]);
-//        }
-
-//        $checkIds = implode($checkArr,',');
-
-//        dd($checkArr);
-//        dd($checkIds);
-
         $cat_id = $request->cat_id;
         $deli_date = $request->deli_date;
 
@@ -112,6 +96,154 @@ class OrderPrintController extends Controller
         $checkInfos->deli_date = $deli_date;
 
         return view('admin.order_print.index',compact('datas' ,'headings', 'heading_shops','checkInfos'));
+    }
+
+    public function printCheck(Request $request)
+    {
+        $check_id = $request->check_id;
+        $deli_date = $request->deli_date;
+
+        $checkIDArr = explode(',',$check_id);
+
+        $checks = WorkshopCheck::find($checkIDArr);
+
+        $allData = array();
+        //每頁格數
+        $countPerPage = 10;
+
+        $shops = User::getKingBakeryShopsOrderBySort();
+        $cartitemModel = new WorkshopCartItem();
+
+        foreach ($checks as $check){
+
+            //是否隱藏沒有數量的,1隱藏,0不隱藏
+            $hideZero = $check->int_hide;
+
+            $items = $check->item_list;
+
+            $menuIdArr = explode(',',$items);
+
+            $checkArr = array();
+            foreach ($menuIdArr as $menu){
+                $tempArr =  explode(':', $menu);
+                $checkArr[] = $tempArr[1];
+            }
+
+            //計算下單數量總數
+            $totals = $cartitemModel;
+
+            foreach ($shops as $shop){
+                $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '$shop->id' and workshop_cart_items.dept != 'B' and workshop_cart_items.deli_date = '{$deli_date}') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '$shop->report_name'";
+                $totals = $totals
+                    ->addSelect(DB::raw($sql));
+            }
+
+            $totals = $totals
+                ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
+                ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
+                ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
+                ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
+                ->where('users.type', '=', 2)
+                ->where('workshop_cart_items.status', '<>', 4)
+                ->whereIn('workshop_cart_items.product_id', $checkArr)
+                ->where('workshop_cart_items.deli_date', $deli_date)
+                ->first();
+
+//            dump($totals->toArray());
+
+            $heading_shops = array();
+//        dump($totals->toArray());
+            foreach ($totals->toArray() as $key=>$total){
+                if($total != '0'){
+                    $heading_shops[] = $key;
+                }
+            }
+
+            //有下單的分店集合
+            $ordershops = collect();
+            foreach ($shops as $shop){
+                if(in_array($shop->report_name,$heading_shops)){
+                    $ordershops->put($shop->id,$shop->report_name);
+                }
+            }
+
+            //頁數
+            $pageCount = (int)ceil(count($ordershops)/$countPerPage);
+            //初始化頁數
+            $page = 1;
+//            dump($pageCount);
+
+            //分頁顯示
+            foreach ($ordershops->chunk($countPerPage) as $chunkshops){
+
+                $datas = $cartitemModel
+                    ->select('workshop_products.product_no as 編號' )
+                    ->addSelect('workshop_products.product_name as 名稱')
+                    ->addSelect(DB::raw("ROUND(sum(case when (workshop_cart_items.dept != 'B' and workshop_cart_items.deli_date = '{$deli_date}') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as Total"));
+
+                foreach ($chunkshops->toArray() as $shopid => $shopname){
+
+                    $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '{$shopid}' and workshop_cart_items.dept != 'B' and workshop_cart_items.deli_date = '{$deli_date}') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '{$shopname}'";
+                    $datas = $datas
+                        ->addSelect(DB::raw($sql));
+
+//            $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '$shop->id' and workshop_cart_items.dept = 'B') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '$shop->report_name"."2'";
+//            $datas = $datas
+//                ->addSelect(DB::raw($sql));
+//            $totals = $totals
+//                ->addSelect(DB::raw($sql));
+                }
+
+                $datas = $datas
+                    ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
+                    ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
+                    ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
+                    ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
+                    ->where('users.type', '=', 2)
+                    ->where('workshop_cart_items.status', '<>', 4)
+                    ->whereIn('workshop_cart_items.product_id', $checkArr);
+
+                if($hideZero){
+                    $datas = $datas
+                        ->where('workshop_cart_items.deli_date', $deli_date);
+                }
+
+                $datas = $datas
+                    ->groupBy('workshop_products.id')
+                    ->orderBy('workshop_products.product_no')
+                    ->orderBy('workshop_groups.id')
+                    ->get();
+
+//        dump($products);
+//        dump($datas->toArray());
+
+//
+                $headings = [];
+                if($datas->first()){
+                    $headings = $datas->first()->toArray();
+                }
+
+//                dump($headings);
+//                dump($datas->toArray());
+
+
+
+                $datas->title = $check->report_name;
+                $datas->deli_date = $deli_date;
+                $datas->page = $page.'/'.$pageCount;
+
+                $page++;
+
+                $allData[$check->id][] = $datas;
+
+            }
+
+        }
+
+//        dd($allData);
+//        dump($heading_shops);
+
+        return view('admin.order_print.index',compact('allData'));
     }
 
 

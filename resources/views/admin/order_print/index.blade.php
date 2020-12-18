@@ -78,46 +78,52 @@
         </style>
 
 <body>
+@foreach($allData as $checkdatas)
+    @foreach($checkdatas as $datas)
+        @foreach($datas as $data)
+            {{--    每13個一頁,生成表頭和頂部--}}
+            @if(($loop->index % 13) == 0)
 
-@foreach($datas as $data)
-{{--    每14個一頁,生成表頭和頂部--}}
-    @if(($loop->index % 14) == 0)
-
-        <div class="page">
-            <div width="100%">
+                <div class="page">
+                    <div width="100%">
 
 
-                <div width="100%">
-                    <div width="50%" align="left">列印時間: {{\Carbon\Carbon::now()->toDateTimeString()}}</div>
-                    <div width="50%" align="right">1/2</div>
-                </div>
+                        <div width="100%">
+                            <div width="50%" align="left">列印時間: {{\Carbon\Carbon::now()->toDateTimeString()}}</div>
+                            <div width="50%" align="right">{{$datas->page}}</div>
+                        </div>
 
-                <br/>
-                <div class="box">
+                        <br/>
+                        <div class="box">
 
-                    <span class="style1">{{$checkInfos->title}}</span>
-                    <span class="style1"
-                    >出貨日期：
-                            {{$checkInfos->deli_date}} ({{\Carbon\Carbon::parse($checkInfos->deli_date)->isoFormat('dd')}})
+                            <span class="style1">{{$datas->title}}</span>
+                            <span class="style1"
+                            >出貨日期：
+                            {{$datas->deli_date}} ({{\Carbon\Carbon::parse($datas->deli_date)->isoFormat('dd')}})
                         </span>
+                        </div>
+
+
+                        <hr/>
+
+                        <table border="1" cellpadding="0" cellspacing="0">
+                            @include('admin.order_print._table_head')
+                            @endif
+                            {{--    加載數據--}}
+                            @include('admin.order_print._table_data')
+
+                            {{--    第14個,生成打印分頁div--}}
+                            @if(($loop->index % 13) == 12 || $loop->last)
+                        </table>
+                        <div style="page-break-after:always;"></div>
+                    </div>
                 </div>
+            @endif
+        @endforeach
 
+    @endforeach
 
-                <hr/>
-
-                <table border="1" cellpadding="0" cellspacing="0">
-                    @include('admin.order_print._table_head')
-    @endif
-{{--    加載數據--}}
-                    @include('admin.order_print._table_data')
-
-{{--    第14個,生成打印分頁div--}}
-    @if(($loop->index % 14) == 13 || $loop->last)
-                </table>
-                <div style="page-break-after:always;"></div>
-            </div>
-        </div>
-    @endif
 @endforeach
+
 
 </body>

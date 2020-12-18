@@ -87,6 +87,19 @@ class User extends Authenticatable
         return $shops;
     }
 
+    public static function getKingBakeryShopsOrderBySort(){
+
+        $users = new User();
+        $shops = $users->where('type', 2)
+            ->where('name','like','kb%')
+            ->orWhere('name','like','ces%')
+            ->orWhere('name','like','b&b%')
+            ->orderBy('sort')
+            ->get(['id','report_name']);
+
+        return $shops;
+    }
+
     public static function getRyoyuBakeryShops(){
 
         $users = new User();
