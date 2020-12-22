@@ -23,10 +23,10 @@
         @endcan
 
         @can('operation')
-            <br/>
-            <a href='{{route('sample.regular')}}' class='styleA'>固定柯打範本</a>
-            <br/>
-            <a href='{{route('order.regular')}}' class='styleA'>批量下單</a>
+{{--            <br/>--}}
+{{--            <a href='{{route('sample.regular')}}' class='styleA'>固定柯打範本</a>--}}
+{{--            <br/>--}}
+{{--            <a href='{{route('order.regular')}}' class='styleA'>批量下單</a>--}}
             <br/>
             <a href='{{route('order.select_deli')}}' class='styleA'>送貨單查詢</a>
         @endcan

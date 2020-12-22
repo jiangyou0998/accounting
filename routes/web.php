@@ -62,10 +62,10 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
     Route::post('order/deli/update', 'DeliController@deli_update')->name('deli.update');
 });
 
-Route::group(['middleware' => ['auth','permission:operation']], function () {
-    Route::get('order/regular', 'RegularOrderController@index')->name('order.regular');
-    Route::post('order/regular', 'RegularOrderController@store')->name('order.regular.store');
-});
+//Route::group(['middleware' => ['auth','permission:operation']], function () {
+//    Route::get('order/regular', 'RegularOrderController@index')->name('order.regular');
+//    Route::post('order/regular', 'RegularOrderController@store')->name('order.regular.store');
+//});
 
 Route::group(['middleware' => ['auth','permission:shop']], function () {
     Route::get('sample', 'WorkshopOrderSampleController@index')->name('sample');
