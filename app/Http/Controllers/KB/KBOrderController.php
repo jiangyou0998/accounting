@@ -40,25 +40,6 @@ class KBOrderController extends Controller
 
         $shops = User::getRyoyuBakeryShops();
 
-//        $products = KBWorkshopProduct::whereHas('prices', function (Builder $query) {
-//            $query->where('shop_group_id', '=', 5);
-//        })->with('prices')->get();
-//        dump($products->toArray());
-
-//        $cats = KBWorkshopCat::whereHas('products', function (Builder $query) {
-//            $query->whereHas('prices', function (Builder $query) {
-//                $query->where('shop_group_id', '=', 5);
-//            });
-//        })->get();
-
-//        $groups = KBWorkshopGroup::whereHas('products', function (Builder $query) {
-//            $query->whereHas('prices', function (Builder $query) {
-//                $query->where('shop_group_id', '=', 5);
-//            });
-//        })->get();
-//        dump($cats->toArray());
-//        dump($groups->toArray());
-
         return view('kb.order.select_day', compact('dayArray', 'isSun','shops'));
     }
 
@@ -189,8 +170,8 @@ class KBOrderController extends Controller
         //合計數據
         $totals = KBWorkshopCartItem::getDeliTotal($deli_date,$shop);
 
-        dump($details->toArray());
-        dump($totals->toArray());
+//        dump($details->toArray());
+//        dump($totals->toArray());
 
         //頁面顯示數據
         $infos = new Collection();

@@ -18,9 +18,9 @@ class ItSupportController extends Controller
     //
     public function index(Request $request)
     {
-        $items = ItsupportItem::all()->pluck('name','id');
+        $items = ItsupportItem::orderBy('sort')->get()->pluck('name','id');
 
-        $details = ItsupportItem::with('details')->get()->mapToGroups(function ($item, $key) {
+        $details = ItsupportItem::with('details')->orderBy('sort')->get()->mapToGroups(function ($item, $key) {
             return [$item['id'] => $item['details']->pluck('name','id')];
         });
 

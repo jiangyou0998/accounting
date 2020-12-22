@@ -12,6 +12,8 @@ class KBWorkshopProduct extends Model
     protected $connection = 'mysql_kb';
     protected $table = 'workshop_products';
 
+//    protected $appends = ['full_name'];
+
     public function groups()
     {
         return $this->belongsTo(KBWorkshopGroup::class,"group_id","id");
@@ -47,6 +49,11 @@ class KBWorkshopProduct extends Model
 //            'parent' => 'parent_id',
 //        ];
     }
+
+//    public function getFullNameAttribute()
+//    {
+//        return "{$this->product_name} {$this->product_no}";
+//    }
 
 
 
