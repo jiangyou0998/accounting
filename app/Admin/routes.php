@@ -40,6 +40,9 @@ Route::group([
     $router->resource('reports/total_sales_by_group_combine', 'Reports\TotalSalesByGroupCombineReportController');
     //分店每月銷售總額報告(按日)
     $router->resource('reports/total_sales_by_day_combine', 'Reports\TotalSalesByDayCombineReportController');
+    //分店銷售查詢
+    $router->resource('reports/total_sales_by_search', 'Reports\TotalSalesBySearchReportController');
+
 
     //前台
     $router->resource('users', 'UserController');

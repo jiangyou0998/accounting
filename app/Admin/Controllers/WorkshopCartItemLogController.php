@@ -21,7 +21,8 @@ class WorkshopCartItemLogController extends AdminController
             $grid->model()
                 ->with('operate_users')
                 ->with('shops')
-                ->with('products');
+                ->with('products')
+                ->orderByDesc('updated_at');
 
 //            $grid->column('id')->sortable();
             $grid->column('operate_users.txt_name','操作人');

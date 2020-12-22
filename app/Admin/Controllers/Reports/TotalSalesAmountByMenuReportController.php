@@ -103,19 +103,39 @@ class TotalSalesAmountByMenuReportController extends AdminController
      */
     public function generate($start,$end) {
 
+        //上月開始,結束日期
+        $last_month_start = (new Carbon($start))->subMonth()->firstOfMonth()->toDateString();
+        $last_month_end = (new Carbon($start))->subMonth()->endOfMonth()->toDateString();
+
         $shops = User::getRyoyuBakeryShops();
 
         $cartitem = new WorkshopCartItem();
         $cartitem = $cartitem
             ->select('workshop_products.product_no as 編號' )
-            ->addSelect('workshop_products.product_name as 名稱')
-            ->addSelect(DB::raw('ROUND(sum(ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty)),0) as Total'));
+            ->addSelect('workshop_products.product_name as 名稱');
+//            ->addSelect(DB::raw('ROUND(sum(ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty)),0) as Total'));
+        //查詢上月
+        $sql = "ROUND(sum(
+            case when (workshop_cart_items.deli_date between '$last_month_start' and '$last_month_end')
+            then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0)
+            as 上月";
+       $cartitem = $cartitem
+            ->addSelect(DB::raw($sql));
 
+        //查詢本月
+        $sql = "ROUND(sum(
+            case when (workshop_cart_items.deli_date between '$start' and '$end')
+            then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0)
+            as Total";
+        $cartitem = $cartitem
+            ->addSelect(DB::raw($sql));
 
         foreach ($shops as $shop){
 //                $sql = "sum(case when workshop_cart_items.user_id = '$shop->id' then workshop_cart_items.qty else 0 end) as '$shop->chr_report_name'";
 //                dump($sql);
-            $sql = "ROUND(sum(case when workshop_cart_items.user_id = '$shop->id' then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '$shop->report_name'";
+            $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '$shop->id' and
+            workshop_cart_items.deli_date between '$start' and '$end')
+             then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '$shop->report_name'";
             $cartitem = $cartitem
                 ->addSelect(DB::raw($sql));
         }
@@ -126,7 +146,7 @@ class TotalSalesAmountByMenuReportController extends AdminController
             ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
             ->where('users.type', '=', 2)
             ->where('workshop_cart_items.status', '<>', 4)
-            ->whereRaw(DB::raw("deli_date between '$start' and '$end'"))
+//            ->whereRaw(DB::raw("workshop_cart_items.deli_date between '$start' and '$end'"))
             ->groupBy('workshop_products.id')
             ->orderBy('workshop_products.product_no')
             ->get();
