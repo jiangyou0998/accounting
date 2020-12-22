@@ -20,13 +20,13 @@ class RepairController extends Controller
     //
     public function index(Request $request)
     {
-        $locations = RepairLocation::all()->pluck('name','id');
+        $locations = RepairLocation::orderBy('sort')->get()->pluck('name','id');
 
-        $items = RepairLocation::with('items')->get()->mapToGroups(function ($item, $key) {
+        $items = RepairLocation::with('items')->orderBy('sort')->get()->mapToGroups(function ($item, $key) {
             return [$item['id'] => $item['items']->pluck('name','id')];
         });
 
-        $details = RepairItem::with('details')->get()->mapToGroups(function ($item, $key) {
+        $details = RepairItem::with('details')->orderBy('sort')->get()->mapToGroups(function ($item, $key) {
             return [$item['id'] => $item['details']->pluck('name','id')];
         });
 

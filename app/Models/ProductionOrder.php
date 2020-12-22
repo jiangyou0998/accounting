@@ -9,7 +9,6 @@ class ProductionOrder implements Renderable
 {
     // 定义页面所需的静态资源，这里会按需加载
     public static $js = [
-
         '/vendors/dcat-admin/dcat/plugins/moment/moment-with-locales.min.js?v1.7.0',
         '/vendors/dcat-admin/dcat/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js?v1.7.0',
     ];
@@ -34,8 +33,10 @@ JS;
         // 通过 Admin::script 设置的JS代码会自动在所有JS脚本都加载完毕后执行
         Admin::script($this->script());
 
-        $cats = WorkshopCat::where('status',1)->get();
+//        $cats = WorkshopCat::where('status',1)->get();
+        $checks = WorkshopCheck::where('disabled',0)->get();
 
-        return view('admin.production.index',compact('cats'))->render();
+//        return view('admin.production.index',compact('cats'))->render();
+        return view('admin.production.index',compact('checks'))->render();
     }
 }
