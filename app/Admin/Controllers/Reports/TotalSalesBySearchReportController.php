@@ -170,10 +170,10 @@ class TotalSalesBySearchReportController extends AdminController
         $sql = "ROUND(sum(ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty)),0) as '數量'";
         $cartitem = $cartitem->addSelect(DB::raw($sql));
         //單價
-        $sql = "ROUND(MAX(workshop_products.default_price),2) as '單價'";
+        $sql = "ROUND(MAX(workshop_cart_items.order_price),2) as '單價'";
         $cartitem = $cartitem->addSelect(DB::raw($sql));
         //總價
-        $sql = "ROUND(sum((ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_products.default_price)),2) as '總價'";
+        $sql = "ROUND(sum((ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_cart_items.order_price)),2) as '總價'";
         $cartitem = $cartitem->addSelect(DB::raw($sql));
 //        }
 

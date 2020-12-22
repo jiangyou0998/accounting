@@ -108,16 +108,16 @@ class TotalSalesByGroupCombineReportController extends AdminController
         $cartitem = new WorkshopCartItem();
         $cartitem = $cartitem
             ->select('users.report_name as 分店')
-            ->addSelect(DB::raw('ROUND(sum(ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_products.default_price) , 2) as Total'));
+            ->addSelect(DB::raw('ROUND(sum(ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_cart_items.order_price) , 2) as Total'));
 
         foreach ($cats as $cat) {
-            $sql = "ROUND(sum(case when workshop_cats.id = '$cat->id' then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_products.default_price) else 0 end),2) as '$cat->cat_name'";
+            $sql = "ROUND(sum(case when workshop_cats.id = '$cat->id' then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_cart_items.order_price) else 0 end),2) as '$cat->cat_name'";
             $cartitem = $cartitem
                 ->addSelect(DB::raw($sql));
         }
 
         foreach ($resales as $resale) {
-            $sql = "ROUND(sum(case when workshop_products.group_id = '$resale->id' then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_products.default_price) else 0 end),2) as '$resale->group_name'";
+            $sql = "ROUND(sum(case when workshop_products.group_id = '$resale->id' then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_cart_items.order_price) else 0 end),2) as '$resale->group_name'";
             $cartitem = $cartitem
                 ->addSelect(DB::raw($sql));
         }

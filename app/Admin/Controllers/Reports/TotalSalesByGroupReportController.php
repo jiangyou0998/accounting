@@ -100,12 +100,12 @@ class TotalSalesByGroupReportController extends AdminController
         $cartitem = $cartitem
             ->select('workshop_cats.cat_name as 大類' )
             ->addSelect('workshop_groups.group_name as 細類')
-            ->addSelect(DB::raw('ROUND(sum(ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_products.default_price) , 2) as Total'));
+            ->addSelect(DB::raw('ROUND(sum(ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_cart_items.order_price) , 2) as Total'));
 
             foreach ($shops as $shop){
 //                $sql = "sum(case when workshop_cart_items.user = '$shop->id' then workshop_cart_items.qty else 0 end) as '$shop->report_name'";
 //                dump($sql);
-                $sql = "ROUND(sum(case when workshop_cart_items.user_id = '$shop->id' then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_products.default_price) else 0 end),2) as '$shop->report_name'";
+                $sql = "ROUND(sum(case when workshop_cart_items.user_id = '$shop->id' then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_cart_items.order_price) else 0 end),2) as '$shop->report_name'";
                 $cartitem = $cartitem
                     ->addSelect(DB::raw($sql));
             }
