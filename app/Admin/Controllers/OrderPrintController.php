@@ -131,43 +131,24 @@ class OrderPrintController extends Controller
 
             //計算下單數量總數
             $totals = $cartitemModel;
-
-            foreach ($shops as $shop){
-                $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '$shop->id' and workshop_cart_items.dept != 'B' and workshop_cart_items.deli_date = '{$deli_date}') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '$shop->report_name'";
-                $totals = $totals
-                    ->addSelect(DB::raw($sql));
-            }
+            $totals = $totals->select('users.id','users.report_name');
 
             $totals = $totals
                 ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
-//                ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
-//                ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
                 ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
                 ->where('users.type', '=', 2)
                 ->where('workshop_cart_items.status', '<>', 4)
                 ->whereIn('workshop_cart_items.product_id', $checkArr)
                 ->where('workshop_cart_items.deli_date', $deli_date)
-                ->first();
+                ->groupBy('users.id')
+                ->havingRaw('SUM(IFNULL(workshop_cart_items.qty_received,
+            workshop_cart_items.qty)) > 0')
+                ->get();
 
 //            dump($totals->toArray());
-//            dump($totals->sum());
+//            dump(count($totals));
 
-            $heading_shops = array();
-//        dump($totals->toArray());
-            foreach ($totals->toArray() as $key=>$total){
-                if($total != '0'){
-                    $heading_shops[] = $key;
-                }
-            }
-
-            //有下單的分店集合
-            $ordershops = collect();
-            foreach ($shops as $shop){
-                if(in_array($shop->report_name,$heading_shops)){
-                    $ordershops->put($shop->id,$shop->report_name);
-                }
-            }
-
+            $ordershops = $totals->pluck('report_name','id');
 //            dump($ordershops);
 
             //頁數
@@ -182,11 +163,11 @@ class OrderPrintController extends Controller
                 $datas = $cartitemModel
                     ->select('workshop_products.product_no as 編號' )
                     ->addSelect('workshop_products.product_name as 名稱')
-                    ->addSelect(DB::raw("ROUND(sum(case when (workshop_cart_items.dept != 'B' and workshop_cart_items.deli_date = '{$deli_date}') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as Total"));
+                    ->addSelect(DB::raw("ROUND(sum(case when (workshop_cart_items.deli_date = '{$deli_date}') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as Total"));
 
                 foreach ($chunkshops->toArray() as $shopid => $shopname){
 
-                    $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '{$shopid}' and workshop_cart_items.dept != 'B' and workshop_cart_items.deli_date = '{$deli_date}') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '{$shopname}'";
+                    $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '{$shopid}' and workshop_cart_items.deli_date = '{$deli_date}') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '{$shopname}'";
                     $datas = $datas
                         ->addSelect(DB::raw($sql));
 
@@ -217,22 +198,11 @@ class OrderPrintController extends Controller
                     ->orderBy('workshop_groups.id')
                     ->get();
 
-//        dump($products);
 //        dump($datas->toArray());
-
-//
-                $headings = [];
-                if($datas->first()){
-                    $headings = $datas->first()->toArray();
-                }
-
-//                dump($headings);
-//                dump($datas->toArray());
-
-
 
                 $datas->title = $check->report_name;
                 $datas->deli_date = $deli_date;
+                //頁碼樣式 1/2
                 $datas->page = $page.'/'.$pageCount;
 
                 $page++;
@@ -244,7 +214,6 @@ class OrderPrintController extends Controller
         }
 
 //        dd($allData);
-//        dump($heading_shops);
 
         return view('admin.order_print.index',compact('allData'));
     }

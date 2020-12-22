@@ -40,7 +40,7 @@
 {{--    烘焙--}}
     <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0">
         <div class="style5" style="text-align: center;">
-            <span class="style4">第一車</span>
+            <span class="style4">烘焙</span>
         </div>
         <div style="margin-bottom: 10px;">
             <button class="sizefont"><a class="btn btn-primary" href="{{route('sample.create',['dept'=>'R'])}}">新建烘焙範本</a></button>
