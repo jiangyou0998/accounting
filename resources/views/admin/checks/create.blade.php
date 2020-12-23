@@ -461,8 +461,7 @@
 
 </div>
 
-<form action="{{route('checkupdate',$checks->id)}}" method="POST" id="add_check">
-    {{ method_field('PATCH') }}
+<form action="{{route('checkcreate')}}" method="POST" id="add_check">
     {{ csrf_field() }}
     <input type="hidden" id="type" name="type" value="">
     {{--    <input type="hidden" id="action" name="action">--}}
@@ -588,29 +587,15 @@
     }
 
     function restoreReportData() {
-        $("#report_name").val("{{$checks->report_name}}")
-        $("#num_of_day").val("{{$checks->num_of_day}}")
-        $("#sort").val("{{$checks->sort}}")
 
-        if ({{$checks->int_hide}} == 0
-    )
-        {
-            $("#hide_f").prop("checked", true);
-        }
-        if ({{$checks->int_main_item}} == 0
-    )
-        {
-            $("#main_shop").prop("checked", true);
-        }
-
-        @foreach($checkArr as $key => $item)
-        var item_id = "item_" + {{$key}} ;
-        var item = document.getElementById(item_id);
-        if (item != null) {
-            addToItemList(document.getElementById(item_id), 1);
-            $("#" + item_id).addClass("item_selected");
-        }
-        @endforeach
+        {{--@foreach($checkArr as $key => $item)--}}
+        {{--var item_id = "item_" + {{$key}} ;--}}
+        {{--var item = document.getElementById(item_id);--}}
+        {{--if (item != null) {--}}
+        {{--    addToItemList(document.getElementById(item_id), 1);--}}
+        {{--    $("#" + item_id).addClass("item_selected");--}}
+        {{--}--}}
+        {{--@endforeach--}}
 
         $(".shop").addClass("shop_select");
 
@@ -631,7 +616,7 @@
             return;
         }
 
-        document.getElementById('report_id').value = "{{$checks->id}}";
+        {{--document.getElementById('report_id').value = "{{$checks->id}}";--}}
         // document.getElementById('action').value = "update";
         document.getElementById('report_info').value = JSON.stringify(reportInfo());
         //console.log(reportInfo());

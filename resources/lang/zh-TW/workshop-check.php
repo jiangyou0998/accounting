@@ -1,17 +1,17 @@
-<?php 
+<?php
 return [
     'labels' => [
-        'WorkshopCheck' => 'WorkshopCheck',
+        'WorkshopCheck' => '生產表編輯',
     ],
     'fields' => [
         'int_all_shop' => 'int_all_shop',
         'shop_list' => 'shop_list',
         'item_list' => 'item_list',
-        'report_name' => 'report_name',
+        'report_name' => '報告名稱',
         'num_of_day' => 'num_of_day',
-        'int_hide' => 'int_hide',
+        'int_hide' => '隱藏0',
         'int_main_item' => 'int_main_item',
-        'sort' => 'sort',
+        'sort' => '排序',
         'disabled' => 'disabled',
     ],
     'options' => [

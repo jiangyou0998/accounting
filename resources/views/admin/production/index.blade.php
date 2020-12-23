@@ -142,15 +142,19 @@
         var downstr = $('#downstr').val();
         if (delidate == '') {
             alert('請選擇收貨日期!');
+            isSelectedTime = false;
             return false;
         }
         if (downstr == '') {
             alert('請選擇要生成的報表!');
+            isSelectedTime = false;
             return false;
         }
-        $('#loading').show();
+        // $('#loading').show();
         {{--window.location.href = "{{route('admin.order_print')}}?deli_date=" + delidate + "&check_id=" + downstr;--}}
-        window.open("{{route('admin.order_print')}}?deli_date=" + delidate + "&check_id=" + downstr);
+        if(isSelectedTime){
+            window.open("{{route('admin.order_print')}}?deli_date=" + delidate + "&check_id=" + downstr);
+        }
     }
 
     //全選/反選

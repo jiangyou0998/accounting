@@ -13,10 +13,10 @@ return [
         'default_price' => '默認價格',
         'sort' => '排序',
         'cuttime' => '截單時間',
-        'int_phase' => '截單日期',
+        'phase' => '截單日期',
         'status' => '狀態',
         'last_modify' => '最後修改',
-        'chr_canordertime' => '出貨期',
+        'canordertime' => '出貨期',
     ],
     'options' => [
     ],
