@@ -6,6 +6,18 @@
         <div class="carousel-item">
             <img class="d-block w-100" src="../images/Banner_2.jpg" alt="Second slide">
         </div>
+        <div class="carousel-item">
+            <img class="d-block w-100" src="../images/Banner_3.jpg" alt="Third slide">
+        </div>
+        <div class="carousel-item">
+            <img class="d-block w-100" src="../images/Banner_4.jpg" alt="Fourth slide">
+        </div>
+        <div class="carousel-item">
+            <img class="d-block w-100" src="../images/Banner_5.jpg" alt="Fifth slide">
+        </div>
+        <div class="carousel-item">
+            <img class="d-block w-100" src="../images/Banner_6.jpg" alt="Sixth slide">
+        </div>
     </div>
     <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
