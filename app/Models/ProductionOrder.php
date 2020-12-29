@@ -34,9 +34,21 @@ JS;
         Admin::script($this->script());
 
 //        $cats = WorkshopCat::where('status',1)->get();
-        $checks = WorkshopCheck::where('disabled',0)->get();
+        $checks = WorkshopCheck::where('disabled',0)->CutDay()->CutTime()->get();
+
+        $cutdays = WorkshopCheck::where('disabled',0)
+            ->distinct()
+            ->orderBy('num_of_day')
+            ->get('num_of_day');
+
+        $cuttimes = WorkshopCheck::where('disabled',0)
+            ->distinct()
+            ->orderBy('cut_time')
+            ->get('cut_time');
+
+//        dump($cutdays->toArray());
 
 //        return view('admin.production.index',compact('cats'))->render();
-        return view('admin.production.index',compact('checks'))->render();
+        return view('admin.production.index',compact('checks','cutdays' ,'cuttimes'))->render();
     }
 }

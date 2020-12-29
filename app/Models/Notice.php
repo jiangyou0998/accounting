@@ -30,6 +30,13 @@ class Notice extends Model
         return $this->belongsTo($userModel,"user_id","id");
     }
 
+    public function frontusers()
+    {
+        $userModel = new User();
+
+        return $this->belongsTo($userModel,"user_id","id");
+    }
+
     public static function getNotices($dept = null ,$search = null)
     {
         $notices = Notice::where('expired_date','>',now());

@@ -27,6 +27,9 @@ class WorkshopCheckController extends AdminController
         return Grid::make(new WorkshopCheck(), function (Grid $grid) {
             $grid->id->sortable();
             $grid->report_name;
+            $grid->num_of_day->display(function ($cutday) {
+                return $cutday."日後";
+            });
             $grid->int_hide->using([0 => '否', 1 => '是'])
                 ->dot(
                 [
@@ -36,7 +39,7 @@ class WorkshopCheckController extends AdminController
                 'danger' // 默认颜色
             );
             $grid->sort;
-            $grid->disabled;
+//            $grid->disabled;
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');

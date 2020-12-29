@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Notice;
+use App\Models\Role;
 use Carbon\Carbon;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
@@ -21,12 +22,17 @@ class NoticeController extends AdminController
     protected function grid()
     {
         return Grid::make(new Notice(), function (Grid $grid) {
+//            dump(!Admin::user()->isAdministrator());
             $roleIds = Admin::user()->roles->pluck('id');
             $grid->column('notice_no');
             $grid->model()
                 ->with('roles')
-                ->with('users')
-                ->whereIn('admin_role_id',$roleIds);
+                ->with('users');
+
+            if(!Admin::user()->isAdministrator()){
+                $grid->model()->whereIn('admin_role_id',$roleIds);
+            }
+
 //            $grid->column('id')->sortable();
             $grid->column('notice_name')->limit(20);
             $grid->column('roles.name','部門');
@@ -43,7 +49,7 @@ class NoticeController extends AdminController
             $grid->column('expired_date');
 
             $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
+                $filter->like('notice_name');
 
             });
         });
@@ -83,6 +89,11 @@ class NoticeController extends AdminController
         return Form::make(new Notice(), function (Form $form) {
             $roles = Admin::user()->roles->pluck('name','id');
 //            $forms->display('id');
+            //2020-12-29 管理員顯示所有部門
+            if(Admin::user()->isAdministrator()){
+                $roleModel = config('admin.database.roles_model');
+                $roles = $roleModel::all()->pluck('name','id');
+            }
 
             if ($form->isCreating()) {
                 $form->hidden('notice_no');

@@ -141,6 +141,8 @@ class OrderPrintController extends Controller
                 ->whereIn('workshop_cart_items.product_id', $checkArr)
                 ->where('workshop_cart_items.deli_date', $deli_date)
                 ->groupBy('users.id')
+                //2020-12-28 根據車期排序
+                ->orderBy('users.sort')
                 ->havingRaw('SUM(IFNULL(workshop_cart_items.qty_received,
             workshop_cart_items.qty)) > 0')
                 ->get();

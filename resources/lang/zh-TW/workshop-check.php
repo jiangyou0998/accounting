@@ -8,7 +8,7 @@ return [
         'shop_list' => 'shop_list',
         'item_list' => 'item_list',
         'report_name' => '報告名稱',
-        'num_of_day' => 'num_of_day',
+        'num_of_day' => '截單日期',
         'int_hide' => '隱藏0',
         'int_main_item' => 'int_main_item',
         'sort' => '排序',

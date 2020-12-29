@@ -75,6 +75,38 @@
 <div align="center" width="100%">
     <div align="center" style="width:850px;">
 
+        <div class="row">
+            <div class="col-md-4 mb-3">
+{{--                <label for="country">緊急性</label>--}}
+                <select class="custom-select d-block w-100" name="cutday" id="cutday">
+                    <option value="">請選擇『截單時間』</option>
+                    @foreach($cutdays as $cutday)
+                        <option value="{{$cutday->num_of_day}}" @if($cutday->num_of_day == request()->cutday) selected @endif>
+                            {{$cutday->num_of_day}}日後
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+{{--                <label for="state">器材</label>--}}
+                <select class="custom-select d-block w-100" name="cuttime" id="cuttime" required="">
+                    <option value="">請選擇『打印時間』</option>
+                    @foreach($cuttimes as $cuttime)
+                        <option value="{{$cuttime->cut_time}}" @if($cuttime->cut_time == request()->cuttime) selected @endif>
+                            {{$cuttime->cut_time}}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <button class="btn btn-success" onclick="selectCheck()">查詢</button>
+                <button class="btn btn-danger" onclick="resetCheck()">重置</button>
+            </div>
+
+        </div>
+
         <form id="sort" method="POST">
             <input type="hidden" name="Sort" value="1">
 
@@ -117,6 +149,22 @@
 
 <script>
 
+    //查詢按鈕
+    function selectCheck() {
+        let cutday = $('#cutday').val();
+        let cuttime = $('#cuttime').val();
+        let url = '{{route('admin.production_order')}}';
+
+        url = url + '?cutday=' + cutday + '&cuttime=' + cuttime;
+
+        window.location.href = url;
+
+    }
+
+    //重置按鈕
+    function resetCheck() {
+        window.location.href = '{{route('admin.production_order')}}';
+    }
 
     function viewPrint(id, numofday) {
         var delidate = $('#datepicker').val();
@@ -182,7 +230,8 @@
             $('#datepicker').datetimepicker({
                 format: 'YYYY-MM-DD',
                 "locale":"zh-TW",
-                defaultDate : '{{\Carbon\Carbon::now()->addDay(2)->toDateString()}}',
+                //默認當前日期+2天,有cutday加相應天數
+                defaultDate : '{{\Carbon\Carbon::now()->addDay(request()->cutday ?? 2)->toDateString()}}',
                 // icon : 'glyphicon glyphicon-calendar',
 
             });

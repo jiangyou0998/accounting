@@ -3,7 +3,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light static-top">
     <div class="container">
         <a class="navbar-brand" href="/">
-            <img src="/images/ryoyu_logo.png" alt="" width="50%" height="50%">
+            <img src="/images/KB_Logo_top.jpg" alt="" height="36px">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
