@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Notice;
+use App\Models\Role;
 use Carbon\Carbon;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
@@ -21,12 +22,19 @@ class NoticeController extends AdminController
     protected function grid()
     {
         return Grid::make(new Notice(), function (Grid $grid) {
+//            dump(!Admin::user()->isAdministrator());
             $roleIds = Admin::user()->roles->pluck('id');
-            $grid->column('notice_no');
+            $grid->column('notice_no')->sortable();
             $grid->model()
                 ->with('roles')
                 ->with('users')
-                ->whereIn('admin_role_id',$roleIds);
+                ->orderByDesc('modify_date');
+
+            //2020-12-30 非管理員只加載所在的role組通告
+            if(!Admin::user()->isAdministrator()){
+                $grid->model()->whereIn('admin_role_id',$roleIds);
+            }
+
 //            $grid->column('id')->sortable();
             $grid->column('notice_name')->limit(20);
             $grid->column('roles.name','部門');
@@ -38,14 +46,39 @@ class NoticeController extends AdminController
                 return '<a href="http://' . $first_path . '" target="_blank">' . $first_path . '</a>';
             });
             $grid->column('created_date')->hide();
-            $grid->column('modify_date');
+            $grid->column('modify_date')->sortable();;
 //            $grid->column('deleted_date');
             $grid->column('expired_date');
 
+            //2020-12-30 篩選器
             $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
+                $filter->like('notice_name');
+                $filter->like('roles.name','部門');
+                $filter->like('users.name','操作人');
 
             });
+
+            //2020-12-30 過期選擇器
+            $grid->selector(function (Grid\Tools\Selector $selector) {
+
+                $selector->selectOne('expired_date', '是否過期', [
+                    0 => '過期',
+                    1 => '未過期',
+                ], function ($query, $value) {
+
+                    $now = Carbon::now()->toDateString();
+
+                    if ($value == 0) {
+                        $query->where('expired_date', '<', $now);
+                    } else if ($value == 1) {
+                        $query->where('expired_date', '>=', $now);
+                    }
+
+                });
+
+
+            });
+
         });
     }
 
@@ -83,6 +116,11 @@ class NoticeController extends AdminController
         return Form::make(new Notice(), function (Form $form) {
             $roles = Admin::user()->roles->pluck('name','id');
 //            $forms->display('id');
+            //2020-12-29 管理員顯示所有部門
+            if(Admin::user()->isAdministrator()){
+                $roleModel = config('admin.database.roles_model');
+                $roles = $roleModel::all()->pluck('name','id');
+            }
 
             if ($form->isCreating()) {
                 $form->hidden('notice_no');

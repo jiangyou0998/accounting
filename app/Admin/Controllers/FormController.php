@@ -24,7 +24,12 @@ class FormController extends AdminController
             $grid->model()
                 ->with('roles')
                 ->with('users')
-                ->whereIn('admin_role_id',$roleIds);
+                ->orderByDesc('modify_date');
+
+            //2020-12-30 非管理員只加載所在的role組表格
+            if(!Admin::user()->isAdministrator()){
+                $grid->model()->whereIn('admin_role_id',$roleIds);
+            }
 //            $grid->column('id')->sortable();
             $grid->column('form_no');
             $grid->column('form_name')->limit(20);
@@ -41,10 +46,14 @@ class FormController extends AdminController
             $grid->column('modify_date');
 //            $grid->column('deleted_date');
 
+            //2020-12-30 篩選器
             $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
+                $filter->like('form_name');
+                $filter->like('roles.name','部門');
+                $filter->like('users.name','操作人');
 
             });
+
         });
     }
 
