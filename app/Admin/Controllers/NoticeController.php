@@ -24,11 +24,13 @@ class NoticeController extends AdminController
         return Grid::make(new Notice(), function (Grid $grid) {
 //            dump(!Admin::user()->isAdministrator());
             $roleIds = Admin::user()->roles->pluck('id');
-            $grid->column('notice_no');
+            $grid->column('notice_no')->sortable();
             $grid->model()
                 ->with('roles')
-                ->with('users');
+                ->with('users')
+                ->orderByDesc('modify_date');
 
+            //2020-12-30 非管理員只加載所在的role組通告
             if(!Admin::user()->isAdministrator()){
                 $grid->model()->whereIn('admin_role_id',$roleIds);
             }
@@ -44,14 +46,39 @@ class NoticeController extends AdminController
                 return '<a href="http://' . $first_path . '" target="_blank">' . $first_path . '</a>';
             });
             $grid->column('created_date')->hide();
-            $grid->column('modify_date');
+            $grid->column('modify_date')->sortable();;
 //            $grid->column('deleted_date');
             $grid->column('expired_date');
 
+            //2020-12-30 篩選器
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->like('notice_name');
+                $filter->like('roles.name','部門');
+                $filter->like('users.name','操作人');
 
             });
+
+            //2020-12-30 過期選擇器
+            $grid->selector(function (Grid\Tools\Selector $selector) {
+
+                $selector->selectOne('expired_date', '是否過期', [
+                    0 => '過期',
+                    1 => '未過期',
+                ], function ($query, $value) {
+
+                    $now = Carbon::now()->toDateString();
+
+                    if ($value == 0) {
+                        $query->where('expired_date', '<', $now);
+                    } else if ($value == 1) {
+                        $query->where('expired_date', '>=', $now);
+                    }
+
+                });
+
+
+            });
+
         });
     }
 
