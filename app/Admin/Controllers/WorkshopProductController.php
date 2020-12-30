@@ -91,7 +91,8 @@ class WorkshopProductController extends AdminController
                 ->with(['groups'])
                 ->with(['units'])
                 ->with(['price'])
-                ->where('status','<>', 4);
+                ->where('status','<>', 4)
+                ->orderBy('product_no');
 
 //            dd($grid->model()->collection()->toArray());
             $grid->model()->collection(function (Collection $collection) {
@@ -130,28 +131,35 @@ class WorkshopProductController extends AdminController
             $grid->column('groups.group_name',"細類");
             $grid->sort;
             $grid->cuttime->label('danger');
-            $grid->phase->display(function ($phase) {
+//            $grid->phase->display(function ($phase) {
+//
+//                if($phase > 0){
+//                    return $phase."日後";
+//                }else{
+//                    return "<span style='color:red'>後勤落單</span>";
+//                }
+//
+//
+//            });
 
-                if($phase > 0){
-                    return $phase."日後";
-                }else{
-                    return "<span style='color:red'>後勤落單</span>";
-                }
+            //2020-12-30 截單日期使用radio
+            $grid->column('phase')->radio([1 => '1日後', 2 => '2日後', 3 => '3日後', -1 => '後勤落單']);
 
-
-            });
 //            $grid->int_phase;
 
-            $grid->status->using([1 => '現貨', 2 => '暫停', 3 => '新貨', 5 => '季節貨'])
-                ->dot(
-                    [
-                        1 => 'success',
-                        2 => 'danger',
-                        3 => 'primary',
-                        4 => Admin::color()->info(),
-                    ],
-                    'success' // 默认颜色
-                );
+//            $grid->status->using([1 => '現貨', 2 => '暫停', 3 => '新貨', 5 => '季節貨'])
+//                ->dot(
+//                    [
+//                        1 => 'success',
+//                        2 => 'danger',
+//                        3 => 'primary',
+//                        4 => Admin::color()->info(),
+//                    ],
+//                    'success' // 默认颜色
+//                );
+
+            //2020-12-30 狀態使用radio
+            $grid->column('status')->radio([1 => '現貨', 2 => '暫停', 3 => '新貨', 5 => '季節貨']);
             $grid->column('canordertime','出貨期');
 
             $grid->column('所屬生產表')->display(function () use ($checkArr) {
