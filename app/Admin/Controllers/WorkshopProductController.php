@@ -308,6 +308,8 @@ class WorkshopProductController extends AdminController
             ];
             $form->radio('status')->options($status)->required();
 
+            $form->select('canview','可視')->options(['ALL'=>'全部','RB'=>'糧友'])->required();
+
             $week = [
                 0 => '星期日',
                 1 => '星期一',
@@ -319,19 +321,20 @@ class WorkshopProductController extends AdminController
             ];
             $form->checkbox('canordertime')
                 ->options($week)
-                ->required()
-                ->saving(function ($value) {
-                    // 转化成json字符串保存到数据库
-                    return implode(",",$value);
-                });
+                ->required();
 
             $form->display('last_modify');
 
 
-            $form->hasMany('price', '價格列表', function (Form\NestedForm $form) {
+            $form->hasMany('price', '價格列表', function (Form\NestedForm $form) use($week){
                 $form->select('shop_group_id', '商店分組')->options('api/shopgroup')->rules('required');
 //                $form->text('shop_group_id', '商店分組')->rules('required');
-                $form->text('price', '单价')->rules('required|numeric|min:0.01');
+                $form->currency('price','單價')->symbol('$')->rules('required|numeric|min:0.01');
+                $form->text('cuttime', '截單時間')->required();
+                $form->text('phase', '截單日期')->rules('required|numeric');
+                $form->checkbox('canordertime')
+                    ->options($week)
+                ;
             });
 
 

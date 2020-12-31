@@ -111,7 +111,8 @@ class OrderPrintController extends Controller
         //每頁格數
         $countPerPage = 10;
 
-        $shops = User::getKingBakeryShopsOrderBySort();
+//        $shops = User::getKingBakeryShopsOrderBySort();
+        $shops = $request->shops;
         $cartitemModel = new WorkshopCartItem();
 
         foreach ($checks as $check){
@@ -140,6 +141,7 @@ class OrderPrintController extends Controller
                 ->where('workshop_cart_items.status', '<>', 4)
                 ->whereIn('workshop_cart_items.product_id', $checkArr)
                 ->where('workshop_cart_items.deli_date', $deli_date)
+                ->ofShop($shops)
                 ->groupBy('users.id')
                 //2020-12-28 根據車期排序
                 ->orderBy('users.sort')
@@ -191,10 +193,11 @@ class OrderPrintController extends Controller
 
                 if($hideZero){
                     $datas = $datas
-                        ->where('workshop_cart_items.deli_date', $deli_date);
+                        ->where('workshop_cart_items.id','>' ,0);
                 }
 
                 $datas = $datas
+                    ->ofShop($shops)
                     ->groupBy('workshop_products.id')
                     ->orderBy('workshop_products.product_no')
                     ->orderBy('workshop_groups.id')

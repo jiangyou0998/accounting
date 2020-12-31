@@ -56,6 +56,15 @@ class WorkshopProduct extends Model
 //        ];
     }
 
+    //2020-12-31 使用修改器將canordertime修改成字符串
+    public function setCanordertimeAttribute($value)
+    {
+        $this->attributes['canordertime'] = implode(",", array_filter($value, function ($var) {
+            //array_filter不去掉0
+            return ($var === '' || $var === null || $var === false) ? false : true;
+        }));
+    }
+
 
 
 }

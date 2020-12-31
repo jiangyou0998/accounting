@@ -30,6 +30,16 @@ class WorkshopCartItem extends Model
         return $this->hasMany(WorkshopCartItemLog::class,"id","cart_item_id");
     }
 
+    public function scopeOfShop($query, $shop)
+    {
+        if($shop === 'kb'){
+            return $query->where('users.name','like', 'kb%')
+                ->orWhere('users.name','like','ces%')
+                ->orWhere('users.name','like','b&b%');
+        }else if($shop === 'rb'){
+            return $query->where('users.name','like', 'rb%');
+        }
+    }
 
     public static function getCartItems($shop , $dept , $deli_date){
 

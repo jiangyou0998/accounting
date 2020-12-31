@@ -228,6 +228,8 @@ class WorkshopCartItemController extends Controller
             ->with('units')
             ->where('group_id', $groupid)
             ->where('status', '!=', 4)
+            //2020-12-31 KB只能看canview為ALL的產品
+            ->where('canview','=','ALL')
             ->get();
 //        dump($products);
         $deli_date = $request->deli_date;
