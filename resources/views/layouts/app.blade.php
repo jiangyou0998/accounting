@@ -60,7 +60,14 @@
                     @else
                         <div class="col-sm-4 col-4 login-reg">
                             <div class="login-reg-inner">
-                                <span><i class="fa fa-user    "></i><a href="javascript:;" class="login">{{Auth::user()->txt_name}}</a></span> |
+                                <span><i class="fa fa-user    "></i><a href="javascript:;" class="login">{{Auth::user()->txt_name}}</a></span>
+                                @cannot('shop')
+                                |
+                                <a class="fa fa-user" href="{{ route('password.reset.login') }}">
+                                    修改密碼
+                                </a>
+                                @endcannot
+                                |
                                 <a class="fa fa-user" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
