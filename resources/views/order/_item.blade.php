@@ -30,13 +30,15 @@
                data-qty="{{round($item->qty,2)}}"
                size="3" maxlength="4"
                autocomplete="off"
-        @if($item->invalid_order && Auth::user()->cannot('workshop')) disabled @endif
+               {{--        2021-01-04 修改ryoyu operation權限--}}
+        @if($item->invalid_order && Auth::user()->cannot('operation')) disabled @endif
 
         >
     </td>
     <td align="center">{{$item->UoM}}</td>
     <td align="center">
-        @if(!$item->invalid_order || Auth::user()->can('workshop'))
+        {{--        2021-01-04 修改ryoyu operation權限--}}
+        @if(!$item->invalid_order || Auth::user()->can('operation'))
             <a href="javascript:void(0);" class="del"><span style="color: #FF6600; ">X</span></a>
         @endif
     </td>

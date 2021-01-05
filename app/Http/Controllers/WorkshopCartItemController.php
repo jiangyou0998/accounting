@@ -158,7 +158,7 @@ class WorkshopCartItemController extends Controller
             //分店無法修改明日之前的訂單
             if ($deli_date <= now()) {
 //                return "權限不足";
-                throw new AccessDeniedHttpException('權限不足');
+                throw new AccessDeniedHttpException('權限不足,無法修改過去訂單');
             }
 
             //分店不能下單方包
@@ -166,18 +166,13 @@ class WorkshopCartItemController extends Controller
 //                return "權限不足";
                 throw new AccessDeniedHttpException('權限不足');
             }
-        }
-        if ($user->can('workshop')) {
-//            dump('workshop');
-            $shopid = $request->shop;
-        }
-        if ($user->can('operation')) {
+        }else if ($user->can('operation')) {
 //            dump('operation');
+            //2021-01-04 修改ryoyu operation權限
             $shopid = $request->shop;
-            if ($deli_date <= now()) {
-//                return "權限不足";
-                throw new AccessDeniedHttpException('權限不足');
-            }
+        }else{
+            //2021-01-04 非shop operation無權修改訂單
+            throw new AccessDeniedHttpException('權限不足');
         }
 
         $items = WorkshopCartItem::getCartItems($shopid, $dept, $deli_date);
