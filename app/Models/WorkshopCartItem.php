@@ -52,29 +52,34 @@ class WorkshopCartItem extends Model
             ->addSelect('workshop_products.product_name as itemName')
             ->addSelect('workshop_products.product_no')
             ->addSelect('workshop_units.unit_name as UoM')
-            ->addSelect('workshop_products.cuttime')
             ->addSelect('workshop_cart_items.qty')
             ->addSelect('workshop_cart_items.status')
-            ->addSelect('workshop_products.phase')
             ->addSelect(DB::raw('DATE(workshop_cart_items.order_date) as order_date'))
             ->addSelect(DB::raw('LEFT(workshop_cats.cat_name, 2) AS suppName'))
             ->addSelect('workshop_products.id as itemID')
-            ->addSelect('workshop_products.base')
-            ->addSelect('workshop_products.min')
-            ->addSelect('workshop_products.canordertime');
+            //2021-01-06 獲取prices表cuttime,phase,base,min,canordertime
+            ->addSelect('prices.cuttime')
+            ->addSelect('prices.phase')
+            ->addSelect('prices.base')
+            ->addSelect('prices.min')
+            ->addSelect('prices.canordertime');
 
         //設置關聯表
         $items = $items
             ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
             ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
             ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
-            ->leftJoin('workshop_units', 'workshop_products.unit_id', '=', 'workshop_units.id');
+            ->leftJoin('workshop_units', 'workshop_products.unit_id', '=', 'workshop_units.id')
+            //2021-01-06 關聯價格表
+            ->leftJoin('prices', 'workshop_cart_items.product_id','=','prices.product_id');
 
         //設置查詢條件
         $items = $items
             ->where('workshop_cart_items.user_id','=',$shop)
             ->whereNotIn('workshop_cart_items.status',[4])
             ->where('workshop_cart_items.qty','>=',0)
+            //2021-01-06 蛋撻王分組為1
+            ->where('prices.shop_group_id','=',1)
             ->where('workshop_cart_items.dept','=',$dept)
             ->where('workshop_cart_items.deli_date','=',$deli_date);
 

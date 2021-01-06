@@ -119,6 +119,10 @@ Route::group(['middleware' => ['auth']], function () {
 //Route::get('/import', 'ImportController@import');
 //Route::get('/api/resetpassword', 'Api\ApiController@resetAllPassword');
 //Route::get('/api/resetshoppassword', 'Api\ApiController@resetShopPassword');
+//Route::get('/api/resetadminpassword', 'Api\ApiController@resetAdminAllPassword');
+
+//datachange
+//Route::get('/api/datachange/product_to_price', 'Api\DataChangeApiController@copyProductToPrice');
 
 
 

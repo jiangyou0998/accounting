@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class ApiController extends Controller
@@ -15,6 +16,14 @@ class ApiController extends Controller
         $newPassword = 'xm95jw';
 
         User::where('id','>',0)
+            ->update(['password' => Hash::make($newPassword)]);
+    }
+
+    public function resetAdminAllPassword(){
+        //批量修改密碼
+        $newPassword = 'z32c4f';
+
+        DB::table('admin_users')->where('id','>',0)
             ->update(['password' => Hash::make($newPassword)]);
     }
 

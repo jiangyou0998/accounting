@@ -90,7 +90,7 @@ class WorkshopProductController extends AdminController
                 ->with(['cats'])
                 ->with(['groups'])
                 ->with(['units'])
-                ->with(['price'])
+                ->with(['prices'])
                 ->where('status','<>', 4)
                 ->orderBy('product_no');
 
@@ -117,10 +117,7 @@ class WorkshopProductController extends AdminController
             $grid->column('number',"#");
             $grid->product_no->sortable();
             $grid->product_name;
-            $grid->base;
-            $grid->min;
             $grid->column('units.unit_name',"單位");
-            $grid->default_price;
 //            $grid->price->display('View')->modal('Price', Price::make(['int_id' => $this->int_id]));
             $grid->price->display('分組價格')->expand(function () {
                 // 允许在比包内返回异步加载类的实例
@@ -130,7 +127,6 @@ class WorkshopProductController extends AdminController
             $grid->column('cats.cat_name',"大類");
             $grid->column('groups.group_name',"細類");
             $grid->sort;
-            $grid->cuttime->label('danger');
 //            $grid->phase->display(function ($phase) {
 //
 //                if($phase > 0){
@@ -141,9 +137,6 @@ class WorkshopProductController extends AdminController
 //
 //
 //            });
-
-            //2020-12-30 截單日期使用radio
-            $grid->column('phase')->radio([1 => '1日後', 2 => '2日後', 3 => '3日後', -1 => '後勤落單']);
 
 //            $grid->int_phase;
 
@@ -160,7 +153,6 @@ class WorkshopProductController extends AdminController
 
             //2020-12-30 狀態使用radio
             $grid->column('status')->radio([1 => '現貨', 2 => '暫停', 3 => '新貨', 5 => '季節貨']);
-            $grid->column('canordertime','出貨期');
 
             $grid->column('所屬生產表')->display(function () use ($checkArr) {
                 if (isset($checkArr[$this->id])){
@@ -227,7 +219,7 @@ class WorkshopProductController extends AdminController
     protected function form()
     {
         $builder = new WorkshopProduct();
-        $builder = $builder->with('price');
+        $builder = $builder->with('prices');
 
         return Form::make($builder, function (Form $form) {
 
@@ -274,31 +266,12 @@ class WorkshopProductController extends AdminController
             $form->select('group_id')->options('/api/group2')->required();
 //            $form->text('int_group')->required();
 
+            $form->select('unit_id')->options('/api/unit')->required();
 
-
-
-            $form->select('unit_id')->options('/api/unit');
-//            $form->number('int_base')->required();
-            $form->text('base')
-                ->type('number')
-                ->attribute('min', 0)
-                ->required();
-            $form->text('min')
-                ->type('number')
-                ->attribute('min', 0)
-                ->required();
-//            $form->text('int_default_price')->required();
-            $form->currency('default_price')->symbol('$')->required();
             $form->text('sort')
                 ->type('number')
                 ->required();
-            $form->text('cuttime')
-                ->type('number')
-                ->attribute('min', 0)
-                ->required();
-            $form->text('phase')
-                ->type('number')
-                ->required();
+
 
             $status = [
                 1 => '現貨',
@@ -307,8 +280,6 @@ class WorkshopProductController extends AdminController
                 5 => '季節貨'
             ];
             $form->radio('status')->options($status)->required();
-
-            $form->select('canview','可視')->options(['ALL'=>'全部','RB'=>'糧友'])->required();
 
             $week = [
                 0 => '星期日',
@@ -319,19 +290,29 @@ class WorkshopProductController extends AdminController
                 5 => '星期五',
                 6 => '星期六'
             ];
-            $form->checkbox('canordertime')
-                ->options($week)
-                ->required();
 
             $form->display('last_modify');
 
 
-            $form->hasMany('price', '價格列表', function (Form\NestedForm $form) use($week){
+            $form->hasMany('prices', '價格列表', function (Form\NestedForm $form) use($week){
                 $form->select('shop_group_id', '商店分組')->options('api/shopgroup')->rules('required');
 //                $form->text('shop_group_id', '商店分組')->rules('required');
                 $form->currency('price','單價')->symbol('$')->rules('required|numeric|min:0.01');
-                $form->text('cuttime', '截單時間')->required();
-                $form->text('phase', '截單日期')->rules('required|numeric');
+                $form->text('base')
+                    ->type('number')
+                    ->attribute('min', 0)
+                    ->required();
+                $form->text('min')
+                    ->type('number')
+                    ->attribute('min', 0)
+                    ->required();
+                $form->text('cuttime')
+                    ->type('number')
+                    ->attribute('min', 0)
+                    ->required();
+                $form->radio('phase')
+                    ->options([1 => '1日後', 2 => '2日後', 3 => '3日後', -1 => '後勤落單'])
+                    ->required();
                 $form->checkbox('canordertime')
                     ->options($week)
                 ;

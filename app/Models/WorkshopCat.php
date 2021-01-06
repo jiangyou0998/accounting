@@ -57,6 +57,7 @@ class WorkshopCat extends Model
 //        }
 
         $cats = $cats
+            ->whereNotIn('cat_name',['時節產品'])
             ->orderby('sort')
             ->get();
 

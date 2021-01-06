@@ -1,7 +1,7 @@
 
 
 <div class="col-xl-4 col-md-4 col-sm-12 text-center">
-    <table class="item" width="100%"
+    <table class="item" width="100%" height="100%"
         @if($product->invalid_order)
            style="background-color:#7D0101;margin: 3px;"
         @else

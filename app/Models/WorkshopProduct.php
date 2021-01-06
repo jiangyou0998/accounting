@@ -35,7 +35,7 @@ class WorkshopProduct extends Model
 //        return $this->belongsToMany($relatedModel, $pivotTable, 'int_user_id', 'int_menu_id');
 //    }
 
-    public function price()
+    public function prices()
     {
         return $this->hasMany(Price::class,"product_id","id");
     }
@@ -57,13 +57,13 @@ class WorkshopProduct extends Model
     }
 
     //2020-12-31 使用修改器將canordertime修改成字符串
-    public function setCanordertimeAttribute($value)
-    {
-        $this->attributes['canordertime'] = implode(",", array_filter($value, function ($var) {
-            //array_filter不去掉0
-            return ($var === '' || $var === null || $var === false) ? false : true;
-        }));
-    }
+//    public function setCanordertimeAttribute($value)
+//    {
+//        $this->attributes['canordertime'] = implode(",", array_filter($value, function ($var) {
+//            //array_filter不去掉0
+//            return ($var === '' || $var === null || $var === false) ? false : true;
+//        }));
+//    }
 
 
 

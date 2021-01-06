@@ -11,6 +11,7 @@ use App\Models\WorkshopSample;
 use App\User;
 use Carbon\Carbon;
 use Dcat\Admin\Grid\Column\Filter\Input;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -248,17 +249,33 @@ class WorkshopOrderSampleController extends Controller
 
     public function showProduct($groupid, Request $request)
     {
-        $products = WorkshopProduct::where('group_id', $groupid)->where('status', '!=', 4)->get();
-//        dump($products);
+        $products = WorkshopProduct::with('cats')
+            ->with('units')
+            ->with('prices')
+            ->where('group_id', $groupid)
+            ->where('status', '!=', 4)
+            //2021-01-06 KB只能看KB產品
+            ->whereHas('prices', function (Builder $query) {
+                $query->where('shop_group_id', '=', 1);
+            })
+            ->get();
+//        dump($products->toArray());
+
+        $group = WorkshopGroup::find($groupid);
+        $infos = new Collection();
+        $infos->group_name = $group->group_name;
+        $infos->cat_name = $group->cats->cat_name;
 
         foreach ($products as $product) {
+
+            $productDetail = $product->prices->where('shop_group_id', 1)->first();
 
             $product->order_by_workshop = false;
             $product->cut_order = false;
             $product->not_deli_time = false;
 
             //判斷是否後台落單
-            if ($product->phase <= 0) {
+            if ($productDetail->phase <= 0) {
                 $product->order_by_workshop = true;
             }
 
@@ -270,9 +287,12 @@ class WorkshopOrderSampleController extends Controller
                 $product->cut_order ||
                 $product->not_deli_time;
 
+            $this->resetProduct($product,$productDetail);
+
         }
+
 //          dump($products->toArray());
-        return view('sample.cart_product', compact('products'))->render();
+        return view('sample.cart_product', compact('products','infos'))->render();
     }
 
     private function getCheckboxHtml($sampledate ,$currentdate = null)
@@ -377,6 +397,18 @@ class WorkshopOrderSampleController extends Controller
         }else{
             return false;
         }
+
+    }
+
+    //將with數據(prices)拿到外層
+    private function resetProduct($product, $productDetail)
+    {
+        $product->phase = $productDetail->phase;
+        $product->cuttime = $productDetail->cuttime;
+        $product->canordertime = $productDetail->canordertime;
+        //2021-01-06 增加base,min
+        $product->base = $productDetail->base;
+        $product->min = $productDetail->min;
 
     }
 }
