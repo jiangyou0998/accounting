@@ -240,7 +240,7 @@
     //點擊完成按鈕提交修改
     function sss() {
         //禁止按鈕重複點擊
-        // $("#btnsubmit").attr('disabled', true);
+        $("#btnsubmit").attr('disabled', true).css("pointer-events","none");
         var insertarray = [];
 
         var isworkshop = false;
