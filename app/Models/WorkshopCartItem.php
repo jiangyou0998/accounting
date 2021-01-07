@@ -279,10 +279,13 @@ class WorkshopCartItem extends Model
             ->whereIn('workshop_cart_items.user_id',$shopids)
             ->whereNotIn('workshop_cart_items.status',[4])
             ->where('workshop_cart_items.qty','>=',0)
-            ->where('workshop_cart_items.dept', $dept)
             ->where('workshop_cart_items.deli_date','>=',$start_date)
             ->where('workshop_cart_items.deli_date','<=',$end_date)
         ;
+
+        if($dept){
+            $items = $items->where('workshop_cart_items.dept', $dept);
+        }
 
         $items = $items
             ->groupBy('workshop_cart_items.deli_date')

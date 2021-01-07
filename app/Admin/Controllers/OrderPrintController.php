@@ -109,7 +109,7 @@ class OrderPrintController extends Controller
 
         $allData = array();
         //每頁格數
-        $countPerPage = 10;
+        $countPerPage = 9;
 
 //        $shops = User::getKingBakeryShopsOrderBySort();
         $shops = $request->shops;
@@ -149,6 +149,11 @@ class OrderPrintController extends Controller
             workshop_cart_items.qty)) > 0')
                 ->get();
 
+//            //第二車
+//            $secondShops = $cartitemModel
+//                ->select('users.id','users.report_name')
+
+//            dump($totals2nd->toArray());
 //            dump($totals->toArray());
 //            dump(count($totals));
 
@@ -171,9 +176,17 @@ class OrderPrintController extends Controller
 
                 foreach ($chunkshops->toArray() as $shopid => $shopname){
 
-                    $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '{$shopid}' and workshop_cart_items.deli_date = '{$deli_date}') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '{$shopname}'";
+                    $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '{$shopid}' and workshop_cart_items.dept != 'R2' and workshop_cart_items.deli_date = '{$deli_date}') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '{$shopname}'";
                     $datas = $datas
                         ->addSelect(DB::raw($sql));
+
+                    //todo 2021-01-07 暫時寫死,只有油塘顯示二車
+                    if($shopid == 33){
+                        $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '{$shopid}' and workshop_cart_items.dept = 'R2' and workshop_cart_items.deli_date = '{$deli_date}') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '{$shopname}2'";
+                        $datas = $datas
+                            ->addSelect(DB::raw($sql));
+                    }
+
 
 //            $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '$shop->id' and workshop_cart_items.dept = 'B') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '$shop->report_name"."2'";
 //            $datas = $datas
@@ -218,7 +231,7 @@ class OrderPrintController extends Controller
 
         }
 
-//        dd($allData);
+//        dump($allData);
 
         return view('admin.order_print.index',compact('allData'));
     }
