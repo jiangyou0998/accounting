@@ -21,10 +21,10 @@
                     {{$row['unit']}}
                 </td>
 
-                @foreach(array("R", "B", "K" ,"F") as $dept)
+                @foreach(config('dept.symbol') as $dept)
 
                     @if(isset($row['qty'][$dept]))
-                        <td width="19%" align="center">
+                        <td width="15%" align="center">
                             <input name="item[{{$product_id}}][{{$dept}}]"
                                    data-mysqlid="{{$row['qty'][$dept]['mysqlid']}}"
                                    data-price="{{$row['price']}}"
@@ -36,7 +36,7 @@
                                    style="width:95%; margin:auto;">
                         </td>
                     @else
-                        <td width="19%" align="center">
+                        <td width="15%" align="center">
                             <input name="item[{{$product_id}}][{{$dept}}]"
                                    data-mysqlid=""
                                    data-price="{{$row['price']}}"

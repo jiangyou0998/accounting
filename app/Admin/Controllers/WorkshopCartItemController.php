@@ -65,10 +65,7 @@ class WorkshopCartItemController extends AdminController
             $grid->column('chr_phase')->hide();
             $grid->column('po_no');
             $grid->column('dept')->using(
-                ['R'=>'烘焙',
-                    'B'=>'水吧',
-                    'K'=>'廚房',
-                    'F'=>'樓面']);
+                config('dept.symbol_and_name_all'));
             $grid->column('insert_date');
             $grid->column('order_date')->hide();
             $grid->column('received_date');
@@ -96,9 +93,7 @@ class WorkshopCartItemController extends AdminController
 
                 });
 
-                $selector->select('dept', '部門', [
-                    'R'=>'烘焙','B'=>'水吧','K'=>'廚房','F'=>'樓面',
-                ]);
+                $selector->select('dept', '部門', config('dept.symbol_and_name_all'));
 
                 $selector->select('change', '修改過', [
                     1 => '有改過',
@@ -228,12 +223,7 @@ class WorkshopCartItemController extends AdminController
             $description = '1:下單&nbsp;&nbsp;&nbsp;99:確認過&nbsp;&nbsp;&nbsp;4:刪除';
             $form->html(Alert::make($description, '说明')->info());
             $form->text('status')->type('number');
-            $form->select('dept')->options([
-                'R' => '烘焙',
-                'B' => '水吧',
-                'K' => '廚房',
-                'F' => '樓面',
-            ]);
+            $form->select('dept')->options(config('dept.symbol_and_name_all'));
             $form->text('qty_received');
             $form->text('reason');
 

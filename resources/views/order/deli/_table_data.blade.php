@@ -1,10 +1,14 @@
 <tr>
     <td>{{ $detail->product_no }}</td>
     <td>{{ $detail->itemName }}</td>
-    <td align="right">{{ $detail->R_total != 0 ? $detail->R_total :'/' }}</td>
-    <td align="right">{{ $detail->B_total != 0 ? $detail->B_total :'/' }}</td>
-    <td align="right">{{ $detail->K_total != 0 ? $detail->K_total :'/' }}</td>
-    <td align="right">{{ $detail->F_total != 0 ? $detail->F_total :'/' }}</td>
+
+    @foreach(config('dept.symbol') as $dept)
+        <td align="right">{{ $detail->{$dept.'_total'} != 0 ? $detail->{$dept.'_total'} :'/' }}</td>
+    @endforeach
+{{--    <td align="right">{{ $detail->R_total != 0 ? $detail->R_total :'/' }}</td>--}}
+{{--    <td align="right">{{ $detail->B_total != 0 ? $detail->B_total :'/' }}</td>--}}
+{{--    <td align="right">{{ $detail->K_total != 0 ? $detail->K_total :'/' }}</td>--}}
+{{--    <td align="right">{{ $detail->F_total != 0 ? $detail->F_total :'/' }}</td>--}}
 
     @if($detail->qty == $detail->qty_received)
         <td align="right">{{ $detail->qty_received }}</td>

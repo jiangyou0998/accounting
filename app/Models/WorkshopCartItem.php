@@ -106,13 +106,13 @@ class WorkshopCartItem extends Model
             ->addSelect('workshop_cats.cat_name')
             ->addSelect('workshop_products.id as itemID');
 
-        foreach (['R','B','K','F'] as $dept) {
+        foreach (config('dept.symbol') as $dept) {
             $sql = "ROUND(sum(case when workshop_cart_items.dept = '$dept' then workshop_cart_items.qty else 0 end),2) as '".$dept."_total'";
             $items = $items
                 ->addSelect(DB::raw($sql));
         }
 
-        foreach (['R','B','K','F'] as $dept) {
+        foreach (config('dept.symbol') as $dept) {
             $sql = "ROUND(sum(case when workshop_cart_items.dept = '$dept' then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty)) else 0 end),2) as '".$dept."_total_received'";
             $items = $items
                 ->addSelect(DB::raw($sql));
@@ -229,17 +229,23 @@ class WorkshopCartItem extends Model
             ->select('deli_date')
             ->addSelect('users.report_name')
             ->addSelect('workshop_cart_items.user_id')
-            ->addSelect(DB::raw('SUM(default_price * ifnull(qty_received,qty)) as po_total'))
+            ->addSelect(DB::raw('SUM(prices.price * ifnull(qty_received,qty)) as po_total'))
         ;
 
         //設置關聯表
         $items = $items
             ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
-            ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id');
+            ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
+            //2021-01-06 KB價格從price表拿
+            ->leftJoin('prices', 'workshop_products.id', '=', 'prices.product_id');
 
         //設置查詢條件
         $items = $items
             ->whereNotIn('workshop_cart_items.status',[4])
+            //2021-01-06 KB價格從price表拿
+            ->where('prices.shop_group_id','=',1)
+            //2021-01-06 不顯示KB以外的
+            ->whereIn('workshop_cart_items.dept', config('dept.symbol'))
             ->where('workshop_cart_items.deli_date','=',$deli_date);
 
         $items = $items

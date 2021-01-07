@@ -9,21 +9,24 @@
 
                     <div style="color:red">
                         &nbsp;&nbsp;
-
-                        烘焙:$<span class="dept-total" data-dept="R"
-                                 data-sum="{{$dept_price['R']}}">{{number_format($dept_price['R'], 1, '.', ',')}}</span>
-                        水吧:$<span class="dept-total" data-dept="B"
-                                 data-sum="{{$dept_price['B']}}">{{number_format($dept_price['B'], 1, '.', ',')}}</span>
-                        廚房:$<span class="dept-total" data-dept="K"
-                                 data-sum="{{$dept_price['K']}}">{{number_format($dept_price['K'], 1, '.', ',')}}</span>
-                        樓面:$<span class="dept-total" data-dept="F"
-                                  data-sum="{{$dept_price['F']}}">{{number_format($dept_price['F'], 1, '.', ',')}}</span>
+                        @foreach(config('dept.symbol_and_name') as $dept => $name)
+                        {{$name}}:$<span class="dept-total" data-dept="{{$dept}}"
+                                      data-sum="{{$dept_price[$dept]}}">{{number_format($dept_price[$dept], 1, '.', ',')}}</span>
+                        @endforeach
+{{--                        烘焙:$<span class="dept-total" data-dept="R"--}}
+{{--                                 data-sum="{{$dept_price['R']}}">{{number_format($dept_price['R'], 1, '.', ',')}}</span>--}}
+{{--                        水吧:$<span class="dept-total" data-dept="B"--}}
+{{--                                 data-sum="{{$dept_price['B']}}">{{number_format($dept_price['B'], 1, '.', ',')}}</span>--}}
+{{--                        廚房:$<span class="dept-total" data-dept="K"--}}
+{{--                                 data-sum="{{$dept_price['K']}}">{{number_format($dept_price['K'], 1, '.', ',')}}</span>--}}
+{{--                        樓面:$<span class="dept-total" data-dept="F"--}}
+{{--                                  data-sum="{{$dept_price['F']}}">{{number_format($dept_price['F'], 1, '.', ',')}}</span>--}}
 
 {{--                        樓:$<span class="dept-total" data-dept="F"--}}
 {{--                                 data-sum="{{$dept_price['F']}}">{{number_format($dept_price['F'], 1, '.', ',')}}</span>--}}
                     </div>
                 </td>
-                <td width="194px" align="center" bgcolor="#CCFFFF"></td>
-                <td width="200px" align="center" bgcolor="#CCFFFF"></td>
+{{--                <td width="194px" align="center" bgcolor="#CCFFFF"></td>--}}
+{{--                <td width="200px" align="center" bgcolor="#CCFFFF"></td>--}}
             </tr>
         </table>

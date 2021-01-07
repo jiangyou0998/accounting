@@ -52,7 +52,7 @@ class DeliController extends Controller
 
         $dept_price = array();
 
-        foreach(array("R", "B", "K" ,"F") as $dept){
+        foreach(config('dept.symbol') as $dept){
 
             $dept_price[$dept] = 0;
         }

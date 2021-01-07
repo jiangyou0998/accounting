@@ -9,10 +9,10 @@
             <tbody>
             <tr>
                 <td width="24%" align="center"><strong>實收</strong></td>
-                <td width="19%" align="center">第一車</td>
-                <td width="19%" align="center">第二車</td>
-                <td width="19%" align="center">麵頭</td>
-                <td width="19%" align="center">方包</td>
+                @foreach(config('dept.symbol_and_name') as $dept => $name)
+                    <td width="15%" align="center">{{$name}}</td>
+                @endforeach
+
 {{--                <td width="19%" align="center">樓面</td>--}}
             </tr>
             </tbody>
