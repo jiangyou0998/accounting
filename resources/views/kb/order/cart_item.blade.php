@@ -50,7 +50,7 @@
                 {{--            <input type="image"--}}
                 {{--                   src="/images/Return.jpg" border="0"--}}
                 {{--                   onclick="top.location.href='select_day_dept.php?advDays=14'">--}}
-                <a class="btn btn-primary btn-lg" href="#" role="button" onClick="sss();">落貨</a>
+                <a class="btn btn-primary btn-lg" href="#" id="btnsubmit" role="button" onClick="sss();">落貨</a>
                 <a class="btn btn-success btn-lg" href="{{route('kb.select_day')}}" role="button">返回</a>
                 <div align="right">
                     <strong>

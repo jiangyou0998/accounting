@@ -310,10 +310,10 @@ class WorkshopProductController extends AdminController
                     ->type('number')
                     ->attribute('min', 0)
                     ->required();
-                $form->radio('phase')
+                $form->radio('phase','截單日期')
                     ->options([1 => '1日後', 2 => '2日後', 3 => '3日後', -1 => '後勤落單'])
                     ->required();
-                $form->checkbox('canordertime')
+                $form->checkbox('canordertime','出貨期')
                     ->options($week)
                 ;
             });
