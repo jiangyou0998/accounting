@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\KB\KBWorkshopCartItem;
 use App\Models\Order;
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopOrderSample;
@@ -10,6 +11,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 
 class OrderController extends Controller
@@ -23,7 +25,47 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return view('order.index');
+        //最近下單數量
+        $user = Auth::user();
+        $countArr = array();
+        if($user && $user->can('shop')){
+
+            $shopids = [$user->id];
+
+            //首頁顯示最近幾日下單
+            $showDayNum = 9;
+
+            $start_date = Carbon::now()->toDateString();
+//            $start_date = '2020-12-01';
+
+            $end_date = Carbon::parse($start_date)->addDay($showDayNum - 1)->toDateString();
+
+            $rbitems = WorkshopCartItem::getRegularOrderCount($shopids,$start_date,$end_date,null);
+            $kbitems = KBWorkshopCartItem::getRegularOrderCount($shopids,$start_date,$end_date,null);
+
+            for ($i = 0; $i < $showDayNum; $i++) {
+                $day = Carbon::parse($start_date)->addDay($i)->toDateString();
+                $countArr['rb'][$day] = '未下單';
+                $countArr['kb'][$day] = '未下單';
+            }
+
+            foreach ($rbitems as $item){
+//                $day = Carbon::parse($item->deli_date)->isoFormat('MM-DD(dd)');
+                $day = $item->deli_date;
+                $countArr['rb'][$day] = $item->count;
+            }
+
+            foreach ($kbitems as $item){
+//                $day = Carbon::parse($item->deli_date)->isoFormat('MM-DD(dd)');
+                $day = $item->deli_date;
+                $countArr['kb'][$day] = $item->count;
+            }
+
+//            dump($kbitems->toArray());
+//            dump($countArr);
+        }
+
+        return view('order.index' ,compact('countArr'));
     }
 
     public function select_day()

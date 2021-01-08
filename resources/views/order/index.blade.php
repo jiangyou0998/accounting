@@ -38,6 +38,11 @@
             <a href='{{route('sample')}}' class='styleA'>創建範本</a>
             <br/>
             <a href='{{route('order.deli')}}' class='styleA' target='view_window'>查看落貨單</a>
+            <!-- 快速查看下單數量 -->
+
+            @include('order._quick_check_order',['shop'=>'rb'])
+
+            <!-- 快速查看下單數量 -->
         @endcan
 
     </div>
@@ -45,7 +50,17 @@
     <div class="col-sm-6">
         <!-- <a href="#"><img src="images/Order_Button_Supplier.jpg" width="150" height="150" border="0"></a> -->
         <a href="{{route('kb.select_day')}}"><span class="btn" style="font-size: 40px;line-height: 50px;">蛋撻王<br/>工場</span></a>
+        @can('shop')
+
+        <!-- 快速查看下單數量 -->
+
+        @include('order._quick_check_order',['shop'=>'kb'])
+
+        <!-- 快速查看下單數量 -->
+        @endcan
     </div>
+
+
 </div>
 
 
