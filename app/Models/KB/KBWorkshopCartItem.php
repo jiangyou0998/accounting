@@ -42,19 +42,17 @@ class KBWorkshopCartItem extends Model
             ->addSelect('workshop_products.product_name as itemName')
             ->addSelect('workshop_products.product_no')
             ->addSelect('workshop_units.unit_name as UoM')
-            //2020-12-11 獲取prices表cuttime
-            ->addSelect(DB::raw('ifnull(prices.cuttime,workshop_products.cuttime) as cuttime'))
             ->addSelect('workshop_cart_items.qty')
             ->addSelect('workshop_cart_items.status')
-            //2020-12-11 獲取prices表phase
-            ->addSelect(DB::raw('ifnull(prices.phase,workshop_products.phase) as phase'))
             ->addSelect(DB::raw('DATE(workshop_cart_items.order_date) as order_date'))
             ->addSelect(DB::raw('LEFT(workshop_cats.cat_name, 2) AS suppName'))
             ->addSelect('workshop_products.id as itemID')
-            ->addSelect('workshop_products.base')
-            ->addSelect('workshop_products.min')
-            //2020-12-11 獲取prices表canordertime
-            ->addSelect(DB::raw('ifnull(prices.canordertime,workshop_products.canordertime) as canordertime'));
+            //2021-01-06 獲取prices表cuttime,phase,base,min,canordertime
+            ->addSelect('prices.cuttime')
+            ->addSelect('prices.phase')
+            ->addSelect('prices.base')
+            ->addSelect('prices.min')
+            ->addSelect('prices.canordertime');
 
         //設置關聯表
         $items = $items
@@ -98,13 +96,13 @@ class KBWorkshopCartItem extends Model
             ->addSelect('workshop_cats.cat_name')
             ->addSelect('workshop_products.id as itemID');
 
-        foreach (['R','B','K','F'] as $dept) {
+        foreach (['RB'] as $dept) {
             $sql = "ROUND(sum(case when workshop_cart_items.dept = '$dept' then workshop_cart_items.qty else 0 end),2) as '".$dept."_total'";
             $items = $items
                 ->addSelect(DB::raw($sql));
         }
 
-        foreach (['R','B','K','F'] as $dept) {
+        foreach (['RB'] as $dept) {
             $sql = "ROUND(sum(case when workshop_cart_items.dept = '$dept' then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty)) else 0 end),2) as '".$dept."_total_received'";
             $items = $items
                 ->addSelect(DB::raw($sql));

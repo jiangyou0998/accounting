@@ -56,7 +56,7 @@ class User extends Authenticatable
         $relatedModel = Role::class; // 关联模型类名
 
         return $this->belongsToMany($relatedModel, $pivotTable, 'model_id', 'role_id')
-            ->withPivot('model_type')->withPivotValue('model_type','App\User');
+            ->withPivot('model_type')->withPivotValue('model_type','App\User')->with('permissions');
     }
 
     public function shop_groups(): BelongsToMany

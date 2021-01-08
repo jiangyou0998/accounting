@@ -38,6 +38,9 @@ Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 //Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
 //Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
 
+Route::get('password/resetlogin', 'Auth\ResetPasswordLoginedController@showResetForm')->name('password.reset.login')->middleware('auth');
+Route::post('password/resetlogin', 'Auth\ResetPasswordLoginedController@reset')->name('password.update.login')->middleware('auth');
+
 // Email 认证相关路由
 //Route::get('email/verify', 'Auth\VerificationController@show')->name('verification.notice');
 //Route::get('email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
@@ -128,6 +131,8 @@ Route::group(['middleware' => ['auth']], function () {
 
 
 //Route::get('/import', 'ImportController@import');
+//Route::get('/api/resetpassword', 'Api\ApiController@resetAllPassword');
+//Route::get('/api/resetshoppassword', 'Api\ApiController@resetShopPassword');
 
 
 

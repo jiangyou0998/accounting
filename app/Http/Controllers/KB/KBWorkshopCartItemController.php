@@ -203,7 +203,8 @@ class KBWorkshopCartItemController extends Controller
 //        dump($items->toArray());
 //        dump($sampleItems->toArray());
 
-        $deptArr= ['R'=>'烘焙','B'=>'水吧','K'=>'廚房','F'=>'樓面'];
+        //糧友在蛋撻王工場下單標識為RB
+        $deptArr= ['RB'=>'蛋撻王工場'];
 
         $orderInfos = new Collection();
         $orderInfos->date = $deli_date;
@@ -251,11 +252,11 @@ class KBWorkshopCartItemController extends Controller
 //        dump($infos);
         foreach ($products as $product) {
 //            dump($deli_date.$product->cuttime);
-            $rbProduct = $product->prices->where('shop_group_id', 5)->first();
+            $productDetail = $product->prices->where('shop_group_id', 5)->first();
 
-            $this->checkInvalidOrder($rbProduct,$deli_date);
+            $this->checkInvalidOrder($productDetail,$deli_date);
 
-            $this->resetProduct($product,$rbProduct);
+            $this->resetProduct($product,$productDetail);
 
 //            dump(mb_substr($product->cats->cat_name,0,4));
 
@@ -304,15 +305,18 @@ class KBWorkshopCartItemController extends Controller
     }
 
     //將with數據(prices)拿到外層
-    private function resetProduct($product, $rbProduct)
+    private function resetProduct($product, $productDetail)
     {
-        $product->phase = $rbProduct->phase;
-        $product->cuttime = $rbProduct->cuttime;
-        $product->canordertime = $rbProduct->canordertime;
+        $product->phase = $productDetail->phase;
+        $product->cuttime = $productDetail->cuttime;
+        $product->canordertime = $productDetail->canordertime;
+        //2021-01-06 增加base,min
+        $product->base = $productDetail->base;
+        $product->min = $productDetail->min;
 
-        $product->order_by_workshop = $rbProduct->order_by_workshop;
-        $product->cut_order = $rbProduct->cut_order;
-        $product->not_deli_time = $rbProduct->not_deli_time;
-        $product->invalid_order = $rbProduct->invalid_order;
+        $product->order_by_workshop = $productDetail->order_by_workshop;
+        $product->cut_order = $productDetail->cut_order;
+        $product->not_deli_time = $productDetail->not_deli_time;
+        $product->invalid_order = $productDetail->invalid_order;
     }
 }
