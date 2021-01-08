@@ -26,16 +26,7 @@ class WorkshopProduct extends Model
         return $this->belongsTo(WorkshopUnit::class,"unit_id","id");
     }
 
-//    public function tblUser(): BelongsToMany
-//    {
-//        $pivotTable = 'tbl_order_z_menu_v_shop'; // 中间表
-//
-//        $relatedModel = tblUser::class; // 关联模型类名
-//
-//        return $this->belongsToMany($relatedModel, $pivotTable, 'int_user_id', 'int_menu_id');
-//    }
-
-    public function price()
+    public function prices()
     {
         return $this->hasMany(Price::class,"product_id","id");
     }

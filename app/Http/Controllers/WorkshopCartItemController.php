@@ -11,6 +11,7 @@ use App\Models\WorkshopProduct;
 use App\Models\WorkshopSample;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -51,7 +52,14 @@ class WorkshopCartItemController extends Controller
 //            dump($delDatas);
 
             //2020-11-23 新增下單時候的價格
-            $prices = WorkshopProduct::all()->pluck('default_price','id');
+//            $prices = WorkshopProduct::all()->pluck('default_price','id');
+            //2021-01-06 下單時候價格改為從prices表獲取
+            $prices = WorkshopProduct::with('prices')->whereHas('prices', function (Builder $query) {
+                $query->where('shop_group_id', '=', 5);
+            })->get()->mapWithKeys(function ($item) {
+                $price = $item['prices']->where('shop_group_id', 5)->first()->price;
+                return [$item['id'] => $price ];
+            });
 //            dump($prices);
 
             //新增
@@ -141,6 +149,7 @@ class WorkshopCartItemController extends Controller
 
     }
 
+    //下單頁面
     public function cart(Request $request)
     {
         $user = Auth::User();
@@ -194,7 +203,7 @@ class WorkshopCartItemController extends Controller
 //        dump($items->toArray());
 //        dump($sampleItems->toArray());
 
-        $deptArr= ['A'=>'第一車','B'=>'第二車','C'=>'麵頭','D'=>'方包'];
+        $deptArr= config('dept.symbol_and_name');
 
         $orderInfos = new Collection();
         $orderInfos->date = $deli_date;
@@ -221,24 +230,41 @@ class WorkshopCartItemController extends Controller
     {
         $products = WorkshopProduct::with('cats')
             ->with('units')
+            ->with('prices')
             ->where('group_id', $groupid)
             ->where('status', '!=', 4)
+            //2021-01-06 RB只能看RB產品
+            ->whereHas('prices', function (Builder $query) {
+                $query->where('shop_group_id', '=', 5);
+            })
             ->get();
-//        dump($products);
+//        dd($products);
         $deli_date = $request->deli_date;
 
         $group = WorkshopGroup::find($groupid);
         $infos = new Collection();
         $infos->group_name = $group->group_name;
         $infos->cat_name = $group->cats->cat_name;
-//        dump($infos);
+//        dd($infos);
+//        foreach ($products as $product) {
+////            dump($deli_date.$product->cuttime);
+//            $this->checkInvalidOrder($product,$deli_date);
+////            dump(mb_substr($product->cats->cat_name,0,4));
+//
+//        }
+//        dd($products->toArray());
         foreach ($products as $product) {
 //            dump($deli_date.$product->cuttime);
-            $this->checkInvalidOrder($product,$deli_date);
+            $productDetail = $product->prices->where('shop_group_id', 5)->first();
+
+            $this->checkInvalidOrder($productDetail,$deli_date);
+
+            $this->resetProduct($product,$productDetail);
+
 //            dump(mb_substr($product->cats->cat_name,0,4));
 
         }
-//          dump($products->toArray());
+//        dd($products->toArray());
 
         return view('order.cart_product', compact('products','infos'))->render();
     }
@@ -280,4 +306,21 @@ class WorkshopCartItemController extends Controller
             $product->cut_order ||
             $product->not_deli_time;
     }
+
+    //將with數據(prices)拿到外層
+    private function resetProduct($product, $productDetail)
+    {
+        $product->phase = $productDetail->phase;
+        $product->cuttime = $productDetail->cuttime;
+        $product->canordertime = $productDetail->canordertime;
+        //2021-01-06 增加base,min
+        $product->base = $productDetail->base;
+        $product->min = $productDetail->min;
+
+        $product->order_by_workshop = $productDetail->order_by_workshop;
+        $product->cut_order = $productDetail->cut_order;
+        $product->not_deli_time = $productDetail->not_deli_time;
+        $product->invalid_order = $productDetail->invalid_order;
+    }
+
 }

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Price extends Model
 {
-    protected $fillable = ['product_id', 'shop_group_id', 'price'];
+    protected $guarded = [];
 
     public function products()
     {
@@ -18,4 +18,14 @@ class Price extends Model
     {
         return $this->belongsTo(ShopGroup::class , "shop_group_id" , "id" );
     }
+
+    //2020-12-31 使用修改器將canordertime修改成字符串
+    public function setCanordertimeAttribute($value)
+    {
+        $this->attributes['canordertime'] = implode(",", array_filter($value, function ($var) {
+            //array_filter不去掉0
+            return ($var === '' || $var === null || $var === false) ? false : true;
+        }));
+    }
+
 }

@@ -30,6 +30,16 @@ class WorkshopCartItem extends Model
         return $this->hasMany(WorkshopCartItemLog::class,"id","cart_item_id");
     }
 
+    public function scopeOfShop($query, $shop)
+    {
+        if($shop === 'kb'){
+            return $query->where('users.name','like', 'kb%')
+                ->orWhere('users.name','like','ces%')
+                ->orWhere('users.name','like','b&b%');
+        }else if($shop === 'rb'){
+            return $query->where('users.name','like', 'rb%');
+        }
+    }
 
     public static function getCartItems($shop , $dept , $deli_date){
 
@@ -42,29 +52,34 @@ class WorkshopCartItem extends Model
             ->addSelect('workshop_products.product_name as itemName')
             ->addSelect('workshop_products.product_no')
             ->addSelect('workshop_units.unit_name as UoM')
-            ->addSelect('workshop_products.cuttime')
             ->addSelect('workshop_cart_items.qty')
             ->addSelect('workshop_cart_items.status')
-            ->addSelect('workshop_products.phase')
             ->addSelect(DB::raw('DATE(workshop_cart_items.order_date) as order_date'))
             ->addSelect(DB::raw('LEFT(workshop_cats.cat_name, 2) AS suppName'))
             ->addSelect('workshop_products.id as itemID')
-            ->addSelect('workshop_products.base')
-            ->addSelect('workshop_products.min')
-            ->addSelect('workshop_products.canordertime');
+            //2021-01-06 獲取prices表cuttime,phase,base,min,canordertime
+            ->addSelect('prices.cuttime')
+            ->addSelect('prices.phase')
+            ->addSelect('prices.base')
+            ->addSelect('prices.min')
+            ->addSelect('prices.canordertime');
 
         //設置關聯表
         $items = $items
             ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
             ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
             ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
-            ->leftJoin('workshop_units', 'workshop_products.unit_id', '=', 'workshop_units.id');
+            ->leftJoin('workshop_units', 'workshop_products.unit_id', '=', 'workshop_units.id')
+            //2021-01-06 關聯價格表
+            ->leftJoin('prices', 'workshop_cart_items.product_id','=','prices.product_id');
 
         //設置查詢條件
         $items = $items
             ->where('workshop_cart_items.user_id','=',$shop)
             ->whereNotIn('workshop_cart_items.status',[4])
             ->where('workshop_cart_items.qty','>=',0)
+            //2021-01-06 糧友分組為5
+            ->where('prices.shop_group_id','=',5)
             ->where('workshop_cart_items.dept','=',$dept)
             ->where('workshop_cart_items.deli_date','=',$deli_date);
 
@@ -91,13 +106,13 @@ class WorkshopCartItem extends Model
             ->addSelect('workshop_cats.cat_name')
             ->addSelect('workshop_products.id as itemID');
 
-        foreach (['A','B','C','D'] as $dept) {
+        foreach (config('dept.symbol') as $dept) {
             $sql = "ROUND(sum(case when workshop_cart_items.dept = '$dept' then workshop_cart_items.qty else 0 end),2) as '".$dept."_total'";
             $items = $items
                 ->addSelect(DB::raw($sql));
         }
 
-        foreach (['A','B','C','D'] as $dept) {
+        foreach (config('dept.symbol') as $dept) {
             $sql = "ROUND(sum(case when workshop_cart_items.dept = '$dept' then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty)) else 0 end),2) as '".$dept."_total_received'";
             $items = $items
                 ->addSelect(DB::raw($sql));
@@ -214,17 +229,23 @@ class WorkshopCartItem extends Model
             ->select('deli_date')
             ->addSelect('users.report_name')
             ->addSelect('workshop_cart_items.user_id')
-            ->addSelect(DB::raw('SUM(default_price * ifnull(qty_received,qty)) as po_total'))
+            ->addSelect(DB::raw('SUM(prices.price * ifnull(qty_received,qty)) as po_total'))
         ;
 
         //設置關聯表
         $items = $items
             ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
-            ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id');
+            ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
+            //2021-01-06 價格從price表拿
+            ->leftJoin('prices', 'workshop_products.id', '=', 'prices.product_id');
 
         //設置查詢條件
         $items = $items
             ->whereNotIn('workshop_cart_items.status',[4])
+            //2021-01-06 價格從price表拿
+            ->where('prices.shop_group_id','=',5)
+            //2021-01-06 不顯示KB以外的
+            ->whereIn('workshop_cart_items.dept', config('dept.symbol'))
             ->where('workshop_cart_items.deli_date','=',$deli_date);
 
         $items = $items
@@ -258,10 +279,13 @@ class WorkshopCartItem extends Model
             ->whereIn('workshop_cart_items.user_id',$shopids)
             ->whereNotIn('workshop_cart_items.status',[4])
             ->where('workshop_cart_items.qty','>=',0)
-            ->where('workshop_cart_items.dept', $dept)
             ->where('workshop_cart_items.deli_date','>=',$start_date)
             ->where('workshop_cart_items.deli_date','<=',$end_date)
         ;
+
+        if($dept){
+            $items = $items->where('workshop_cart_items.dept', $dept);
+        }
 
         $items = $items
             ->groupBy('workshop_cart_items.deli_date')
