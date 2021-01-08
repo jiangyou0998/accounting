@@ -19,11 +19,7 @@
                     <!-- 快速進入 -->
                     @include('home._quick_link')
                     <!-- 快速進入 -->
-                    @can('shop')
-                        <!-- 快速查看下單數量 -->
-                        @include('home._quick_check_order')
-                        <!-- 快速查看下單數量 -->
-                    @endcan
+
                 </div>
             </div>
 

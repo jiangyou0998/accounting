@@ -10,6 +10,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 
 
 class OrderController extends Controller
@@ -23,7 +24,39 @@ class OrderController extends Controller
      */
     public function index()
     {
-        return view('order.index');
+        //最近下單數量
+        $user = Auth::user();
+        $countArr = array();
+        if($user && $user->can('shop')){
+
+            $shopids = [$user->id];
+
+            //首頁顯示最近幾日下單
+            $showDayNum = 9;
+
+            $start_date = Carbon::now()->toDateString();
+//            $start_date = '2020-12-01';
+
+            $end_date = Carbon::parse($start_date)->addDay($showDayNum - 1)->toDateString();
+
+            $items = WorkshopCartItem::getRegularOrderCount($shopids,$start_date,$end_date,null);
+
+            for ($i = 0; $i < $showDayNum; $i++) {
+                $day = Carbon::parse($start_date)->addDay($i)->toDateString();
+                $countArr[$day] = '未下單';
+            }
+
+            foreach ($items as $item){
+//                $day = Carbon::parse($item->deli_date)->isoFormat('MM-DD(dd)');
+                $day = $item->deli_date;
+                $countArr[$day] = $item->count;
+            }
+
+//            dump($items->toArray());
+//            dump($countArr);
+        }
+
+        return view('order.index' ,compact('countArr'));
     }
 
     public function select_day()

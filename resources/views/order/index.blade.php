@@ -37,6 +37,10 @@
             <a href='{{route('sample')}}' class='styleA'>創建範本</a>
             <br/>
             <a href='{{route('order.deli')}}' class='styleA' target='view_window'>查看落貨單</a>
+
+            <!-- 快速查看下單數量 -->
+            @include('order._quick_check_order')
+            <!-- 快速查看下單數量 -->
         @endcan
 
     </div>

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Price;
 use App\Models\WorkshopCat;
 use App\Models\WorkshopGroup;
 use App\Models\WorkshopProduct;
@@ -151,6 +152,72 @@ class ImportController extends Controller
         dump($catArr);
         dump($groupArr);
         dump($productArr);
+        $reader->close();
+    }
+
+    public function importRyoyuPrice()
+    {
+        $reader = ReaderFactory::createFromType(Type::XLSX);
+
+        $reader->open('ryoyuimport.xlsx');
+
+        foreach ($reader->getSheetIterator() as $sheet) {
+
+            foreach ($sheet->getRowIterator() as $rowKey => $row) {
+                // do stuff with the row
+                if($rowKey == 1) continue;
+                $rowValues = $row->toArray();
+
+                if($rowValues[8] == "") continue;
+
+                //產品數組
+                $productArr[] = $rowValues;
+
+            }
+        }
+
+//        dump($productArr);
+
+        // 数据库事务处理
+        DB::transaction(function() use($productArr){
+
+            //插入產品
+            $priceModel = new Price();
+            foreach ($productArr as $product){
+
+                //插入,更新時間
+                $now = Carbon::now()->toDateTimeString();
+
+//                0 => array:9 [▼
+//                    0 => "914"
+//                    1 => "1103001"
+//                    2 => "奶油反卷方包"
+//                    3 => 27
+//                    4 => "2"
+//                    5 => "1000"
+//                    6 => "0,1,2,3,4,5,6"
+//                    7 => 4
+//                    8 => 4
+//                  ]
+
+                $priceModel->insert([
+                    'product_id' => $product[0],
+                    //糧友group_id 5
+                    'shop_group_id' => 5,
+                    'price' => $product[3],
+                    'phase' => $product[4],
+                    'cuttime' => $product[5],
+                    'canordertime' => $product[6],
+                    'min' => $product[7],
+                    'base' => $product[8],
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]);
+
+            }
+
+        });
+
         $reader->close();
     }
 
