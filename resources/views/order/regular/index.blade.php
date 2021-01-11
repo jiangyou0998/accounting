@@ -18,9 +18,10 @@
 
 @section('content')
     <div class="container">
+        <div align="left"><a target="_top" href="{{route('order')}}" style="font-size: xx-large;">返回</a></div>
         <div class="py-5 text-center">
 
-            <h2>固定柯打</h2>
+            <h2>固定柯打(方包)</h2>
             <div valign="middle" align="center">
                 日期:
                 <input id="start" class="Wdate" type="text" value="{{request()->start}}" onclick="WdatePicker({minDate:'%y-%M-{%d+1}',maxDate:'#F{$dp.$D(\'end\')}'})" autocomplete="off"/>到

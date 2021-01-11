@@ -45,6 +45,8 @@
                 <span style="color: #FF0000; font-size: 172%; ">第一車</span>
             @elseif($orderInfos->dept_name == 'B')
                 <span style="color: #FF0000; font-size: 172%; ">第二車</span>
+            @elseif($orderInfos->dept_name == 'C')
+                <span style="color: #FF0000; font-size: 172%; ">麵頭</span>
             @elseif($orderInfos->dept_name == 'D')
                 <span style="color: #FF0000; font-size: 172%; ">方包</span>
             @endif

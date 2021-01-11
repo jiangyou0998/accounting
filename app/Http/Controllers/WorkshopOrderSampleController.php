@@ -158,7 +158,7 @@ class WorkshopOrderSampleController extends Controller
         $user = Auth::User();
         if($request->dept == 'D' && $user->can('operation')){
             $shopid = $request->shopid;
-        }else if(($request->dept == 'A' || $request->dept == 'B') && $user->can('shop')){
+        }else if(($request->dept == 'A' || $request->dept == 'B' || $request->dept == 'C') && $user->can('shop')){
             $shopid = $user->id;
         }else{
             //                return "權限不足";
@@ -254,7 +254,7 @@ class WorkshopOrderSampleController extends Controller
             ->with('prices')
             ->where('group_id', $groupid)
             ->where('status', '!=', 4)
-            //2021-01-06 KB只能看KB產品
+            //2021-01-06 RB只能看RB產品
             ->whereHas('prices', function (Builder $query) {
                 $query->where('shop_group_id', '=', 5);
             })
@@ -377,7 +377,7 @@ class WorkshopOrderSampleController extends Controller
 
         if($request->dept == 'D' && $user->can('operation')){
             $shopid = $request->shopid;
-        }else if(($request->dept == 'A' || $request->dept == 'B') && $user->can('shop')){
+        }else if(($request->dept == 'A' || $request->dept == 'B' || $request->dept == 'C') && $user->can('shop')){
             $shopid = $user->id;
         }else{
             return false;
@@ -392,7 +392,7 @@ class WorkshopOrderSampleController extends Controller
 
         if($dept == 'D' && $user->can('operation')){
             return true;
-        }else if(($dept == 'A' || $dept == 'B') && $user->can('shop') && $shopid == $user->id){
+        }else if(($dept == 'A' || $dept == 'B' || $dept == 'C') && $user->can('shop') && $shopid == $user->id){
             return true;
         }else{
             return false;
