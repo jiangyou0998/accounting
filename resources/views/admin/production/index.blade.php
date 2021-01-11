@@ -82,13 +82,8 @@
                 <tr class="cssImportant">
                     <th style="width:50px;">#</th>
                     <th style="width:300px;">報告名稱</th>
-{{--                    <th>相隔日數</th>--}}
-{{--                    <th>報表時間</th>--}}
-{{--                    <th>查看</th>--}}
                     <th>打印預覽</th>
-                    <th>全選
-                        <!-- <input type="checkbox" οnclick="checkAll()"> -->
-                    </th>
+
                 </tr>
 
                 @foreach($cats as $cat)
@@ -98,45 +93,6 @@
 
         </table>
         </form>
-{{--        <div><span>收貨時間:</span>--}}
-{{--            <input type="text" name="checkDate"--}}
-{{--                   class="forms-control"--}}
-{{--                   value=""--}}
-{{--                   id="datepicker"--}}
-{{--                   onclick="WdatePicker({maxDate:'',isShowClear:false})" style="width:125px" --}}
-{{--                   readonly>--}}
-
-{{--            <a href="#" style=" font-size:150%;" onclick="createReport()">生成全部報表</a><br><br>--}}
-{{--            <a href="#" style=" font-size:150%;" onclick="createReportSelected()">生成選擇報表</a>--}}
-{{--        </div>--}}
-
-{{--        <div class="row" style="margin-top: 15px;">--}}
-{{--            <div class='col-sm-4'></div>--}}
-{{--            <div class='col-sm-4'>--}}
-{{--                <div class="forms-group">--}}
-{{--                    <div class='input-group date' id='datetimepicker'>--}}
-{{--                        <span style="font-size: larger;text-align:center;">報表時間&nbsp&nbsp:&nbsp&nbsp</span>--}}
-{{--                        <input type='text' class="forms-control" id='datepicker'/>--}}
-{{--                        <span class="input-group-addon">--}}
-{{--                            <span class="glyphicon glyphicon-calendar"></span>--}}
-{{--                        </span>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
-{{--            <div class='col-sm-4'></div>--}}
-{{--            <script type="text/javascript">--}}
-{{--                $(function () {--}}
-{{--                    $('#datetimepicker').datetimepicker({--}}
-{{--                        format: 'YYYY-MM-DD',--}}
-{{--                        "locale":"zh-TW",--}}
-{{--                        defaultDate : '{{\Carbon\Carbon::now()->addDay('2')->toDateString()}}',--}}
-{{--                        // icon : 'glyphicon glyphicon-calendar',--}}
-
-{{--                    });--}}
-{{--                });--}}
-
-{{--            </script>--}}
-{{--        </div>--}}
 
         <div class="input-group input-group-sm" style="margin-top: 15px;">
             <div class='col-sm-4'></div>
@@ -147,40 +103,11 @@
             <div class='col-sm-4'></div>
         </div>
 
-        <script type="text/javascript">
-            $(function () {
-                $('#datepicker').datetimepicker({
-                    format: 'YYYY-MM-DD',
-                    "locale":"zh-TW",
-                    defaultDate : '{{\Carbon\Carbon::now()->addDay('2')->toDateString()}}',
-                    // icon : 'glyphicon glyphicon-calendar',
-
-                });
-            });
-
-        </script>
-
     </div>
     <input type="hidden" name="downstr" id="downstr" value=""/>
 </div>
-<div id='loading'>報表正在生成中...</div>
 
 <script>
-    function viewReport(id, numofday) {
-        var delidate = $('#datepicker').val();
-
-        // alert(delidate);
-        if (delidate == '') {
-            alert('請選擇收貨日期!');
-            return false;
-        }
-
-        var dateTime = new Date(delidate);
-        dateTime = dateTime.setDate(dateTime.getDate() - numofday);
-        var url = '';
-        url = 'CMS_order_c_check_m.php?id=' + id + '&checkDate=' + formatDate(dateTime);
-        window.open(url);
-    }
 
     function viewPrint(id, numofday) {
         var delidate = $('#datepicker').val();
@@ -199,75 +126,6 @@
         window.open(url);
     }
 
-    // 第三种方式：函数处理
-    function formatDate(now) {
-        var date = new Date(now);
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var date = date.getDate();
-        if (month < 10) {
-            month = '0' + month;
-        }
-        if (date < 10) {
-            date = '0' + date;
-        }
-        return year + "-" + month + "-" + date;
-    }
-
-    function createReport() {
-        // alert(111);
-        var isSelectedTime = true;
-        var delidate = $('#datepicker').val();
-        if (delidate == '') {
-            alert('請選擇收貨日期!');
-            return false;
-        }
-        $('#loading').show();
-        window.location.href = "down_history_report.php?dTime=" + delidate;
-
-    }
-
-    function createReportSelected(){
-        var isSelectedTime = true;
-        var delidate = $('#datepicker').val();
-        var downstr = $('#downstr').val();
-        if (delidate == '') {
-            alert('請選擇收貨日期!');
-            return false;
-        }
-        if (downstr == '') {
-            alert('請選擇要生成的報表!');
-            return false;
-        }
-        $('#loading').show();
-        window.location.href = "down_selected_report.php?dTime=" + delidate + "&checkids=" + downstr;
-    }
-
-    function checkAll(){
-        // $("#downselect").prop('checked', $(obj).prop('checked'));
-        if($("#downselect :checked")){
-            if(b){
-                $("input[class='downselect']").each(function(){
-                    this.checked=true;
-                    //获取当前值
-                    //alert($(this).val());
-                });
-                $("#spanss").html("取消");
-                b=false;
-            }else{
-                $("input[class='downselect']").each(function(){
-                    this.checked=false;
-                    //获取当前值
-                    //alert($(this).val());
-                });
-                $("#spanss").html("全选");
-                b=true;
-            }
-
-        }
-
-    }
-
     //鉤選或取消時,修改weekstr(隱藏)的值
     $(document).on('change', 'input[type=checkbox]', function () {
         var downstr = $('input[type=checkbox]:checked').map(function () {
@@ -278,13 +136,18 @@
     });
 
 
-    $(document).ready(function () {
-        $('#loading').hide();
-    });
+    Dcat.ready(function () {
+        $(function () {
+            $('#datepicker').datetimepicker({
+                format: 'YYYY-MM-DD',
+                "locale":"zh-TW",
+                //默認當前日期+2天,有cutday加相應天數
+                defaultDate : '{{\Carbon\Carbon::now()->addDay(request()->cutday ?? 2)->toDateString()}}',
+                // icon : 'glyphicon glyphicon-calendar',
 
-    // $(window).load(function () {
-    //     $('#loading').hide();
-    // });
+            });
+        });
+    });
 
 </script>
 

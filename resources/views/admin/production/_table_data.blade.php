@@ -14,6 +14,6 @@
     <td><img src="../images/print.png"
              onclick="viewPrint({{$cat->id}},2)"
              style="cursor:pointer;"></td>
-    <td><input class="downselect" type="checkbox" value="7" style="zoom:180%;"></td>
+
 </tr>
 
