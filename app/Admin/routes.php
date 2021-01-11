@@ -61,5 +61,10 @@ Route::group([
     $router->get('api/unit', 'ApiController@unit');
     $router->get('api/shopgroup', 'ApiController@shop_group');
 
+    //test
+    $router->get('data/', 'DataChangeController@index');
+    $router->put('data/test', 'DataChangeController@test');
+    $router->put('data/form', 'DataChangeController@changeForms');
+
 
 });

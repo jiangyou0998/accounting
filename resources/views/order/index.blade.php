@@ -50,6 +50,12 @@
     <div class="col-sm-6">
         <!-- <a href="#"><img src="images/Order_Button_Supplier.jpg" width="150" height="150" border="0"></a> -->
         <a href="{{route('kb.select_day')}}"><span class="btn" style="font-size: 40px;line-height: 50px;">蛋撻王<br/>工場</span></a>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
         @can('shop')
 
         <!-- 快速查看下單數量 -->
