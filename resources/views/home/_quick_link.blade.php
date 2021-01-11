@@ -22,8 +22,8 @@
         <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
                 <h6 class="my-0">
-                    <a href="{{route('select_day')}}">
-                        下單
+                    <a href="{{route('order')}}">
+                        柯打
                     </a>
                 </h6>
 
