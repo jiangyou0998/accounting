@@ -16,7 +16,7 @@
                                 </a>
                             @endguest
                             @auth
-                            <a href="{{'/notices/'.$notice->file_path}}">
+                            <a href="{{'/notices/'.$notice->file_path}}" target="_blank">
                                 {{$notice->notice_name}}
                             </a>
                             @endauth
