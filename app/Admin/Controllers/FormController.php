@@ -92,15 +92,12 @@ class FormController extends AdminController
     {
         return Form::make(new FormModel(), function (Form $form) {
             $roles = Admin::user()->roles->pluck('name','id');
-//            $forms->display('id');
 
-//            if ($form->isCreating()) {
-//                $form->hidden('form_no');
-//            }
-//
-//            if ($form->isEditing()) {
-//                $form->display('form_no');
-//            }
+            //2020-12-29 管理員顯示所有部門
+            if(Admin::user()->isAdministrator()){
+                $roleModel = config('admin.database.roles_model');
+                $roles = $roleModel::all()->pluck('name','id');
+            }
 
             $form->text('form_no')->required();
 

@@ -1,6 +1,6 @@
 @foreach($countArr as $deli_date => $countItems)
 <tr class="bg-blue">
-    <td width="15%">{{\Carbon\Carbon::parse($deli_date)->isoFormat('M月DD日(dd)')}}</td>
+    <td width="10%">{{\Carbon\Carbon::parse($deli_date)->isoFormat('M月DD日(dd)')}}</td>
     @foreach($countItems as $key =>$count)
         <td @if($count != 0) class="bg-warning" @endif>
             <a href="{{route('cart',['shop' => $key,'dept' => request()->dept,'deli_date' => $deli_date])}}"

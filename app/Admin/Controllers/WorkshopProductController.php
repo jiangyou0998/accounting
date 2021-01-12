@@ -3,7 +3,6 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Renderable\Price;
-use App\Admin\Repositories\TblOrderZMenu;
 use App\Models\WorkshopCheck;
 use App\Models\WorkshopGroup;
 use App\Models\WorkshopUnit;
@@ -13,7 +12,9 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use App\Models\Price as PriceModel;
 
 class WorkshopProductController extends AdminController
 {
@@ -64,9 +65,8 @@ class WorkshopProductController extends AdminController
 
             $unitArr = array();
             foreach ($units::all() as $unit) {
-                $unitArr[$unit['id']] =  $unit['product_name'];
+                $unitArr[$unit['id']] =  $unit['unit_name'];
             }
-
 
             //細類數組
             $groups = new WorkshopGroup();
@@ -75,7 +75,7 @@ class WorkshopProductController extends AdminController
             $groups = $groups::with('cats')->get();
             foreach ($groups as $group) {
 //                dump($group->toArray()['tbl_order_z_cat']);
-                $groupArr[$group['id']] = $group->toArray()['cats']['cat_name'].'-'.$group['product_name'];
+                $groupArr[$group['id']] = $group->toArray()['cats']['cat_name'].'-'.$group['group_name'];
             }
 
 
@@ -163,17 +163,44 @@ class WorkshopProductController extends AdminController
 
             });
 
+
+            $prices = PriceModel::where('shop_group_id', 1)->get();
+//            dump($prices->toArray());
+//            foreach ($prices as $price){
+//                $price->xxx = $price->prices()->pluck('price','shop_group_id');
+//                $price->moq = $price->prices()->pluck('min','shop_group_id');
+////                dump($price->toArray());
+//            }
+
             $titles = [
                 'product_no' => '編碼',
                 'product_name' => '貨名',
                 'group_id' => '細類',
                 'min' => 'MOQ',
                 'unit_id' => '包裝' ,
-                'default_price' => '單價'];
+                'kb_price' => '蛋撻王單價',
+                'rb_price' => '糧友單價',
+                ];
             $grid->export($titles)->rows(function (array $rows) use ($groupArr , $unitArr){
                 foreach ($rows as $index => &$row) {
                     $row['group_id'] = $groupArr[$row['group_id']];
                     $row['unit_id'] = $unitArr[$row['unit_id']];
+
+
+                    $kbprice = Arr::where($row['prices'], function ($value, $key) {
+                        return ($value['shop_group_id'] == 1);
+                    });
+                    $row['kb_price'] = $kbprice[0]['price'];
+
+                    $rbprice = Arr::where($row['prices'], function ($value, $key) {
+                        return ($value['shop_group_id'] == 5);
+                    });
+                    if(isset($rbprice[0])){
+                        $row['rb_price'] = $rbprice[0]['price'];
+                    }else{
+                        $row['rb_price'] = '';
+                    }
+
                 }
 
                 return $rows;
@@ -205,6 +232,26 @@ class WorkshopProductController extends AdminController
 
                 }, '細類')->select('api/group2')->default("");
 
+
+
+            });
+
+            //選擇器
+            $grid->selector(function (Grid\Tools\Selector $selector) {
+
+
+                $selector->selectOne('price', '有價格', [
+                    1 => '蛋撻王',
+                    5 => '糧友',
+                ], function ($query, $value) {
+
+//                    $value = current($value);
+
+                    $query->whereHas('prices', function ($query) use($value){
+                        $query->where('shop_group_id', $value);
+                    });
+
+                });
 
 
             });

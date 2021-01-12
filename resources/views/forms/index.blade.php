@@ -79,7 +79,7 @@
                     <td width="20%">{{$dept_names[$form->admin_role_id]}}</td>
                     <td width="10%">
                         @if($form->sample_path)
-                            <a href="{{$form->sample_path}}" target="_blank">樣本</a>
+                            <a href="{{'/forms/'.$form->sample_path}}" target="_blank">樣本</a>
                         @endif
                     </td>
                 </tr>

@@ -32,6 +32,15 @@
             color: #FF0000;
         }
 
+        .container {
+            margin-right: auto;
+            margin-left: auto;
+            padding-right: 15px;
+            padding-left: 15px;
+            width: 100%;
+            max-width: 2000px;      // 隨螢幕尺寸而變，當螢幕尺寸 ≥ 1200px 時是 1140px。
+        }
+
     </style>
 
     <div align="left"><a target="_top" href="{{route('order')}}" style="font-size: xx-large;">返回</a></div>
@@ -41,11 +50,14 @@
         <br>
         <br>
 
-        <input type="radio" name="dept" id="radio" value="R" @if(request()->dept == 'R') checked @endif>烘焙
-        <input type="radio" name="dept" id="radio" value="B" @if(request()->dept == 'B') checked @endif>水吧
-        <input type="radio" name="dept" id="radio" value="K" @if(request()->dept == 'K') checked @endif>廚房
-        <input type="radio" name="dept" id="radio" value="F" @if(request()->dept == 'F') checked @endif>樓面
-
+{{--        <input type="radio" name="dept" id="radio" value="R" @if(request()->dept == 'R') checked @endif>烘焙--}}
+{{--        <input type="radio" name="dept" id="radio" value="R2" @if(request()->dept == 'R2') checked @endif>二車--}}
+{{--        <input type="radio" name="dept" id="radio" value="B" @if(request()->dept == 'B') checked @endif>水吧--}}
+{{--        <input type="radio" name="dept" id="radio" value="K" @if(request()->dept == 'K') checked @endif>廚房--}}
+{{--        <input type="radio" name="dept" id="radio" value="F" @if(request()->dept == 'F') checked @endif>樓面--}}
+        @foreach(config('dept.symbol_and_name') as $dept => $name)
+            <input type="radio" name="dept" id="radio" value="{{$dept}}" @if(request()->dept == $dept) checked @endif>{{$name}}
+        @endforeach
 
     </div>
 
@@ -64,15 +76,7 @@
         <div class="py-5 text-center">
 
             <h2>
-                @if(request()->dept == 'R')
-                    烘焙
-                @elseif(request()->dept == 'B')
-                    水吧
-                @elseif(request()->dept == 'K')
-                    廚房
-                @elseif(request()->dept == 'F')
-                    樓面
-                @endif
+                {{config('dept.symbol_and_name')[request()->dept]}}
 
             </h2>
             {{--        <p class="lead">Below is an example forms built entirely with Bootstrap's forms controls. Each required forms group has a validation state that can be triggered by attempting to submit the forms without completing it.</p>--}}
