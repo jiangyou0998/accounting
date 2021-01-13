@@ -72,19 +72,6 @@ class OrderController extends Controller
         return view('order.select_day', compact('dayArray', 'isSun','shops'));
     }
 
-//    public function select_old_order()
-//    {
-//        $isSun = $this->isSunday();
-//
-//        $dayArray = $this->getDayArray();
-//
-//        $shops = User::getRyoyuBakeryShops();
-////        dump($dayArray);
-//
-//
-//        return view('order.select_old_order', compact('dayArray', 'isSun','shops'));
-//    }
-
     public function select_old_order(Request $request)
     {
         $shops = User::getKingBakeryShops();
@@ -127,6 +114,50 @@ class OrderController extends Controller
         }
 
         return view('order.select_order.index', compact('countArr','shop_names'));
+    }
+
+    public function select_rb_old_order(Request $request)
+    {
+        $shops = User::getRyoyuBakeryShops();
+
+        $shopids = $shops->pluck('id');
+        $shop_names = $shops->pluck('report_name','id')->toArray();
+
+        $start_date = $request->start;
+        if($start_date == ''){
+            $start_date = Carbon::now()->toDateString();
+        }
+
+        $end_date = $request->end;
+        if($end_date == ''){
+            $end_date = Carbon::parse($start_date)->addDay(10)->toDateString();
+        }
+
+        $dept = $request->dept;
+
+        $items = WorkshopCartItem::getRegularOrderCount($shopids,$start_date,$end_date,$dept);
+//        dump($shops->toArray());
+//        dump($shops->pluck('id'));
+
+        $countArr = array();
+
+        if($end_date >= $start_date){
+            $start = Carbon::parse($start_date);
+            $end = Carbon::parse($end_date);
+            $time = $start;
+            while($end->gte($time)) {
+                foreach ($shopids as $shopid){
+                    $countArr[$time->toDateString()][$shopid] = 0;
+                }
+                $time = $time->addDay();
+            }
+        }
+
+        foreach ($items as $item){
+            $countArr[$item->deli_date][$item->user_id] = $item->count;
+        }
+
+        return view('rb.order.select_order.index', compact('countArr','shop_names'));
     }
 
     public static function getDayArray($advDays = 14)

@@ -50,14 +50,17 @@ class WorkshopCartItemController extends Controller
 
 //            dump($insertDatas);
 //            dump($delDatas);
+            $shop_group_id = 1;
+            //2021-01-13 dept為RB 分組改為糧友
+            if(request()->dept === 'RB') $shop_group_id = 5;
 
             //2020-11-23 新增下單時候的價格
 //            $prices = WorkshopProduct::all()->pluck('default_price','id');
             //2021-01-06 下單時候價格改為從prices表獲取
-            $prices = WorkshopProduct::with('prices')->whereHas('prices', function (Builder $query) {
-                $query->where('shop_group_id', '=', 1);
-            })->get()->mapWithKeys(function ($item) {
-                $price = $item['prices']->where('shop_group_id', 1)->first()->price;
+            $prices = WorkshopProduct::with('prices')->whereHas('prices', function (Builder $query) use($shop_group_id){
+                $query->where('shop_group_id', '=', $shop_group_id);
+            })->get()->mapWithKeys(function ($item) use($shop_group_id){
+                $price = $item['prices']->where('shop_group_id', $shop_group_id)->first()->price;
                 return [$item['id'] => $price ];
             });
 //            dump($prices);
@@ -208,7 +211,7 @@ class WorkshopCartItemController extends Controller
 //        dump($items->toArray());
 //        dump($sampleItems->toArray());
 
-        $deptArr= config('dept.symbol_and_name');
+        $deptArr= config('dept.symbol_and_name_all');
 
         $orderInfos = new Collection();
         $orderInfos->date = $deli_date;
@@ -225,7 +228,15 @@ class WorkshopCartItemController extends Controller
     //ajax加載分組
     public function showGroup($catid)
     {
-        $groups = WorkshopGroup::where('cat_id', $catid)->get();
+//        dump(request()->dept);
+        $groups = WorkshopGroup::where('cat_id', $catid)->whereHas('products', function (Builder $query){
+            $query->whereHas('prices', function (Builder $query) {
+                $shop_group_id = 1;
+                //dept為RB 分組改為糧友
+                if(request()->dept === 'RB') $shop_group_id = 5;
+                $query->where('shop_group_id', '=', $shop_group_id);
+            });
+        })->get();
 
         return view('order.cart_group', compact('groups'))->render();
     }
@@ -233,14 +244,17 @@ class WorkshopCartItemController extends Controller
     //ajax加載產品
     public function showProduct($groupid, Request $request)
     {
+        $shop_group_id = 1;
+        //dept為RB 分組改為糧友
+        if(request()->dept === 'RB') $shop_group_id = 5;
         $products = WorkshopProduct::with('cats')
             ->with('units')
             ->with('prices')
             ->where('group_id', $groupid)
             ->where('status', '!=', 4)
-            //2021-01-06 KB只能看KB產品
-            ->whereHas('prices', function (Builder $query) {
-                $query->where('shop_group_id', '=', 1);
+            //2021-01-13 根據dept設置分組
+            ->whereHas('prices', function (Builder $query) use($shop_group_id){
+                $query->where('shop_group_id', '=', $shop_group_id);
             })
             ->get();
 //        dd($products);
@@ -260,7 +274,7 @@ class WorkshopCartItemController extends Controller
 //        dd($products->toArray());
         foreach ($products as $product) {
 //            dump($deli_date.$product->cuttime);
-            $productDetail = $product->prices->where('shop_group_id', 1)->first();
+            $productDetail = $product->prices->where('shop_group_id', '=', $shop_group_id)->first();
 
             $this->checkInvalidOrder($productDetail,$deli_date);
 

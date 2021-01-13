@@ -191,7 +191,7 @@
         // alert("order/cart/show_group/"+catid);
         $.ajax({
             type: "POST",
-            url: "/order/cart/show_group/"+catid,
+            url: "/order/cart/show_group/"+catid+'?dept={{request()->dept}}',
             data: "",
             dataType:'html',
             // headers: {
@@ -217,7 +217,7 @@
         console.log(deli_date);
         $.ajax({
             type: "POST",
-            url: "/order/cart/show_product/"+groupid,
+            url: "/order/cart/show_product/"+groupid+'?dept={{request()->dept}}',
             data: {'deli_date':deli_date},
             dataType:'html',
             // headers: {
@@ -315,11 +315,12 @@
         {{--shopid = {{$_REQUEST['shop']}};--}}
         $.ajax({
             type: "PUT",
-            url: "{{route('cart.update',request()->shop)}}",
+            url: "{{route('cart.update', request()->shop)}}",
             data: {
                 'insertData': JSON.stringify(insertarray),
                 'updateData': JSON.stringify(updatearray),
-                'delData': JSON.stringify(delarray)
+                'delData': JSON.stringify(delarray),
+                'dept' : '{{request()->dept}}'
             },
             success: function (msg) {
                 // alert('已落貨!');
