@@ -2,9 +2,16 @@
     <td>{{ $detail->product_no }}</td>
     <td>{{ $detail->itemName }}</td>
 
-    @foreach(config('dept.symbol') as $dept)
-        <td align="right">{{ $detail->{$dept.'_total'} != 0 ? $detail->{$dept.'_total'} :'/' }}</td>
-    @endforeach
+    @if(request()->group === 'RB')
+        @foreach(['RB'] as $dept)
+            <td align="right">{{ $detail->{$dept.'_total'} != 0 ? $detail->{$dept.'_total'} :'/' }}</td>
+        @endforeach
+    @else
+        @foreach(config('dept.symbol') as $dept)
+            <td align="right">{{ $detail->{$dept.'_total'} != 0 ? $detail->{$dept.'_total'} :'/' }}</td>
+        @endforeach
+    @endif
+
 {{--    <td align="right">{{ $detail->R_total != 0 ? $detail->R_total :'/' }}</td>--}}
 {{--    <td align="right">{{ $detail->B_total != 0 ? $detail->B_total :'/' }}</td>--}}
 {{--    <td align="right">{{ $detail->K_total != 0 ? $detail->K_total :'/' }}</td>--}}

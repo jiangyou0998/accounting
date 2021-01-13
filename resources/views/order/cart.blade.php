@@ -335,7 +335,13 @@
                     cancelButtonText: '返回',
                 }).then((result) => {
                     if (result.isDenied) {
-                        window.open('{!! route('order.deli',['shop'=>$orderInfos->shopid,'deli_date'=>$orderInfos->deli_date]) !!}');
+                        let url = '';
+                        if('{{request()->dept}}' == 'RB'){
+                            url = '{!! route('order.deli',['shop'=>$orderInfos->shopid,'deli_date'=>$orderInfos->deli_date,'group'=>'RB']) !!}';
+                        } else {
+                            url = '{!! route('order.deli',['shop'=>$orderInfos->shopid,'deli_date'=>$orderInfos->deli_date]) !!}';
+                        }
+                        window.open(url);
                         window.location.reload();
                     } else if (result.isDismissed) {
                         window.location.href = '{{route('select_day')}}';

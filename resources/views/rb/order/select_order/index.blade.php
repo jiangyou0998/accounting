@@ -61,13 +61,7 @@
         <div class="py-5 text-center">
 
             <h2>
-                @if(request()->dept == 'A')
-                    第一車
-                @elseif(request()->dept == 'B')
-                    第二車
-                @elseif(request()->dept == 'C')
-                    麵頭
-                @endif
+                糧友
 
             </h2>
             {{--        <p class="lead">Below is an example forms built entirely with Bootstrap's forms controls. Each required forms group has a validation state that can be triggered by attempting to submit the forms without completing it.</p>--}}
