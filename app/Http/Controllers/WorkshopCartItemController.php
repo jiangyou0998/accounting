@@ -251,7 +251,8 @@ class WorkshopCartItemController extends Controller
             ->with('units')
             ->with('prices')
             ->where('group_id', $groupid)
-            ->where('status', '!=', 4)
+            //2021-01-15 不顯示暫停產品
+            ->whereNotIn('status', [2,4])
             //2021-01-13 根據dept設置分組
             ->whereHas('prices', function (Builder $query) use($shop_group_id){
                 $query->where('shop_group_id', '=', $shop_group_id);

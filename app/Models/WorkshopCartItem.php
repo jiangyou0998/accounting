@@ -41,6 +41,15 @@ class WorkshopCartItem extends Model
         }
     }
 
+    public function scopeOfDept($query, $dept)
+    {
+        if(in_array($dept,config('dept.symbol'))){
+            return $query->where('prices.shop_group_id','=',1);
+        }else if($dept === 'RB'){
+            return $query->where('prices.shop_group_id','=',5);
+        }
+    }
+
     public static function getCartItems($shop , $dept , $deli_date){
 
 
@@ -78,8 +87,8 @@ class WorkshopCartItem extends Model
             ->where('workshop_cart_items.user_id','=',$shop)
             ->whereNotIn('workshop_cart_items.status',[4])
             ->where('workshop_cart_items.qty','>=',0)
-            //2021-01-06 蛋撻王分組為1
-            ->where('prices.shop_group_id','=',1)
+            //2021-01-15 根據dept選擇分組
+            ->ofDept($dept)
             ->where('workshop_cart_items.dept','=',$dept)
             ->where('workshop_cart_items.deli_date','=',$deli_date);
 

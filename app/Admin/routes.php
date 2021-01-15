@@ -17,7 +17,7 @@ Route::group([
     $router->resource('cats', 'WorkshopCatController');
     $router->resource('menus', 'WorkshopProductController');
 //    $router->post('menus/confirm1', 'TblOrderZMenuController@confirm1');
-    $router->resource('groups', 'TblOrderZGroupController');
+    $router->resource('groups', 'WorkshopGroupController');
     $router->resource('notices', 'NoticeController');
     $router->resource('forms', 'FormController');
     $router->resource('checks', 'WorkshopCheckController');
@@ -62,6 +62,9 @@ Route::group([
     $router->get('api/cat', 'ApiController@cat');
     $router->get('api/unit', 'ApiController@unit');
     $router->get('api/shopgroup', 'ApiController@shop_group');
+
+    $router->resource('library', 'Library\LibraryController');
+    $router->resource('library_group', 'Library\LibraryGroupController');
 
     //test
 //    $router->get('data/', 'DataChangeController@index');

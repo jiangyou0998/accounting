@@ -10,6 +10,7 @@ class WorkshopProduct extends Model
 {
 
     protected $table = 'workshop_products';
+    protected $guarded = [];
 
     public function groups()
     {

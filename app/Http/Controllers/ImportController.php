@@ -221,4 +221,93 @@ class ImportController extends Controller
         $reader->close();
     }
 
+    public function importNewRyoyuProductAndPrice()
+    {
+        $reader = ReaderFactory::createFromType(Type::XLSX);
+
+        $reader->open('ryoyunew.xlsx');
+
+
+        $groups = WorkshopGroup::all()->pluck('id','group_name');
+        $units = WorkshopUnit::all()->pluck('id','unit_name');
+
+        foreach ($reader->getSheetIterator() as $sheet) {
+
+            foreach ($sheet->getRowIterator() as $rowKey => $row) {
+                // do stuff with the row
+                if($rowKey == 1) continue;
+                $rowValues = $row->toArray();
+
+                //分組名轉化成分組id
+                $rowValues[3] = $groups[$rowValues[3]];
+                //單位名轉化成單位id
+                $rowValues[4] = $units[$rowValues[4]];
+
+                //產品數組
+                $productArr[] = $rowValues;
+
+            }
+        }
+
+//        dd($productArr);
+
+        // 数据库事务处理
+        DB::transaction(function() use($productArr){
+
+            //插入產品
+            $productModel = new WorkshopProduct();
+            $priceModel = new Price();
+
+            foreach ($productArr as $product){
+
+                //插入,更新時間
+                $now = Carbon::now()->toDateTimeString();
+
+//                 0 => array:11 [▼
+//                    0 => 1102012
+//                    1 => "日本湯種-英式方包"
+//                    2 => "麵包部"
+//                    3 => "熟包-方包"
+//                    4 => "條"
+//                    5 => 27
+//                    6 => 2
+//                    7 => 1000
+//                    8 => "0,1,2,3,4,5,6"
+//                    9 => 1
+//                    10 => 1
+//                  ]
+
+                $productModel = WorkshopProduct::create([
+                    'product_no' => $product[0],
+                    'product_name' => $product[1],
+                    'group_id' => $product[3],
+                    'unit_id' => $product[4],
+                    'sort' => 999,
+                    'status' => 1,
+                    'last_modify' => 'Insert in '.$now,
+                ]);
+
+                $price = new Price([
+                    //糧友group_id 5
+                    'shop_group_id' => 5,
+                    'price' => $product[5],
+                    'phase' => $product[6],
+                    'cuttime' => $product[7],
+                    'canordertime' => $product[8],
+                    'min' => $product[9],
+                    'base' => $product[10],
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]);
+
+                //保存關聯模型
+                $productModel->prices()->save($price);
+
+            }
+
+        });
+
+        $reader->close();
+    }
+
 }
