@@ -42,7 +42,7 @@ class TotalSalesAmountByMenuReportController extends AdminController
 
             $shop_group = request()->group ?? 'all';
 //            dump(request()->_selector['group']);
-            
+
             $data = $this->generate($start, $end, $shop_group);
 
             if(count($data) > 0){

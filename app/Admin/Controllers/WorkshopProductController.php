@@ -131,7 +131,21 @@ class WorkshopProductController extends AdminController
             $grid->sort;
 
             //2020-12-30 狀態使用radio
-            $grid->column('status')->radio([1 => '現貨', 2 => '暫停', 3 => '新貨', 5 => '季節貨']);
+            //2020-01-18 有權限才顯示修改狀態
+            if(Admin::user()->can('factory-menus-edit') === true){
+                $grid->column('status')->radio([1 => '現貨', 2 => '暫停', 3 => '新貨', 5 => '季節貨']);
+            }else{
+                $grid->status->using([1 => '現貨', 2 => '暫停', 3 => '新貨', 5 => '季節貨'])
+                    ->dot(
+                        [
+                            1 => 'success',
+                            2 => 'danger',
+                            3 => 'primary',
+                            4 => Admin::color()->info(),
+                        ],
+                        'success' // 默认颜色
+                    );
+            }
 
             $grid->column('所屬生產表')->display(function () use ($checkArr) {
                 return $checkArr[$this->id] ?? "不在生產表中";
@@ -142,22 +156,56 @@ class WorkshopProductController extends AdminController
                 'product_name' => '貨名',
                 'group_id' => '細類',
                 'unit_id' => '包裝' ,
-                'kb_price' => '蛋撻王單價',
-                'kb_min' => '蛋撻王MOQ',
-                'rb_price' => '糧友單價',
-                'rb_min' => '糧友MOQ',
                 ];
-            $grid->export($titles)->rows(function (array $rows) use ($groupArr, $unitArr, $kbPricesArr, $rbPricesArr) {
+            $shop_group = request()->_selector['price'] ?? 0;
+            switch ($shop_group) {
+                case 0:
+                    $titles['kb_price'] = '蛋撻王單價';
+                    $titles['kb_min'] = '蛋撻王MOQ';
+                    $titles['rb_price'] = '糧友單價';
+                    $titles['rb_min'] = '糧友MOQ';
+                    break;
+                case 1:
+                    $titles['kb_price'] = '蛋撻王單價';
+                    $titles['kb_min'] = '蛋撻王MOQ';
+                    break;
+                case 5:
+                    $titles['rb_price'] = '糧友單價';
+                    $titles['rb_min'] = '糧友MOQ';
+                    break;
+                default:
+                    $titles['kb_price'] = '蛋撻王單價';
+                    $titles['kb_min'] = '蛋撻王MOQ';
+                    $titles['rb_price'] = '糧友單價';
+                    $titles['rb_min'] = '糧友MOQ';
+            }
+
+            $grid->export($titles)->csv()->rows(function (array $rows) use ($groupArr, $unitArr, $kbPricesArr, $rbPricesArr, $shop_group) {
                 foreach ($rows as $index => &$row) {
                     $row['group_id'] = $groupArr[$row['group_id']];
                     $row['unit_id'] = $unitArr[$row['unit_id']];
 
-                    $row['kb_price'] = $kbPricesArr[$row['id']][0]['price'] ?? '';
-                    $row['kb_min'] = $kbPricesArr[$row['id']][0]['min'] ?? '';
-                    $row['rb_price'] = $rbPricesArr[$row['id']][0]['price'] ?? '';
-                    $row['rb_min'] = $rbPricesArr[$row['id']][0]['min'] ?? '';
-
-
+                    switch ($shop_group) {
+                        case 0:
+                            $row['kb_price'] = $kbPricesArr[$row['id']][0]['price'] ?? '';
+                            $row['kb_min'] = $kbPricesArr[$row['id']][0]['min'] ?? '';
+                            $row['rb_price'] = $rbPricesArr[$row['id']][0]['price'] ?? '';
+                            $row['rb_min'] = $rbPricesArr[$row['id']][0]['min'] ?? '';
+                            break;
+                        case 1:
+                            $row['kb_price'] = $kbPricesArr[$row['id']][0]['price'] ?? '';
+                            $row['kb_min'] = $kbPricesArr[$row['id']][0]['min'] ?? '';
+                            break;
+                        case 5:
+                            $row['rb_price'] = $rbPricesArr[$row['id']][0]['price'] ?? '';
+                            $row['rb_min'] = $rbPricesArr[$row['id']][0]['min'] ?? '';
+                            break;
+                        default:
+                            $row['kb_price'] = $kbPricesArr[$row['id']][0]['price'] ?? '';
+                            $row['kb_min'] = $kbPricesArr[$row['id']][0]['min'] ?? '';
+                            $row['rb_price'] = $rbPricesArr[$row['id']][0]['price'] ?? '';
+                            $row['rb_min'] = $rbPricesArr[$row['id']][0]['min'] ?? '';
+                    }
 
                 }
 
