@@ -37,15 +37,12 @@ class TotalSalesAmountByMenuReportController extends AdminController
                 return $card;
             });
 
-            //上个月第一天
-            $start = request()->between->start ?? Carbon::now()->subMonth()->firstOfMonth()->toDateString();
-
-            //上个月最后一天
-            $end = request()->between->end ?? Carbon::now()->subMonth()->lastOfMonth()->toDateString();
+            $start = $this->getStartTime();
+            $end = $this->getEndTime();
 
             $shop_group = request()->group ?? 'all';
 //            dump(request()->_selector['group']);
-
+            
             $data = $this->generate($start, $end, $shop_group);
 
             if(count($data) > 0){
