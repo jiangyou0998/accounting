@@ -2,7 +2,6 @@
 
 namespace App\Admin\Controllers\Reports;
 
-use App\Models\OrderZDept;
 use App\Models\TblUser;
 use App\Models\WorkshopCartItem;
 use App\User;
@@ -42,7 +41,9 @@ class TotalSalesByGroupReportController extends AdminController
             $start = $this->getStartTime();
             $end = $this->getEndTime();
 
-            $data = $this->generate($start,$end);
+            $shop_group = request()->group ?? 'all';
+
+            $data = $this->generate($start, $end, $shop_group);
 
             if(count($data) > 0){
                 $keys = $data->first()->toArray();
@@ -73,10 +74,8 @@ class TotalSalesByGroupReportController extends AdminController
 
                 // 更改为 panel 布局
                 $filter->panel();
-
                 $filter->between('between', '報表日期')->date();
-
-
+                $filter->equal('group', '分組')->select(config('report.report_group'));
             });
 
             $filename = '分店每月銷售總額報告 '.$start.'至'.$end ;
@@ -92,9 +91,22 @@ class TotalSalesByGroupReportController extends AdminController
      *
      * @return array
      */
-    public function generate($start,$end) {
+    public function generate($start, $end, $shop_group){
 
-        $shops = User::getKingBakeryShops();
+        switch ($shop_group) {
+            case 'all':
+                $shops = User::getAllShops();
+                break;
+            case 'kb':
+                $shops = User::getKingBakeryShops();
+                break;
+            case 'rb':
+                $shops = User::getRyoyuBakeryShops();
+                break;
+            default:
+                $shops = User::getAllShops();
+        }
+        $shopids = $shops->pluck('id');
 
         $cartitem = new WorkshopCartItem();
         $cartitem = $cartitem
@@ -117,6 +129,7 @@ class TotalSalesByGroupReportController extends AdminController
             ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
             ->where('users.type', '=', 2)
             ->where('workshop_cart_items.status', '<>', 4)
+            ->whereIn('workshop_cart_items.user_id', $shopids)
             ->whereRaw("deli_date between '$start' and '$end'")
             ->groupBy('workshop_groups.id')
             ->orderBy('workshop_cats.sort')

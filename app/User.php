@@ -111,6 +111,20 @@ class User extends Authenticatable
         return $shops;
     }
 
+    public static function getAllShops(){
+
+        $users = new User();
+        $shops = $users->where('type', 2)
+            ->where('name','like','kb%')
+            ->orWhere('name','like','ces%')
+            ->orWhere('name','like','b&b%')
+            ->orWhere('name','like','rb%')
+            ->orderBy('name')
+            ->get(['id','report_name']);
+
+        return $shops;
+    }
+
     public static function getTestUserIDs(){
 
         $testUserIDs = [1,2,3,4,77,82];

@@ -2,10 +2,8 @@
 
 namespace App\Admin\Controllers\Reports;
 
-use App\Models\OrderZDept;
 use App\Models\TblOrderZCat;
 use App\Models\TblOrderZGroup;
-use App\Models\TblUser;
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopCat;
 use App\User;
@@ -14,7 +12,6 @@ use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Card;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 
@@ -33,19 +30,38 @@ class TotalSalesByDayCombineReportController extends AdminController
         return new Grid(null, function (Grid $grid) {
 
             $grid->header(function ($collection) {
-
+                $shop_group = request()->group ?? 'all';
+                switch ($shop_group) {
+                    case 'all':
+                        $shop_group_name = '全部';
+                        break;
+                    case 'kb':
+                        $shop_group_name = '蛋撻王';
+                        break;
+                    case 'rb':
+                        $shop_group_name = '糧友';
+                        break;
+                    default:
+                        $shop_group_name = '全部';
+                }
                 $month = $this->getMonth();
 
                 // 标题和内容
-                $cardInfo = $month;
-                $card = Card::make('日期:', $cardInfo);
+                $cardInfo = <<<HTML
+        <h1>月份:<span style="color: red">$month</span></h1>
+        <h1>分組:<span style="color: red">$shop_group_name</span></h1>
+HTML;
+                $card = Card::make('', $cardInfo);
+//                $card = Card::make('xxx:', $shop_group);
+
 
                 return $card;
             });
 
             $month = $this->getMonth();
+            $shop_group = request()->group ?? 'all';
 
-            $data = $this->generate($month);
+            $data = $this->generate($month, $shop_group);
 
             if (count($data) > 0) {
                 $keys = $data->first()->toArray();
@@ -76,9 +92,8 @@ class TotalSalesByDayCombineReportController extends AdminController
 
                 // 更改为 panel 布局
                 $filter->panel();
-
-//                $filter->between('between', '報表日期')->date();
                 $filter->month('month', '報表日期');
+                $filter->equal('group', '分組')->select(config('report.report_group'));
 
 
             });
@@ -96,8 +111,22 @@ class TotalSalesByDayCombineReportController extends AdminController
      *
      * @return array
      */
-    public function generate($month)
+    public function generate($month ,$shop_group)
     {
+        switch ($shop_group) {
+            case 'all':
+                $shops = User::getAllShops();
+                break;
+            case 'kb':
+                $shops = User::getKingBakeryShops();
+                break;
+            case 'rb':
+                $shops = User::getRyoyuBakeryShops();
+                break;
+            default:
+                $shops = User::getAllShops();
+        }
+        $shopids = $shops->pluck('id');
 
         $cats = WorkshopCat::getCats();
         $testids = User::getTestUserIDs();
@@ -122,6 +151,7 @@ class TotalSalesByDayCombineReportController extends AdminController
             ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
             ->where('users.type', '=', 2)
             ->where('workshop_cart_items.status', '<>', 4)
+            ->whereIn('workshop_cart_items.user_id', $shopids)
             ->whereNotIn('users.id', $testids)
             ->whereRaw(DB::raw("deli_date like '%$month%' "))
             ->groupBy(DB::raw('week,day with rollup'))

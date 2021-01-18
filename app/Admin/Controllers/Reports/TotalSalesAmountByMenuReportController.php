@@ -2,8 +2,6 @@
 
 namespace App\Admin\Controllers\Reports;
 
-use App\Models\OrderZDept;
-use App\Models\TblUser;
 use App\Models\WorkshopCartItem;
 use App\User;
 use Carbon\Carbon;
@@ -19,7 +17,7 @@ class TotalSalesAmountByMenuReportController extends AdminController
 {
     public function index(Content $content)
     {
-        return $content
+          return $content
             ->header('分店每月銷售數量報告')
             ->body($this->grid());
     }
@@ -40,20 +38,15 @@ class TotalSalesAmountByMenuReportController extends AdminController
             });
 
             //上个月第一天
-            if(isset($_REQUEST['between']['start'])){
-                $start = $_REQUEST['between']['start'];
-            }else{
-                $start = Carbon::now()->subMonth()->firstOfMonth()->toDateString();
-            }
+            $start = request()->between->start ?? Carbon::now()->subMonth()->firstOfMonth()->toDateString();
 
             //上个月最后一天
-            if(isset($_REQUEST['between']['end'])){
-                $end = $_REQUEST['between']['end'];
-            }else{
-                $end = Carbon::now()->subMonth()->lastOfMonth()->toDateString();
-            }
+            $end = request()->between->end ?? Carbon::now()->subMonth()->lastOfMonth()->toDateString();
 
-            $data = $this->generate($start,$end);
+            $shop_group = request()->group ?? 'all';
+//            dump(request()->_selector['group']);
+
+            $data = $this->generate($start, $end, $shop_group);
 
             if(count($data) > 0){
                 $keys = $data->first()->toArray();
@@ -82,10 +75,8 @@ class TotalSalesAmountByMenuReportController extends AdminController
 
                 // 更改为 panel 布局
                 $filter->panel();
-
                 $filter->between('between', '報表日期')->date();
-
-
+                $filter->equal('group', '分組')->select(config('report.report_group'));
             });
 
             $filename = '分店每月銷售數量報告 '.$start.'至'.$end ;
@@ -101,13 +92,26 @@ class TotalSalesAmountByMenuReportController extends AdminController
      *
      * @return array
      */
-    public function generate($start,$end) {
-
+    public function generate($start, $end, $shop_group)
+    {
         //上月開始,結束日期
         $last_month_start = (new Carbon($start))->subMonth()->firstOfMonth()->toDateString();
         $last_month_end = (new Carbon($start))->subMonth()->endOfMonth()->toDateString();
 
-        $shops = User::getKingBakeryShops();
+        switch ($shop_group) {
+            case 'all':
+                $shops = User::getAllShops();
+                break;
+            case 'kb':
+                $shops = User::getKingBakeryShops();
+                break;
+            case 'rb':
+                $shops = User::getRyoyuBakeryShops();
+                break;
+            default:
+                $shops = User::getAllShops();
+        }
+        $shopids = $shops->pluck('id');
 
         $cartitem = new WorkshopCartItem();
         $cartitem = $cartitem
@@ -146,6 +150,7 @@ class TotalSalesAmountByMenuReportController extends AdminController
             ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
             ->where('users.type', '=', 2)
             ->where('workshop_cart_items.status', '<>', 4)
+            ->whereIn('workshop_cart_items.user_id', $shopids)
 //            ->whereRaw(DB::raw("workshop_cart_items.deli_date between '$start' and '$end'"))
             ->groupBy('workshop_products.id')
             ->orderBy('workshop_products.product_no')

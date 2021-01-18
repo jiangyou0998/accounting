@@ -43,7 +43,9 @@ class TotalSalesByGroupCombineReportController extends AdminController
             $start = $this->getStartTime();
             $end = $this->getEndTime();
 
-            $data = $this->generate($start, $end);
+            $shop_group = request()->group ?? 'all';
+
+            $data = $this->generate($start, $end, $shop_group);
 
             if (count($data) > 0) {
                 $keys = $data->first()->toArray();
@@ -79,9 +81,8 @@ class TotalSalesByGroupCombineReportController extends AdminController
 
                 // 更改为 panel 布局
                 $filter->panel();
-
                 $filter->between('between', '報表日期')->date();
-
+                $filter->equal('group', '分組')->select(config('report.report_group'));
 
             });
 
@@ -98,8 +99,22 @@ class TotalSalesByGroupCombineReportController extends AdminController
      *
      * @return array
      */
-    public function generate($start, $end)
-    {
+    public function generate($start, $end, $shop_group){
+
+        switch ($shop_group) {
+            case 'all':
+                $shops = User::getAllShops();
+                break;
+            case 'kb':
+                $shops = User::getKingBakeryShops();
+                break;
+            case 'rb':
+                $shops = User::getRyoyuBakeryShops();
+                break;
+            default:
+                $shops = User::getAllShops();
+        }
+        $shopids = $shops->pluck('id');
 
         $cats = WorkshopCat::getCatsExceptResale();
         $resales = WorkshopGroup::getResaleGroups();
@@ -129,6 +144,7 @@ class TotalSalesByGroupCombineReportController extends AdminController
             ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
             ->where('users.type', '=', 2)
             ->where('workshop_cart_items.status', '<>', 4)
+            ->whereIn('workshop_cart_items.user_id', $shopids)
             ->whereNotIn('users.id', $testids)
             ->whereRaw(DB::raw("deli_date between '$start' and '$end'"))
             ->groupBy('users.id')
