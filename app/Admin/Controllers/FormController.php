@@ -36,7 +36,7 @@ class FormController extends AdminController
             $grid->column('roles.name','部門');
             $grid->column('users.name','操作人');
             $grid->column('file_path')->display(function ($file_path) {
-                return '<a href="/forms/' . $file_path . '" target="_blank">' . $file_path . '</a>';
+                return '<a href="/forms/' . $file_path . '" target="_blank">查看</a>';
             });
             $grid->column('sample_path')->display(function ($sample_path) {
                 return '<a href="/forms/' . $sample_path . '" target="_blank">' . $sample_path . '</a>';

@@ -6,14 +6,9 @@ namespace App\Models;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class Notice extends Model
 {
-
-    public $timestamps = false;
-
     protected $guarded = [];
 
     public function roles()
@@ -37,6 +32,11 @@ class Notice extends Model
         return $this->belongsTo($userModel,"user_id","id");
     }
 
+    public function attachments()
+    {
+        return $this->hasMany(NoticeAttachment::class,"notice_id","id");
+    }
+
     public static function getNotices($dept = null ,$search = null)
     {
         $notices = Notice::where('expired_date','>',now());
@@ -52,9 +52,20 @@ class Notice extends Model
         }
 
         $notices = $notices
-            ->orderByDesc('modify_date')
+            ->orderByDesc('updated_at')
             ->orderByDesc('id')
             ->paginate(10);
+
+        foreach ($notices as &$notice){
+            $notice->isNew = false;
+            $modify_date = Carbon::parse($notice->updated_at);
+            $now = Carbon::now();
+
+            //七日內是新
+            if($now->diffInDays($modify_date,false) > -7){
+                $notice->isNew = true;
+            }
+        }
 
         return $notices;
     }
@@ -72,11 +83,17 @@ class Notice extends Model
         $notices = Notice::where('expired_date','>',now());
 
         $notices = $notices
-            ->orderByDesc('modify_date')
+            ->orderByDesc('updated_at')
             ->orderByDesc('id')
             ->limit($limit)
             ->get();
 
+        return $notices;
+    }
+
+    public static function getNoticesAttachment($id)
+    {
+        $notices = Notice::with('attachments')->find($id);
         return $notices;
     }
 

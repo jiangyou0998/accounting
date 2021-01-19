@@ -9,16 +9,23 @@
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                     <div>
                         <h6 class="my-0">
-                            <small class="text-muted">{{$notice->modify_date}}</small>
+                            <small class="text-muted">{{\Carbon\Carbon::parse($notice->updated_at)->toDateString()}}</small>
                             @guest
                                 <a href="{{route('login')}}">
                                     {{$notice->notice_name}}
                                 </a>
                             @endguest
                             @auth
-                            <a href="{{'/notices/'.$notice->file_path}}" target="_blank">
-                                {{$notice->notice_name}}
-                            </a>
+                                @if($notice->is_directory)
+                                    <a href="{{route('notice.attachment',$notice->id)}}" target="_blank">
+                                        {{$notice->notice_name}}
+                                    </a>
+                                    <span class="badge badge-success">附件</span>
+                                @else
+                                    <a href="{{'/notices/'.$notice->file_path}}" target="_blank">
+                                        {{$notice->notice_name}}
+                                    </a>
+                                @endif
                             @endauth
                             @if($notice->isNew)
                             <span class="badge badge-danger">New</span>

@@ -105,6 +105,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::delete('repair/{repair}', 'RepairController@destroy')->name('repair.destroy');
 
     Route::any('notice', 'NoticeController@index')->middleware('auth')->name('notice');
+    Route::get('notice/attachment/{id}', 'NoticeController@attachment')->middleware('auth')->name('notice.attachment');
     Route::any('dept_form', 'FormController@index')->middleware('auth')->name('form');
 
     Route::get('addressbook', 'AddressBookController@index')->name('addressbook');

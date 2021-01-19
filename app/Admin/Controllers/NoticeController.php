@@ -10,10 +10,15 @@ use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
+use Dcat\Admin\Widgets\Alert;
 use Illuminate\Support\Facades\DB;
 
 class NoticeController extends AdminController
 {
+    protected $options = [
+        0 => '單文件',
+        1 => '多文件',
+    ];
     /**
      * Make a grid builder.
      *
@@ -28,7 +33,7 @@ class NoticeController extends AdminController
             $grid->model()
                 ->with('roles')
                 ->with('users')
-                ->orderByDesc('modify_date');
+                ->orderByDesc('updated_at');
 
             //2020-12-30 非管理員只加載所在的role組通告
             if(!Admin::user()->isAdministrator()){
@@ -40,13 +45,13 @@ class NoticeController extends AdminController
             $grid->column('roles.name','部門');
             $grid->column('users.name','操作人');
             $grid->column('file_path')->display(function ($file_path) {
-                return '<a href="/notices/' . $file_path . '" target="_blank">' . $file_path . '</a>';
+                return '<a href="/notices/' . $file_path . '" target="_blank">查看</a>';
             });
             $grid->column('first_path')->display(function ($first_path) {
                 return '<a href="http://' . $first_path . '" target="_blank">' . $first_path . '</a>';
             });
-            $grid->column('created_date')->hide();
-            $grid->column('modify_date')->sortable();;
+            $grid->column('created_at')->hide();
+            $grid->column('updated_at')->sortable();
 //            $grid->column('deleted_date');
             $grid->column('expired_date');
 
@@ -97,9 +102,9 @@ class NoticeController extends AdminController
             $show->field('dept');
             $show->field('file_path');
             $show->field('user_id');
-            $show->field('created_date');
-            $show->field('modify_date');
-            $show->field('deleted_date');
+//            $show->field('created_date');
+//            $show->field('modify_date');
+//            $show->field('deleted_date');
             $show->field('notice_no');
             $show->field('expired_date');
             $show->field('first_path');
@@ -113,7 +118,10 @@ class NoticeController extends AdminController
      */
     protected function form()
     {
-        return Form::make(new Notice(), function (Form $form) {
+        $builder = new Notice();
+        $builder = $builder->with('attachments');
+
+        return Form::make($builder, function (Form $form) {
             $roles = Admin::user()->roles->pluck('name','id');
 //            $forms->display('id');
             //2020-12-29 管理員顯示所有部門
@@ -134,36 +142,60 @@ class NoticeController extends AdminController
 
             $form->text('notice_name')->required();
             $form->select('admin_role_id')->options($roles)->required();
-            $form->file('file_path')
-                ->disk('notice')
-                ->accept('xls,xlsx,csv,pdf,mp4,mov')
-                ->uniqueName()
-                ->maxSize(204800)
-                ->autoUpload();
-//            $forms->text('user_id');
 
             if ($form->isCreating()) {
-                $form->hidden('created_date');
-                $form->hidden('modify_date');
-                $form->hidden('deleted_date');
+                $form->hidden('created_at');
+                $form->hidden('updated_at');
+                $form->hidden('deleted_at');
             }
 
             if ($form->isEditing()) {
-                $form->display('created_date');
-                $form->display('modify_date');
-                $form->display('deleted_date');
+                $form->display('created_at');
+                $form->display('updated_at');
+                $form->display('deleted_at');
             }
 
 //            $forms->text('notice_no');
             $form->date('expired_date');
             $form->text('first_path');
 
+            $alertText = '僅支持 xls, xlsx, csv, pdf, mp4, mov文件上傳，最大支持200M的文件！';
+            $form->html(Alert::make($alertText, '提示')->info());
+            $form->radio('is_directory','文件數量')
+                ->when([0, 1], function (Form $form) {
+
+                })
+                ->when(0, function (Form $form) {
+                    //單文件
+                    $form->file('file_path')
+                        ->disk('notice')
+                        ->accept('xls,xlsx,csv,pdf,mp4,mov')
+                        ->uniqueName()
+                        ->maxSize(204800)
+                        ->autoUpload();
+                })
+                ->when(1, function (Form $form) {
+                    //多文件
+                    //2021-01-19 attachment多個文件
+                    $form->hasMany('attachments','多文件', function (Form\NestedForm $form) {
+                        $form->text('title','標題');
+                        $form->file('file_path')
+                            ->disk('notice')
+                            ->accept('xls,xlsx,csv,pdf,mp4,mov')
+                            ->uniqueName()
+                            ->maxSize(204800)
+                            ->autoUpload();
+                    });
+                })
+                ->options($this->options)
+                ->default(0);
+
             $form->submitted(function (Form $form) {
-                $now = Carbon::now()->toDateString();
+                $now = Carbon::now()->toDateTimeString();
 
                 // 判断是否是新增操作
                 if ($form->isCreating()) {
-                    $form->input('created_date', $now);
+                    $form->input('created_at', $now);
                     $notice_no = DB::table('notices')->max('notice_no');
                     //最小編號10001
                     if($notice_no <= 10000){
@@ -175,7 +207,7 @@ class NoticeController extends AdminController
                 }
 
                 $form->input('user_id', Admin::user()->id);
-                $form->input('modify_date', $now);
+                $form->input('updated_at', $now);
 
                 if($form->expired_date == ''){
                     $form->input('expired_date', '9999-12-31');

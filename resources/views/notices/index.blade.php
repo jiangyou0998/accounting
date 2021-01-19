@@ -68,13 +68,23 @@
                 <tbody class="table-striped" style="background-color: white">
                 @foreach($notices as $notice)
                 <tr>
-                    <th scope="row" width="20%">{{$notice->modify_date}}</th>
+                    <th scope="row" width="20%">{{\Carbon\Carbon::parse($notice->updated_at)->toDateString()}}</th>
                     <td width="10%">{{$notice->notice_no}}</td>
                     <td width="40%">
-                        <a href="{{'/notices/'.$notice->file_path}}" target="_blank">
-                            {{$notice->notice_name}}
-                        </a>
+                        @if($notice->is_directory)
+                            <a href="{{route('notice.attachment',$notice->id)}}" target="_blank">
+                                {{$notice->notice_name}}
+                            </a>
+                            <span class="badge badge-success">附件</span>
+                        @else
+                            <a href="{{'/notices/'.$notice->file_path}}" target="_blank">
+                                {{$notice->notice_name}}
+                            </a>
+                        @endif
 
+                        @if($notice->isNew)
+                            <span class="badge badge-danger">New</span>
+                        @endif
                     </td>
                     <td width="20%">{{$dept_names[$notice->admin_role_id]}}</td>
                     <td width="10%">
@@ -83,6 +93,12 @@
                         @endif
                     </td>
                 </tr>
+{{--                <tr class="child_row_01">--}}
+{{--                    <th>分区</th>--}}
+{{--                    <th>类型</th>--}}
+{{--                    <th>是否挂载</th>--}}
+{{--                    --}}
+{{--                </tr>--}}
                 @endforeach
                 </tbody>
             </table>
