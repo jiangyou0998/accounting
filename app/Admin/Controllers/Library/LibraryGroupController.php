@@ -5,12 +5,10 @@ namespace App\Admin\Controllers\Library;
 
 use App\Models\Library\LibraryGroup;
 use Dcat\Admin\Controllers\AdminController;
-
 use Dcat\Admin\Form;
 use Dcat\Admin\Layout\Column;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Layout\Row;
-
 use Dcat\Admin\Tree;
 use Dcat\Admin\Widgets\Box;
 use Dcat\Admin\Widgets\Form as WidgetForm;
@@ -53,14 +51,24 @@ class LibraryGroupController extends AdminController
             $tree->disableCreateButton();
             $tree->disableQuickCreateButton();
             $tree->disableEditButton();
+            $tree->disableQuickEditButton();
+            $tree->disableDeleteButton();
+            $tree->disableSaveButton();
 
             $tree->branch(function ($branch) {
+//                dump($branch);
                 $payload = "<i class='fa {$branch['icon']}'></i>&nbsp;<strong>{$branch['title']}</strong>";
 
-                if (! isset($branch['children'])) {
-                    $uri = $branch['uri'];
+//                if (! isset($branch['children'])) {
+//                    $id = $branch['id'];
+//
+//                    $payload .= "&nbsp;&nbsp;&nbsp;<a href=\"www.baidu.com\" class=\"dd-nodrag\"  target='_blank'>查看</a>";
+//                }
+                if ($branch['parent_id'] !== 0) {
+                    $id = $branch['id'];
+                    $url = admin_url('library')."?group_id={$id}";
 
-                    $payload .= "&nbsp;&nbsp;&nbsp;<a href=\"$uri\" class=\"dd-nodrag\"  target='_blank'>$uri</a>";
+                    $payload .= "&nbsp;&nbsp;&nbsp;<a href=\"{$url}\" class=\"dd-nodrag\"  target='_blank'>查看</a>";
                 }
 
                 return $payload;

@@ -44,6 +44,7 @@ class NoticeController extends AdminController
             $grid->column('notice_name')->limit(20);
             $grid->column('roles.name','部門');
             $grid->column('users.name','操作人');
+//            dump($this->is_directory);
             $grid->column('file_path')->display(function ($file_path) {
                 return '<a href="/notices/' . $file_path . '" target="_blank">查看</a>';
             });

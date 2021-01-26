@@ -108,6 +108,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('notice/attachment/{id}', 'NoticeController@attachment')->middleware('auth')->name('notice.attachment');
     Route::any('dept_form', 'FormController@index')->middleware('auth')->name('form');
 
+    Route::get('library', 'Library\LibraryController@index')->middleware('auth')->name('library');
+    Route::get('library/child/{id}', 'Library\LibraryController@child_index')->name('library.child.show');
+
     Route::get('addressbook', 'AddressBookController@index')->name('addressbook');
 
     //通过redirect页面实现框架跳转

@@ -13,12 +13,84 @@ class LibraryGroup extends Model
     protected $table = 'library_group';
 
     public function childMenu() {
-        return $this->hasMany('App\Models\Library', 'parent_id', 'id');
+        return $this->hasMany($this, 'parent_id', 'id');
+    }
+
+    public function child_menu_has_libraries() {
+        return $this->hasMany($this, 'parent_id', 'id')
+            ->has('libraries');
     }
 
     public function allChildrenMenu()
     {
         return $this->childMenu()->with('allChildrenMenu');
+    }
+
+    public function all_child_menu_has_libraries() {
+        return $this->child_menu_has_libraries()
+            ->whereHas('libraries');
+    }
+
+    public function libraries()
+    {
+        return $this->hasMany(Library::class, 'group_id' , 'id');
+    }
+
+    /**
+     * Get options for Select field in form.
+     * 不包括主分類的分組(parent_id = 0)
+     *
+     * @param \Closure|null $closure
+     * @param string        $rootText
+     *
+     * @return array
+     */
+    public static function selectOptionsWithoutMain(\Closure $closure = null, $rootText = null)
+    {
+        $options = (new static())->withQuery($closure)->buildSelectOptionsWithoutMain();
+
+        return collect($options)->all();
+    }
+
+    /**
+     * Build options of select field in form.
+     * 不包括主分類的分組(parent_id = 0)
+     *
+     * @param array  $nodes
+     * @param int    $parentId
+     * @param string $prefix
+     *
+     * @return array
+     */
+    protected function buildSelectOptionsWithoutMain(array $nodes = [], $parentId = 0, $prefix = '')
+    {
+        $options = [];
+
+        if (empty($nodes)) {
+            $nodes = $this->allNodes();
+        }
+
+        $titleColumn = $this->getTitleColumn();
+        $parentColumn = $this->getParentColumn();
+
+        foreach ($nodes as $node) {
+            $node[$titleColumn] = $prefix.'&nbsp;'.$node[$titleColumn];
+
+            if ($node[$parentColumn] == $parentId) {
+//                $children = $this->buildSelectOptions($nodes, $node[$this->getKeyName()], $prefix.$prefix);
+                $children = $this->buildSelectOptionsWithoutMain($nodes, $node[$this->getKeyName()], $node[$titleColumn].'->');
+
+                if($parentId !== 0){
+                    $options[$node[$this->getKeyName()]] = $node[$titleColumn];
+                }
+
+                if ($children) {
+                    $options += $children;
+                }
+            }
+        }
+
+        return $options;
     }
 
 }
