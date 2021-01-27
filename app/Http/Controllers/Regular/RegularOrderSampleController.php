@@ -64,7 +64,7 @@ class RegularOrderSampleController extends Controller
         //選擇日期checkbox
         $checkHtml = $this->getCheckboxHtml($sampledate);
 
-        return view('order.regular.sample.create_and_edit', compact('sample', 'shops', 'info' , 'itemsArr', 'currentdate', 'checkHtml'));
+        return view('order.regular.sample.create_and_edit', compact('sample', 'shops', 'info' , 'itemsArr', 'checkHtml'));
     }
 
     public function edit(RegularOrder $sample)
