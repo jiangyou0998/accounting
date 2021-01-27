@@ -21,6 +21,10 @@
             <br/>
             <a href='{{route('rb.order.select_old_order',['dept'=>'RB'])}}' class='styleA'>改舊單(糧友)</a>
             <br/>
+            <a href='{{route('order.regular.sample')}}' class='styleA'>固定柯打</a>
+            <br/>
+            <a href='{{route('order.regular')}}' class='styleA'>批量下單</a>
+            <br/>
             <a href='{{route('order.select_deli')}}' class='styleA'>送貨單查詢</a>
         @endcan
 

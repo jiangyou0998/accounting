@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Regular;
 
 
-use App\Models\Order;
+use App\Http\Controllers\Controller;
+use App\Models\Regular\RegularOrder;
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopOrderSample;
 use App\Models\WorkshopProduct;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -38,7 +40,7 @@ class RegularOrderController extends Controller
         if($end_date == ''){
             $end_date = Carbon::parse($start_date)->addDay(7)->toDateString();
         }
-        $dept = 'D';
+        $dept = 'F';
         $items = WorkshopCartItem::getRegularOrderCount($shopids,$start_date,$end_date,$dept);
 
         $counts = $items;
@@ -128,7 +130,7 @@ class RegularOrderController extends Controller
 
         $start_date = $request->start;
         $end_date = $request->end;
-        $dept = 'D';
+        $dept = 'F';
         $items = WorkshopCartItem::getRegularOrderCount($shopids,$start_date,$end_date,$dept);
 
         $counts = $items;
@@ -137,12 +139,12 @@ class RegularOrderController extends Controller
             return [$item['user_id'] => $item['deli_date']];
         });
 
-        $sampleItems = WorkshopOrderSample::getSampleByDept($dept);
+        $sampleItems = RegularOrder::getRegularOrder();
 
 //        dump($sampleItems->toArray());
 
         foreach ($sampleItems as $sampleItem){
-            $sampledate =  $sampleItem['sampledate'];
+            $sampledate =  $sampleItem['orderdates'];
             $sampledateArr = explode(',',$sampledate);
 
             foreach ($sampledateArr as $value){
@@ -150,6 +152,16 @@ class RegularOrderController extends Controller
             }
 
         }
+
+        $shop_group_id = 1;
+
+        //2021-01-06 下單時候價格改為從prices表獲取
+        $prices = WorkshopProduct::with('prices')->whereHas('prices', function (Builder $query) use($shop_group_id){
+            $query->where('shop_group_id', '=', $shop_group_id);
+        })->get()->mapWithKeys(function ($item) use($shop_group_id){
+            $price = $item['prices']->where('shop_group_id', $shop_group_id)->first()->price;
+            return [$item['id'] => $price ];
+        });
 
         $insertArr = array();
         if($end_date >= $start_date){
@@ -169,9 +181,6 @@ class RegularOrderController extends Controller
                         && in_array($deli_date,$counts->toArray()[$shopid])){
                         $is_order = true;
                     }
-
-                    //2020-12-03 新增下單時候的價格
-                    $prices = WorkshopProduct::all()->pluck('default_price','id');
 
                     if (isset($sampleArr[$shopid][$week])
                         && !$is_order){
@@ -205,5 +214,6 @@ class RegularOrderController extends Controller
         DB::table('workshop_cart_items')->insert($insertArr);
 
     }
+
 
 }

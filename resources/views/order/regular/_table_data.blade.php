@@ -7,7 +7,7 @@
     </td>
     @foreach($countItems as $key =>$count)
         <td @if($count != 0) class="bg-warning" @endif>
-            <a href="{{route('cart',['shop' => $key,'dept' => 'D','deli_date' => $deli_date])}}"
+            <a href="{{route('cart',['shop' => $key,'dept' => 'F','deli_date' => $deli_date])}}"
             target="_blank">
                 @if($count == 0)
                     未下單

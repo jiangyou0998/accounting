@@ -266,6 +266,7 @@ class WorkshopCartItem extends Model
 
     }
 
+    //
     public static function getRegularOrderCount($shopids , $start_date ,$end_date ,$dept)
     {
         $items = new WorkshopCartItem();

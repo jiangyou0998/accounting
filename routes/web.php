@@ -65,10 +65,17 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
     Route::post('order/deli/update', 'DeliController@deli_update')->name('deli.update');
 });
 
-//Route::group(['middleware' => ['auth','permission:operation']], function () {
-//    Route::get('order/regular', 'RegularOrderController@index')->name('order.regular');
-//    Route::post('order/regular', 'RegularOrderController@store')->name('order.regular.store');
-//});
+Route::group(['middleware' => ['auth','permission:workshop']], function () {
+    Route::get('order/regular', 'Regular\RegularOrderController@index')->name('order.regular');
+    Route::post('order/regular', 'Regular\RegularOrderController@store')->name('order.regular.store');
+
+    Route::get('order/regular/sample', 'Regular\RegularOrderSampleController@index')->name('order.regular.sample');
+    Route::get('order/regular/sample/create', 'Regular\RegularOrderSampleController@create')->name('order.regular.sample.create');
+    Route::get('order/regular/sample/{sample}/edit', 'Regular\RegularOrderSampleController@edit')->name('order.regular.sample.edit');
+    Route::post('order/regular/sample', 'Regular\RegularOrderSampleController@store')->name('order.regular.sample.store');
+    Route::put('order/regular/sample/{sample}', 'Regular\RegularOrderSampleController@update')->name('order.regular.sample.update');
+    Route::delete('order/regular/sample/{sample}', 'Regular\RegularOrderSampleController@destroy')->name('order.regular.sample.destroy');
+});
 
 Route::group(['middleware' => ['auth','permission:shop']], function () {
     Route::get('sample', 'WorkshopOrderSampleController@index')->name('sample');

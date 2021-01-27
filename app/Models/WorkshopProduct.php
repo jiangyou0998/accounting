@@ -50,11 +50,12 @@ class WorkshopProduct extends Model
             $cat->parent_id = 0;
         }
         return $cats;
-//        return [
-//            'id'     => 'id',
-//            'text'   => 'name',
-//            'parent' => 'parent_id',
-//        ];
+
+    }
+
+    public function getCodeProductAttribute()
+    {
+        return "{$this->product_no}-{$this->product_name}";
     }
 
     //2020-12-31 使用修改器將canordertime修改成字符串
