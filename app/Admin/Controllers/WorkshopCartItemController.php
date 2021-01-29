@@ -28,7 +28,7 @@ class WorkshopCartItemController extends AdminController
             $grid->model()
                 ->with('users')
                 ->with('products')
-                ->orderByDesc('po_no');
+                ->orderByDesc('id');
 
             $grid->showQuickEditButton();
             // 禁用创建按钮

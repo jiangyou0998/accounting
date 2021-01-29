@@ -23,9 +23,9 @@ class RenameTblNoticeTable extends Migration
             $table->renameColumn('int_dept','admin_role_id');
             $table->renameColumn('txt_path','file_path');
             $table->renameColumn('int_user','user_id');
-            $table->renameColumn('date_create','created_date');
-            $table->renameColumn('date_modify','modify_date');
-            $table->renameColumn('date_delete','deleted_date');
+            $table->renameColumn('date_create','created_at');
+            $table->renameColumn('date_modify','updated_at');
+            $table->renameColumn('date_delete','deleted_at');
             $table->renameColumn('int_no','notice_no');
             $table->renameColumn('date_last','expired_date');
 //            $table->dateTime('created_at')->nullable()->default(null);

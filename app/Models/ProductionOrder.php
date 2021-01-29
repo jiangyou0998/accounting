@@ -34,7 +34,7 @@ JS;
         Admin::script($this->script());
 
 //        $cats = WorkshopCat::where('status',1)->get();
-        $checks = WorkshopCheck::where('disabled',0)->CutDay()->CutTime()->get();
+        $checks = WorkshopCheck::where('disabled',0)->CutDay()->CutTime()->orderBy('sort')->get();
 
         $cutdays = WorkshopCheck::where('disabled',0)
             ->distinct()

@@ -28,7 +28,7 @@
 @section('content')
     <div class="container">
         <div class="py-5 text-center">
-
+            <div align="left"><a target="_top" href="{{route('order')}}" style="font-size: xx-large;">返回</a></div>
             <h2>固定柯打</h2>
             <div valign="middle" align="center">
                 日期:

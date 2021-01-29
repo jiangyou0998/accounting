@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Metrics\Examples;
 use App\Http\Controllers\Controller;
+use App\Models\HomePage;
 use App\Models\MyPage;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Controllers\Dashboard;
@@ -16,6 +17,7 @@ class HomeController extends Controller
     public function index(Content $content)
     {
         return $content->description('首頁...');
+//        return $content->body(new HomePage());
     }
 
 }

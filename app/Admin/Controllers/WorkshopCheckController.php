@@ -25,6 +25,7 @@ class WorkshopCheckController extends AdminController
     protected function grid()
     {
         return Grid::make(new WorkshopCheck(), function (Grid $grid) {
+            $grid->model()->orderBy('sort');
             $grid->id->sortable();
             $grid->report_name;
             $grid->num_of_day->display(function ($cutday) {

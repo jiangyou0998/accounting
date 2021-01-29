@@ -49,6 +49,7 @@
     .cssTable1 td {
         padding: 0px;
         text-align: center;
+        font-size: 20px;
         border: 2px solid black;
     }
 

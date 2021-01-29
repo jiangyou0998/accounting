@@ -49,7 +49,10 @@ class WorkshopProductController extends AdminController
                 $menuIdArr = explode(',',$check->item_list);
                 foreach ($menuIdArr as $menu){
                     $tempArr =  explode(':', $menu);
-                    $checkArr[$tempArr[1]] = $check->report_name;
+                    $checkArr[$tempArr[1]] = [
+                        'id' => $check->id,
+                        'report_name' => $check->report_name
+                    ];
                 }
 
             }
@@ -148,7 +151,13 @@ class WorkshopProductController extends AdminController
             }
 
             $grid->column('所屬生產表')->display(function () use ($checkArr) {
-                return $checkArr[$this->id] ?? "不在生產表中";
+                if(isset($checkArr[$this->id])){
+                    return '<a href="/admin/checks/'.$checkArr[$this->id]['id'].'/edit" target="_blank">'.$checkArr[$this->id]['report_name'].'</a>';
+                }else{
+                    return "不在生產表中";
+                }
+
+
             });
 
             $titles = [
@@ -364,7 +373,7 @@ class WorkshopProductController extends AdminController
                     ->attribute('min', 0)
                     ->required();
                 $form->radio('phase')
-                    ->options([1 => '1日後', 2 => '2日後', 3 => '3日後', -1 => '後勤落單'])
+                    ->options([1 => '1日前', 2 => '2日前', 3 => '3日前', -1 => '後勤落單'])
                     ->required();
                 $form->checkbox('canordertime')
                     ->options($week)

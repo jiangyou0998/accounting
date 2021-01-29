@@ -36,7 +36,7 @@
 
     <div align="left"><a target="_top" href="{{route('order')}}" style="font-size: xx-large;">返回</a></div>
     <div class="style5" style="text-align: center;">
-        <span class="style4">按日期修改訂單</span>
+        <span class="style4">改舊單(糧友)</span>
 
         <br>
         <br>
