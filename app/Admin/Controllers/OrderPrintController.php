@@ -204,9 +204,9 @@ class OrderPrintController extends Controller
                     ->where('workshop_cart_items.status', '<>', 4)
                     ->whereIn('workshop_cart_items.product_id', $checkArr);
 
-                if($hideZero){
+                if($hideZero != 0){
                     $datas = $datas
-                        ->where('workshop_cart_items.id','>' ,0);
+                        ->where('workshop_cart_items.deli_date', $deli_date);
                 }
 
                 $datas = $datas

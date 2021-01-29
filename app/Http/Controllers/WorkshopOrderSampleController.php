@@ -158,7 +158,7 @@ class WorkshopOrderSampleController extends Controller
         $user = Auth::User();
         if($request->dept == 'F' && $user->can('operation')){
             $shopid = $request->shopid;
-        }else if(($request->dept == 'R') && $user->can('shop')){
+        }else if(($request->dept == 'R' || $request->dept == 'R2') && $user->can('shop')){
             $shopid = $user->id;
         }else{
             //                return "權限不足";
@@ -377,7 +377,7 @@ class WorkshopOrderSampleController extends Controller
 
         if($request->dept == 'F' && $user->can('workshop')){
             $shopid = $request->shopid;
-        }else if(($request->dept == 'R') && $user->can('shop')){
+        }else if(($request->dept == 'R' || ($user->id == 33 && $request->dept == 'R2')) && $user->can('shop')){
             $shopid = $user->id;
         }else{
             return false;
@@ -392,7 +392,7 @@ class WorkshopOrderSampleController extends Controller
 
         if($dept == 'F' && $user->can('workshop')){
             return true;
-        }else if(($dept == 'R') && $user->can('shop') && $shopid == $user->id){
+        }else if(($dept == 'R' || ($user->id == 33 && $dept == 'R2')) && $user->can('shop') && $shopid == $user->id){
             return true;
         }else{
             return false;
