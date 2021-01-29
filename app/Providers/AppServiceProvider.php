@@ -28,7 +28,8 @@ class AppServiceProvider extends ServiceProvider
     {
         //導航欄傳遞數據
         view()->composer('layouts._nav', function ($view) {
-            $menus = Menu::with('allChildrenMenu')->get();
+            $menus = Menu::with('allChildrenMenu')->orderBy('order')->get();
+
             $view->with('menus', $menus);
         });
     }
