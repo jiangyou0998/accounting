@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class DeliController extends Controller
 {
@@ -38,6 +39,7 @@ class DeliController extends Controller
     protected function deli_edit(Request $request)
     {
         $now = Carbon::now();
+        $user = Auth::user();
         //如果URL沒有送貨日期,使用當日日期
         if(isset($request->deli_date)){
             $deli_date = $request->deli_date;
@@ -45,7 +47,21 @@ class DeliController extends Controller
             $deli_date = $now->toDateString();
         }
 
-        $shop = $request->shop;
+        if ($user->can('shop')) {
+//            dump('shop');
+            $shop = $user->id;
+            //分店無法修改明日之前的訂單
+            if ($deli_date != $now->toDateString()) {
+//                return "權限不足";
+                throw new AccessDeniedHttpException('訂單只能當天收貨');
+            }
+
+        }else if ($user->can('operation')) {
+            $shop = $request->shop;
+        }else{
+            //2021-02-02 非shop operation無權修改
+            throw new AccessDeniedHttpException('權限不足');
+        }
 
         //送貨單詳細數據
         $items = WorkshopCartItem::getDeliItem($deli_date,$shop);
@@ -97,15 +113,15 @@ class DeliController extends Controller
             1=>'品質問題 (壞貨)',
             2=>'執漏貨',
             3=>'執錯貨',
-            4=>'分店落錯貨，即日收走',
+//            4=>'分店落錯貨，即日收走',
             5=>'打錯單',
-            6=>'抄碼',
+//            6=>'抄碼',
             7=>'運送途中損爛',
             8=>'運輸送錯分店',
             9=>'缺貨',
             10=>'廠派貨',
-            11=>'分店要求扣數',
-            12=>'分店要求加單',
+//            11=>'分店要求扣數',
+//            12=>'分店要求加單',
             13=>'不明原因'
         ];
 

@@ -15,8 +15,6 @@
         @can('workshop')
 {{--            <a href="order_check.php?head=5" class="styleA">翻查柯打</a>--}}
             <br/>
-            <a href='{{route('order.deli.list')}}' class='styleA'>改發票</a>
-            <br/>
             <a href='{{route('order.select_deli')}}' class='styleA'>送貨單查詢</a>
         @endcan
 
@@ -25,6 +23,9 @@
             <a href='{{route('sample.regular')}}' class='styleA'>固定柯打範本</a>
             <br/>
             <a href='{{route('order.regular')}}' class='styleA'>批量下單</a>
+            <br/>
+{{--        2021-02-02 修改ryoyu operation權限--}}
+            <a href='{{route('order.deli.list')}}' class='styleA'>改發票</a>
             <br/>
 {{--        2021-01-04 修改ryoyu operation權限--}}
             <a href='{{route('order.select_old_order',['dept'=>'A'])}}' class='styleA'>改舊單</a>

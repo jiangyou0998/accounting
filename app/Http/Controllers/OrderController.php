@@ -319,8 +319,8 @@ class OrderController extends Controller
         }
 
 
-        dump($countArr);
-        var_dump($insertArr);
+//        dump($countArr);
+//        var_dump($insertArr);
 
 
         return view('order.regular.index',compact('countArr','shop_names'));

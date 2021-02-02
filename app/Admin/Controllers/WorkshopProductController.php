@@ -29,7 +29,7 @@ class WorkshopProductController extends AdminController
 
 
         return Grid::make(new WorkshopProduct(), function (Grid $grid) {
-            
+
             if(Admin::user()->can('factory-menus-edit') === false){
                 // 禁用创建按钮
                 $grid->disableCreateButton();

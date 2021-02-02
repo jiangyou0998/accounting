@@ -48,14 +48,13 @@
     <div align="center" style="width:995px; padding:0px 8px;">
 
         <table class="table table-striped" width="100%" border="1" cellspacing="0" cellpadding="8" style="padding:8px;">
-            <tbody>
+            <thead class="thead-dark">
             <tr>
-
-                <td align="center" bgcolor="#CCCCCC"><strong>收貨日期</strong></td>
-                <td align="center" bgcolor="#CCCCCC"><strong>分店</strong></td>
-                <td align="center" bgcolor="#CCCCCC"><strong>總數($)</strong></td>
-
+                <th scope="col" style="text-align: center"><strong>收貨日期</strong></th>
+                <th scope="col" style="text-align: center"><strong>分店</strong></th>
+                <th scope="col" style="text-align: center"><strong>總數($)</strong></th>
             </tr>
+            <tbody class="table-striped">
 
             @foreach($lists as $list)
                 <tr>

@@ -72,7 +72,7 @@ Route::group(['middleware' => ['auth','permission:shop|workshop|operation']], fu
 
 });
 
-Route::group(['middleware' => ['auth','permission:workshop']], function () {
+Route::group(['middleware' => ['auth','permission:shop|operation']], function () {
     Route::get('order/deli/list', 'DeliController@list')->name('order.deli.list');
     Route::get('order/deli/edit', 'DeliController@deli_edit')->name('order.deli.edit');
     Route::post('order/deli/update', 'DeliController@deli_update')->name('deli.update');
@@ -92,6 +92,7 @@ Route::group(['middleware' => ['auth','permission:operation']], function () {
 });
 
 Route::group(['middleware' => ['auth']], function () {
+    //範本
     Route::get('sample/create', 'WorkshopOrderSampleController@create')->name('sample.create');
     Route::get('sample/{sample}/edit', 'WorkshopOrderSampleController@edit')->name('sample.edit');
     Route::post('sample', 'WorkshopOrderSampleController@store')->name('sample.store');
@@ -101,8 +102,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('sample/show_group/{catid}', 'WorkshopOrderSampleController@showGroup')->name('sample.show_group');
     Route::post('sample/show_product/{groupid}', 'WorkshopOrderSampleController@showProduct')->name('sample.show_product');
 
+    //報告
     Route::get('support', 'SupportController@index')->name('support');
 
+    //IT維修報告
     Route::get('itsupport', 'ItSupportController@index')->name('itsupport');
     Route::post('itsupport', 'ItSupportController@store')->name('itsupport.store');
     Route::get('itsupport/{itsupport}/edit', 'ItSupportController@edit')->name('itsupport.edit');
@@ -110,6 +113,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::patch('itsupport/{itsupportid}', 'ItSupportController@update')->name('itsupport.update');
     Route::delete('itsupport/{itsupport}', 'ItSupportController@destroy')->name('itsupport.destroy');
 
+    //維修報告
     Route::get('repair', 'RepairController@index')->name('repair');
     Route::post('repair', 'RepairController@store')->name('repair.store');
     Route::get('repair/{repair}/edit', 'RepairController@edit')->name('repair.edit');
@@ -117,10 +121,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::patch('repair/{repairid}', 'RepairController@update')->name('repair.update');
     Route::delete('repair/{repair}', 'RepairController@destroy')->name('repair.destroy');
 
+    //通告
     Route::any('notice', 'NoticeController@index')->middleware('auth')->name('notice');
+    //表格
     Route::any('dept_form', 'FormController@index')->middleware('auth')->name('form');
 
+    //通訊錄
     Route::get('addressbook', 'AddressBookController@index')->name('addressbook');
+
+    //收貨
+    Route::get('delivery', 'DeliveryController@index')->name('delivery');
 
     //通过redirect页面实现框架跳转
     Route::get('redirect/{message}', 'RedirectController@index')->name('redirect');

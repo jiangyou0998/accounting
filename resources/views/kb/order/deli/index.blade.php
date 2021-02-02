@@ -60,7 +60,7 @@
 
 </div>
 <div>
-    <img src="/images/invoice_top.jpeg" alt="Top Header" style="width:100%; border:0px solid black;" border="0">
+    <img src="/images/invoice_top_kb.jpeg" alt="Top Header" style="width:100%; border:0px solid black;" border="0">
 </div>
 <br>
 <table style="width:100%">
