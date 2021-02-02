@@ -115,6 +115,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('notice/attachment/{id}', 'NoticeController@attachment')->middleware('auth')->name('notice.attachment');
     Route::any('dept_form', 'FormController@index')->middleware('auth')->name('form');
 
+    Route::get('addressbook', 'AddressBookController@index')->name('addressbook');
+
     Route::get('library', 'Library\LibraryController@index')->middleware('auth')->name('library');
     Route::get('library/child/{id}', 'Library\LibraryController@child_index')->name('library.child.show');
 
@@ -125,9 +127,6 @@ Route::group(['middleware' => ['auth']], function () {
 
 });
 
-
-
-
 //Route::get('/import', 'ImportController@import');
 //Route::get('/importryoyuprice', 'ImportController@importRyoyuPrice');
 //Route::get('/importnewryoyuproductandprice', 'ImportController@importNewRyoyuProductAndPrice');
@@ -137,8 +136,3 @@ Route::group(['middleware' => ['auth']], function () {
 
 //datachange
 //Route::get('/api/datachange/product_to_price', 'Api\DataChangeApiController@copyProductToPrice');
-
-
-
-
-Route::get('addressbook', 'AddressBookController@index')->name('addressbook');
