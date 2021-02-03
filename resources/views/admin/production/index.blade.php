@@ -112,7 +112,7 @@
 
 <script>
 
-    function viewPrint(id, numofday) {
+    function viewPrint(id, type = 0) {
         var delidate = $('#datepicker').val();
 
         // alert(delidate);
@@ -125,7 +125,7 @@
         // dateTime = dateTime.setDate(dateTime.getDate() - numofday);
 
         var url = '';
-        url = '{{route('admin.order_print')}}' + '?cat_id=' + id + '&deli_date=' + delidate;
+        url = '{{route('admin.order_print')}}' + '?cat_id=' + id + '&deli_date=' + delidate + '&type=' + type;
         window.open(url);
     }
 
