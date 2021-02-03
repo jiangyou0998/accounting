@@ -106,10 +106,10 @@
                 <hr/>
 
                 <table border="1" cellpadding="0" cellspacing="0">
-                    @include('admin.order_print._table_head')
+                    @include('admin.order_print_rate._table_head')
     @endif
 {{--    加載數據--}}
-                    @include('admin.order_print._table_data')
+                    @include('admin.order_print_rate._table_data')
 
 {{--    第14個,生成打印分頁div--}}
     @if(($loop->index % 14) == 13 || $loop->last)

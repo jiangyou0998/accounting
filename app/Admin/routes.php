@@ -23,6 +23,7 @@ Route::group([
     $router->resource('checks', 'WorkshopCheckController');
     $router->get('production_order', 'ProductionOrderController@index');
     $router->get('production_order/print', 'OrderPrintController@print')->name('admin.order_print');
+    $router->get('production_order/print_rate', 'OrderPrintController@printByRate')->name('admin.order_print_rate');
     $router->patch('checks/update/{id}','WorkshopCheckController@updateChecks')->name('checkupdate');
     $router->resource('shopgroups', 'ShopGroupController');
     $router->resource('cart', 'WorkshopCartItemController');

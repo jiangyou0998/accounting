@@ -83,6 +83,9 @@
                     <th style="width:50px;">#</th>
                     <th style="width:300px;">報告名稱</th>
                     <th>打印預覽</th>
+                    <th>按比例</th>
+                    <th>一車</th>
+                    <th>二車</th>
 
                 </tr>
 
@@ -123,6 +126,23 @@
 
         var url = '';
         url = '{{route('admin.order_print')}}' + '?cat_id=' + id + '&deli_date=' + delidate;
+        window.open(url);
+    }
+
+    function viewPrintRate(id) {
+        var delidate = $('#datepicker').val();
+
+        // alert(delidate);
+        if (delidate == '') {
+            alert('請選擇收貨日期!');
+            return false;
+        }
+
+        var dateTime = new Date(delidate);
+        // dateTime = dateTime.setDate(dateTime.getDate() - numofday);
+
+        var url = '';
+        url = '{{route('admin.order_print_rate')}}' + '?cat_id=' + id + '&deli_date=' + delidate;
         window.open(url);
     }
 

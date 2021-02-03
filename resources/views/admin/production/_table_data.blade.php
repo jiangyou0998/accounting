@@ -12,8 +12,33 @@
 {{--             style="cursor:pointer;"></td>--}}
 {{--    <!--               查看-->--}}
     <td><img src="../images/print.png"
-             onclick="viewPrint({{$cat->id}},2)"
-             style="cursor:pointer;"></td>
+             onclick="viewPrint({{$cat->id}})"
+             style="cursor:pointer;">
+    </td>
+{{--    按比例--}}
+    <td>
+        @if($cat->cat_name == '方包')
+            <img src="../images/print.png"
+                 onclick="viewPrintRate({{$cat->id}})"
+                 style="cursor:pointer;">
+        @endif
+    </td>
+{{--    一車--}}
+    <td>
+        @if(in_array($cat->cat_name,['熟細包','熟大包']))
+            <img src="../images/print.png"
+                 onclick="viewPrint({{$cat->id}},1)"
+                 style="cursor:pointer;">
+        @endif
+    </td>
+{{--    二車--}}
+    <td>
+        @if(in_array($cat->cat_name,['熟細包','熟大包']))
+            <img src="../images/print.png"
+                 onclick="viewPrint({{$cat->id}},2)"
+                 style="cursor:pointer;">
+        @endif
+    </td>
 
 </tr>
 

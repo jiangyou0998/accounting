@@ -41,6 +41,24 @@ class WorkshopCartItem extends Model
         }
     }
 
+    //2021-02-03 type=1,一車 type=2,二車 type=0,全部
+    public function scopeOfType($query, $type = 0)
+    {
+        switch ($type){
+            case 0:
+                $query = $query;
+                break;
+            case 1:
+                $query = $query->where('workshop_cart_items.dept','!=', 'B');
+                break;
+            case 2:
+                $query = $query->where('workshop_cart_items.dept','=', 'B');
+                break;
+        }
+
+        return $query;
+    }
+
     public static function getCartItems($shop , $dept , $deli_date){
 
 
