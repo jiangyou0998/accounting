@@ -95,7 +95,11 @@
                 <br/>
                 <div class="box">
 
-                    <span class="style1">{{$checkInfos->title}}</span>
+                    <span class="style1">
+                        {{$checkInfos->title}}
+                        @if(request()->type == 1)(一車) @endif
+                        @if(request()->type == 2)(二車) @endif
+                    </span>
                     <span class="style1"
                     >出貨日期：
                             {{$checkInfos->deli_date}} ({{\Carbon\Carbon::parse($checkInfos->deli_date)->isoFormat('dd')}})
