@@ -46,7 +46,7 @@ class User extends Authenticatable
 
     public function address()
     {
-        return $this->hasOne(ShopAddress::class,'id','address_id');
+        return $this->belongsTo(ShopAddress::class,'address_id','id');
     }
 
     public function roles(): BelongsToMany
