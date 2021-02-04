@@ -123,6 +123,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     //通告
     Route::any('notice', 'NoticeController@index')->middleware('auth')->name('notice');
+    Route::get('notice/attachment/{id}', 'NoticeController@attachment')->middleware('auth')->name('notice.attachment');
     //表格
     Route::any('dept_form', 'FormController@index')->middleware('auth')->name('form');
 

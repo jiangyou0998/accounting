@@ -13,7 +13,7 @@ return [
         'deleted_date' => '刪除時間',
         'notice_no' => '通告編號',
         'expired_date' => '有效時間',
-        'first_path' => 'first_path',
+        'first_path' => '鏈接',
     ],
     'options' => [
     ],

@@ -30,7 +30,7 @@ class HomeController extends Controller
 
         foreach ($notices as &$notice){
             $notice->isNew = false;
-            $modify_date = Carbon::parse($notice->modify_date);
+            $modify_date = Carbon::parse($notice->updated_at);
             $now = Carbon::now();
 
             //七日內是新
