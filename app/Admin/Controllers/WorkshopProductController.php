@@ -44,20 +44,6 @@ class WorkshopProductController extends AdminController
                 ->placeholder('輸入「編號」或「名稱」快速搜索');
 
 
-            //生產表數組
-            $checks = new WorkshopCheck();
-
-            $checkArr = array();
-
-            foreach ($checks::all() as $check) {
-                $menuIdArr = explode(',',$check->item_list);
-                foreach ($menuIdArr as $menu){
-                    $tempArr =  explode(':', $menu);
-                    $checkArr[$tempArr[1]] = $check->report_name;
-                }
-
-            }
-
             //單位數組
             $units = new WorkshopUnit();
 
@@ -152,15 +138,6 @@ class WorkshopProductController extends AdminController
 
             //2020-12-30 狀態使用radio
             $grid->column('status')->radio([1 => '現貨', 2 => '暫停', 3 => '新貨', 5 => '季節貨']);
-
-            $grid->column('所屬生產表')->display(function () use ($checkArr) {
-                if (isset($checkArr[$this->id])){
-                    return $checkArr[$this->id];
-                }else{
-                    return "不在生產表中";
-                }
-
-            });
 
             $titles = [
                 'product_no' => '編碼',

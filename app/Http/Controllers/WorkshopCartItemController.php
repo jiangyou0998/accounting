@@ -105,7 +105,7 @@ class WorkshopCartItemController extends Controller
             //更新
             $updateLogsArr = array();
             foreach ($updateDatas as $updateData) {
-                $cartItemModel::where('id', $updateData['mysqlid'])->update(['qty' => $updateData['qty']]);
+                $cartItemModel::where('id', $updateData['mysqlid'])->update(['qty' => $updateData['qty'] , 'order_date' => $now]);
 //                $productModel = new WorkshopProduct();
                 $updateLogsArr[] = [
                     'operate_user_id' => $user->id,

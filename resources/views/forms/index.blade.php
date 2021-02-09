@@ -35,7 +35,7 @@
                     <li class="list-group-item d-flex justify-content-between lh-condensed">
                         <div>
                             <h6 class="my-0">
-                                <a href="{{route('form',['dept' => $key])}}">{{$dept_name}}</a>
+                                <a href="{{route('form',['dept' => $key , 'search' => $search])}}">{{$dept_name}}</a>
                             </h6>
                         </div>
 
@@ -47,7 +47,8 @@
             <form class="card p-2" method="POST" action="{{route('form')}}">
                 <div class="input-group">
                     @csrf
-                    <input id="search" name="search" type="text" class="form-control" placeholder="根據編號或主旨查詢">
+                    <input id="search" name="search" type="text" class="form-control" placeholder="根據編號或主旨查詢" value="{{ $search }}">
+                    <input id="dept" name="dept" type="hidden" value="{{ request()->dept }}">
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-primary">查詢</button>
                     </div>
@@ -86,7 +87,7 @@
                 @endforeach
                 </tbody>
             </table>
-            {{$forms->links()}}
+            {{$forms->appends(['dept' => request()->dept ,'search' => $search])->links()}}
         </div>
     </div>
 

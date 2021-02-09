@@ -19,7 +19,7 @@ class NoticeController extends Controller
 
 //        dump($notices->toArray());
 //        dump($dept_names->toArray());
-        return view('notices.index',compact('notices','dept_names'));
+        return view('notices.index',compact('notices','dept_names' ,'search'));
     }
 
     public function attachment($id)
