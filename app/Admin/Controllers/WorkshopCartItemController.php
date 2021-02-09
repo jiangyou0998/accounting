@@ -4,8 +4,6 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Renderable\CartitemLog;
 use App\Admin\Renderable\ProductTable;
-use App\Models\TblOrderZDept;
-use App\Models\TblOrderZMenu;
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopProduct;
 use App\User;
@@ -28,7 +26,7 @@ class WorkshopCartItemController extends AdminController
             $grid->model()
                 ->with('users')
                 ->with('products')
-                ->orderByDesc('po_no');
+                ->orderByDesc('id');
 
             $grid->showQuickEditButton();
             // 禁用创建按钮
@@ -62,15 +60,13 @@ class WorkshopCartItemController extends AdminController
                     ],
                     'success' // 默认颜色
                 );
-            $grid->column('chr_phase')->hide();
-            $grid->column('po_no');
+//            $grid->column('chr_phase')->hide();
+            $grid->column('deli_date')->sortable();
             $grid->column('dept')->using(
-                ['A' => '第一車',
-                    'B' => '第二車',
-                    'C' => '麵頭',]);
-            $grid->column('insert_date');
+                config('dept.symbol_and_name'));
+            $grid->column('insert_date')->sortable();
             $grid->column('order_date')->hide();
-            $grid->column('received_date');
+            $grid->column('received_date')->sortable();
             $grid->column('reason');
 
             $grid->selector(function (Grid\Tools\Selector $selector) {
@@ -95,11 +91,7 @@ class WorkshopCartItemController extends AdminController
 
                 });
 
-                $selector->select('dept', '部門', [
-                    'A' => '第一車',
-                    'B' => '第二車',
-                    'C' => '麵頭',
-                ]);
+                $selector->select('dept', '部門', config('dept.symbol_and_name'));
 
                 $selector->select('change', '修改過', [
                     1 => '有改過',
@@ -131,19 +123,20 @@ class WorkshopCartItemController extends AdminController
 
                 });
 
+
                 $selector->select('reason', '原因', [
                     '品質問題 (壞貨)' => '品質問題 (壞貨)',
                     '執漏貨' => '執漏貨',
                     '執錯貨' => '執錯貨',
-                    '分店落錯貨，即日收走' => '分店落錯貨，即日收走',
+//                    '分店落錯貨，即日收走' => '分店落錯貨，即日收走',
                     '打錯單' => '打錯單',
-                    '抄碼' => '抄碼',
+//                    '抄碼' => '抄碼',
                     '運送途中損爛' => '運送途中損爛',
                     '運輸送錯分店' => '運輸送錯分店',
                     '缺貨' => '缺貨',
                     '廠派貨' => '廠派貨',
-                    '分店要求扣數' => '分店要求扣數',
-                    '分店要求加單' => '分店要求加單',
+//                    '分店要求扣數' => '分店要求扣數',
+//                    '分店要求加單' => '分店要求加單',
                     '不明原因' => '不明原因'
                 ]);
 
@@ -195,25 +188,13 @@ class WorkshopCartItemController extends AdminController
             $grid->filter(function (Grid\Filter $filter) {
                 // 更改为 panel 布局
                 $filter->panel();
-                $filter->between('insert_date', '插入時間')->date();
-//                $filter->where('deli_date', function ($query) {
-//
-//                    $query->whereRaw("DATE(DATE_ADD(insert_date, INTERVAL 1+chr_phase DAY)) = '$this->input'");
-//
-//                }, '送貨時間')->date();
-                $filter->whereBetween('deli_date', function ($q) {
-                    $start = $this->input['start'] ?? null;
-                    $end = $this->input['end'] ?? null;
+                $filter->between('insert_date', '插入時間')->datetime();
 
-                    if ($start !== null) {
-                        $q->where("deli_date", '>=', $start);
-                    }
+                $filter->between('order_date', '更新時間')->datetime();
 
-                    if ($end !== null) {
-                        $q->where("deli_date", '<=', $end);
-                    }
-                }, '送貨時間')->date();
-                $filter->between('received_date', '確認時間')->date();
+                $filter->between('deli_date', '送貨時間')->date();
+
+                $filter->between('received_date', '確認時間')->datetime();
                 $filter->in('product_id', '產品')
                     ->multipleSelectTable(ProductTable::make()) // 设置渲染类实例，并传递自定义参数
                     ->title('弹窗标题')
@@ -244,12 +225,7 @@ class WorkshopCartItemController extends AdminController
             $description = '1:下單&nbsp;&nbsp;&nbsp;99:確認過&nbsp;&nbsp;&nbsp;4:刪除';
             $form->html(Alert::make($description, '说明')->info());
             $form->text('status')->type('number');
-            $form->select('dept')->options([
-                'R' => '烘焙',
-                'B' => '水吧',
-                'K' => '廚房',
-                'F' => '樓面',
-            ]);
+            $form->select('dept')->options(config('dept.symbol_and_name'));
             $form->text('qty_received');
             $form->text('reason');
 
