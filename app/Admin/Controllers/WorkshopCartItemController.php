@@ -4,8 +4,6 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Renderable\CartitemLog;
 use App\Admin\Renderable\ProductTable;
-use App\Models\TblOrderZDept;
-use App\Models\TblOrderZMenu;
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopProduct;
 use App\User;
@@ -62,13 +60,13 @@ class WorkshopCartItemController extends AdminController
                     ],
                     'success' // 默认颜色
                 );
-            $grid->column('chr_phase')->hide();
-            $grid->column('po_no');
+//            $grid->column('chr_phase')->hide();
+            $grid->column('deli_date')->sortable();
             $grid->column('dept')->using(
                 config('dept.symbol_and_name_all'));
-            $grid->column('insert_date');
+            $grid->column('insert_date')->sortable();
             $grid->column('order_date')->hide();
-            $grid->column('received_date');
+            $grid->column('received_date')->sortable();
             $grid->column('reason');
 
             $grid->selector(function (Grid\Tools\Selector $selector) {
@@ -190,25 +188,13 @@ class WorkshopCartItemController extends AdminController
             $grid->filter(function (Grid\Filter $filter) {
                 // 更改为 panel 布局
                 $filter->panel();
-                $filter->between('insert_date', '插入時間')->date();
-//                $filter->where('deli_date', function ($query) {
-//
-//                    $query->whereRaw("DATE(DATE_ADD(insert_date, INTERVAL 1+chr_phase DAY)) = '$this->input'");
-//
-//                }, '送貨時間')->date();
-                $filter->whereBetween('deli_date', function ($q) {
-                    $start = $this->input['start'] ?? null;
-                    $end = $this->input['end'] ?? null;
+                $filter->between('insert_date', '插入時間')->datetime();
 
-                    if ($start !== null) {
-                        $q->where("deli_date", '>=', $start);
-                    }
+                $filter->between('order_date', '更新時間')->datetime();
 
-                    if ($end !== null) {
-                        $q->where("deli_date", '<=', $end);
-                    }
-                }, '送貨時間')->date();
-                $filter->between('received_date', '確認時間')->date();
+                $filter->between('deli_date', '送貨時間')->date();
+
+                $filter->between('received_date', '確認時間')->datetime();
                 $filter->in('product_id', '產品')
                     ->multipleSelectTable(ProductTable::make()) // 设置渲染类实例，并传递自定义参数
                     ->title('弹窗标题')

@@ -4,7 +4,7 @@ return [
         'WorkshopCartItem' => '下單內容查詢',
     ],
     'fields' => [
-        'order_date' => '下單時間',
+        'order_date' => '更新時間',
         'user_id' => '分店',
         'product_id' => '產品',
         'qty' => '數量',
@@ -17,6 +17,7 @@ return [
         'qty_received' => '確認數量',
         'received_date' => '確認日期',
         'reason' => '原因',
+        'deli_date' => '收貨日期'
     ],
     'options' => [
     ],

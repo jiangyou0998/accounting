@@ -2,7 +2,9 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Renderable\ProductTable;
 use App\Models\WorkshopCartItemLog;
+use App\Models\WorkshopProduct;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
@@ -22,21 +24,41 @@ class WorkshopCartItemLogController extends AdminController
                 ->with('operate_users')
                 ->with('shops')
                 ->with('products')
+                ->with('cart_items')
                 ->orderByDesc('updated_at');
 
 //            $grid->column('id')->sortable();
             $grid->column('operate_users.txt_name','操作人');
             $grid->column('shops.txt_name','分店');
             $grid->column('products.product_name','產品名稱');
+            $grid->column('cart_items.deli_date','送貨時間');
             $grid->column('method')->filter();
             $grid->column('ip')->filter();
             $grid->column('input');
-            $grid->column('created_at')->filter();;
+            $grid->column('created_at')->filter();
             $grid->column('updated_at')->sortable();
 
             $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
+                // 更改为 panel 布局
+                $filter->panel();
+                $filter->between('created_at')->datetime();
 
+                $filter->between('updated_at')->datetime();
+
+                $filter->between('cart_items.deli_date', '送貨時間')->date();
+
+                $filter->in('products.product_id', '產品')
+                    ->multipleSelectTable(ProductTable::make()) // 设置渲染类实例，并传递自定义参数
+                    ->title('弹窗标题')
+                    ->dialogWidth('50%') // 弹窗宽度，默认 800px
+                    ->model(WorkshopProduct::class, 'id', 'product_name'); // 设置编辑数据显示
+
+                $filter->equal('method','方法')->select([
+                   'INSERT' => '新增',
+                   'UPDATE' => '更新',
+                   'DELETE' => '刪除',
+                   'MODIFY' => '改單'
+                ]);
             });
         });
     }
