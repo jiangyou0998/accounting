@@ -27,7 +27,7 @@ class WorkshopCartItem extends Model
 
     public function cart_item_logs()
     {
-        return $this->hasMany(WorkshopCartItemLog::class,"id","cart_item_id");
+        return $this->hasMany(WorkshopCartItemLog::class,"cart_item_id","id");
     }
 
     public function scopeOfShop($query, $shop)
