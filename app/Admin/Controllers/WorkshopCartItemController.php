@@ -110,6 +110,22 @@ class WorkshopCartItemController extends AdminController
 
                 });
 
+                $selector->select('logcount', 'Log數量', [
+                    1 => '大於1',
+                    0 => '小於等於1',
+                ], function ($query, $value) {
+
+                    $value = current($value);
+
+                    if ($value == 1) {
+                        $query->has('cart_item_logs','>',1);
+                    } else {
+                        $query->has('cart_item_logs','<=',1);
+                    }
+
+                });
+
+
                 $selector->select('reason', '原因', [
                     '品質問題 (壞貨)' => '品質問題 (壞貨)',
                     '執漏貨' => '執漏貨',
