@@ -36,6 +36,31 @@ class LibraryGroup extends Model
         return $this->hasMany(Library::class, 'group_id' , 'id');
     }
 
+    public static function generateTree($data = [])
+    {
+        if(empty($data)){
+            $data = self::query()->orderBy('order')->get()->toArray();
+        }
+
+//        $parentIds = LibraryGroup::has('libraries')->get()->pluck('id')->toArray();
+        $items = [];
+        foreach ($data as $value) {
+            $items[$value['id']] = $value;
+        }
+
+        $tree = [];
+        foreach ($items as $k => $v) {
+            if(isset($items[$v['parent_id']])){
+                $items[$v['parent_id']]['children'][] = &$items[$k];
+            } else {
+                $tree[] = &$items[$k];
+            }
+        }
+
+//        dump($items);
+        return $tree;
+    }
+
     /**
      * Get options for Select field in form.
      * 不包括主分類的分組(parent_id = 0)
