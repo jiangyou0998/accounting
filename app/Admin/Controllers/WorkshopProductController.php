@@ -112,6 +112,7 @@ class WorkshopProductController extends AdminController
 
 //            $grid->column('number',"#");
             $grid->number();
+            $grid->id()->sortable();
             $grid->product_no->sortable();
             $grid->product_name;
             $grid->column('units.unit_name',"單位");
