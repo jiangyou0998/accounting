@@ -60,7 +60,7 @@
             @foreach($lists as $list)
                 <tr>
                     <td align="center">
-                        <a href="{{route('order.deli.edit',['shop'=>$list->user_id,'deli_date'=>$list->deli_date])}}"
+                        <a href="{{route('order.deli.edit',['shop'=>$list->user_id, 'deli_date'=>$list->deli_date, 'group'=>request()->group])}}"
                            target='view_window'>
                             {{$list->deli_date}}
                         </a>
@@ -83,7 +83,7 @@
 @section('script')
     <script type="text/javascript">
         function btnSubmit(){
-            window.location.href = "{{route('order.deli.list')}}?deli_date="+$('#datepicker').val();
+            window.location.href = "{{route('order.deli.list')}}?deli_date=" + $('#datepicker').val() + "&group=" + "{{request()->group}}";
         }
     </script>
 @endsection

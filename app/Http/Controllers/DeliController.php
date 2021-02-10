@@ -24,8 +24,14 @@ class DeliController extends Controller
             $deli_date = $now->toDateString();
         }
 
+        if(isset($request->group)){
+            $group = $request->group;
+        }else{
+            $group = 'KB';
+        }
+
 //        $deli_date = '2020-10-09';
-        $lists = WorkshopCartItem::getDeliLists($deli_date);
+        $lists = WorkshopCartItem::getDeliLists($deli_date, $group);
 
 //        dump($lists->toArray());
 
@@ -46,13 +52,30 @@ class DeliController extends Controller
         }
 
         $shop = $request->shop;
+        $group = $request->group;
+
+        $deptArr = config('dept.symbol');
+        $deptArrWithName = config('dept.symbol_and_name');
+
+        switch ($group){
+            case 'KB' :
+                $deptArr = config('dept.symbol');
+                $deptArrWithName = config('dept.symbol_and_name');
+                break;
+
+            case 'RB' :
+                $deptArr = ['RB'];
+                $deptArrWithName = ['RB' => '糧友'];
+                break;
+
+        }
 
         //送貨單詳細數據
         $items = WorkshopCartItem::getDeliItem($deli_date,$shop);
 
         $dept_price = array();
 
-        foreach(config('dept.symbol') as $dept){
+        foreach($deptArr as $dept){
 
             $dept_price[$dept] = 0;
         }
@@ -115,7 +138,7 @@ class DeliController extends Controller
         $infos->deli_date = $deli_date;
         $infos->shop = User::find($shop)->txt_name;
 
-        return view('order.deli.edit.edit',compact('po' ,'infos', 'reasonArr' , 'dept_price' , 'total_price'));
+        return view('order.deli.edit.edit',compact('po' ,'infos', 'reasonArr' , 'dept_price' , 'total_price' , 'deptArr','deptArrWithName'));
     }
 
     public function deli_update(Request $request)

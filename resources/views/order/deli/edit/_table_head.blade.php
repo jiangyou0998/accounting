@@ -9,7 +9,7 @@
             <tbody>
             <tr>
                 <td width="24%" align="center"><strong>實收</strong></td>
-                @foreach(config('dept.symbol_and_name') as $dept => $name)
+                @foreach($deptArrWithName as $dept => $name)
                     <td width="15%" align="center">{{$name}}</td>
                 @endforeach
 

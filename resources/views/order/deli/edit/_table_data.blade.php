@@ -21,7 +21,7 @@
                     {{$row['unit']}}
                 </td>
 
-                @foreach(config('dept.symbol') as $dept)
+                @foreach($deptArr as $dept)
 
                     @if(isset($row['qty'][$dept]))
                         <td width="15%" align="center">

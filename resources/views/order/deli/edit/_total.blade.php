@@ -9,7 +9,7 @@
 
                     <div style="color:red">
                         &nbsp;&nbsp;
-                        @foreach(config('dept.symbol_and_name') as $dept => $name)
+                        @foreach($deptArrWithName as $dept => $name)
                         {{$name}}:$<span class="dept-total" data-dept="{{$dept}}"
                                       data-sum="{{$dept_price[$dept]}}">{{number_format($dept_price[$dept], 1, '.', ',')}}</span>
                         @endforeach
