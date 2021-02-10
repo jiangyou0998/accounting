@@ -14,7 +14,7 @@ class RBShopTable extends LazyRenderable
         $id = $this->id;
 
         return Grid::make(new User(), function (Grid $grid) {
-            $grid->model()->where('type','=',2)
+            $grid->model()
                 ->where(function($query) {
                     $query->where('name','like','rb%');
                 })
