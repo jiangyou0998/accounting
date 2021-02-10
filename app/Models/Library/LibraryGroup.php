@@ -3,8 +3,10 @@
 namespace App\Models\Library;
 
 
+use App\User;
 use Dcat\Admin\Traits\ModelTree;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class LibraryGroup extends Model
 {
@@ -33,7 +35,19 @@ class LibraryGroup extends Model
 
     public function libraries()
     {
-        return $this->hasMany(Library::class, 'group_id' , 'id');
+        $id = Auth::id();
+        $groupIds = User::with('front_groups')->find($id)->front_groups->pluck('id');
+//        dump($groupIds);
+        return $this->hasMany(Library::class, 'group_id' , 'id')
+            ->where(function ($q) use($id,$groupIds){  //閉包返回的條件會包含在括號中
+                return $q->whereHas('users', function ($query) use ($id) {
+                    $query->where('id', Auth::id());
+                })
+                    ->orWhereHas('frontgroups', function ($query) use ($groupIds) {
+                        $query->whereIn('id', $groupIds);
+                    });
+            });
+
     }
 
     public static function generateTree($data = [])

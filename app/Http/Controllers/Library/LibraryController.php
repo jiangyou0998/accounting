@@ -4,22 +4,27 @@ namespace App\Http\Controllers\Library;
 
 
 use App\Http\Controllers\Controller;
-use App\Models\Library\Library;
 use App\Models\Library\LibraryGroup;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 
 class LibraryController extends Controller
 {
     //
     public function index()
     {
+//        $id = Auth::id();
+//        $groupIds = User::with('front_groups')->find($id);
+//        $groupIds = User::with('front_groups')->where('id',$id)->first();
+//        dump($groupIds->front_groups()->pluck('id'));
+//        $temp = LibraryGroup::with('libraries')->has('libraries')->get()->toArray();
+//        dump($temp);
+
         $arr = LibraryGroup::all()->pluck('parent_id','id')->toArray();
 //        dd($arr);
 
         $childIds = LibraryGroup::has('libraries')->get()->pluck('id')->toArray();
 //        dd($childIds);
 
+        //獲取所有id(包括父級id)
         $ids = [];
         foreach ($childIds as $id){
             array_push($ids,$id);

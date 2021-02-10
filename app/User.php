@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\FrontGroup;
 use App\Models\Library\Library;
 use App\Models\Role;
 use App\Models\ShopAddress;
@@ -68,6 +69,15 @@ class User extends Authenticatable
         $relatedModel = ShopGroup::class; // 关联模型类名
 
         return $this->belongsToMany($relatedModel, $pivotTable, 'user_id', 'shop_group_id');
+    }
+
+    public function front_groups(): BelongsToMany
+    {
+        $pivotTable = 'front_group_has_users'; // 中间表
+
+        $relatedModel = FrontGroup::class; // 关联模型类名
+
+        return $this->belongsToMany($relatedModel, $pivotTable, 'user_id', 'front_group_id');
     }
 
     public function librarys(): MorphToMany
