@@ -72,14 +72,14 @@ class UserController extends AdminController
                 'unique'   => '用戶名已存在',
             ]);
 //            $form->text('password');
-            $form->text('txt_name');
-            $form->text('report_name');
+            $form->text('txt_name')->required();
+            $form->text('report_name')->required();
 //            $form->text('int_dept');
-            $form->password('password','新密碼');
+            $form->password('password','新密碼')->required();
             // 设置错误信息
-            $form->password('password_confirm','確認密碼')->same('password', '两次密码输入不一致');
+            $form->password('password_confirm','確認密碼')->same('password', '两次密码输入不一致')->required();
 
-            $form->email('email');
+            $form->email('email')->required();
 
             if ($form->isCreating()) {
                 $form->radio('radio','是否分店賬號')
@@ -120,6 +120,7 @@ class UserController extends AdminController
             $form->selectResource('roles')
                 ->path('front/roles') // 设置表格页面链接
 //                ->multiple() // 设置为多选
+//                ->required()
                 ->options(function () { // 显示已选中的数据
 
                     $v = Role::all()->pluck('name','id')->toArray();
