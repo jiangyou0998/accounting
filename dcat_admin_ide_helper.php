@@ -25,14 +25,14 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection status
      * @property Grid\Column|Collection start_date
      * @property Grid\Column|Collection end_date
+     * @property Grid\Column|Collection id
      * @property Grid\Column|Collection product_no
      * @property Grid\Column|Collection product_name
      * @property Grid\Column|Collection price
-     * @property Grid\Column|Collection id
      * @property Grid\Column|Collection group_name
+     * @property Grid\Column|Collection last_modify
      * @property Grid\Column|Collection cat_id
      * @property Grid\Column|Collection short_name
-     * @property Grid\Column|Collection last_modify
      * @property Grid\Column|Collection report_name
      * @property Grid\Column|Collection num_of_day
      * @property Grid\Column|Collection int_hide
@@ -86,6 +86,10 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection sample_path
      * @property Grid\Column|Collection first_path
      * @property Grid\Column|Collection is_multi_print
+     * @property Grid\Column|Collection group_id
+     * @property Grid\Column|Collection model_type
+     * @property Grid\Column|Collection model_id
+     * @property Grid\Column|Collection front_group_id
      * @property Grid\Column|Collection group
      * @property Grid\Column|Collection code
      * @property Grid\Column|Collection item_id
@@ -105,11 +109,13 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection file_name
      * @property Grid\Column|Collection link_path
      * @property Grid\Column|Collection link_name
-     * @property Grid\Column|Collection model_type
-     * @property Grid\Column|Collection model_id
+     * @property Grid\Column|Collection view_type
+     * @property Grid\Column|Collection deleted_at
+     * @property Grid\Column|Collection notice_id
      * @property Grid\Column|Collection notice_name
      * @property Grid\Column|Collection notice_no
      * @property Grid\Column|Collection expired_date
+     * @property Grid\Column|Collection is_directory
      * @property Grid\Column|Collection token
      * @property Grid\Column|Collection product_id
      * @property Grid\Column|Collection shop_group_id
@@ -191,9 +197,14 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection cut_time
      * @property Grid\Column|Collection sampledate
      * @property Grid\Column|Collection sample_id
-     * @property Grid\Column|Collection group_id
      * @property Grid\Column|Collection unit_id
+     * @property Grid\Column|Collection default_price
+     * @property Grid\Column|Collection chr_sap_2
+     * @property Grid\Column|Collection int_unit_2
      * @property Grid\Column|Collection image
+     * @property Grid\Column|Collection txt_detail_1
+     * @property Grid\Column|Collection txt_detail_2
+     * @property Grid\Column|Collection txt_detail_3
      * @property Grid\Column|Collection unit_name
      *
      * @method Grid\Column|Collection name(string $label = null)
@@ -210,14 +221,14 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection status(string $label = null)
      * @method Grid\Column|Collection start_date(string $label = null)
      * @method Grid\Column|Collection end_date(string $label = null)
+     * @method Grid\Column|Collection id(string $label = null)
      * @method Grid\Column|Collection product_no(string $label = null)
      * @method Grid\Column|Collection product_name(string $label = null)
      * @method Grid\Column|Collection price(string $label = null)
-     * @method Grid\Column|Collection id(string $label = null)
      * @method Grid\Column|Collection group_name(string $label = null)
+     * @method Grid\Column|Collection last_modify(string $label = null)
      * @method Grid\Column|Collection cat_id(string $label = null)
      * @method Grid\Column|Collection short_name(string $label = null)
-     * @method Grid\Column|Collection last_modify(string $label = null)
      * @method Grid\Column|Collection report_name(string $label = null)
      * @method Grid\Column|Collection num_of_day(string $label = null)
      * @method Grid\Column|Collection int_hide(string $label = null)
@@ -271,6 +282,10 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection sample_path(string $label = null)
      * @method Grid\Column|Collection first_path(string $label = null)
      * @method Grid\Column|Collection is_multi_print(string $label = null)
+     * @method Grid\Column|Collection group_id(string $label = null)
+     * @method Grid\Column|Collection model_type(string $label = null)
+     * @method Grid\Column|Collection model_id(string $label = null)
+     * @method Grid\Column|Collection front_group_id(string $label = null)
      * @method Grid\Column|Collection group(string $label = null)
      * @method Grid\Column|Collection code(string $label = null)
      * @method Grid\Column|Collection item_id(string $label = null)
@@ -290,11 +305,13 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection file_name(string $label = null)
      * @method Grid\Column|Collection link_path(string $label = null)
      * @method Grid\Column|Collection link_name(string $label = null)
-     * @method Grid\Column|Collection model_type(string $label = null)
-     * @method Grid\Column|Collection model_id(string $label = null)
+     * @method Grid\Column|Collection view_type(string $label = null)
+     * @method Grid\Column|Collection deleted_at(string $label = null)
+     * @method Grid\Column|Collection notice_id(string $label = null)
      * @method Grid\Column|Collection notice_name(string $label = null)
      * @method Grid\Column|Collection notice_no(string $label = null)
      * @method Grid\Column|Collection expired_date(string $label = null)
+     * @method Grid\Column|Collection is_directory(string $label = null)
      * @method Grid\Column|Collection token(string $label = null)
      * @method Grid\Column|Collection product_id(string $label = null)
      * @method Grid\Column|Collection shop_group_id(string $label = null)
@@ -376,9 +393,14 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection cut_time(string $label = null)
      * @method Grid\Column|Collection sampledate(string $label = null)
      * @method Grid\Column|Collection sample_id(string $label = null)
-     * @method Grid\Column|Collection group_id(string $label = null)
      * @method Grid\Column|Collection unit_id(string $label = null)
+     * @method Grid\Column|Collection default_price(string $label = null)
+     * @method Grid\Column|Collection chr_sap_2(string $label = null)
+     * @method Grid\Column|Collection int_unit_2(string $label = null)
      * @method Grid\Column|Collection image(string $label = null)
+     * @method Grid\Column|Collection txt_detail_1(string $label = null)
+     * @method Grid\Column|Collection txt_detail_2(string $label = null)
+     * @method Grid\Column|Collection txt_detail_3(string $label = null)
      * @method Grid\Column|Collection unit_name(string $label = null)
      */
     class Grid {}
@@ -400,14 +422,14 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection status
      * @property Show\Field|Collection start_date
      * @property Show\Field|Collection end_date
+     * @property Show\Field|Collection id
      * @property Show\Field|Collection product_no
      * @property Show\Field|Collection product_name
      * @property Show\Field|Collection price
-     * @property Show\Field|Collection id
      * @property Show\Field|Collection group_name
+     * @property Show\Field|Collection last_modify
      * @property Show\Field|Collection cat_id
      * @property Show\Field|Collection short_name
-     * @property Show\Field|Collection last_modify
      * @property Show\Field|Collection report_name
      * @property Show\Field|Collection num_of_day
      * @property Show\Field|Collection int_hide
@@ -461,6 +483,10 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection sample_path
      * @property Show\Field|Collection first_path
      * @property Show\Field|Collection is_multi_print
+     * @property Show\Field|Collection group_id
+     * @property Show\Field|Collection model_type
+     * @property Show\Field|Collection model_id
+     * @property Show\Field|Collection front_group_id
      * @property Show\Field|Collection group
      * @property Show\Field|Collection code
      * @property Show\Field|Collection item_id
@@ -480,11 +506,13 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection file_name
      * @property Show\Field|Collection link_path
      * @property Show\Field|Collection link_name
-     * @property Show\Field|Collection model_type
-     * @property Show\Field|Collection model_id
+     * @property Show\Field|Collection view_type
+     * @property Show\Field|Collection deleted_at
+     * @property Show\Field|Collection notice_id
      * @property Show\Field|Collection notice_name
      * @property Show\Field|Collection notice_no
      * @property Show\Field|Collection expired_date
+     * @property Show\Field|Collection is_directory
      * @property Show\Field|Collection token
      * @property Show\Field|Collection product_id
      * @property Show\Field|Collection shop_group_id
@@ -566,9 +594,14 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection cut_time
      * @property Show\Field|Collection sampledate
      * @property Show\Field|Collection sample_id
-     * @property Show\Field|Collection group_id
      * @property Show\Field|Collection unit_id
+     * @property Show\Field|Collection default_price
+     * @property Show\Field|Collection chr_sap_2
+     * @property Show\Field|Collection int_unit_2
      * @property Show\Field|Collection image
+     * @property Show\Field|Collection txt_detail_1
+     * @property Show\Field|Collection txt_detail_2
+     * @property Show\Field|Collection txt_detail_3
      * @property Show\Field|Collection unit_name
      *
      * @method Show\Field|Collection name(string $label = null)
@@ -585,14 +618,14 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection status(string $label = null)
      * @method Show\Field|Collection start_date(string $label = null)
      * @method Show\Field|Collection end_date(string $label = null)
+     * @method Show\Field|Collection id(string $label = null)
      * @method Show\Field|Collection product_no(string $label = null)
      * @method Show\Field|Collection product_name(string $label = null)
      * @method Show\Field|Collection price(string $label = null)
-     * @method Show\Field|Collection id(string $label = null)
      * @method Show\Field|Collection group_name(string $label = null)
+     * @method Show\Field|Collection last_modify(string $label = null)
      * @method Show\Field|Collection cat_id(string $label = null)
      * @method Show\Field|Collection short_name(string $label = null)
-     * @method Show\Field|Collection last_modify(string $label = null)
      * @method Show\Field|Collection report_name(string $label = null)
      * @method Show\Field|Collection num_of_day(string $label = null)
      * @method Show\Field|Collection int_hide(string $label = null)
@@ -646,6 +679,10 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection sample_path(string $label = null)
      * @method Show\Field|Collection first_path(string $label = null)
      * @method Show\Field|Collection is_multi_print(string $label = null)
+     * @method Show\Field|Collection group_id(string $label = null)
+     * @method Show\Field|Collection model_type(string $label = null)
+     * @method Show\Field|Collection model_id(string $label = null)
+     * @method Show\Field|Collection front_group_id(string $label = null)
      * @method Show\Field|Collection group(string $label = null)
      * @method Show\Field|Collection code(string $label = null)
      * @method Show\Field|Collection item_id(string $label = null)
@@ -665,11 +702,13 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection file_name(string $label = null)
      * @method Show\Field|Collection link_path(string $label = null)
      * @method Show\Field|Collection link_name(string $label = null)
-     * @method Show\Field|Collection model_type(string $label = null)
-     * @method Show\Field|Collection model_id(string $label = null)
+     * @method Show\Field|Collection view_type(string $label = null)
+     * @method Show\Field|Collection deleted_at(string $label = null)
+     * @method Show\Field|Collection notice_id(string $label = null)
      * @method Show\Field|Collection notice_name(string $label = null)
      * @method Show\Field|Collection notice_no(string $label = null)
      * @method Show\Field|Collection expired_date(string $label = null)
+     * @method Show\Field|Collection is_directory(string $label = null)
      * @method Show\Field|Collection token(string $label = null)
      * @method Show\Field|Collection product_id(string $label = null)
      * @method Show\Field|Collection shop_group_id(string $label = null)
@@ -751,9 +790,14 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection cut_time(string $label = null)
      * @method Show\Field|Collection sampledate(string $label = null)
      * @method Show\Field|Collection sample_id(string $label = null)
-     * @method Show\Field|Collection group_id(string $label = null)
      * @method Show\Field|Collection unit_id(string $label = null)
+     * @method Show\Field|Collection default_price(string $label = null)
+     * @method Show\Field|Collection chr_sap_2(string $label = null)
+     * @method Show\Field|Collection int_unit_2(string $label = null)
      * @method Show\Field|Collection image(string $label = null)
+     * @method Show\Field|Collection txt_detail_1(string $label = null)
+     * @method Show\Field|Collection txt_detail_2(string $label = null)
+     * @method Show\Field|Collection txt_detail_3(string $label = null)
      * @method Show\Field|Collection unit_name(string $label = null)
      */
     class Show {}

@@ -69,6 +69,9 @@ Route::group([
     $router->resource('library', 'Library\LibraryController');
     $router->resource('library_group', 'Library\LibraryGroupController');
 
+    //前台最近登錄用戶
+    $router->get('lastlogin', 'LastLoginController@index');
+
     //test
 //    $router->get('data/', 'DataChangeController@index');
 //    $router->put('data/test', 'DataChangeController@test');

@@ -25,7 +25,7 @@ class TotalSalesByGroupReportController extends AdminController
 
     protected function grid()
     {
-        return new Grid(null, function (Grid $grid) {
+        return Grid::make(null, function (Grid $grid) {
 
             $grid->header(function ($collection) {
                 $start = $this->getStartTime();
