@@ -14,7 +14,7 @@ class ShopAddress extends Model
 
     public function users()
     {
-        return $this->belongsTo(User::class,'id','address_id');
+        return $this->hasOne(User::class,'address_id','id');
     }
 
 }

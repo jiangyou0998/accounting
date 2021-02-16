@@ -81,6 +81,24 @@ class UserController extends AdminController
 
             $form->email('email');
 
+            if ($form->isCreating()) {
+                $form->radio('radio','是否分店賬號')
+                    ->when(0, function (Form $form) {
+                        $form->divider();
+                    })
+                    ->when(1, function (Form $form) {
+                        $form->divider();
+                        $form->text('address.shop_name','分店名');
+                        $form->text('address.address','地址');
+                        $form->text('address.eng_address','英文地址');
+                        $form->text('address.tel','電話');
+                        $form->text('address.fax','FAX');
+                        $form->text('address.oper_time','營業時間');
+                        $form->divider();
+                    })
+                    ->options([0=>'否',1=>'是'])
+                    ->default(0);
+            }
 
             if ($form->isEditing()) {
                 if (User::find($id)->can('shop')){
@@ -116,7 +134,7 @@ class UserController extends AdminController
             $form->saving(function (Form $form) {
                 // 判断是否是新增操作
                 if ($form->isCreating()) {
-
+                    $form->deleteInput('radio');
                 }
 
                 $password = $form->input('password');
