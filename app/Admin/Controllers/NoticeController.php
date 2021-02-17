@@ -160,7 +160,7 @@ class NoticeController extends AdminController
             $form->date('expired_date');
             $form->text('first_path');
 
-            $alertText = '僅支持 xls, xlsx, csv, pdf, mp4, mov文件上傳，最大支持200M的文件！';
+            $alertText = '僅支持 xls, xlsx, csv, pdf, mp4, mov, jpg, jpeg, png文件上傳，最大支持200M的文件！';
             $form->html(Alert::make($alertText, '提示')->info());
             $form->radio('is_directory','文件數量')
                 ->when([0, 1], function (Form $form) {
@@ -170,7 +170,7 @@ class NoticeController extends AdminController
                     //單文件
                     $form->file('file_path')
                         ->disk('notice')
-                        ->accept('xls,xlsx,csv,pdf,mp4,mov')
+                        ->accept('xls,xlsx,csv,pdf,mp4,mov,jpg,jpeg,png')
                         ->uniqueName()
                         ->maxSize(204800)
                         ->autoUpload();
@@ -182,7 +182,7 @@ class NoticeController extends AdminController
                         $form->text('title','標題');
                         $form->file('file_path')
                             ->disk('notice')
-                            ->accept('xls,xlsx,csv,pdf,mp4,mov')
+                            ->accept('xls,xlsx,csv,pdf,mp4,mov,jpg,jpeg,png')
                             ->uniqueName()
                             ->maxSize(204800)
                             ->autoUpload();
