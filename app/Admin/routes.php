@@ -62,6 +62,9 @@ Route::group([
     $router->get('api/unit', 'ApiController@unit');
     $router->get('api/shopgroup', 'ApiController@shop_group');
 
+    //前台最近登錄用戶
+    $router->get('lastlogin', 'LastLoginController@index');
+
     //test
 //    $router->get('data/', 'DataChangeController@index');
 //    $router->put('data/test', 'DataChangeController@test');
