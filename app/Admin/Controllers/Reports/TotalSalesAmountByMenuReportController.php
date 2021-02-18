@@ -143,9 +143,8 @@ class TotalSalesAmountByMenuReportController extends AdminController
 
         $cartitem = $cartitem
             ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
-            ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
             ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
-            ->where('users.type', '=', 2)
+            ->whereBetween('workshop_cart_items.deli_date',[$last_month_start,$end])
             ->where('workshop_cart_items.status', '<>', 4)
             ->whereIn('workshop_cart_items.user_id', $shopids)
 //            ->whereRaw(DB::raw("workshop_cart_items.deli_date between '$start' and '$end'"))
