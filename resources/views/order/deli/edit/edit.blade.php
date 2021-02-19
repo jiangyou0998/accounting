@@ -163,16 +163,17 @@
                         Swal.fire({
                             icon: 'success',
                             title: "已確認收貨!",
-                            showCancelButton: true,
+                            // showCancelButton: true,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: '確定',
-                            cancelButtonText: '返回',
+                            // cancelButtonText: '返回',
                         }).then((result) => {
-                            if (result.isDismissed) {
-                                window.location.href = '{{route('order.deli.list')}}';
-                            } else {
-                                window.location.reload();
-                            }
+                            // if (result.isDismissed) {
+                            //     window.top.close();
+                            // } else {
+                            //     window.location.reload();
+                            // }
+                            window.location.reload();
 
                         });
 

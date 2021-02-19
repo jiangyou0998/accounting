@@ -73,9 +73,13 @@ Route::group(['middleware' => ['auth','permission:shop|workshop|operation']], fu
 });
 
 Route::group(['middleware' => ['auth','permission:shop|operation']], function () {
-    Route::get('order/deli/list', 'DeliController@list')->name('order.deli.list');
     Route::get('order/deli/edit', 'DeliController@deli_edit')->name('order.deli.edit');
     Route::post('order/deli/update', 'DeliController@deli_update')->name('deli.update');
+});
+
+Route::group(['middleware' => ['auth','permission:operation']], function () {
+    Route::get('order/deli/list', 'DeliController@list')->name('order.deli.list');
+
 });
 
 Route::group(['middleware' => ['auth','permission:operation']], function () {

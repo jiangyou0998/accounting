@@ -29,7 +29,6 @@ Route::group([
     $router->resource('cart', 'WorkshopCartItemController');
     $router->resource('cartitem_log', 'WorkshopCartItemLogController');
     $router->resource('mypage', 'MypageController');
-//    $router->resource('report', 'ReportController');
 
     //------------------------------------------------------------------
     //報告
