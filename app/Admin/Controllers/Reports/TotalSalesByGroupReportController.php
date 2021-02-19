@@ -94,18 +94,40 @@ class TotalSalesByGroupReportController extends AdminController
      */
     public function generate($start,$end) {
 
+        //上月開始,結束日期
+        $last_month_start = (new Carbon($start))->subMonth()->firstOfMonth()->toDateString();
+        $last_month_end = (new Carbon($start))->subMonth()->endOfMonth()->toDateString();
+
         $shops = User::getRyoyuBakeryShops();
 
         $cartitem = new WorkshopCartItem();
         $cartitem = $cartitem
             ->select('workshop_cats.cat_name as 大類' )
-            ->addSelect('workshop_groups.group_name as 細類')
-            ->addSelect(DB::raw('ROUND(sum(ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_cart_items.order_price) , 2) as Total'));
+            ->addSelect('workshop_groups.group_name as 細類');
+//            ->addSelect(DB::raw('ROUND(sum(ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_cart_items.order_price) , 2) as Total'));
+
+        //查詢上月
+        $sql = "ROUND(sum(
+            case when (workshop_cart_items.deli_date between '$last_month_start' and '$last_month_end')
+            then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_cart_items.order_price) else 0 end),2)
+            as 上月";
+        $cartitem = $cartitem
+            ->addSelect(DB::raw($sql));
+
+        //查詢本月
+        $sql = "ROUND(sum(
+            case when (workshop_cart_items.deli_date between '$start' and '$end')
+            then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_cart_items.order_price) else 0 end),2)
+            as Total";
+        $cartitem = $cartitem
+            ->addSelect(DB::raw($sql));
 
             foreach ($shops as $shop){
 //                $sql = "sum(case when workshop_cart_items.user = '$shop->id' then workshop_cart_items.qty else 0 end) as '$shop->report_name'";
 //                dump($sql);
-                $sql = "ROUND(sum(case when workshop_cart_items.user_id = '$shop->id' then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_cart_items.order_price) else 0 end),2) as '$shop->report_name'";
+                $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '$shop->id' and
+                workshop_cart_items.deli_date between '$start' and '$end')
+                then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_cart_items.order_price) else 0 end),2) as '$shop->report_name'";
                 $cartitem = $cartitem
                     ->addSelect(DB::raw($sql));
             }
@@ -115,9 +137,8 @@ class TotalSalesByGroupReportController extends AdminController
             ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
             ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
             ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
-            ->where('users.type', '=', 2)
+            ->whereBetween('workshop_cart_items.deli_date', [$last_month_start, $end])
             ->where('workshop_cart_items.status', '<>', 4)
-            ->whereRaw("deli_date between '$start' and '$end'")
             ->groupBy('workshop_groups.id')
             ->orderBy('workshop_cats.sort')
             ->orderBy('workshop_groups.id')

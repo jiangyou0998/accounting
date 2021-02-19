@@ -23,10 +23,12 @@
 
     <div align="left"><a target="_top" href="{{route('order')}}" style="font-size: xx-large;">返回</a></div>
     <div class="style5" style="text-align: center;">
-        <span class="style4">請選</span>
-        <span class="style4 red-font">送貨日</span>
-        <span class="style4">及</span>
-        <span class="style4 red-font">部門</span>
+{{--        <span class="style4">請選</span>--}}
+{{--        <span class="style4 red-font">送貨日</span>--}}
+{{--        <span class="style4">及</span>--}}
+{{--        <span class="style4 red-font">部門</span>--}}
+
+        <span class="style4 red-font">蛋撻王工場</span>
 
         @if(Auth::user()->can('workshop') or Auth::user()->can('operation'))
             <br>
