@@ -3,6 +3,7 @@
 /public/storage
 /public/notices
 /public/forms
+/public/libraries
 /public/uploads
 /storage/*.key
 /storage/tmp

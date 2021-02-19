@@ -105,7 +105,6 @@ class TotalSalesByGroupCombineReportController extends AdminController
         $last_month_start = (new Carbon($start))->subMonth()->firstOfMonth()->toDateString();
         $last_month_end = (new Carbon($start))->subMonth()->endOfMonth()->toDateString();
 
-
         switch ($shop_group) {
             case 'all':
                 $shops = User::getAllShops();
