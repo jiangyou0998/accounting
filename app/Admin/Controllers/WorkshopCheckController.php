@@ -136,92 +136,17 @@ class WorkshopCheckController extends AdminController
 
     public function store()
     {
-        dump(Input::all());
+//        dump(Input::all());
 
     }
 
     //todo 没做完
     public function createChecks(Request $request)
     {
-//        $this->validate($request, [
-//            'name' => 'required|max:50',
-//            'password' => 'required|confirmed|min:6'
-//        ]);
-
-//        $request = Request::('report_info');
-
-//        dump($request->report_info);
 
         $checks = new WorkshopCheck;
 
         $infos = json_decode($request->report_info);
-
-//        dump($infos->hide);die();
-//
-//        $checks->int_all_shop = $infos->all_shop;
-
-        $checks->item_list = implode(', ',$infos->item);
-        $checks->report_name = $infos->name;
-        $checks->num_of_day = $infos->num_of_day;
-        $checks->int_hide = $infos->hide;
-        $checks->int_main_item = $infos->mainItem;
-        $checks->sort = $infos->sort;
-        $checks->cut_time = $infos->print_time;
-
-        $printtime = array();
-        $printtime['weekday'] = $infos->print_weekday;
-        $printtime['time'] = $infos->print_time;
-
-        // 数据库事务处理
-        DB::transaction(function () use ($checks, $printtime) {
-            $checks->save();
-//            $checks->printtime->update($printtime);
-        });
-
-
-
-//
-//        dump($checks->printtime);
-
-//        $check->update([
-//            'name' => $request->name,
-//            'password' => bcrypt($request->password),
-//        ]);
-
-//        $url = admin_url('admin/checks');
-//
-//        Admin::script(
-//            <<<JS
-//        // 3秒后跳转到 admin/auth/users 页面
-//        setTimeout(function () {
-//            Dcat.reload('{$url}');
-//        }, 3000);
-//JS
-//            );
-
-//        Dcat.success('更新成功');
-        return redirect('admin/checks');
-    }
-
-    //todo 没做完
-    public function updateChecks($id, Request $request)
-    {
-//        $this->validate($request, [
-//            'name' => 'required|max:50',
-//            'password' => 'required|confirmed|min:6'
-//        ]);
-
-//        $request = Request::('report_info');
-
-//        dd($request->report_info);
-
-        $checks = WorkshopCheck::find($id);
-
-        $infos = json_decode($request->report_info);
-
-//        dump($infos->hide);die();
-//
-//        $checks->int_all_shop = $infos->all_shop;
 
         $checks->item_list = implode(', ',$infos->item);
         $checks->report_name = $infos->name;
@@ -241,28 +166,34 @@ class WorkshopCheckController extends AdminController
 //            $checks->printtime->update($printtime);
         });
 
+        return redirect('admin/checks');
+    }
 
+    //todo 没做完
+    public function updateChecks($id, Request $request)
+    {
+        $checks = WorkshopCheck::find($id);
 
-//
-//        dump($checks->printtime);
+        $infos = json_decode($request->report_info);
 
-//        $check->update([
-//            'name' => $request->name,
-//            'password' => bcrypt($request->password),
-//        ]);
+        $checks->item_list = implode(', ',$infos->item);
+        $checks->report_name = $infos->name;
+        $checks->num_of_day = $infos->num_of_day;
+        $checks->int_hide = $infos->hide;
+        $checks->int_main_item = $infos->mainItem;
+        $checks->sort = $infos->sort;
+        $checks->cut_time = $infos->print_time;
 
-//        $url = admin_url('admin/checks');
-//
-//        Admin::script(
-//            <<<JS
-//        // 3秒后跳转到 admin/auth/users 页面
-//        setTimeout(function () {
-//            Dcat.reload('{$url}');
-//        }, 3000);
-//JS
-//            );
+//        $printtime = array();
+//        $printtime['weekday'] = $infos->print_weekday;
+//        $printtime['time'] = $infos->print_time;
 
-//        Dcat.success('更新成功');
+        // 数据库事务处理
+        DB::transaction(function () use ($checks) {
+            $checks->save();
+//            $checks->printtime->update($printtime);
+        });
+
         return redirect('admin/checks');
     }
 

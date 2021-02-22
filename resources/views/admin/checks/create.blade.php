@@ -270,23 +270,23 @@
             <td class="cssTableInput"><input type="text" id="report_name"></td>
         </tr>
         <tr>
-            <th class="cssTableField cssImportant" valign="top">報表 日期</th>
+            <th class="cssTableField cssImportant" valign="top">報表 時間</th>
             <td class="cssTableInput">
-                星期:
-                <select type="text" id="email_week" style="width:173px;" multiple>
-                    <option value="0">星期一</option>
-                    <option value="1">星期二</option>
-                    <option value="2">星期三</option>
-                    <option value="3">星期四</option>
-                    <option value="4">星期五</option>
-                    <option value="5">星期六</option>
-                    <option value="6">星期日</option>
-                </select>
-                <input type="hidden" id="email_weel_val" value="0,1,2,3,4,5,6"/>
-                <br/>
+{{--                星期:--}}
+{{--                <select type="text" id="email_week" style="width:173px;" multiple>--}}
+{{--                    <option value="0">星期一</option>--}}
+{{--                    <option value="1">星期二</option>--}}
+{{--                    <option value="2">星期三</option>--}}
+{{--                    <option value="3">星期四</option>--}}
+{{--                    <option value="4">星期五</option>--}}
+{{--                    <option value="5">星期六</option>--}}
+{{--                    <option value="6">星期日</option>--}}
+{{--                </select>--}}
+{{--                <input type="hidden" id="email_weel_val" value="0,1,2,3,4,5,6"/>--}}
+{{--                <br/>--}}
                 時間:
-                <input type="text" id="email_time" readonly onclick="WdatePicker(WdatePickerOpt2);" style="width:173px;"
-                       value="12:00"/>
+                <input type="text" id="email_time" readonly onclick="WdatePicker({dateFmt: 'HH:mm',isShowClear: false,vel: 'time',});" style="width:173px;"
+                       value=""/>
             </td>
         </tr>
         <tr>
@@ -368,16 +368,16 @@
     </table>
 
     <table class="cssTable2">
-        <tr style="color:white;">
-            <th class="cssTableField">按貨品編號查找</th>
-            <td class="cssTableInput" valign="middle" style="width:300px;">
-                <div>
-                    <input type="text" id="search_no" style="width:150px;"
-                           onkeypress='search_code($("#search_no").val(), event);'>
-                    <button onclick='search_code($("#search_no").val());'>查找</button>
-                </div>
-            </td>
-        </tr>
+{{--        <tr style="color:white;">--}}
+{{--            <th class="cssTableField">按貨品編號查找</th>--}}
+{{--            <td class="cssTableInput" valign="middle" style="width:300px;">--}}
+{{--                <div>--}}
+{{--                    <input type="text" id="search_no" style="width:150px;"--}}
+{{--                           onkeypress='search_code($("#search_no").val(), event);'>--}}
+{{--                    <button onclick='search_code($("#search_no").val());'>查找</button>--}}
+{{--                </div>--}}
+{{--            </td>--}}
+{{--        </tr>--}}
         <tr>
             <td class="cssTableInput" valign="top" colspan="2">
                 <table>
@@ -607,6 +607,11 @@
             alert("請輸入報告名稱");
             return;
         }
+
+        if (document.getElementById("email_time").value == "") {
+            alert("請輸入報表時間");
+            return;
+        }
         // if ($(".shop_select").length == 0) {
         //     alert("請選擇分店");
         //     return;
@@ -644,7 +649,7 @@
         //var car = (document.getElementById("car_t").checked)? 1 : 0;
         var mainItem = (document.getElementById("main_item").checked) ? 1 : 0;
         //var showNC = (document.getElementById("showNC_t").checked)? 1 : 0;
-        var print_weekday = $("#email_weel_val").val();
+        // var print_weekday = $("#email_weel_val").val();
         ;
         var print_time = $("#email_time").val();
 
@@ -663,7 +668,7 @@
                 "hide": hide,
                 "mainItem": mainItem,
                 "sort": sort,
-                "print_weekday": print_weekday,
+                // "print_weekday": print_weekday,
                 "print_time": print_time
             }
         } else {
@@ -675,7 +680,7 @@
                 "hide": hide,
                 "mainItem": mainItem,
                 "sort": sort,
-                "print_weekday": print_weekday,
+                // "print_weekday": print_weekday,
                 "print_time": print_time
             }
             var list = $(".shop_select");
@@ -693,27 +698,27 @@
         $("#title").html("修改報告");
         $("footer").hide();
 
-        $("#email_week").multipleSelect({
-            selectAllText: '所有',
-            allSelected: '每天',
-            countSelected: '已選擇 # 項',
-            minimumCountSelected: 6,
-            multiple: true,
-            multipleWidth: 85,
-            onClose: function () {
-                $("#email_weel_val").val($("#email_week").multipleSelect('getSelects').join(','));
-            }
-        });
-        $("#email_week").multipleSelect('setSelects', [0, 1, 2, 3, 4, 5, 6]);
+        // $("#email_week").multipleSelect({
+        //     selectAllText: '所有',
+        //     allSelected: '每天',
+        //     countSelected: '已選擇 # 項',
+        //     minimumCountSelected: 6,
+        //     multiple: true,
+        //     multipleWidth: 85,
+        //     onClose: function () {
+        //         $("#email_weel_val").val($("#email_week").multipleSelect('getSelects').join(','));
+        //     }
+        // });
+        // $("#email_week").multipleSelect('setSelects', [0, 1, 2, 3, 4, 5, 6]);
 
-        var WdatePickerOpt2 = {
-            dateFmt: 'HH:mm',
-            isShowClear: false,
-            vel: 'time',
-            onpicked: function (dp) {
-
-            }
-        };
+        // var WdatePickerOpt2 = {
+        //     dateFmt: 'HH:mm',
+        //     isShowClear: false,
+        //     vel: 'time',
+        //     onpicked: function (dp) {
+        //
+        //     }
+        // };
 
         $(".cssTable2").show();
         $(".cssTable3").hide();

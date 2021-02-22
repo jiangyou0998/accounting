@@ -270,7 +270,7 @@
             <td class="cssTableInput"><input type="text" id="report_name"></td>
         </tr>
         <tr>
-            <th class="cssTableField cssImportant" valign="top">報表 日期</th>
+            <th class="cssTableField cssImportant" valign="top">報表 時間</th>
             <td class="cssTableInput">
 {{--                星期:--}}
 {{--                <select type="text" id="email_week" style="width:173px;" multiple>--}}
@@ -659,7 +659,7 @@
         //var car = (document.getElementById("car_t").checked)? 1 : 0;
         var mainItem = (document.getElementById("main_item").checked) ? 1 : 0;
         //var showNC = (document.getElementById("showNC_t").checked)? 1 : 0;
-        var print_weekday = $("#email_weel_val").val();
+        // var print_weekday = $("#email_weel_val").val();
         ;
         var print_time = $("#email_time").val();
 
@@ -678,7 +678,7 @@
                 "hide": hide,
                 "mainItem": mainItem,
                 "sort": sort,
-                "print_weekday": print_weekday,
+                // "print_weekday": print_weekday,
                 "print_time": print_time
             }
         } else {
@@ -690,7 +690,7 @@
                 "hide": hide,
                 "mainItem": mainItem,
                 "sort": sort,
-                "print_weekday": print_weekday,
+                // "print_weekday": print_weekday,
                 "print_time": print_time
             }
             var list = $(".shop_select");
@@ -721,14 +721,14 @@
         // });
         // $("#email_week").multipleSelect('setSelects', [0, 1, 2, 3, 4, 5, 6]);
 
-        var WdatePickerOpt2 = {
-            dateFmt: 'HH:mm',
-            isShowClear: false,
-            vel: 'time',
-            onpicked: function (dp) {
-
-            }
-        };
+        // var WdatePickerOpt2 = {
+        //     dateFmt: 'HH:mm',
+        //     isShowClear: false,
+        //     vel: 'time',
+        //     onpicked: function (dp) {
+        //
+        //     }
+        // };
 
         $(".cssTable2").show();
         $(".cssTable3").hide();
