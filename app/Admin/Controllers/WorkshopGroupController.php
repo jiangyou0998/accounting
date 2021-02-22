@@ -29,6 +29,15 @@ class WorkshopGroupController extends AdminController
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
+                $filter->where('cat_id', function ($query) {
+
+                    $query->whereHas('cats', function ($query) {
+                        $query->where('id', '=', $this->input);
+                    });
+
+                }, '大類')->select('api/cat');
+
+                $filter->like('group_name');
 
             });
         });

@@ -272,21 +272,21 @@
         <tr>
             <th class="cssTableField cssImportant" valign="top">報表 日期</th>
             <td class="cssTableInput">
-                星期:
-                <select type="text" id="email_week" style="width:173px;" multiple>
-                    <option value="0">星期一</option>
-                    <option value="1">星期二</option>
-                    <option value="2">星期三</option>
-                    <option value="3">星期四</option>
-                    <option value="4">星期五</option>
-                    <option value="5">星期六</option>
-                    <option value="6">星期日</option>
-                </select>
-                <input type="hidden" id="email_weel_val" value="0,1,2,3,4,5,6"/>
-                <br/>
+{{--                星期:--}}
+{{--                <select type="text" id="email_week" style="width:173px;" multiple>--}}
+{{--                    <option value="0">星期一</option>--}}
+{{--                    <option value="1">星期二</option>--}}
+{{--                    <option value="2">星期三</option>--}}
+{{--                    <option value="3">星期四</option>--}}
+{{--                    <option value="4">星期五</option>--}}
+{{--                    <option value="5">星期六</option>--}}
+{{--                    <option value="6">星期日</option>--}}
+{{--                </select>--}}
+{{--                <input type="hidden" id="email_weel_val" value="0,1,2,3,4,5,6"/>--}}
+{{--                <br/>--}}
                 時間:
-                <input type="text" id="email_time" readonly onclick="WdatePicker(WdatePickerOpt2);" style="width:173px;"
-                       value="12:00"/>
+                <input type="text" id="email_time" readonly onclick="WdatePicker({dateFmt: 'HH:mm',isShowClear: false,vel: 'time',});" style="width:173px;"
+                       value="{{$checks['cut_time']}}"/>
             </td>
         </tr>
         <tr>
@@ -369,14 +369,14 @@
 
     <table class="cssTable2">
         <tr style="color:white;">
-            <th class="cssTableField">按貨品編號查找</th>
-            <td class="cssTableInput" valign="middle" style="width:300px;">
-                <div>
-                    <input type="text" id="search_no" style="width:150px;"
-                           onkeypress='search_code($("#search_no").val(), event);'>
-                    <button onclick='search_code($("#search_no").val());'>查找</button>
-                </div>
-            </td>
+{{--            <th class="cssTableField">按貨品編號查找</th>--}}
+{{--            <td class="cssTableInput" valign="middle" style="width:300px;">--}}
+{{--                <div>--}}
+{{--                    <input type="text" id="search_no" style="width:150px;"--}}
+{{--                           onkeypress='search_code($("#search_no").val(), event);'>--}}
+{{--                    <button onclick='search_code($("#search_no").val());'>查找</button>--}}
+{{--                </div>--}}
+{{--            </td>--}}
         </tr>
         <tr>
             <td class="cssTableInput" valign="top" colspan="2">
@@ -708,18 +708,18 @@
         $("#title").html("修改報告");
         $("footer").hide();
 
-        $("#email_week").multipleSelect({
-            selectAllText: '所有',
-            allSelected: '每天',
-            countSelected: '已選擇 # 項',
-            minimumCountSelected: 6,
-            multiple: true,
-            multipleWidth: 85,
-            onClose: function () {
-                $("#email_weel_val").val($("#email_week").multipleSelect('getSelects').join(','));
-            }
-        });
-        $("#email_week").multipleSelect('setSelects', [0, 1, 2, 3, 4, 5, 6]);
+        // $("#email_week").multipleSelect({
+        //     selectAllText: '所有',
+        //     allSelected: '每天',
+        //     countSelected: '已選擇 # 項',
+        //     minimumCountSelected: 6,
+        //     multiple: true,
+        //     multipleWidth: 85,
+        //     onClose: function () {
+        //         $("#email_weel_val").val($("#email_week").multipleSelect('getSelects').join(','));
+        //     }
+        // });
+        // $("#email_week").multipleSelect('setSelects', [0, 1, 2, 3, 4, 5, 6]);
 
         var WdatePickerOpt2 = {
             dateFmt: 'HH:mm',

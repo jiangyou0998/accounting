@@ -132,7 +132,7 @@ class WorkshopProductController extends AdminController
 
             $grid->column('cats.cat_name',"大類");
             $grid->column('groups.group_name',"細類");
-            $grid->sort;
+            $grid->sort->sortable();
 
             //2020-12-30 狀態使用radio
             //2020-01-18 有權限才顯示修改狀態
@@ -225,9 +225,11 @@ class WorkshopProductController extends AdminController
             //------------------------------------------------------------------
             //過濾器
             $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('cuttime');
-                $filter->like('product_name');
+
+                $filter->equal('id');
                 $filter->like('product_no');
+                $filter->like('product_name');
+                $filter->equal('cuttime');
                 $filter->equal('status')->select([1 => '現貨', 2 => '暫停', 3 => '新貨', 5 => '季節貨']);
 
                 $filter->where('cat_id', function ($query) {
@@ -360,7 +362,7 @@ class WorkshopProductController extends AdminController
             $form->hasMany('prices', '價格列表', function (Form\NestedForm $form) use($week){
                 $form->select('shop_group_id', '商店分組')->options('api/shopgroup')->rules('required');
 //                $form->text('shop_group_id', '商店分組')->rules('required');
-                $form->currency('price','單價')->symbol('$')->rules('required|numeric|min:0.01');
+                $form->currency('price','單價')->symbol('$')->rules('required|numeric|min:0.00');
                 $form->text('base')
                     ->type('number')
                     ->attribute('min', 0)
@@ -372,6 +374,8 @@ class WorkshopProductController extends AdminController
                 $form->text('cuttime')
                     ->type('number')
                     ->attribute('min', 0)
+                    //正則匹配時間
+                    ->rules(['regex:/([0-1]{1}[0-9]{1}|[2][0-3])[0-5]{1}[0-9]{1}/','size:4'])
                     ->required();
                 $form->radio('phase')
                     ->options([1 => '1日前', 2 => '2日前', 3 => '3日前', -1 => '後勤落單'])

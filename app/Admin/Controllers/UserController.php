@@ -37,8 +37,11 @@ class UserController extends AdminController
             $grid->showQuickEditButton();
             $grid->model()->with('roles');
 
+            //快速搜索
+            $grid->quickSearch('name', 'txt_name');
+
             $grid->id->sortable();
-            $grid->name;
+            $grid->name->sortable();
             $grid->txt_name;
             $grid->report_name;
             $grid->roles()->pluck('name')->label();
@@ -47,6 +50,8 @@ class UserController extends AdminController
             $grid->filter(function (Grid\Filter $filter) {
                 $rolesModel = config('front.database.roles_model');
                 $roles = $rolesModel::all()->pluck('name','name');
+                $filter->like('name','登錄名');
+                $filter->like('txt_name','名稱');
                 $filter->equal('roles.name','角色')->select($roles);
 
             });

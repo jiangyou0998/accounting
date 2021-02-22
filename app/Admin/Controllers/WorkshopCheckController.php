@@ -166,6 +166,7 @@ class WorkshopCheckController extends AdminController
         $checks->int_hide = $infos->hide;
         $checks->int_main_item = $infos->mainItem;
         $checks->sort = $infos->sort;
+        $checks->cut_time = $infos->print_time;
 
         $printtime = array();
         $printtime['weekday'] = $infos->print_weekday;
@@ -212,9 +213,9 @@ class WorkshopCheckController extends AdminController
 
 //        $request = Request::('report_info');
 
-//        dump($request->report_info);
+//        dd($request->report_info);
 
-        $checks = WorkshopCheck::with('printtime')->find($id);
+        $checks = WorkshopCheck::find($id);
 
         $infos = json_decode($request->report_info);
 
@@ -228,15 +229,16 @@ class WorkshopCheckController extends AdminController
         $checks->int_hide = $infos->hide;
         $checks->int_main_item = $infos->mainItem;
         $checks->sort = $infos->sort;
+        $checks->cut_time = $infos->print_time;
 
-        $printtime = array();
-        $printtime['weekday'] = $infos->print_weekday;
-        $printtime['time'] = $infos->print_time;
+//        $printtime = array();
+//        $printtime['weekday'] = $infos->print_weekday;
+//        $printtime['time'] = $infos->print_time;
 
         // 数据库事务处理
-        DB::transaction(function () use ($checks, $printtime) {
+        DB::transaction(function () use ($checks) {
             $checks->save();
-            $checks->printtime->update($printtime);
+//            $checks->printtime->update($printtime);
         });
 
 
