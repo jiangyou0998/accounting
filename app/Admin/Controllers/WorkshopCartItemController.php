@@ -213,15 +213,15 @@ class WorkshopCartItemController extends AdminController
      */
     protected function form()
     {
-        $builder = new WorkshopProduct();
-        $builder = $builder->with('users')
-            ->with('products');
+        $builder = new WorkshopCartItem();
+        $builder = $builder->with(['users','products']);
 
         return Form::make($builder, function (Form $form) {
             $form->display('id');
             $form->display('users.txt_name', '分店');
             $form->display('products.product_name', '產品');
             $form->text('qty');
+            $form->text('order_price','下單價格');
             $description = '1:下單&nbsp;&nbsp;&nbsp;99:確認過&nbsp;&nbsp;&nbsp;4:刪除';
             $form->html(Alert::make($description, '说明')->info());
             $form->text('status')->type('number');
