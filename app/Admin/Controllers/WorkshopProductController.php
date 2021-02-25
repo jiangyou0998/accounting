@@ -244,12 +244,12 @@ class WorkshopProductController extends AdminController
                 $form->text('min')
                     ->type('number')
                     ->attribute('min', 0)
-                    //正則匹配時間
-                    ->rules(['regex:/([0-1]{1}[0-9]{1}|[2][0-3])[0-5]{1}[0-9]{1}/','size:4'])
                     ->required();
                 $form->text('cuttime')
                     ->type('number')
                     ->attribute('min', 0)
+                    //正則匹配時間
+                    ->rules(['regex:/([0-1]{1}[0-9]{1}|[2][0-3])[0-5]{1}[0-9]{1}/','size:4'])
                     ->required();
                 $form->radio('phase','截單日期')
                     ->options([1 => '1日後', 2 => '2日後', 3 => '3日後', -1 => '後勤落單'])
