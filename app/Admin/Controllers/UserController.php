@@ -80,11 +80,22 @@ class UserController extends AdminController
             $form->text('txt_name')->required();
             $form->text('report_name')->required();
 //            $form->text('int_dept');
-            $form->password('password','新密碼')->required();
-            // 设置错误信息
-            $form->password('password_confirm','確認密碼')->same('password', '两次密码输入不一致')->required();
+            if($form->isCreating()){
+                $form->password('password','新密碼')->required();
+                // 设置错误信息
+                $form->password('password_confirm','確認密碼')->same('password', '两次密码输入不一致')->required();
+            }
 
+            //編輯用戶時不需要輸入密碼
+            if($form->isEditing()){
+                $form->password('password','新密碼');
+                // 设置错误信息
+                $form->password('password_confirm','確認密碼')->same('password', '两次密码输入不一致');
+            }
             $form->email('email')->required();
+            $form->text('sort','報表排序');
+            $form->text('rb_user_id','糧友賬號ID')->required();
+
 
             if ($form->isCreating()) {
                 $form->radio('radio','是否分店賬號')

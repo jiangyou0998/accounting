@@ -196,7 +196,7 @@ class TotalSalesBySearchReportController extends AdminController
         }
 
         $cartitem = $cartitem
-            ->where('users.type', '=', 2)
+//            ->where('users.type', '=', 2)
             ->where('workshop_cart_items.status', '<>', 4)
             ->whereNotIn('users.id', $testids)
             ->whereRaw("workshop_cart_items.deli_date between '$start' and '$end'")

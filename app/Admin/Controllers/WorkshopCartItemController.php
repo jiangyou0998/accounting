@@ -72,9 +72,15 @@ class WorkshopCartItemController extends AdminController
             $grid->selector(function (Grid\Tools\Selector $selector) {
 
                 $shop = User::getKingBakeryShops()->toArray();
+                $rbshop = User::getRyoyuBakeryShops()->toArray();
                 $shops = array_column($shop, 'report_name', 'id');
+                $rbshops = array_column($rbshop, 'report_name', 'id');
 
-                $selector->select('user_id', '分店', $shops);
+                $selector->select('user_id', '蛋撻王', $shops);
+                $selector->select('user_id2', '糧友', $rbshops, function ($query, $value) {
+
+                    $query->where('user_id', $value);
+                });
 
                 $selector->selectOne('status', '狀態', [
                     1 => '正常',

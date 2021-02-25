@@ -149,7 +149,7 @@ HTML;
             ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
             ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
             ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
-            ->where('users.type', '=', 2)
+//            ->where('users.type', '=', 2)
             ->where('workshop_cart_items.status', '<>', 4)
             ->whereIn('workshop_cart_items.user_id', $shopids)
             ->whereNotIn('users.id', $testids)
