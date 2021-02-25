@@ -241,6 +241,8 @@ class KBWorkshopCartItemController extends Controller
             ->whereHas('prices', function (Builder $query) {
                 $query->where('shop_group_id', '=', 5);
             })
+            //2020-02-25 產品排序
+            ->orderBy('product_no')
             ->get();
 //        dump($products);
         $deli_date = $request->deli_date;
