@@ -10,7 +10,6 @@ use App\Models\KB\KBWorkshopCartItemLog;
 use App\Models\KB\KBWorkshopCat;
 use App\Models\KB\KBWorkshopGroup;
 use App\Models\KB\KBWorkshopProduct;
-use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -237,7 +236,8 @@ class KBWorkshopCartItemController extends Controller
         $products = KBWorkshopProduct::with('cats')
             ->with('units')
             ->where('group_id', $groupid)
-            ->where('status', '!=', 4)
+            //2021-02-25 不顯示暫停產品
+            ->whereNotIn('status', [2, 4])
             ->whereHas('prices', function (Builder $query) {
                 $query->where('shop_group_id', '=', 5);
             })
