@@ -43,8 +43,8 @@
             }
 
             .page {
-                width: 297mm;
-                min-height: 203mm;
+                width: 203mm;
+                min-height: 293mm;
                 padding: 4mm;
                 background: white;
             }
@@ -81,7 +81,7 @@
 
 @foreach($datas as $data)
 {{--    每14個一頁,生成表頭和頂部--}}
-    @if(($loop->index % 14) == 0)
+    @if(($loop->index % 23) == 0)
 
         <div class="page">
             <div width="100%">
@@ -116,7 +116,8 @@
                     @include('admin.order_print._table_data')
 
 {{--    第14個,生成打印分頁div--}}
-    @if(($loop->index % 14) == 13 || $loop->last)
+{{--    @if(($loop->index % 23) == 22 || $loop->last)--}}
+    @if(($loop->index % 23) == 22 && !($loop->last))
                 </table>
                 <div style="page-break-after:always;"></div>
             </div>
