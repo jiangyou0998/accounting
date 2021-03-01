@@ -248,8 +248,9 @@ class OrderController extends Controller
     public function select_deli()
     {
         $shops = User::getKingBakeryShops();
+        $rbshops = User::getRyoyuBakeryShops();
 
-        return view('order.deli.select_deli',compact('shops'));
+        return view('order.deli.select_deli',compact('shops','rbshops'));
     }
 
     //查看方包下單

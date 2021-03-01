@@ -2,7 +2,7 @@
     <td>{{ $detail->product_no }}</td>
     <td>{{ $detail->itemName }}</td>
 
-    @if(request()->group === 'RB')
+    @if(strtolower(request()->group) === 'rb')
         @foreach(['RB'] as $dept)
             <td align="right">{{ $detail->{$dept.'_total'} != 0 ? $detail->{$dept.'_total'} :'/' }}</td>
         @endforeach

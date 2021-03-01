@@ -95,7 +95,17 @@
 <script>
     function select() {
         var deli_date = $('#datepicker').val();
-        window.location.href = '/order/deli?deli_date='+deli_date+'&shop={{$infos->shop}}';
+
+        let $url = '/order/deli?deli_date='+deli_date+'&shop={{$infos->shop}}';
+
+        if({{isset(request()->group)}}){
+            $url += '&group={{request()->group}}';
+        }
+
+        // console.log($url);return;
+
+        window.location.href = $url;
+
     }
 </script>
 

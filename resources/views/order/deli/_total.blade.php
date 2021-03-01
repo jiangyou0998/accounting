@@ -1,7 +1,7 @@
 <tr style='border-bottom:4px solid black'>
     <td></td>
     <td align='right'>總件數=</td>
-    @if(request()->group === 'RB')
+    @if(strtolower(request()->group) === 'rb')
         <td align='right' colspan='{{ count(['RB']) + 2 }}' style='border-right:0px'>{{ $total->qty_total }}</td>
     @else
         <td align='right' colspan='{{ count(config('dept.symbol')) + 2 }}' style='border-right:0px'>{{ $total->qty_total }}</td>

@@ -4,9 +4,9 @@
 {{--    <th style="font-weight:bold;" width="12%" align="center">下單數量</th>--}}
 {{--    <th style="font-weight:bold;" width="12%" align="center">數量</th>--}}
 
-    @if(request()->group === 'RB')
+    @if(strtolower(request()->group) === 'rb')
         @foreach(['RB'] as $dept)
-            <<th style="font-weight:bold;" width="18%" align="center">蛋撻王工場</th>
+            <th style="font-weight:bold;" width="18%" align="center">蛋撻王工場</th>
         @endforeach
     @else
         @foreach(config('dept.symbol_and_name') as $dept => $name)
