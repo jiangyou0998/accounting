@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 class OrderPrintController extends Controller
 {
+    private const ITEM_COUNT_PER_PAGE = 25;
 
     public function print(Request $request)
     {
@@ -109,6 +110,8 @@ class OrderPrintController extends Controller
         $checkInfos = new Collection();
         $checkInfos->title = WorkshopCat::find($cat_id)->cat_name;
         $checkInfos->deli_date = $deli_date;
+        //2021-03-01 每頁item數寫進常量
+        $checkInfos->item_count = self::ITEM_COUNT_PER_PAGE;
 
         return view('admin.order_print.index',compact('datas' ,'headings', 'heading_shops','checkInfos'));
     }
@@ -202,6 +205,8 @@ class OrderPrintController extends Controller
         $checkInfos = new Collection();
         $checkInfos->title = WorkshopCat::find($cat_id)->cat_name;
         $checkInfos->deli_date = $deli_date;
+        //2021-03-01 每頁item數寫進常量
+        $checkInfos->item_count = self::ITEM_COUNT_PER_PAGE;
 
         return view('admin.order_print_rate.index',compact('datas' ,'headings', 'heading_shops','checkInfos' ,'productArr'));
     }

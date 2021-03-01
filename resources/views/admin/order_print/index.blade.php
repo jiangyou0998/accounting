@@ -80,8 +80,8 @@
 <body>
 
 @foreach($datas as $data)
-{{--    每14個一頁,生成表頭和頂部--}}
-    @if(($loop->index % 23) == 0)
+{{--    每n個一頁,生成表頭和頂部--}}
+    @if(($loop->index % $checkInfos->item_count) == 0)
 
         <div class="page">
             <div width="100%">
@@ -115,9 +115,9 @@
 {{--    加載數據--}}
                     @include('admin.order_print._table_data')
 
-{{--    第14個,生成打印分頁div--}}
+{{--    第n個,生成打印分頁div--}}
 {{--    @if(($loop->index % 23) == 22 || $loop->last)--}}
-    @if(($loop->index % 23) == 22 && !($loop->last))
+    @if(($loop->index % $checkInfos->item_count) == ($checkInfos->item_count - 1) && !($loop->last))
                 </table>
                 <div style="page-break-after:always;"></div>
             </div>

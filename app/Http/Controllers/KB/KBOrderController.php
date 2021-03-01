@@ -8,7 +8,6 @@ use App\Models\KB\KBWorkshopCartItem;
 use App\Models\KB\KBWorkshopCat;
 use App\Models\KB\KBWorkshopGroup;
 use App\Models\KB\KBWorkshopProduct;
-use App\Models\Order;
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopOrderSample;
 use App\User;

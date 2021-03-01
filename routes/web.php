@@ -89,6 +89,7 @@ Route::group(['middleware' => ['auth','permission:operation']], function () {
 
 Route::group(['middleware' => ['auth','permission:shop']], function () {
     Route::get('sample', 'WorkshopOrderSampleController@index')->name('sample');
+    Route::get('kb/sample', 'KB\KBWorkshopOrderSampleController@index')->name('kb.sample');
 });
 
 Route::group(['middleware' => ['auth','permission:operation']], function () {
@@ -105,6 +106,16 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('sample/show_group/{catid}', 'WorkshopOrderSampleController@showGroup')->name('sample.show_group');
     Route::post('sample/show_product/{groupid}', 'WorkshopOrderSampleController@showProduct')->name('sample.show_product');
+
+    //蛋撻王工場範本
+    Route::get('kb/sample/create', 'KB\KBWorkshopOrderSampleController@create')->name('kb.sample.create');
+    Route::get('kb/sample/{sample}/edit', 'KB\KBWorkshopOrderSampleController@edit')->name('kb.sample.edit');
+    Route::post('kb/sample', 'KB\KBWorkshopOrderSampleController@store')->name('kb.sample.store');
+    Route::put('kb/sample/{sampleid}', 'KB\KBWorkshopOrderSampleController@update')->name('kb.sample.update');
+    Route::delete('kb/sample/{sampleid}', 'KB\KBWorkshopOrderSampleController@destroy')->name('kb.sample.destroy');
+
+    Route::post('kb/sample/show_group/{catid}', 'KB\KBWorkshopOrderSampleController@showGroup')->name('kb.sample.show_group');
+    Route::post('kb/sample/show_product/{groupid}', 'KB\KBWorkshopOrderSampleController@showProduct')->name('kb.sample.show_product');
 
     //報告
     Route::get('support', 'SupportController@index')->name('support');

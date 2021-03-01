@@ -32,9 +32,9 @@
                         @include('kb.order._item')
                     @endforeach
 
-{{--                    @foreach($sampleItems as $itemCount => $item)--}}
-{{--                        @include('order._sample_item')--}}
-{{--                    @endforeach--}}
+                    @foreach($sampleItems as $itemCount => $item)
+                        @include('kb.order._sample_item')
+                    @endforeach
                     <tr class="blankline">
                         <td colspan="6">&nbsp;</td>
                     </tr>

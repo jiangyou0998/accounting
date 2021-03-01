@@ -9,6 +9,7 @@ use App\Models\KB\KBWorkshopCartItem;
 use App\Models\KB\KBWorkshopCartItemLog;
 use App\Models\KB\KBWorkshopCat;
 use App\Models\KB\KBWorkshopGroup;
+use App\Models\KB\KBWorkshopOrderSample;
 use App\Models\KB\KBWorkshopProduct;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -186,18 +187,18 @@ class KBWorkshopCartItemController extends Controller
         $items = KBWorkshopCartItem::getCartItems($shopid, $dept, $deli_date);
         $cats = KBWorkshopCat::getCatsNotExpired($deli_date , $dept);
 //        dump($deliDate);
-//        $sampleItems = new Collection();
-//        if (count($items) == 0) {
-//            $sampleItems = KBWorkshopSample::getRegularOrderItems($shopid, $deliW ,$dept);
-//        }
+        $sampleItems = new Collection();
+        if (count($items) == 0) {
+            $sampleItems = KBWorkshopOrderSample::getRegularOrderItems($shopid, $deliW ,$dept);
+        }
 
         foreach ($items as $item) {
             $this->checkInvalidOrder($item,$deli_date);
         }
 
-//        foreach ($sampleItems as $sampleItem) {
-//            $this->checkInvalidOrder($sampleItem,$deli_date);
-//        }
+        foreach ($sampleItems as $sampleItem) {
+            $this->checkInvalidOrder($sampleItem,$deli_date);
+        }
 
 //        dump($items->toArray());
 //        dump($sampleItems->toArray());
@@ -214,8 +215,8 @@ class KBWorkshopCartItemController extends Controller
         $orderInfos->dept_name = $deptArr[$dept];
         $orderInfos->deli_date = $deli_date;
 
-//        return view('order.cart', compact('items', 'cats', 'sampleItems', 'orderInfos'));
-        return view('kb.order.cart', compact('items', 'cats', 'orderInfos'));
+        return view('kb.order.cart', compact('items', 'cats', 'sampleItems', 'orderInfos'));
+//        return view('kb.order.cart', compact('items', 'cats', 'orderInfos'));
     }
 
     //ajax加載分組
