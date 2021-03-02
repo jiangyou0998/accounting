@@ -77,11 +77,7 @@
         {{--          表頭  --}}
         @include('kb.order.deli._table_head')
         {{--        具體內容--}}
-        @foreach($details as $detail)
-            @if($total->cat_id == $detail->cat_id)
-                @include('kb.order.deli._table_data')
-            @endif
-        @endforeach
+        @include('kb.order.deli._table_data')
         {{--        合計--}}
         @include('kb.order.deli._total')
     @endforeach
@@ -95,7 +91,7 @@
 <script>
     function select() {
         var deli_date = $('#datepicker').val();
-        window.location.href = '/order/deli?deli_date='+deli_date+'&shop={{$infos->shop}}';
+        window.location.href = '/kb/order/deli?deli_date='+deli_date+'&shop={{$infos->shop}}';
     }
 </script>
 

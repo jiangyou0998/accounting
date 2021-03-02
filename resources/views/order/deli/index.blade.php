@@ -77,11 +77,7 @@
         {{--          表頭  --}}
         @include('order.deli._table_head')
         {{--        具體內容--}}
-        @foreach($details as $detail)
-            @if($total->cat_id == $detail->cat_id)
-                @include('order.deli._table_data')
-            @endif
-        @endforeach
+        @include('order.deli._table_data')
         {{--        合計--}}
         @include('order.deli._total')
     @endforeach
