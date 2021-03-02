@@ -362,7 +362,9 @@ class WorkshopProductController extends AdminController
             $form->hasMany('prices', '價格列表', function (Form\NestedForm $form) use($week){
                 $form->select('shop_group_id', '商店分組')->options('api/shopgroup')->rules('required');
 //                $form->text('shop_group_id', '商店分組')->rules('required');
-                $form->currency('price','單價')->symbol('$')->rules('required|numeric|min:0.00');
+                $form->text('price','單價')
+                    ->rules('required|numeric|min:0.00')
+                    ->required();
                 $form->text('base')
                     ->type('number')
                     ->attribute('min', 0)
