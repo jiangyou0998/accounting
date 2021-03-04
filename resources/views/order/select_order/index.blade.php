@@ -41,9 +41,13 @@
         <br>
         <br>
 
-        <input type="radio" name="dept" id="radio" value="A" @if(request()->dept == 'A') checked @endif>第一車
-        <input type="radio" name="dept" id="radio" value="B" @if(request()->dept == 'B') checked @endif>第二車
-        <input type="radio" name="dept" id="radio" value="C" @if(request()->dept == 'C') checked @endif>麵頭
+        @foreach(config('dept.symbol_and_name') as $dept => $name)
+            <input type="radio" name="dept" id="radio" value="{{$dept}}" @if(request()->dept == $dept) checked @endif>{{$name}}
+        @endforeach
+{{--        <input type="radio" name="dept" id="radio" value="A" @if(request()->dept == 'A') checked @endif>第一車--}}
+{{--        <input type="radio" name="dept" id="radio" value="B" @if(request()->dept == 'B') checked @endif>第二車--}}
+{{--        <input type="radio" name="dept" id="radio" value="C" @if(request()->dept == 'C') checked @endif>麵頭--}}
+{{--        <input type="radio" name="dept" id="radio" value="D" @if(request()->dept == 'D') checked @endif>方包--}}
 
     </div>
 
