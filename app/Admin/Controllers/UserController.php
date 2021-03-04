@@ -95,6 +95,8 @@ class UserController extends AdminController
             $form->email('email')->required();
             $form->text('sort','報表排序');
             $form->text('rb_user_id','糧友賬號ID')->required();
+            $form->text('company_chinese_name','公司名(中文)');
+            $form->text('company_english_name','公司名(英文)');
 
 
             if ($form->isCreating()) {
