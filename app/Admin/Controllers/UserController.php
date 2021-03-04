@@ -78,7 +78,7 @@ class UserController extends AdminController
             ]);
 //            $form->text('password');
             $form->text('txt_name')->required();
-            $form->text('report_name')->required();
+            $form->text('report_name');
 //            $form->text('int_dept');
             if($form->isCreating()){
                 $form->password('password','新密碼')->required();
