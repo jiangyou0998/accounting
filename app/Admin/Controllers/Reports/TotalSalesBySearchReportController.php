@@ -2,7 +2,7 @@
 
 namespace App\Admin\Controllers\Reports;
 
-use App\Admin\Renderable\KBShopTable;
+use App\Admin\Renderable\ShopTable;
 use App\Admin\Renderable\ProductTable;
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopProduct;
@@ -105,7 +105,7 @@ class TotalSalesBySearchReportController extends AdminController
 //                $filter->month('month', '報表日期');
 
                 $filter->equal('shop_id', '分店')
-                    ->multipleSelectTable(KBShopTable::make()) // 设置渲染类实例，并传递自定义参数
+                    ->multipleSelectTable(ShopTable::make()) // 设置渲染类实例，并传递自定义参数
                     ->title('弹窗标题')
                     ->dialogWidth('50%') // 弹窗宽度，默认 800px
                     ->model(User::class, 'id', 'txt_name'); // 设置编辑数据显示
