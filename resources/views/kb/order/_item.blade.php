@@ -30,15 +30,15 @@
                data-qty="{{round($item->qty,2)}}"
                size="3" maxlength="4"
                autocomplete="off"
-{{--               2021-01-08 更改operation權限--}}
-        @if($item->invalid_order && Auth::user()->cannot('operation')) disabled @endif
+{{--               2021-03-05 更改operation權限--}}
+        @if($item->invalid_order && Auth::user()->cannot('workshop')) disabled @endif
 
         >
     </td>
     <td align="center">{{$item->UoM}}</td>
     <td align="center">
-        {{--               2021-01-08 更改operation權限--}}
-        @if(!$item->invalid_order || Auth::user()->can('operation'))
+        {{--               2021-03-05 更改operation權限--}}
+        @if(!$item->invalid_order || Auth::user()->can('workshop'))
             <a href="javascript:void(0);" class="del"><span style="color: #FF6600; ">X</span></a>
         @endif
     </td>

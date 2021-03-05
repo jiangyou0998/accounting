@@ -46,7 +46,7 @@
             </td>
         </tr>
         <tr>
-            @if(Auth::user()->can('workshop') or Auth::user()->can('operation') or
+            @if(Auth::user()->can('workshop') or
             !$product->invalid_order
             )
                 <td style="height:20px; width:50%; font-size:24px; text-align:center" colspan="2">
