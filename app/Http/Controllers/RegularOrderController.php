@@ -9,6 +9,7 @@ use App\Models\WorkshopOrderSample;
 use App\Models\WorkshopProduct;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -170,8 +171,15 @@ class RegularOrderController extends Controller
                         $is_order = true;
                     }
 
-                    //2020-12-03 新增下單時候的價格
-                    $prices = WorkshopProduct::all()->pluck('default_price','id');
+                    $shop_group_id = 5;
+
+                    //2021-01-06 下單時候價格改為從prices表獲取
+                    $prices = WorkshopProduct::with('prices')->whereHas('prices', function (Builder $query) use($shop_group_id){
+                        $query->where('shop_group_id', '=', $shop_group_id);
+                    })->get()->mapWithKeys(function ($item) use($shop_group_id){
+                        $price = $item['prices']->where('shop_group_id', $shop_group_id)->first()->price;
+                        return [$item['id'] => $price ];
+                    });
 
                     if (isset($sampleArr[$shopid][$week])
                         && !$is_order){

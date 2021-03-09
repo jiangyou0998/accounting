@@ -262,7 +262,7 @@ class WorkshopCartItem extends Model
             ->whereNotIn('workshop_cart_items.status',[4])
             //2021-01-06 價格從price表拿
             ->where('prices.shop_group_id','=',5)
-            //2021-01-06 不顯示KB以外的
+            //2021-01-06 不顯示symbol以外的
             ->whereIn('workshop_cart_items.dept', config('dept.symbol'))
             ->where('workshop_cart_items.deli_date','=',$deli_date);
 

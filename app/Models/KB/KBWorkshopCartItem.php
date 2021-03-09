@@ -219,17 +219,21 @@ class KBWorkshopCartItem extends Model
             ->select('deli_date')
             ->addSelect('users.report_name')
             ->addSelect('workshop_cart_items.user_id')
-            ->addSelect(DB::raw('SUM(default_price * ifnull(qty_received,qty)) as po_total'))
+            ->addSelect(DB::raw('SUM(prices.price * ifnull(qty_received,qty)) as po_total'))
         ;
 
         //設置關聯表
         $items = $items
             ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
-            ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id');
+            ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
+            //2021-01-06 價格從price表拿
+            ->leftJoin('prices', 'workshop_products.id', '=', 'prices.product_id');
 
         //設置查詢條件
         $items = $items
             ->whereNotIn('workshop_cart_items.status',[4])
+            //2021-01-06 價格從price表拿
+            ->where('prices.shop_group_id','=',1)
             ->where('workshop_cart_items.deli_date','=',$deli_date);
 
         $items = $items
