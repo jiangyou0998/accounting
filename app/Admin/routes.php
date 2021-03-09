@@ -43,6 +43,13 @@ Route::group([
     //分店銷售查詢
     $router->resource('reports/total_sales_by_search', 'Reports\TotalSalesBySearchReportController');
 
+    //會計相關
+    //statement
+    $router->get('reports/statement', 'Accountings\StatementController@index');
+    $router->get('reports/statement/view', 'Accountings\StatementController@statement')->name('admin.statement.view');
+    //invoice
+    $router->get('reports/invoice', 'Accountings\InvoiceController@index');
+    $router->get('reports/invoice/view', 'Accountings\InvoiceController@invoice')->name('admin.invoice.view');
 
     //前台
     $router->resource('users', 'UserController');

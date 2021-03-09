@@ -44,6 +44,9 @@ class UserController extends AdminController
             $grid->name->sortable();
             $grid->txt_name;
             $grid->report_name;
+            $grid->column('pocode')->hide();
+            $grid->column('company_chinese_name','公司名(中文)')->hide();
+            $grid->column('company_english_name','公司名(英文)')->hide();
             $grid->roles()->pluck('name')->label();
             $grid->email;
 
@@ -95,6 +98,9 @@ class UserController extends AdminController
 
 
             $form->email('email')->required();
+            $form->text('company_chinese_name','公司名(中文)');
+            $form->text('company_english_name','公司名(英文)');
+            $form->text('pocode');
 
             if ($form->isCreating()) {
                 $form->radio('radio','是否分店賬號')
