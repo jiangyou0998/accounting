@@ -102,18 +102,18 @@
                     @include('admin.invoice._total')
                     <hr style="border-top:2px solid black;">
                     <footer class="footer">
-                        <div>
-                            <div><span><b><i>For and on behalf of</i></b></span></div>
-                            <div><span><b>糧友麵包飲食有限公司</b></span></div>
-                            <div style="width: 30%">
-                                <img src="/images/invoice_signature_rb.jpeg" alt="Top Header" style="width:100%; border-bottom:1px solid black;" border="0">
-                            </div>
-                            <div><span><b><i>Authorized signature</i></b></span></div>
-                            <div style="font-size: large;text-align: center; padding-top: 6px">
-                                <b>付款方式：請開支票抬頭人"Ryoyupan Bakery Catering Limited"</b>
-                            </div>
-                        </div>
-
+{{--                        <div>--}}
+{{--                            <div><span><b><i>For and on behalf of</i></b></span></div>--}}
+{{--                            <div><span><b>糧友麵包飲食有限公司</b></span></div>--}}
+{{--                            <div style="width: 30%">--}}
+{{--                                <img src="/images/invoice_signature_rb.jpeg" alt="Footer" style="width:100%; border-bottom:1px solid black;" border="0">--}}
+{{--                            </div>--}}
+{{--                            <div><span><b><i>Authorized signature</i></b></span></div>--}}
+{{--                            <div style="font-size: large;text-align: center; padding-top: 6px">--}}
+{{--                                <b>付款方式：請開支票抬頭人"Ryoyupan Bakery Catering Limited"</b>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+                        <img src="/images/invoice_signature_rb2.jpeg" alt="Footer" style="width:100%; border-bottom:1px solid black;" border="0">
                     </footer>
                 @else
                     <footer></footer>
