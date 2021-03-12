@@ -102,7 +102,7 @@
                     @include('admin.invoice._total')
                     <hr style="border-top:2px solid black;">
                     <footer class="footer">
-                        <img src="/images/invoice_signature_kb.jpeg" alt="Top Header" style="width:100%; border:0px solid black;" border="0">
+                        <img src="/images/invoice_signature_kb.jpeg" alt="Footer" style="width:100%; border:0px solid black;" border="0">
                     </footer>
                 @else
                     <footer></footer>
