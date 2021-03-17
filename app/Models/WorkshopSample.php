@@ -3,14 +3,26 @@
 namespace App\Models;
 
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class WorkshopSample extends Model
 {
 
     protected $table = 'workshop_order_sample';
     public $timestamps = false;
+
+    public function scopeOfShopGroupId($query, $shop)
+    {
+        $shop_group_id = User::getShopGroupId($shop);
+        if($shop_group_id){
+            return $query->where('prices.shop_group_id','=',$shop_group_id);
+        }else{
+            throw new AccessDeniedHttpException('分店未加入分組,請聯繫管理員');
+        }
+    }
 
     //獲取固定柯打item
     public static function getRegularOrderItems($shop ,$dateofweek ,$dept = '')
@@ -49,9 +61,9 @@ class WorkshopSample extends Model
 //            ->where('workshop_order_sample.dept','=',$dept)
             ->where('workshop_order_sample.sampledate','like', "%$dateofweek%")
             //20.10.22 判斷範本產品是否已暫停
-            ->where('workshop_products.status','!=',2)
-            //2021-01-06 蛋撻王分組為1
-            ->where('prices.shop_group_id','=',1)
+            ->whereNotIn('workshop_products.status', [2,4])
+            //2021-03-17 獲取分組id
+            ->ofShopGroupId($shop)
             ->where('workshop_order_sample_item.disabled','=',0)
             ->where('workshop_order_sample.disabled','=',0);
 
