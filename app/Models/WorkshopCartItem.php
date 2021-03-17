@@ -110,7 +110,7 @@ class WorkshopCartItem extends Model
             ->addSelect(DB::raw('SUM(workshop_cart_items.qty) as qty'))
             ->addSelect(DB::raw('SUM(ifnull(workshop_cart_items.qty_received, workshop_cart_items.qty)) as qty_received'))
             //2020-11-23 workshop_products.default_price改為workshop_cart_items.order_price
-            ->addSelect(DB::raw('SUM(workshop_cart_items.order_price) as default_price'))
+            ->addSelect(DB::raw('MAX(workshop_cart_items.order_price) as default_price'))
             ->addSelect('workshop_cats.id as cat_id')
             ->addSelect('workshop_cats.cat_name')
             ->addSelect('workshop_products.id as itemID');
