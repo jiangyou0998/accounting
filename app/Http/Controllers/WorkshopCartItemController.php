@@ -280,28 +280,34 @@ class WorkshopCartItemController extends Controller
         $product->cut_order = false;
         $product->not_deli_time = false;
 
+        $phase = $product->phase;
+        $deliW = Carbon::parse($deli_date)->isoFormat('d');
+        $canOrderTime = explode(",", $product->canordertime);
+
         //判斷是否後台落單
-        if ($product->phase <= 0) {
+        if ($phase <= 0) {
             $product->order_by_workshop = true;
         }
 
+        //跳過出貨期不出貨(星期日不是出貨期)
+        if (($deliW - $phase) <= 0 && !in_array('0', $canOrderTime) && $phase > 0) {
+            $phase += 1;
+        }
+
         //判斷是否已截單
-        if ($product->phase > 0) {
+        if ($phase > 0) {
             $cuttime = $deli_date . " " . $product->cuttime . "00";
-            $deliTime = Carbon::parse($cuttime)->subDay($product->phase);
+            $finalOrderTime = Carbon::parse($cuttime)->subDay($phase);
+//            dump($finalOrderTime->toDateTimeString());
             $now = Carbon::now();
-            $product->cut_order = $deliTime->lt($now);
+            $product->cut_order = $finalOrderTime->lt($now);
         }
 
         //判斷是否在出貨期
-        $deliW = Carbon::parse($deli_date)->isoFormat('d');
-        $canOrderTime = explode(",", $product->canordertime);
         //送貨日期不在可下單日期時
         if (!in_array($deliW, $canOrderTime)) {
             $product->not_deli_time = true;
         }
-
-        //todo 判斷跳過週末不出貨
 
         //只要有一個是true,分店就不能下單
         $product->invalid_order =
