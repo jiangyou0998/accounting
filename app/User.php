@@ -19,8 +19,6 @@ class User extends Authenticatable
 {
     use Notifiable, HasRoles;
 
-//    protected $table = 'tbl_user';
-
     /**
      * The attributes that are mass assignable.
      *
@@ -152,6 +150,26 @@ class User extends Authenticatable
             ->get(['id','report_name']);
 
         return $shops;
+    }
+
+    //根據shop_group的id,獲取分店
+    public static function getShopsByShopGroup($shop_group_id){
+
+        $users = new User();
+        $shops = $users
+            ->whereHas('shop_groups', function ($query) use($shop_group_id){
+                $query->where('id', '=', $shop_group_id);
+            })
+            ->orderBy('name')
+            ->get(['id','report_name']);
+
+        return $shops;
+    }
+
+    //根據user表的id,獲取分店shop_group_id
+    public static function getShopGroupId($shop_id){
+        $query = self::query();
+        return $query->find($shop_id)->shop_groups->first()->id ?? "";
     }
 
     public static function getTestUserIDs(){
