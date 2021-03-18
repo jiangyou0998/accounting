@@ -34,6 +34,10 @@ class WorkshopProductController extends AdminController
                 $grid->disableActions();
             }
 
+            //2021-03-18 禁用詳情、刪除按鈕
+            $grid->disableViewButton();
+            $grid->disableDeleteButton();
+
             $grid->showQuickEditButton();
 
             // 表格快捷搜索
@@ -91,26 +95,6 @@ class WorkshopProductController extends AdminController
                 ->where('status','<>', 4)
                 ->orderBy('product_no');
 
-//            dd($grid->model()->collection()->toArray());
-//            $grid->model()->collection(function (Collection $collection) {
-//
-////                $collection->transform(function ($item) {
-////
-////                    return $item;
-////                });
-//
-//                //给表格加一个序号列
-//                $collection->transform(function ($item, $index) {
-//                    $item['number'] = $index + 1 ;
-//
-//                    return $item;
-//                });
-//
-//                // 最后一定要返回集合对象
-//                return $collection;
-//            });
-
-//            $grid->column('number',"#");
             $grid->number();
             $grid->id()->sortable();
             $grid->product_no->sortable();
@@ -157,8 +141,6 @@ class WorkshopProductController extends AdminController
                 }else{
                     return "不在生產表中";
                 }
-
-
             });
 
             $titles = [
@@ -250,27 +232,20 @@ class WorkshopProductController extends AdminController
 
                 }, '細類')->select('api/group2')->default("");
 
-
-
             });
 
             //選擇器
             $grid->selector(function (Grid\Tools\Selector $selector) {
 
-
                 $selector->selectOne('price', '有價格', [
                     1 => '蛋撻王',
                     5 => '糧友',
                 ], function ($query, $value) {
-
 //                    $value = current($value);
-
                     $query->whereHas('prices', function ($query) use($value){
                         $query->where('shop_group_id', $value);
                     });
-
                 });
-
 
             });
         });
@@ -296,14 +271,11 @@ class WorkshopProductController extends AdminController
                 // 去掉跳转详情页按钮
                 $tools->disableView();
                 // 去掉删除按钮
-//                $tools->disableDelete();
+                $tools->disableDelete();
 
                 // 添加一个按钮, 参数可以是字符串, 匿名函数, 或者实现了Renderable或Htmlable接口的对象实例
 //                $tools->append('<a class="btn btn-sm btn-danger"><i class="fa fa-trash"></i>&nbsp;&nbsp;delete</a>');
             });
-
-
-
 
             $form->display('id',"ID");
             $form->text('product_name')->required();
@@ -312,31 +284,16 @@ class WorkshopProductController extends AdminController
                 'max' => '編號最大長度為7',
                 'unique'   => '編號已存在',
             ]);
-//                ;
-//            $form->text('product_no')->required()->rules(function ($form) {
-//
-//                return [
-//                    'required',
-//                    'max:7',
-//                    Rule::unique('tbl_order_z_menu')->ignore($form->getKey(),'int_id'), [
-//                        'max' => '編號最大長度為7',
-//                        'unique'   => '編號已存在',
-//                    ]
-//                ];
-//
-//            });
 
             $form->select('','大類')->options('/api/cat')->load('group_id', '/api/group');
 
             $form->select('group_id')->options('/api/group2')->required();
-//            $form->text('int_group')->required();
 
             $form->select('unit_id')->options('/api/unit')->required();
 
             $form->text('sort')
                 ->type('number')
                 ->required();
-
 
             $status = [
                 1 => '現貨',
@@ -357,7 +314,6 @@ class WorkshopProductController extends AdminController
             ];
 
             $form->display('last_modify');
-
 
             $form->hasMany('prices', '價格列表', function (Form\NestedForm $form) use($week){
                 $form->select('shop_group_id', '商店分組')->options('api/shopgroup')->rules('required');
@@ -386,7 +342,6 @@ class WorkshopProductController extends AdminController
                     ->options($week)
                 ;
             });
-
 
             $form->saving(function (Form $form) {
 
