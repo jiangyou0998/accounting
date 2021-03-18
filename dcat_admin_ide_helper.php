@@ -140,6 +140,9 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection eng_address
      * @property Grid\Column|Collection int_area
      * @property Grid\Column|Collection oper_time
+     * @property Grid\Column|Collection cat_ids
+     * @property Grid\Column|Collection user_ids
+     * @property Grid\Column|Collection special_date
      * @property Grid\Column|Collection int_id
      * @property Grid\Column|Collection txt_dept
      * @property Grid\Column|Collection bl_isvalid
@@ -176,6 +179,9 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection address_id
      * @property Grid\Column|Collection email_verified_at
      * @property Grid\Column|Collection rb_user_id
+     * @property Grid\Column|Collection company_chinese_name
+     * @property Grid\Column|Collection company_english_name
+     * @property Grid\Column|Collection pocode
      * @property Grid\Column|Collection operate_user_id
      * @property Grid\Column|Collection shop_id
      * @property Grid\Column|Collection cart_item_id
@@ -336,6 +342,9 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection eng_address(string $label = null)
      * @method Grid\Column|Collection int_area(string $label = null)
      * @method Grid\Column|Collection oper_time(string $label = null)
+     * @method Grid\Column|Collection cat_ids(string $label = null)
+     * @method Grid\Column|Collection user_ids(string $label = null)
+     * @method Grid\Column|Collection special_date(string $label = null)
      * @method Grid\Column|Collection int_id(string $label = null)
      * @method Grid\Column|Collection txt_dept(string $label = null)
      * @method Grid\Column|Collection bl_isvalid(string $label = null)
@@ -372,6 +381,9 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection address_id(string $label = null)
      * @method Grid\Column|Collection email_verified_at(string $label = null)
      * @method Grid\Column|Collection rb_user_id(string $label = null)
+     * @method Grid\Column|Collection company_chinese_name(string $label = null)
+     * @method Grid\Column|Collection company_english_name(string $label = null)
+     * @method Grid\Column|Collection pocode(string $label = null)
      * @method Grid\Column|Collection operate_user_id(string $label = null)
      * @method Grid\Column|Collection shop_id(string $label = null)
      * @method Grid\Column|Collection cart_item_id(string $label = null)
@@ -537,6 +549,9 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection eng_address
      * @property Show\Field|Collection int_area
      * @property Show\Field|Collection oper_time
+     * @property Show\Field|Collection cat_ids
+     * @property Show\Field|Collection user_ids
+     * @property Show\Field|Collection special_date
      * @property Show\Field|Collection int_id
      * @property Show\Field|Collection txt_dept
      * @property Show\Field|Collection bl_isvalid
@@ -573,6 +588,9 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection address_id
      * @property Show\Field|Collection email_verified_at
      * @property Show\Field|Collection rb_user_id
+     * @property Show\Field|Collection company_chinese_name
+     * @property Show\Field|Collection company_english_name
+     * @property Show\Field|Collection pocode
      * @property Show\Field|Collection operate_user_id
      * @property Show\Field|Collection shop_id
      * @property Show\Field|Collection cart_item_id
@@ -733,6 +751,9 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection eng_address(string $label = null)
      * @method Show\Field|Collection int_area(string $label = null)
      * @method Show\Field|Collection oper_time(string $label = null)
+     * @method Show\Field|Collection cat_ids(string $label = null)
+     * @method Show\Field|Collection user_ids(string $label = null)
+     * @method Show\Field|Collection special_date(string $label = null)
      * @method Show\Field|Collection int_id(string $label = null)
      * @method Show\Field|Collection txt_dept(string $label = null)
      * @method Show\Field|Collection bl_isvalid(string $label = null)
@@ -769,6 +790,9 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection address_id(string $label = null)
      * @method Show\Field|Collection email_verified_at(string $label = null)
      * @method Show\Field|Collection rb_user_id(string $label = null)
+     * @method Show\Field|Collection company_chinese_name(string $label = null)
+     * @method Show\Field|Collection company_english_name(string $label = null)
+     * @method Show\Field|Collection pocode(string $label = null)
      * @method Show\Field|Collection operate_user_id(string $label = null)
      * @method Show\Field|Collection shop_id(string $label = null)
      * @method Show\Field|Collection cart_item_id(string $label = null)

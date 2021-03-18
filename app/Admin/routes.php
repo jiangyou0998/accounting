@@ -30,6 +30,7 @@ Route::group([
     $router->resource('cart', 'WorkshopCartItemController');
     $router->resource('cartitem_log', 'WorkshopCartItemLogController');
     $router->resource('mypage', 'MypageController');
+    $router->resource('special_date', 'SpecialDateController');
 //    $router->resource('report', 'ReportController');
 
     //------------------------------------------------------------------

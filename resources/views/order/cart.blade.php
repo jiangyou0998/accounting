@@ -191,7 +191,7 @@
         // alert("order/cart/show_group/"+catid);
         $.ajax({
             type: "POST",
-            url: "/order/cart/show_group/"+catid+'?dept={{request()->dept}}',
+            url: "/order/cart/show_group/"+catid+'/{{$orderInfos->shopid}}',
             data: "",
             dataType:'html',
             // headers: {
@@ -217,7 +217,7 @@
         console.log(deli_date);
         $.ajax({
             type: "POST",
-            url: "/order/cart/show_product/"+groupid+'?dept={{request()->dept}}',
+            url: "/order/cart/show_product/"+groupid+'/{{$orderInfos->shopid}}',
             data: {'deli_date':deli_date},
             dataType:'html',
             // headers: {

@@ -152,6 +152,18 @@ class User extends Authenticatable
         return $shops;
     }
 
+    // 獲取所有加入shop_group的用戶
+    public static function getAllShopsByShopGroup(){
+
+        $users = new User();
+        $shops = $users
+            ->has('shop_groups')
+            ->orderBy('name')
+            ->get();
+
+        return $shops;
+    }
+
     //根據shop_group的id,獲取分店
     public static function getShopsByShopGroup($shop_group_id){
 
@@ -169,7 +181,7 @@ class User extends Authenticatable
     //根據user表的id,獲取分店shop_group_id
     public static function getShopGroupId($shop_id){
         $query = self::query();
-        return $query->find($shop_id)->shop_groups->first()->id ?? "";
+        return $query->find($shop_id)->shop_groups->first()->id ?? 0;
     }
 
     public static function getTestUserIDs(){

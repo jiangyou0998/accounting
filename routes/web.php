@@ -54,8 +54,8 @@ Route::group(['middleware' => ['auth','permission:shop|workshop|operation']], fu
     Route::get('/order/select_rb_old_order', 'OrderController@select_rb_old_order')->name('rb.order.select_old_order');
 
     Route::get('order/cart','WorkshopCartItemController@cart')->name('cart');
-    Route::post('order/cart/show_group/{catid}', 'WorkshopCartItemController@showGroup')->name('show_group');
-    Route::post('order/cart/show_product/{groupid}', 'WorkshopCartItemController@showProduct')->name('show_product');
+    Route::post('order/cart/show_group/{catid}/{shopid}', 'WorkshopCartItemController@showGroup')->name('show_group');
+    Route::post('order/cart/show_product/{groupid}/{shopid}', 'WorkshopCartItemController@showProduct')->name('show_product');
     Route::put('order/cart/{shopid}', 'WorkshopCartItemController@update')->name('cart.update');
 });
 
@@ -65,6 +65,7 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
     Route::post('order/deli/update', 'DeliController@deli_update')->name('deli.update');
 });
 
+//workshop分組
 Route::group(['middleware' => ['auth','permission:workshop']], function () {
     Route::get('order/regular', 'Regular\RegularOrderController@index')->name('order.regular');
     Route::post('order/regular', 'Regular\RegularOrderController@store')->name('order.regular.store');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\SpecialDate;
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopCartItemLog;
 use App\Models\WorkshopCat;
@@ -20,6 +21,9 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class WorkshopCartItemController extends Controller
 {
+    private $productArr;
+    private $special_dates;
+
     public function update(Request $request, $shopid)
     {
         $user = Auth::User();
@@ -200,12 +204,19 @@ class WorkshopCartItemController extends Controller
             $sampleItems = WorkshopSample::getRegularOrderItems($shopid, $deliW ,$dept);
         }
 
+        $this->productArr = WorkshopProduct::getProductCatIds();
+        $this->special_dates = SpecialDate::where('special_date', $deli_date)->get();
+
+//        dump($items);
         foreach ($items as $item) {
-            $this->checkInvalidOrder($item,$deli_date);
+            $item->product_id = $item->itemID;
+            $this->checkInvalidOrder($item,$deli_date,$shopid);
         }
 
+//        dd($sampleItems);
         foreach ($sampleItems as $sampleItem) {
-            $this->checkInvalidOrder($sampleItem,$deli_date);
+            $sampleItem->product_id = $sampleItem->itemID;
+            $this->checkInvalidOrder($sampleItem,$deli_date,$shopid);
         }
 
 //        dump($items->toArray());
@@ -226,14 +237,11 @@ class WorkshopCartItemController extends Controller
     }
 
     //ajax加載分組
-    public function showGroup($catid)
+    public function showGroup($catid ,$shopid)
     {
-//        dump(request()->dept);
-        $groups = WorkshopGroup::where('cat_id', $catid)->whereHas('products', function (Builder $query){
-            $query->whereHas('prices', function (Builder $query) {
-                $shop_group_id = 1;
-                //dept為RB 分組改為糧友
-                if(request()->dept === 'RB') $shop_group_id = 5;
+        $groups = WorkshopGroup::where('cat_id', $catid)->whereHas('products', function (Builder $query) use($shopid){
+            $query->whereHas('prices', function (Builder $query) use($shopid){
+                $shop_group_id = User::getShopGroupId($shopid);
                 $query->where('shop_group_id', '=', $shop_group_id);
             });
         })->get();
@@ -242,11 +250,9 @@ class WorkshopCartItemController extends Controller
     }
 
     //ajax加載產品
-    public function showProduct($groupid, Request $request)
+    public function showProduct($groupid, $shopid, Request $request)
     {
-        $shop_group_id = 1;
-        //dept為RB 分組改為糧友
-        if(request()->dept === 'RB') $shop_group_id = 5;
+        $shop_group_id = User::getShopGroupId($shopid);
         $products = WorkshopProduct::with('cats')
             ->with('units')
             ->with('prices')
@@ -265,33 +271,27 @@ class WorkshopCartItemController extends Controller
         $infos = new Collection();
         $infos->group_name = $group->group_name;
         $infos->cat_name = $group->cats->cat_name;
-//        dd($infos);
-//        foreach ($products as $product) {
-////            dump($deli_date.$product->cuttime);
-//            $this->checkInvalidOrder($product,$deli_date);
-////            dump(mb_substr($product->cats->cat_name,0,4));
-//
-//        }
-//        dd($products->toArray());
+
+        $this->productArr = WorkshopProduct::getProductCatIds();
+        $this->special_dates = SpecialDate::where('special_date', $deli_date)->get();
+//        dump($this->productArr->toArray());
+
         foreach ($products as $product) {
-//            dump($deli_date.$product->cuttime);
+
             $productDetail = $product->prices->where('shop_group_id', '=', $shop_group_id)->first();
 
-            $this->checkInvalidOrder($productDetail,$deli_date);
+            $this->checkInvalidOrder($productDetail,$deli_date,$shopid);
 
             $this->resetProduct($product,$productDetail);
 
-//            dump(mb_substr($product->cats->cat_name,0,4));
-
         }
-//        dd($products->toArray());
 
         return view('order.cart_product', compact('products','infos'))->render();
     }
 
     //判斷是否能下單
-    //$product必須有phase,cuttime,canordertime
-    private function checkInvalidOrder($product,$deli_date)
+    //$product必須有phase,cuttime,canordertime,product_id
+    private function checkInvalidOrder($product,$deli_date,$shopid)
     {
         $product->order_by_workshop = false;
         $product->cut_order = false;
@@ -325,6 +325,24 @@ class WorkshopCartItemController extends Controller
         if (!in_array($deliW, $canOrderTime)) {
             $product->not_deli_time = true;
         }
+
+        $productArr = $this->productArr;
+        $special_dates = $this->special_dates;
+//        dump($special_dates);
+        foreach ($special_dates as $special_date){
+            $catArr = explode(',', $special_date->cat_ids);
+            $shopArr = explode(',', $special_date->user_ids);
+//            dump($catArr);
+//            dump($shopArr);
+
+            $cat_id = $productArr[$product->product_id] ?? 0 ;
+
+            if (in_array($cat_id, $catArr) && in_array($shopid, $shopArr)){
+                $product->not_deli_time = false;
+                break;
+            }
+        }
+
 
         //只要有一個是true,分店就不能下單
         $product->invalid_order =

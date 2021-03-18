@@ -67,6 +67,17 @@ class WorkshopProduct extends Model
 //        }));
 //    }
 
+    public static function getProductCatIds()
+    {
+        $query = self::query();
+        $query = $query->with('cats')->get();
+
+        $catids = $query->mapWithKeys(function ($item, $key) {
+            return [$item['id'] => $item['cats']->id];
+        });
+        return $catids->toArray();
+    }
+
 
 
 }
