@@ -33,6 +33,10 @@ class WorkshopProductController extends AdminController
                 $grid->disableActions();
             }
 
+            //2021-03-18 禁用詳情、刪除按鈕
+            $grid->disableViewButton();
+            $grid->disableDeleteButton();
+
             $grid->showQuickEditButton();
 
             // 表格快捷搜索
@@ -53,7 +57,6 @@ class WorkshopProductController extends AdminController
             $groupArr = array();
             $groups = $groups::with('cats')->get();
             foreach ($groups as $group) {
-//                dump($group->toArray()['tbl_order_z_cat']);
                 $groupArr[$group['id']] = $group->toArray()['cats']['cat_name'].'-'.$group['group_name'];
             }
 
@@ -61,8 +64,6 @@ class WorkshopProductController extends AdminController
             $rbPricesArr = PriceModel::where('shop_group_id', 5)->get()->mapToGroups(function ($item, $key) {
                 return [$item['product_id'] => $item];
             })->toArray();
-
-//            dd($groupArr);
 
             $grid->model()
                 ->with(['cats'])
@@ -72,21 +73,6 @@ class WorkshopProductController extends AdminController
                 ->where('status','<>', 4)
                 ->orderBy('product_no');
 
-//            dd($grid->model()->collection()->toArray());
-//            $grid->model()->collection(function (Collection $collection) {
-//
-//                //给表格加一个序号列
-//                $collection->transform(function ($item, $index) {
-//                    $item['number'] = $index + 1 ;
-//
-//                    return $item;
-//                });
-//
-//                // 最后一定要返回集合对象
-//                return $collection;
-//            });
-//
-//            $grid->column('number',"#");
             $grid->number();
             $grid->id()->sortable();
             $grid->product_no->sortable();
@@ -126,8 +112,6 @@ class WorkshopProductController extends AdminController
                     $row['rb_min'] = $rbPricesArr[$row['id']][0]['min'] ?? '';
                 }
 
-
-
                 return $rows;
             });
 
@@ -158,8 +142,6 @@ class WorkshopProductController extends AdminController
 
                 }, '細類')->select('api/group2')->default("");
 
-
-
             });
         });
     }
@@ -176,15 +158,13 @@ class WorkshopProductController extends AdminController
 
         return Form::make($builder, function (Form $form) {
 
-//            $form->action($this->confirm1());
-
             $form->tools(function (Form\Tools $tools) {
                 // 去掉跳转列表按钮
 //                $tools->disableList();
                 // 去掉跳转详情页按钮
                 $tools->disableView();
                 // 去掉删除按钮
-//                $tools->disableDelete();
+                $tools->disableDelete();
 
                 // 添加一个按钮, 参数可以是字符串, 匿名函数, 或者实现了Renderable或Htmlable接口的对象实例
 //                $tools->append('<a class="btn btn-sm btn-danger"><i class="fa fa-trash"></i>&nbsp;&nbsp;delete</a>');
