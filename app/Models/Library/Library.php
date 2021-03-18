@@ -20,6 +20,12 @@ class Library extends Model
         return $value;
     }
 
+    //修改獲取的file_path
+    public function getFilePathAttribute($value)
+    {
+        return $value ? ('/libraries/'.$value) : $value;
+    }
+
     public function users(): MorphToMany
     {
         return $this->morphToMany(

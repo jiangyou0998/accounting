@@ -229,6 +229,7 @@ return [
             'image' => 'images',
             'file'  => 'files',
             'notice'=>'notices',
+            'library'=>'libraries',
         ],
     ],
 

@@ -18,23 +18,26 @@ class LibraryController extends Controller
 //        $temp = LibraryGroup::with('libraries')->has('libraries')->get()->toArray();
 //        dump($temp);
 
-        $arr = LibraryGroup::all()->pluck('parent_id','id')->toArray();
+//        $arr = LibraryGroup::all()->pluck('parent_id','id')->toArray();
 //        dd($arr);
 
         $childIds = LibraryGroup::has('libraries')->get()->pluck('id')->toArray();
 //        dd($childIds);
 
-        //獲取所有id(包括父級id)
-        $ids = [];
-        foreach ($childIds as $id){
-            array_push($ids,$id);
-            while($arr[$id]) {
-                $id = $arr[$id];
-                array_push($ids,$id);
-            }
-        }
+//        //獲取所有id(包括父級id)
+//        $ids = [];
+//        foreach ($childIds as $id){
+//            array_push($ids,$id);
+//            while($arr[$id]) {
+//                $id = $arr[$id];
+//                array_push($ids,$id);
+//            }
+//        }
+//
+//        $ids = array_unique($ids);
 
-        $ids = array_unique($ids);
+        $ids = $this->getIdsAndParentIds($childIds);
+
         $data = LibraryGroup::whereIn('id',$ids)->orderBy('order')->get()->toArray();
 
         $library_groups = [];
@@ -58,11 +61,30 @@ class LibraryController extends Controller
 
     public function child_index($id)
     {
-        $library_groups = LibraryGroup::with('child_menu_has_libraries')
-            ->where('id', $id)
-            ->get();
+//        $library_groups = LibraryGroup::with('child_menu_has_libraries')
+//            ->with('libraries')
+//            ->where('id', $id)
+//            ->first();
+//
+//        dump($library_groups->toArray());
 
-        dump($library_groups->toArray());
+        $childIds = LibraryGroup::has('libraries')->get()->pluck('id')->toArray();
+//        dump($childIds);
+//        dump($id);
+
+        $ids = $this->getIdsAndParentIds($childIds ,$id);
+//        dump($ids);
+
+        $data = LibraryGroup::whereIn('id',$ids)->orderBy('order')->get()->toArray();
+
+//        dump($data);
+        $library_groups = [];
+        if(!empty($data)){
+            $library_groups = LibraryGroup::generateTree($data);
+        }
+//
+//        dd($library_groups);
+        $library_groups = $library_groups[0] ?? $library_groups;
         return view('libraries.child_index',compact('library_groups'));
     }
 
@@ -118,4 +140,45 @@ class LibraryController extends Controller
 //        return $nodes;
 //
 //    }
+    private function getIdsAndParentIds($childIds,$current_id = null)
+    {
+        $arr = LibraryGroup::all()->pluck('parent_id','id')->toArray();
+
+        //獲取所有id(包括父級id)
+        $ids = [];
+        foreach ($childIds as $id){
+
+
+            if($current_id){
+                $temp = [];
+                array_push($temp,$id);
+                while($arr[$id]) {
+
+                    $id = $arr[$id];
+                    array_push($temp,$id);
+                    if($id == $current_id){
+                        $ids = $temp;
+                    }
+                }
+//                dump('id:'.$id.'---temp:');
+//                dump($temp);
+
+
+            }else{
+                array_push($ids,$id);
+                while($arr[$id]) {
+                    $id = $arr[$id];
+                    array_push($ids,$id);
+                }
+            }
+
+
+        }
+
+        $ids = array_unique($ids);
+
+//        dump($arr);
+
+        return $ids;
+    }
 }

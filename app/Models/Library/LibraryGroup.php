@@ -71,7 +71,6 @@ class LibraryGroup extends Model
             }
         }
 
-//        dump($items);
         return $tree;
     }
 

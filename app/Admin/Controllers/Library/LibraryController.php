@@ -120,9 +120,16 @@ class LibraryController extends AdminController
 
             $form->radio('library_type')
                 ->when('FILE', function (Form $form) {
-                    $form->file('file_path');
+                    $form->text('file_name');
+                    $form->file('file_path')
+                        ->disk('library')
+                        ->accept('xls,xlsx,csv,pdf,mp4,mov,jpg,jpeg,png')
+                        ->uniqueName()
+                        ->maxSize(204800)
+                        ->autoUpload();
                 })
                 ->when('LINK', function (Form $form) {
+                    $form->text('link_name');
                     $form->url('link_path');
                 })
                 ->options($this->options)
