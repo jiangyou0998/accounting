@@ -5,6 +5,7 @@
 /public/forms
 /public/libraries
 /public/uploads
+/public/imports
 /storage/*.key
 /storage/tmp
 /vendor
