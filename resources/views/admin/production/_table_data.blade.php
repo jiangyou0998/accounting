@@ -39,6 +39,12 @@
                  style="cursor:pointer;">
         @endif
     </td>
+{{--    總--}}
+    <td>
+        <img src="../images/print.png"
+             onclick="viewPrint({{$cat->id}},3)"
+             style="cursor:pointer;">
+    </td>
 
 </tr>
 

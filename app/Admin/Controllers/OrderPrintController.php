@@ -23,9 +23,9 @@ class OrderPrintController extends Controller
     {
         $cat_id = $request->cat_id;
         $deli_date = $request->deli_date;
-        //2021-02-03 type=1,一車 type=2,二車 type=0,全部
+        //2021-02-03 type=1,一車 type=2,二車 type=0,全部 type=3,只算一二車總數
         $type = $request->type ?? 0;
-        if (!in_array($type, [1, 2])) {
+        if (!in_array($type, [1, 2, 3])) {
             $type = 0;
         }
 
@@ -39,27 +39,44 @@ class OrderPrintController extends Controller
 
         $totals = $cartitemModel;
 
-        foreach ($shops as $shop){
+        if($type == 3){
+            //一車總數
+            $sql = "ROUND(sum(case when (workshop_cart_items.dept != 'B') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '一車'";
+            $datas = $datas
+                ->addSelect(DB::raw($sql));
+            $totals = $totals
+                ->addSelect(DB::raw($sql));
+
+            //二車總數
+            $sql = "ROUND(sum(case when (workshop_cart_items.dept = 'B') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '二車'";
+            $datas = $datas
+                ->addSelect(DB::raw($sql));
+            $totals = $totals
+                ->addSelect(DB::raw($sql));
+        }else{
+            foreach ($shops as $shop){
 //                $sql = "sum(case when workshop_cart_items.user_id = '$shop->id' then workshop_cart_items.qty else 0 end) as '$shop->chr_report_name'";
 //                dump($sql);
-            //2021-02-03 type=1,一車 type=2,二車 type=0,全部
-            if (in_array($type, [0, 1])) {
-                $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '$shop->id' and workshop_cart_items.dept != 'B') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '$shop->report_name'";
-                $datas = $datas
-                    ->addSelect(DB::raw($sql));
-                $totals = $totals
-                    ->addSelect(DB::raw($sql));
-            }
+                //2021-02-03 type=1,一車 type=2,二車 type=0,全部
+                if (in_array($type, [0, 1])) {
+                    $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '$shop->id' and workshop_cart_items.dept != 'B') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '$shop->report_name'";
+                    $datas = $datas
+                        ->addSelect(DB::raw($sql));
+                    $totals = $totals
+                        ->addSelect(DB::raw($sql));
+                }
 
-            //2021-02-03 type=1,一車 type=2,二車 type=0,全部
-            if (in_array($type, [0, 2])) {
-                $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '$shop->id' and workshop_cart_items.dept = 'B') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '$shop->report_name" . "2'";
-                $datas = $datas
-                    ->addSelect(DB::raw($sql));
-                $totals = $totals
-                    ->addSelect(DB::raw($sql));
+                //2021-02-03 type=1,一車 type=2,二車 type=0,全部
+                if (in_array($type, [0, 2])) {
+                    $sql = "ROUND(sum(case when (workshop_cart_items.user_id = '$shop->id' and workshop_cart_items.dept = 'B') then ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) else 0 end),0) as '$shop->report_name" . "2'";
+                    $datas = $datas
+                        ->addSelect(DB::raw($sql));
+                    $totals = $totals
+                        ->addSelect(DB::raw($sql));
+                }
             }
         }
+
 
         $datas = $datas
             ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
@@ -76,7 +93,6 @@ class OrderPrintController extends Controller
             ->orderBy('workshop_groups.id')
             ->get();
 
-//        dump($datas->toArray());
         $totals = $totals
 //            ->leftJoin('workshop_products', DB::raw('ifnull(workshop_products.base_product_id,workshop_products.id)'), '=', 'workshop_cart_items.product_id')
             ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
@@ -90,22 +106,17 @@ class OrderPrintController extends Controller
             ->first();
 
         $heading_shops = array();
-//        dump($totals->toArray());
+
         foreach ($totals->toArray() as $key=>$total){
-//            dump($total);
             if($total != '0'){
                 $heading_shops[] = $key;
             }
         }
-//        dump(in_array('奧海城2',$heading_shops));
 
         $headings = [];
         if($datas->first()){
             $headings = $datas->first()->toArray();
         }
-
-//        dump($datas->toArray());
-
 
         $checkInfos = new Collection();
         $checkInfos->title = WorkshopCat::find($cat_id)->cat_name;

@@ -99,6 +99,7 @@
                         {{$checkInfos->title}}
                         @if(request()->type == 1)(一車) @endif
                         @if(request()->type == 2)(二車) @endif
+                        @if(request()->type == 3)(總) @endif
                     </span>
                     <span class="style1"
                     >出貨日期：
