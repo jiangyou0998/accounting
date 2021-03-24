@@ -58,10 +58,21 @@
             <tr>
                 {{--                <td style="width:33%"></td>--}}
                 <td style="width:70%" align="left">
-                    <div><span><b>{{ $infos->company_name }}</b></span></div>
-                    <div><span>{{ $infos->address }}</span></div>
-                    <div><span>Phone&nbsp;:&nbsp;{{ $infos->phone }}</span></div>
-                    <div><span>Fax&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;{{ $infos->fax }}</span></div>
+                    @isset($infos->company_name)
+                        <div><span><b>{{ $infos->company_name }}</b></span></div>
+                    @endisset
+
+                    @isset($infos->address)
+                        <div><span>{{ $infos->address }}</span></div>
+                    @endisset
+
+                    @isset($infos->phone)
+                        <div><span>Phone&nbsp;:&nbsp;{{ $infos->phone }}</span></div>
+                    @endisset
+
+                    @isset($infos->fax)
+                        <div><span>Fax&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;{{ $infos->fax }}</span></div>
+                    @endisset
                 </td>
                 <td style="width:30%" align="left">
                     <div class='parent'>

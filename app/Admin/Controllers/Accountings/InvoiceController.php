@@ -2,15 +2,21 @@
 
 namespace App\Admin\Controllers\Accountings;
 
+use App\Admin\Actions\Form\Test;
+use App\Admin\Actions\Grid\PrintInvoices;
+use App\Admin\Forms\Invoice;
 use App\Admin\Renderable\ShopTable;
 use App\Admin\Traits\ReportTimeTraits;
 use App\Models\WorkshopCartItem;
 use App\User;
 use Carbon\Carbon;
+use Dcat\Admin\Admin;
 use Dcat\Admin\Controllers\AdminController;
+use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Card;
+use Dcat\Admin\Widgets\Modal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -27,12 +33,15 @@ class InvoiceController extends AdminController
     {
         return $content
             ->header('分店INVOICE')
+            ->body($this->render())
             ->body($this->grid());
     }
 
     protected function grid()
     {
         return Grid::make(null, function (Grid $grid) {
+
+//            $grid->tools(new Invoice());
 
             $grid->header(function ($collection) {
 
@@ -116,7 +125,7 @@ class InvoiceController extends AdminController
         }
 
         //根據權限獲取商店id
-        $shopid = $request->shop ?? 42;
+        $shopid = $request->shop ?? 0;
 
         //送貨單詳細數據
         $details = WorkshopCartItem::getDeliDetail($deli_date,$shopid);
@@ -132,6 +141,7 @@ class InvoiceController extends AdminController
 //        dump($total);
 
         $user = User::with('address')->find($shopid);
+
         $address = $user->address;
 
         //頁面顯示數據
@@ -232,6 +242,25 @@ class InvoiceController extends AdminController
         $cartitem = $cartitem->get();
 //        dd($cartitem->toArray());
         return $cartitem;
+    }
+
+    // 普通非异步弹窗
+    // 批量生成Invoice
+    protected function batchInvoice()
+    {
+        return Modal::make()
+            ->lg()
+            ->title('批量預覽')
+            ->body(Invoice::make())
+            ->button('<button class="btn btn-white"><i class="feather icon-grid"></i>&nbsp;批量預覽</button>');
+    }
+
+    protected function render()
+    {
+        return <<<HTML
+{$this->batchInvoice()}
+<br><br>
+HTML;
     }
 
 }

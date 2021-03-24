@@ -122,5 +122,16 @@ class User extends Authenticatable
         return $shop;
     }
 
+    // 獲取所有加入shop_group的用戶
+    public static function getAllShopsByShopGroup(){
+
+        $users = new User();
+        $shops = $users
+            ->has('shop_groups')
+            ->orderBy('name')
+            ->get();
+
+        return $shops;
+    }
 
 }
