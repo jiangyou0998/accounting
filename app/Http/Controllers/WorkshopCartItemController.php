@@ -308,7 +308,8 @@ class WorkshopCartItemController extends Controller
 
         //跳過出貨期不出貨(星期日不是出貨期)
         //2021-03-22 全跳過星期日
-        if (($deliW - $phase) <= 0 && $phase > 0) {
+        //2021-03-25 星期日時不用跳
+        if (($deliW - $phase) <= 0 && $deliW != 0 && $phase > 0) {
             $phase += 1;
         }
 
