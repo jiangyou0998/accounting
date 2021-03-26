@@ -76,6 +76,15 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
     Route::post('order/regular/sample', 'Regular\RegularOrderSampleController@store')->name('order.regular.sample.store');
     Route::put('order/regular/sample/{sample}', 'Regular\RegularOrderSampleController@update')->name('order.regular.sample.update');
     Route::delete('order/regular/sample/{sample}', 'Regular\RegularOrderSampleController@destroy')->name('order.regular.sample.destroy');
+
+    //外客
+    Route::get('customer/select_customer_group', 'Customer\CustomerController@select_customer_group')->name('customer.select_group');
+    Route::get('customer/order/select_old_order', 'Customer\CustomerController@select_old_order')->name('customer.order.select_old_order');
+
+    Route::get('customer/order/cart','Customer\WorkshopCartItemController@cart')->name('customer.cart');
+    Route::post('customer/order/cart/show_group/{catid}', 'Customer\WorkshopCartItemController@showGroup')->name('customer.show_group');
+    Route::post('customer/order/cart/show_product/{groupid}', 'Customer\WorkshopCartItemController@showProduct')->name('customer.show_product');
+    Route::put('customer/order/cart/{shopid}', 'Customer\WorkshopCartItemController@update')->name('customer.cart.update');
 });
 
 Route::group(['middleware' => ['auth','permission:shop']], function () {
@@ -129,11 +138,18 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 //Route::get('/import', 'ImportController@import');
-//Route::get('/importryoyuprice', 'ImportController@importRyoyuPrice');
-//Route::get('/importnewryoyuproductandprice', 'ImportController@importNewRyoyuProductAndPrice');
+//Route::get('/import/ryoyuprice', 'ImportController@importRyoyuPrice');
+//Route::get('/import/newryoyuproductandprice', 'ImportController@importNewRyoyuProductAndPrice');
+//Route::get('/import/customer', 'ImportController@importCustomer');
+//Route::get('/import/reset/price', 'ImportController@resetPrice');
+
+
 //Route::get('/api/resetpassword', 'Api\ApiController@resetAllPassword');
 //Route::get('/api/resetshoppassword', 'Api\ApiController@resetShopPassword');
 //Route::get('/api/resetadminpassword', 'Api\ApiController@resetAdminAllPassword');
 
 //datachange
 //Route::get('/api/datachange/product_to_price', 'Api\DataChangeApiController@copyProductToPrice');
+
+//test
+//Route::get('/test', 'Regular\RegularOrderController@test');

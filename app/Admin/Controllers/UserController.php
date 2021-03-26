@@ -95,7 +95,7 @@ class UserController extends AdminController
                 // 设置错误信息
                 $form->password('password_confirm','確認密碼')->same('password', '两次密码输入不一致');
             }
-            $form->email('email')->required();
+            $form->email('email');
             $form->text('sort','報表排序');
             $form->text('rb_user_id','糧友賬號ID');
             $form->text('company_chinese_name','公司名(中文)');

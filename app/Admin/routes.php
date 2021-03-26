@@ -52,7 +52,10 @@ Route::group([
     $router->get('reports/statement/view', 'Accountings\StatementController@statement')->name('admin.statement.view');
     //invoice
     $router->get('reports/invoice', 'Accountings\InvoiceController@index');
+    //外客invoice首頁
+    $router->get('reports/invoice/customer', 'Accountings\CustomerInvoiceController@index');
     $router->get('reports/invoice/view', 'Accountings\InvoiceController@invoice')->name('admin.invoice.view');
+    $router->get('reports/delivery/view', 'Accountings\InvoiceController@delivery')->name('admin.delivery.view');
 
     //前台
     $router->resource('users', 'UserController');
@@ -84,6 +87,9 @@ Route::group([
 //    $router->get('data/', 'DataChangeController@index');
 //    $router->put('data/test', 'DataChangeController@test');
 //    $router->put('data/form', 'DataChangeController@changeForms');
+
+//    $router->resource('menus2', 'WorkshopProductExportController');
+//    $router->resource('price/export', 'PriceExportController');
 
 //    $router->get('test',function (){
 //       return view('admin.checks.layout');

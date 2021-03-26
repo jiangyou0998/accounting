@@ -215,5 +215,53 @@ class RegularOrderController extends Controller
 
     }
 
+//    public function test(){
+//        $shop_group_id = 1;
+//
+//        //2021-01-06 下單時候價格改為從prices表獲取
+//        $prices = WorkshopProduct::with('prices')->whereHas('prices', function (Builder $query) use($shop_group_id){
+//            $query->where('shop_group_id', '=', $shop_group_id);
+//        })->get()->mapWithKeys(function ($item) use($shop_group_id){
+//            $price = $item['prices']->where('shop_group_id', $shop_group_id)->first()->price;
+//            return [$item['id'] => $price ];
+//        });
+//
+//        $prices = WorkshopProduct::with('prices')->has('prices')->get()
+//            ->mapWithKeys(function ($item) use ($shop_group_id) {
+//                $price = $item['prices']->mapWithKeys(function ($item) {
+//                    return [$item['shop_group_id'] => $item['price']];
+//                });
+//                return [$item['id'] => $price];
+//            })->toArray();
+//
+////        dump($prices[914][4]);
+//
+//        $sampleItems = RegularOrder::getRegularOrder();
+//
+//        foreach ($sampleItems as $sampleItem){
+//            $sampledate =  $sampleItem['orderdates'];
+//            $sampledateArr = explode(',',$sampledate);
+//
+//            foreach ($sampledateArr as $value){
+//                $sampleArr[$sampleItem['user_id']][$value][] = $sampleItem->toArray();
+//            }
+//
+//        }
+//
+////        dump($sampleItems->toArray());
+//
+//
+//        $users = User::with('shop_groups')->has('shop_groups')->get()
+//            ->mapWithKeys(function ($item) {
+//            return [$item['id'] => $item['shop_groups']->first()->id];
+//        });
+//
+////        返回值:
+////        array[
+////            user_id => shop_groups_id
+////        ]
+//
+//        dump($users->toArray());
+//    }
 
 }

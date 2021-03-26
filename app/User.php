@@ -152,6 +152,19 @@ class User extends Authenticatable
         return $shops;
     }
 
+    public static function getCustomerShops(){
+
+        $users = new User();
+        $shops = $users
+            ->whereHas('shop_groups', function ($query){
+                $query->whereNotIn('id', [1,5]);
+            })
+            ->orderBy('name')
+            ->get(['id','report_name']);
+
+        return $shops;
+    }
+
     // 獲取所有加入shop_group的用戶
     public static function getAllShopsByShopGroup(){
 
@@ -202,5 +215,12 @@ class User extends Authenticatable
         return $shop;
     }
 
-
+    public function allShopNodes()
+    {
+        $user = new User();
+        $user = $user->with('shop_groups')
+            ->has('shop_groups')
+            ->get();
+        return $user;
+    }
 }

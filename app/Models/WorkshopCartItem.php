@@ -6,6 +6,7 @@ namespace App\Models;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class WorkshopCartItem extends Model
 {
@@ -50,6 +51,16 @@ class WorkshopCartItem extends Model
         }
     }
 
+    public function scopeOfShopGroupId($query, $shop)
+    {
+        $shop_group_id = User::getShopGroupId($shop);
+        if($shop_group_id){
+            return $query->where('prices.shop_group_id','=',$shop_group_id);
+        }else{
+            throw new AccessDeniedHttpException('分店未加入分組,請聯繫管理員');
+        }
+    }
+
     public static function getCartItems($shop , $dept , $deli_date){
 
 
@@ -88,7 +99,8 @@ class WorkshopCartItem extends Model
             ->whereNotIn('workshop_cart_items.status',[4])
             ->where('workshop_cart_items.qty','>=',0)
             //2021-01-15 根據dept選擇分組
-            ->ofDept($dept)
+//            ->ofDept($dept)
+            ->ofShopGroupId($shop)
             ->where('workshop_cart_items.dept','=',$dept)
             ->where('workshop_cart_items.deli_date','=',$deli_date);
 

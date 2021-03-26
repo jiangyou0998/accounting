@@ -2,23 +2,22 @@
 
 namespace App\Admin\Controllers\Accountings;
 
-use App\Admin\Forms\Invoice;
-use App\Admin\Renderable\ShopTable;
+use App\Admin\Forms\CustomerDelivery;
+use App\Admin\Forms\CustomerInvoice;
+use App\Admin\Renderable\CustomerShopTable;
 use App\Admin\Traits\ReportTimeTraits;
 use App\Models\WorkshopCartItem;
 use App\User;
-use Carbon\Carbon;
+use Dcat\Admin\Admin;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Card;
 use Dcat\Admin\Widgets\Modal;
-use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 
-class InvoiceController extends AdminController
+class CustomerInvoiceController extends AdminController
 {
 //    use NumberToEnglishTraits;
     use ReportTimeTraits;
@@ -28,7 +27,7 @@ class InvoiceController extends AdminController
     public function index(Content $content)
     {
         return $content
-            ->header('分店INVOICE')
+            ->header('外客INVOICE')
             ->body($this->render())
             ->body($this->grid());
     }
@@ -36,8 +35,6 @@ class InvoiceController extends AdminController
     protected function grid()
     {
         return Grid::make(null, function (Grid $grid) {
-
-//            $grid->tools(new Invoice());
 
             $grid->header(function ($collection) {
 
@@ -72,8 +69,14 @@ class InvoiceController extends AdminController
                 $keys = $data->first()->toArray();
                 foreach ($keys as $key => $value) {
                     if($key == 'id'){
-                        $grid->column('id','查看')->display(function ($id){
-                            return '<a href="' . route('admin.invoice.view', ['shop' => $id , 'deli_date' => $this->deli_date]) .'" target="_blank">查看</a>';
+                        $grid->column('note','備註')->display(function (){
+                            return '<input id="note'.$this->id.'"></input>';
+                        });
+                        $grid->column('id','查看Invoice')->display(function (){
+                            return '<button class="view btn btn-primary" data-shop="'.$this->id.'" data-delidate="'.$this->deli_date.'">查看</button>';
+                        });
+                        $grid->column('id2','查看Delivery Note')->display(function (){
+                            return '<button class="viewD btn btn-success" data-shop="'.$this->id.'" data-delidate="'.$this->deli_date.'">查看</button>';
                         });
                     }else{
                         $grid->column($key);
@@ -96,93 +99,38 @@ class InvoiceController extends AdminController
                 $filter->panel();
                 $filter->between('between', '報表日期')->date();
                 $filter->equal('shop_id', '分店')
-                    ->multipleSelectTable(ShopTable::make()) // 设置渲染类实例，并传递自定义参数
+                    ->multipleSelectTable(CustomerShopTable::make()) // 设置渲染类实例，并传递自定义参数
                     ->title('弹窗标题')
                     ->dialogWidth('50%') // 弹窗宽度，默认 800px
                     ->model(User::class, 'id', 'txt_name'); // 设置编辑数据显示
-                $filter->equal('group', '分組')->select(config('report.report_group'));
+//                $filter->equal('group', '分組')->select(config('report.report_group'));
                 $filter->like('pocode', 'PO');
 
             });
 
+            //查看按鈕點擊事件
+            Admin::script(
+                <<<JS
+$('.view').click(function () {
+    let shop = $(this).data('shop');
+    let deli_date = $(this).data('delidate');
+    let po = $('#note'+ shop).val();
+    let url = '/admin/reports/invoice/view?shop=' + shop + '&deli_date=' + deli_date + '&po=' + po;
+    window.open(url);
+});
+
+$('.viewD').click(function () {
+    let shop = $(this).data('shop');
+    let deli_date = $(this).data('delidate');
+    let po = $('#note'+ shop).val();
+    let url = '/admin/reports/delivery/view?shop=' + shop + '&deli_date=' + deli_date + '&po=' + po;
+    window.open(url);
+});
+JS
+            );
+
         });
 
-    }
-
-    //invoice
-    public function invoice(Request $request)
-    {
-       $allData = $this->getInoviceData($request);
-
-//        return view('admin.invoice.index',compact('details','totals','infos'));
-        return view('admin.invoice.index',compact('allData'));
-    }
-
-    //delivery note
-    public function delivery(Request $request)
-    {
-        $allData = $this->getInoviceData($request);
-
-        return view('admin.delivery.index',compact('allData'));
-    }
-
-    public function getInoviceData(Request $request)
-    {
-        $now = Carbon::now();
-        //如果URL沒有送貨日期,使用當日日期
-        if(isset($request->deli_date)){
-            $deli_date = $request->deli_date;
-        }else{
-            $deli_date = $now->toDateString();
-        }
-
-        //根據權限獲取商店id
-        $shopids = $request->shop ?? 0;
-
-        $shopIDArr = explode('-',$shopids);
-
-        $allData = array();
-
-        foreach ($shopIDArr as $shopid){
-            //送貨單詳細數據
-            $details = WorkshopCartItem::getDeliDetail($deli_date,$shopid);
-            //合計數據
-            $totals = WorkshopCartItem::getDeliTotal($deli_date,$shopid);
-//        dump($details->toArray());
-//        dump($totals->toArray());
-
-            $total = (float)0;
-            foreach ($totals as $v){
-                $total += $v->total;
-            }
-//        dump($total);
-
-            $user = User::with('address')->find($shopid);
-            $address = $user->address;
-
-            //頁面顯示數據
-            $infos = new Collection();
-            $infos->deli_date = $deli_date;
-            $infos->shop = $shopid;
-            $infos->shop_name = $user->txt_name;
-            $infos->now = $now->toDateTimeString();
-            $infos->company_name = $user->company_english_name ?? '';
-            $infos->address = $address->address ?? '';
-            $infos->phone = $address->tel ?? '';
-            $infos->fax = $address->fax ?? '';
-            $infos->total = $total;
-//        $infos->total_english = $this->money_to_english($total);
-            $infos->pocode = $user->pocode.Carbon::parse($deli_date)->isoFormat('YYMMDD');
-            //2021-03-01 每頁item數寫進常量
-            $infos->item_count = self::ITEM_COUNT_PER_PAGE;
-//        dump($infos->shop_info->toArray());
-//        dump($infos->total_english);
-            $allData[$shopid]['details'] = $details;
-            $allData[$shopid]['totals'] = $totals;
-            $allData[$shopid]['infos'] = $infos;
-        }
-//        dump($allData);
-        return $allData;
     }
 
     /**
@@ -201,20 +149,8 @@ class InvoiceController extends AdminController
             $end = '9999-12-31';
         }
 
-//        switch ($shop_group) {
-//            case 'all':
-//                $shops = User::getAllShops();
-//                break;
-//            case 'kb':
-//                $shops = User::getKingBakeryShops();
-//                break;
-//            case 'rb':
-//                $shops = User::getRyoyuBakeryShops();
-//                break;
-//            default:
-//                $shops = User::getAllShops();
-//        }
-        $shops = User::getAllShops();
+        $shops = User::getCustomerShops();
+
         $shopgroupids = $shops->pluck('id');
 
         $cartitem = new WorkshopCartItem();
@@ -252,14 +188,9 @@ class InvoiceController extends AdminController
             ->whereIn('workshop_cart_items.user_id', $shopgroupids)
             ->whereNotIn('users.id', $testids)
             ->groupBy('users.id','workshop_cart_items.deli_date')
-            ->orderBy('users.name');
-
-        if($pocode){
-            $cartitem = $cartitem
-                ->having('PO','like',"%{$pocode}%");
-        }
-
-        $cartitem = $cartitem->get();
+            ->orderBy('users.name')
+            ->having('PO','like',"%{$pocode}%")
+            ->get();
 //        dd($cartitem->toArray());
         return $cartitem;
     }
@@ -270,15 +201,27 @@ class InvoiceController extends AdminController
     {
         return Modal::make()
             ->lg()
-            ->title('批量預覽')
-            ->body(Invoice::make())
-            ->button('<button class="btn btn-white"><i class="feather icon-grid"></i>&nbsp;批量預覽</button>');
+            ->title('批量預覽Invoice')
+            ->body(CustomerInvoice::make())
+            ->button('<button class="btn btn-white"><i class="feather icon-grid"></i>&nbsp;批量預覽Invoice</button>');
     }
 
+    // 批量生成Delivery
+    protected function batchDelivery()
+    {
+        return Modal::make()
+            ->lg()
+            ->title('批量預覽Delivery')
+            ->body(CustomerDelivery::make())
+            ->button('<button class="btn btn-success"><i class="feather icon-grid"></i>&nbsp;批量預覽Delivery</button>');
+    }
+
+    //生成頂部按鈕
     protected function render()
     {
         return <<<HTML
 {$this->batchInvoice()}
+{$this->batchDelivery()}
 <br><br>
 HTML;
     }

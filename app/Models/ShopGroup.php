@@ -40,7 +40,12 @@ class ShopGroup extends Model
         return $this->users()->with('address');
     }
 
-
+    //獲取外客分組
+    public static function getCustomerGroup()
+    {
+        $query = self::query();
+        return $query->whereNotIn('name',['蛋撻王','共食薈','一口烘焙','糧友'])->get();
+    }
 
 
 }

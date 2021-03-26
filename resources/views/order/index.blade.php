@@ -15,13 +15,15 @@
         @can('workshop')
 {{--            <a href="order_check.php?head=5" class="styleA">翻查柯打</a>--}}
             <br/>
-            <a href='{{route('order.deli.list')}}' class='styleA'>改發票</a>
+            <a href='{{route('order.deli.list')}}' class='styleA'>改發票(蛋撻王)</a>
             <br/>
             <a href='{{route('order.deli.list',['group'=>'RB'])}}' class='styleA'>改發票(糧友)</a>
             <br/>
-            <a href='{{route('order.select_old_order',['dept'=>'R'])}}' class='styleA'>改舊單</a>
+            <a href='{{route('order.select_old_order',['dept'=>'R'])}}' class='styleA'>改舊單(蛋撻王)</a>
             <br/>
             <a href='{{route('rb.order.select_old_order',['dept'=>'RB'])}}' class='styleA'>改舊單(糧友)</a>
+            <br/>
+            <a href='{{route('customer.select_group')}}' class='styleA'>外客下單</a>
             <br/>
             <a href='{{route('order.regular.sample')}}' class='styleA'>固定柯打</a>
             <br/>

@@ -2,7 +2,7 @@
 <head>
     <meta name="ROBOTS" content="NOINDEX,NOFOLLOW">
     <meta name="format-detection" content="telephone=no"/>
-    <title>Invoice-內聯網</title>
+    <title>Delivery Note-內聯網</title>
     <script src="/js/jquery.min.js"></script>
     <script src="/js/parser.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css"
@@ -55,7 +55,7 @@
 
         <br>
         <table style="width:100%">
-            <h3 style="text-align: center;padding-bottom: 6px;"><u>INVOICE : {{ $data['infos']->pocode }}</u></h3>
+            <h3 style="text-align: center;padding-bottom: 6px;"><u>Delivery Note : {{ $data['infos']->pocode }}</u></h3>
             <tr>
                 {{--                <td style="width:33%"></td>--}}
                 <td style="width:70%" align="left">
@@ -112,16 +112,16 @@
 
         <table id="content" style="width:100%" cellspacing="0" cellpadding="0">
             {{--    打印時每頁都有的表頭--}}
-            @include('admin.invoice._table_head')
+            @include('admin.delivery._table_head')
     @endif
             {{--    加載數據--}}
-            @include('admin.invoice._table_data')
+            @include('admin.delivery._table_data')
 
             {{--    第14個,生成打印分頁div--}}
             @if(($loop->index % $data['infos']->item_count) == ( $data['infos']->item_count - 1 ) || $loop->last)
         </table>
                 @if($loop->last)
-                    @include('admin.invoice._total')
+                    @include('admin.delivery._total')
                     <hr style="border-top:2px solid black;">
                     <footer class="footer">
                         <img src="/images/invoice_signature_kb.jpeg" alt="Footer" style="width:100%; border:0px solid black;" border="0">

@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 use App\Models\Price;
+use App\Models\ShopAddress;
 use App\Models\WorkshopCat;
 use App\Models\WorkshopGroup;
 use App\Models\WorkshopProduct;
 use App\Models\WorkshopUnit;
+use App\User;
 use Box\Spout\Common\Type;
 use Box\Spout\Reader\Common\Creator\ReaderFactory;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class ImportController extends Controller
@@ -308,6 +311,173 @@ class ImportController extends Controller
         });
 
         $reader->close();
+    }
+
+    //導入外客賬號以及地址
+    public function importCustomer(){
+        $reader = ReaderFactory::createFromType(Type::XLSX);
+
+        $reader->open('imports\customer.xlsx');
+
+        $sort = 300;
+
+        foreach ($reader->getSheetIterator() as $sheet) {
+
+            foreach ($sheet->getRowIterator() as $rowKey => $row) {
+                // do stuff with the row
+                if($rowKey == 1) continue;
+                $rowValues = $row->toArray();
+
+                //產品數組
+                $resultArr[] = $rowValues;
+//                dump($rowValues);
+
+                $user = new User();
+                $user->name = 'cu'.($rowValues[0] ?? '');
+                $user->password = Hash::make('xm95jw');
+                $user->txt_name = $rowValues[1] ?? '';
+                $user->report_name = $rowValues[6] ?? '';
+                $user->type = 2;
+                $user->sort = $sort;
+                $user->company_chinese_name = $rowValues[9] ?? '';
+                $user->company_english_name = $rowValues[10] ?? '';
+                $user->pocode = $rowValues[0] ?? '';
+
+                $address = new ShopAddress();
+                $address->shop_name = $rowValues[1] ?? '';
+                $address->tel = $rowValues[3] ?? '';
+                $address->fax = $rowValues[4] ?? '';
+                $address->address = $rowValues[7] ?? '';
+                $address->eng_address = $rowValues[8] ?? '';
+
+                $address->save();
+                $address->users()->save($user);
+
+                $sort++;
+            }
+        }
+
+
+
+//        dump($resultArr);
+    }
+
+    //導入外客價格
+    public function importCustomerPrice()
+    {
+        $array = [
+            4 => 'imports\貳號冰室.xlsx',
+            6 => 'imports\金記.xlsx',
+            7 => 'imports\敏華.xlsx',
+            8 => 'imports\機場.xlsx',
+            9 => 'imports\滿泰.xlsx',
+            10 => 'imports\To-Gather Cafe.xlsx',
+        ];
+
+        foreach ($array as $shop_group_id => $filename){
+            $this->importPrice($shop_group_id,$filename);
+        }
+    }
+
+    public function importPrice($shop_group_id,$filename)
+    {
+        $reader = ReaderFactory::createFromType(Type::XLSX);
+
+        $reader->open($filename);
+
+        foreach ($reader->getSheetIterator() as $sheet) {
+
+            foreach ($sheet->getRowIterator() as $rowKey => $row) {
+                // do stuff with the row
+                if($rowKey == 1) continue;
+                $rowValues = $row->toArray();
+
+                if($rowValues[8] == "") continue;
+
+                //產品數組
+                $productArr[] = $rowValues;
+
+            }
+        }
+
+        dd($productArr);
+
+        // 数据库事务处理
+        DB::transaction(function() use($productArr ,$shop_group_id){
+
+            //插入產品
+            $priceModel = new Price();
+            foreach ($productArr as $product){
+
+                //插入,更新時間
+                $now = Carbon::now()->toDateTimeString();
+
+//                0 => array:9 [▼
+//                    0 => "914"
+//                    1 => "1103001"
+//                    2 => "奶油反卷方包"
+//                    3 => 27
+//                    4 => "2"
+//                    5 => "1000"
+//                    6 => "0,1,2,3,4,5,6"
+//                    7 => 4
+//                    8 => 4
+//                  ]
+
+                $priceModel->insert([
+                    'product_id' => $product[0],
+                    //糧友group_id 5
+                    'shop_group_id' => $shop_group_id,
+                    'price' => $product[3],
+                    'phase' => $product[4],
+                    'cuttime' => $product[5],
+                    'canordertime' => $product[6],
+                    'min' => $product[7],
+                    'base' => $product[8],
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]);
+
+            }
+
+        });
+
+        $reader->close();
+    }
+
+    public function resetPrice(){
+
+        $reader = ReaderFactory::createFromType(Type::XLSX);
+
+        $reader->open('imports\Price.xlsx');
+
+        foreach ($reader->getSheetIterator() as $sheet) {
+
+            foreach ($sheet->getRowIterator() as $rowKey => $row) {
+                // do stuff with the row
+                if($rowKey == 1) continue;
+                $rowValues = $row->toArray();
+//dump($rowValues);
+                if(!isset($rowValues[5]) || $rowValues[5] == '') continue;
+
+                //產品數組
+                $priceArr[$rowValues[0]] = $rowValues[5];
+
+            }
+        }
+//        dd($priceArr);
+
+        DB::transaction(function() use($priceArr){
+
+//            $priceModel = new Price();
+            foreach ($priceArr as $id => $price){
+                $priceModel = Price::find($id);
+                $priceModel->price = $price;
+                $priceModel->save();
+            }
+        });
+
+        return 'success';
     }
 
 }
