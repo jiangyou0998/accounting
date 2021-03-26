@@ -289,14 +289,18 @@ class KBWorkshopCartItemController extends Controller
         //跳過出貨期不出貨(星期日不是出貨期)
         //2021-03-22 全跳過星期日
         //2021-03-25 星期日時不用跳
-        if (($deliW - $phase) <= 0 && $deliW != 0 && $phase > 0) {
-            $phase += 1;
-        }
+//        if (($deliW - $phase) <= 0 && $deliW != 0 && $phase > 0) {
+//            $phase += 1;
+//        }
 
         //判斷是否已截單
         if ($phase > 0) {
             $cuttime = $deli_date . " " . $product->cuttime . "00";
             $finalOrderTime = Carbon::parse($cuttime)->subDay($phase);
+            //2021-03-26 最後下單時間是星期日時 要推前一日下單
+            if ($finalOrderTime->isSunday()){
+                $finalOrderTime = $finalOrderTime->subDay(1);
+            }
 //            dump($finalOrderTime->toDateTimeString());
             $now = Carbon::now();
             $product->cut_order = $finalOrderTime->lt($now);
