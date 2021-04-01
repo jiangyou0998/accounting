@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class WorkshopCat extends Model
@@ -17,7 +18,7 @@ class WorkshopCat extends Model
 
     public function products()
     {
-        return $this->hasManyThrough(WorkshopProduct::class,WorkshopGroup::class,"id" ,"id","group_id","cat_id");
+        return $this->hasManyThrough(WorkshopProduct::class,WorkshopGroup::class,"cat_id" ,"group_id","id","id");
     }
 
     //查詢所有大類(除轉手貨)
@@ -65,9 +66,11 @@ class WorkshopCat extends Model
     }
 
     //获取所有大類(生效)
-    public static function getCatsNotExpired($date , $dept)
+    public static function getCatsNotExpired($date , $shopid)
     {
+        $shop_group_id = User::getShopGroupId($shopid);
         $cats = new WorkshopCat();
+
         $cats = $cats
             ->where(function ($query) use ($date){
                 $query->whereNotNull('start_date')
@@ -78,16 +81,11 @@ class WorkshopCat extends Model
             })->orWhere(function ($query) use ($date){
                 $query->whereNull('start_date')
                     ->whereNull('end_date');
+            })->whereHas('products', function ($query) use ($shop_group_id){
+                $query->whereHas('prices',function ($query) use ($shop_group_id){
+                    $query->where('shop_group_id',$shop_group_id);
+                });
             });
-
-        //A第一車,B第二車,C麵頭,D方包
-//        if($dept == 'A' || $dept == 'B'){
-//            $cats = $cats->whereIn('cat_name',['熟細包','熟大包']);
-//        }else if($dept == 'C'){
-//            $cats = $cats->whereIn('cat_name',['麵頭']);
-//        }else if($dept == 'D'){
-//            $cats = $cats->whereIn('cat_name',['方包']);
-//        }
 
         $cats = $cats
             ->orderby('sort')

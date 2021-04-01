@@ -59,21 +59,21 @@
             <tr>
                 {{--                <td style="width:33%"></td>--}}
                 <td style="width:70%" align="left">
-                    @isset($data['infos']->company_name)
+                    @if($data['infos']->company_name)
                         <div><span><b>{{ $data['infos']->company_name }}</b></span></div>
-                    @endisset
+                    @endif
 
-                    @isset($data['infos']->address)
+                    @if($data['infos']->address)
                         <div><span>{{ $data['infos']->address }}</span></div>
-                    @endisset
+                    @endif
 
-                    @isset($data['infos']->phone)
+                    @if($data['infos']->phone)
                         <div><span>Phone&nbsp;:&nbsp;{{ $data['infos']->phone }}</span></div>
-                    @endisset
+                    @endif
 
-                    @isset($data['infos']->fax)
+                    @if($data['infos']->fax)
                         <div><span>Fax&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;{{ $data['infos']->fax }}</span></div>
-                    @endisset
+                    @endif
                 </td>
                 <td style="width:30%" align="left">
                     <div class='parent'>
@@ -84,11 +84,11 @@
                             <div>
                                 <span>Date</span>
                             </div>
-                            @isset(request()->po)
+                            @if($data['infos']->customer_po)
                                 <div>
                                     <span>PO</span>
                                 </div>
-                            @endisset
+                            @endif
                         </div>
                         <div class="right">
                             <div>
@@ -97,11 +97,11 @@
                             <div>
                                 <span>：{{ $data['infos']->deli_date }}</span>
                             </div>
-                            @isset(request()->po)
+                            @if($data['infos']->customer_po)
                                 <div>
-                                    <span>：{{ request()->po }}</span>
+                                    <span>：{{ $data['infos']->customer_po }}</span>
                                 </div>
-                            @endisset
+                            @endif
                         </div>
                     </div>
 
@@ -121,7 +121,6 @@
             @if(($loop->index % $data['infos']->item_count) == ( $data['infos']->item_count - 1 ) || $loop->last)
         </table>
                 @if($loop->last)
-                    @include('admin.delivery._total')
                     <hr style="border-top:2px solid black;">
                     <footer class="footer">
                         <img src="/images/invoice_signature_kb.jpeg" alt="Footer" style="width:100%; border:0px solid black;" border="0">

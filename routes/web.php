@@ -142,6 +142,7 @@ Route::group(['middleware' => ['auth']], function () {
 //Route::get('/import/newryoyuproductandprice', 'ImportController@importNewRyoyuProductAndPrice');
 //Route::get('/import/customer', 'ImportController@importCustomer');
 //Route::get('/import/reset/price', 'ImportController@resetPrice');
+//Route::get('/import/customer/price', 'ImportController@importCustomerPrice');
 
 
 //Route::get('/api/resetpassword', 'Api\ApiController@resetAllPassword');

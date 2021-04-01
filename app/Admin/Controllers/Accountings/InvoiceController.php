@@ -4,24 +4,23 @@ namespace App\Admin\Controllers\Accountings;
 
 use App\Admin\Forms\Invoice;
 use App\Admin\Renderable\ShopTable;
+use App\Admin\Traits\InvoiceTraits;
 use App\Admin\Traits\ReportTimeTraits;
 use App\Models\WorkshopCartItem;
 use App\User;
-use Carbon\Carbon;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Card;
 use Dcat\Admin\Widgets\Modal;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 
 class InvoiceController extends AdminController
 {
 //    use NumberToEnglishTraits;
-    use ReportTimeTraits;
+    use ReportTimeTraits, InvoiceTraits;
 
     private const ITEM_COUNT_PER_PAGE = 38;
 
@@ -60,12 +59,8 @@ class InvoiceController extends AdminController
             //選中的商店id
             $shop_id = request()->shop_id ?? "";
             $shop_group = request()->group ?? 'all';
-//            dump($start);
-//            dump($end);
-//            dump($pocode);
 
             $data = $this->generate($start,$end,$pocode,$shop_id,$shop_group);
-//            dump($data->toArray());
 
             $grid->number();
             if (count($data) > 0) {
@@ -118,6 +113,7 @@ class InvoiceController extends AdminController
         return view('admin.invoice.index',compact('allData'));
     }
 
+
     //delivery note
     public function delivery(Request $request)
     {
@@ -126,64 +122,6 @@ class InvoiceController extends AdminController
         return view('admin.delivery.index',compact('allData'));
     }
 
-    public function getInoviceData(Request $request)
-    {
-        $now = Carbon::now();
-        //如果URL沒有送貨日期,使用當日日期
-        if(isset($request->deli_date)){
-            $deli_date = $request->deli_date;
-        }else{
-            $deli_date = $now->toDateString();
-        }
-
-        //根據權限獲取商店id
-        $shopids = $request->shop ?? 0;
-
-        $shopIDArr = explode('-',$shopids);
-
-        $allData = array();
-
-        foreach ($shopIDArr as $shopid){
-            //送貨單詳細數據
-            $details = WorkshopCartItem::getDeliDetail($deli_date,$shopid);
-            //合計數據
-            $totals = WorkshopCartItem::getDeliTotal($deli_date,$shopid);
-//        dump($details->toArray());
-//        dump($totals->toArray());
-
-            $total = (float)0;
-            foreach ($totals as $v){
-                $total += $v->total;
-            }
-//        dump($total);
-
-            $user = User::with('address')->find($shopid);
-            $address = $user->address;
-
-            //頁面顯示數據
-            $infos = new Collection();
-            $infos->deli_date = $deli_date;
-            $infos->shop = $shopid;
-            $infos->shop_name = $user->txt_name;
-            $infos->now = $now->toDateTimeString();
-            $infos->company_name = $user->company_english_name ?? '';
-            $infos->address = $address->address ?? '';
-            $infos->phone = $address->tel ?? '';
-            $infos->fax = $address->fax ?? '';
-            $infos->total = $total;
-//        $infos->total_english = $this->money_to_english($total);
-            $infos->pocode = $user->pocode.Carbon::parse($deli_date)->isoFormat('YYMMDD');
-            //2021-03-01 每頁item數寫進常量
-            $infos->item_count = self::ITEM_COUNT_PER_PAGE;
-//        dump($infos->shop_info->toArray());
-//        dump($infos->total_english);
-            $allData[$shopid]['details'] = $details;
-            $allData[$shopid]['totals'] = $totals;
-            $allData[$shopid]['infos'] = $infos;
-        }
-//        dump($allData);
-        return $allData;
-    }
 
     /**
      * 生成数据
@@ -201,19 +139,6 @@ class InvoiceController extends AdminController
             $end = '9999-12-31';
         }
 
-//        switch ($shop_group) {
-//            case 'all':
-//                $shops = User::getAllShops();
-//                break;
-//            case 'kb':
-//                $shops = User::getKingBakeryShops();
-//                break;
-//            case 'rb':
-//                $shops = User::getRyoyuBakeryShops();
-//                break;
-//            default:
-//                $shops = User::getAllShops();
-//        }
         $shops = User::getAllShops();
         $shopgroupids = $shops->pluck('id');
 

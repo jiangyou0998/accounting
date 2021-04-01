@@ -55,25 +55,33 @@
 
         <br>
         <table style="width:100%">
-            <h3 style="text-align: center;padding-bottom: 6px;"><u>INVOICE : {{ $data['infos']->pocode }}</u></h3>
+            <h3 style="text-align: center;padding-bottom: 6px;">
+                <u>
+                    @if(request()->type == 'CUR')
+                        RETURN INVOICE : {{ $data['infos']->pocode }}R
+                    @else
+                        INVOICE : {{ $data['infos']->pocode }}
+                    @endif
+                </u>
+            </h3>
             <tr>
                 {{--                <td style="width:33%"></td>--}}
                 <td style="width:70%" align="left">
-                    @isset($data['infos']->company_name)
+                    @if($data['infos']->company_name)
                         <div><span><b>{{ $data['infos']->company_name }}</b></span></div>
-                    @endisset
+                    @endif
 
-                    @isset($data['infos']->address)
+                    @if($data['infos']->address)
                         <div><span>{{ $data['infos']->address }}</span></div>
-                    @endisset
+                    @endif
 
-                    @isset($data['infos']->phone)
+                    @if($data['infos']->phone)
                         <div><span>Phone&nbsp;:&nbsp;{{ $data['infos']->phone }}</span></div>
-                    @endisset
+                    @endif
 
-                    @isset($data['infos']->fax)
+                    @if($data['infos']->fax)
                         <div><span>Fax&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;{{ $data['infos']->fax }}</span></div>
-                    @endisset
+                    @endif
                 </td>
                 <td style="width:30%" align="left">
                     <div class='parent'>
@@ -84,11 +92,11 @@
                             <div>
                                 <span>Date</span>
                             </div>
-                            @isset(request()->po)
+                            @if($data['infos']->customer_po)
                                 <div>
                                     <span>PO</span>
                                 </div>
-                            @endisset
+                            @endif
                         </div>
                         <div class="right">
                             <div>
@@ -97,11 +105,11 @@
                             <div>
                                 <span>：{{ $data['infos']->deli_date }}</span>
                             </div>
-                            @isset(request()->po)
+                            @if($data['infos']->customer_po)
                                 <div>
-                                    <span>：{{ request()->po }}</span>
+                                    <span>：{{ $data['infos']->customer_po }}</span>
                                 </div>
-                            @endisset
+                            @endif
                         </div>
                     </div>
 

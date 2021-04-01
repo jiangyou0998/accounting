@@ -366,17 +366,19 @@ class ImportController extends Controller
     public function importCustomerPrice()
     {
         $array = [
-            4 => 'imports\貳號冰室.xlsx',
-            6 => 'imports\金記.xlsx',
-            7 => 'imports\敏華.xlsx',
-            8 => 'imports\機場.xlsx',
-            9 => 'imports\滿泰.xlsx',
-            10 => 'imports\To-Gather Cafe.xlsx',
+//            4 => 'imports\貳號冰室.xlsx',
+            6 => 'imports\jinji.xlsx',
+//            7 => 'imports\敏華.xlsx',
+//            8 => 'imports\機場.xlsx',
+            9 => 'imports\mantai.xlsx',
+            10 => 'imports\togathercafe.xlsx',
         ];
 
         foreach ($array as $shop_group_id => $filename){
             $this->importPrice($shop_group_id,$filename);
         }
+
+        return 'success';
     }
 
     public function importPrice($shop_group_id,$filename)
@@ -391,8 +393,8 @@ class ImportController extends Controller
                 // do stuff with the row
                 if($rowKey == 1) continue;
                 $rowValues = $row->toArray();
-
-                if($rowValues[8] == "") continue;
+                //dd($rowValues);
+                if(!isset($rowValues[6]) || $rowValues[6] == "") continue;
 
                 //產品數組
                 $productArr[] = $rowValues;
@@ -400,7 +402,7 @@ class ImportController extends Controller
             }
         }
 
-        dd($productArr);
+//        dd($productArr);
 
         // 数据库事务处理
         DB::transaction(function() use($productArr ,$shop_group_id){
@@ -428,12 +430,12 @@ class ImportController extends Controller
                     'product_id' => $product[0],
                     //糧友group_id 5
                     'shop_group_id' => $shop_group_id,
-                    'price' => $product[3],
-                    'phase' => $product[4],
-                    'cuttime' => $product[5],
-                    'canordertime' => $product[6],
-                    'min' => $product[7],
-                    'base' => $product[8],
+                    'price' => $product[5],
+                    'phase' => $product[6],
+                    'cuttime' => $product[7],
+                    'canordertime' => $product[8],
+                    'min' => $product[9],
+                    'base' => $product[10],
                     'created_at' => $now,
                     'updated_at' => $now,
                 ]);

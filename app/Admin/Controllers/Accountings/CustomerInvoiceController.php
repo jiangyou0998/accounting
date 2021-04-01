@@ -4,7 +4,9 @@ namespace App\Admin\Controllers\Accountings;
 
 use App\Admin\Forms\CustomerDelivery;
 use App\Admin\Forms\CustomerInvoice;
+use App\Admin\Forms\CustomerPoEdit;
 use App\Admin\Renderable\CustomerShopTable;
+use App\Admin\Traits\InvoiceTraits;
 use App\Admin\Traits\ReportTimeTraits;
 use App\Models\WorkshopCartItem;
 use App\User;
@@ -20,7 +22,7 @@ use Illuminate\Support\Facades\DB;
 class CustomerInvoiceController extends AdminController
 {
 //    use NumberToEnglishTraits;
-    use ReportTimeTraits;
+    use ReportTimeTraits, InvoiceTraits;
 
     private const ITEM_COUNT_PER_PAGE = 38;
 
@@ -57,26 +59,38 @@ class CustomerInvoiceController extends AdminController
             //選中的商店id
             $shop_id = request()->shop_id ?? "";
             $shop_group = request()->group ?? 'all';
-//            dump($start);
-//            dump($end);
-//            dump($pocode);
 
             $data = $this->generate($start,$end,$pocode,$shop_id,$shop_group);
-//            dump($data->toArray());
+
+            $customerPoArr = $this->getCustomerPoArr();
 
             $grid->number();
             if (count($data) > 0) {
                 $keys = $data->first()->toArray();
                 foreach ($keys as $key => $value) {
                     if($key == 'id'){
-                        $grid->column('note','備註')->display(function (){
-                            return '<input id="note'.$this->id.'"></input>';
+                        $grid->column('customer_po','外客po')->display(function () use($customerPoArr){
+                            return $customerPoArr[$this->id][$this->deli_date] ?? '';
+                        });
+                        $grid->column('customer_po_edit','外客po')
+                            ->display(function () use($customerPoArr){
+                                return Modal::make()
+                                    ->lg()
+                                    ->title('修改PO')
+                                    ->body(CustomerPoEdit::make($this->id, $this->shop_name, $this->deli_date, $customerPoArr[$this->id][$this->deli_date] ?? ''))
+                                    ->button('<button class="btn btn-white"><i class="feather icon-grid"></i>&nbsp;修改PO</button>');;
+                            });
+                        $grid->column('id2','查看Delivery Note')->display(function (){
+                            return '<button class="viewD btn btn-success" data-shop="'.$this->id.'" data-delidate="'.$this->deli_date.'">查看</button>';
                         });
                         $grid->column('id','查看Invoice')->display(function (){
                             return '<button class="view btn btn-primary" data-shop="'.$this->id.'" data-delidate="'.$this->deli_date.'">查看</button>';
                         });
-                        $grid->column('id2','查看Delivery Note')->display(function (){
-                            return '<button class="viewD btn btn-success" data-shop="'.$this->id.'" data-delidate="'.$this->deli_date.'">查看</button>';
+                    }elseif($key == 'R_PO'){
+                        $grid->column('rpo','查看R單')->display(function (){
+                            if($this->R_PO){
+                                return '<button class="viewR btn btn-danger" data-shop="'.$this->id.'" data-delidate="'.$this->deli_date.'">查看</button>';
+                            }
                         });
                     }else{
                         $grid->column($key);
@@ -114,16 +128,24 @@ class CustomerInvoiceController extends AdminController
 $('.view').click(function () {
     let shop = $(this).data('shop');
     let deli_date = $(this).data('delidate');
-    let po = $('#note'+ shop).val();
-    let url = '/admin/reports/invoice/view?shop=' + shop + '&deli_date=' + deli_date + '&po=' + po;
+    let type = 'CU';
+    let url = '/admin/reports/invoice/view?shop=' + shop + '&deli_date=' + deli_date + '&type=' + type;
     window.open(url);
 });
 
 $('.viewD').click(function () {
     let shop = $(this).data('shop');
     let deli_date = $(this).data('delidate');
-    let po = $('#note'+ shop).val();
-    let url = '/admin/reports/delivery/view?shop=' + shop + '&deli_date=' + deli_date + '&po=' + po;
+    let type = 'CU';
+    let url = '/admin/reports/delivery/view?shop=' + shop + '&deli_date=' + deli_date + '&type=' + type;
+    window.open(url);
+});
+
+$('.viewR').click(function () {
+    let shop = $(this).data('shop');
+    let deli_date = $(this).data('delidate');
+    let type = 'CUR';
+    let url = '/admin/reports/invoice/view?shop=' + shop + '&deli_date=' + deli_date + '&type=' + type;
     window.open(url);
 });
 JS
@@ -155,7 +177,7 @@ JS
 
         $cartitem = new WorkshopCartItem();
         $cartitem = $cartitem
-            ->select('users.report_name as 分店');
+            ->select('users.report_name as shop_name');
 
         //查詢PO
         $sql = "CONCAT(users.pocode, date_format(workshop_cart_items.deli_date, '%y%m%d'))
@@ -172,7 +194,9 @@ JS
 
         $cartitem = $cartitem
             ->addSelect('workshop_cart_items.deli_date')
-            ->addSelect('users.id');
+            ->addSelect('users.id')
+            //只要有修改過的就判斷有R單
+            ->addSelect(DB::raw('MAX(NOT ISNULL(workshop_cart_items.qty_received)) as R_PO'));
 
         $cartitem = $cartitem
             ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
@@ -214,6 +238,15 @@ JS
             ->title('批量預覽Delivery')
             ->body(CustomerDelivery::make())
             ->button('<button class="btn btn-success"><i class="feather icon-grid"></i>&nbsp;批量預覽Delivery</button>');
+    }
+
+    protected function editCustomerPo($shop_id , $deli_date)
+    {
+        return Modal::make()
+            ->lg()
+            ->title('修改PO')
+            ->body(CustomerPoEdit::make($shop_id , $deli_date))
+            ->button('<button class="btn btn-white"><i class="feather icon-grid"></i>&nbsp;修改PO</button>');
     }
 
     //生成頂部按鈕

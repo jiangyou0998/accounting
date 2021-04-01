@@ -68,6 +68,11 @@ class DeliController extends Controller
                 $deptArrWithName = ['RB' => '糧友'];
                 break;
 
+            case 'CU' :
+                $deptArr = ['CU'];
+                $deptArrWithName = ['CU' => '外客'];
+                break;
+
         }
 
         //送貨單詳細數據

@@ -197,7 +197,7 @@ class WorkshopCartItemController extends Controller
         }
 
         $items = WorkshopCartItem::getCartItems($shopid, $dept, $deli_date);
-        $cats = WorkshopCat::getCatsNotExpired($deli_date , $dept);
+        $cats = WorkshopCat::getCatsNotExpired($deli_date , $shopid);
 //        dump($deliDate);
         $sampleItems = new Collection();
         if (count($items) == 0) {

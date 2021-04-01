@@ -61,6 +61,50 @@ class WorkshopCartItem extends Model
         }
     }
 
+    public function scopeAddSelectAmount($query, $type = null)
+    {
+        $sql = '';
+        switch ($type) {
+            case 'CU':
+                $sql = 'SUM(workshop_cart_items.qty) as qty_received';
+                break;
+            case 'CUR':
+                $sql = 'SUM(ifnull(workshop_cart_items.qty_received, workshop_cart_items.qty) - workshop_cart_items.qty) as qty_received';
+                break;
+            default:
+                $sql = 'SUM(ifnull(workshop_cart_items.qty_received, workshop_cart_items.qty)) as qty_received';
+                break;
+        }
+        return $query->addSelect(DB::raw($sql));
+    }
+
+    public function scopeAddSelectTotal($query, $type = null)
+    {
+        switch ($type) {
+            case 'CU':
+                $sql = 'SUM(workshop_cart_items.qty * workshop_cart_items.order_price) as total';
+                break;
+            case 'CUR':
+                $sql = 'SUM((workshop_cart_items.qty - ifnull(workshop_cart_items.qty_received, workshop_cart_items.qty)) * workshop_cart_items.order_price) as total';
+                break;
+            default:
+                $sql = 'SUM(if(workshop_cart_items.qty_received is not null , workshop_cart_items.qty_received, workshop_cart_items.qty) * workshop_cart_items.order_price) as total';
+                break;
+        }
+        return $query->addSelect(DB::raw($sql));
+    }
+
+    //外客R單不顯示數量為0的
+    public function scopeHideZero($query, $type = null)
+    {
+        if($type == 'CUR'){
+            $sql = 'workshop_cart_items.qty - ifnull(workshop_cart_items.qty_received, workshop_cart_items.qty) != 0';
+            return $query->whereRaw($sql);
+        }else{
+            return $query;
+        }
+    }
+
     public static function getCartItems($shop , $dept , $deli_date){
 
 
@@ -110,7 +154,7 @@ class WorkshopCartItem extends Model
 
     }
 
-    public static function getDeliDetail($deli_date, $shop)
+    public static function getDeliDetail($deli_date, $shop , $type = null)
     {
         $items = new WorkshopCartItem();
 
@@ -120,7 +164,8 @@ class WorkshopCartItem extends Model
             ->addSelect('workshop_products.product_no')
             ->addSelect('workshop_units.unit_name as UoM')
             ->addSelect(DB::raw('SUM(workshop_cart_items.qty) as qty'))
-            ->addSelect(DB::raw('SUM(ifnull(workshop_cart_items.qty_received, workshop_cart_items.qty)) as qty_received'))
+//            ->addSelect(DB::raw('SUM(ifnull(workshop_cart_items.qty_received, workshop_cart_items.qty)) as qty_received'))
+            ->addSelectAmount($type)
             //2020-11-23 workshop_products.default_price改為workshop_cart_items.order_price
             ->addSelect(DB::raw('MAX(workshop_cart_items.order_price) as default_price'))
             ->addSelect('workshop_cats.id as cat_id')
@@ -152,17 +197,19 @@ class WorkshopCartItem extends Model
             ->where('workshop_cart_items.user_id','=',$shop)
             ->whereNotIn('workshop_cart_items.status',[4])
             ->where('workshop_cart_items.qty','>=',0)
-            ->where('workshop_cart_items.deli_date','=',$deli_date);
+            ->where('workshop_cart_items.deli_date','=',$deli_date)
+            ->hideZero($type);
 
         $items = $items
             ->groupBy('workshop_products.id')
-            ->orderBy('workshop_products.product_no')->get();
+            ->orderBy('workshop_products.product_no')
+            ->get();
 
         return $items;
 
     }
 
-    public static function getDeliTotal($deli_date, $shop)
+    public static function getDeliTotal($deli_date, $shop, $type = null)
     {
         $items = new WorkshopCartItem();
 
@@ -174,7 +221,8 @@ class WorkshopCartItem extends Model
             ->addSelect(DB::raw('SUM(if(workshop_cart_items.qty_received is not null , workshop_cart_items.qty_received, workshop_cart_items.qty)) as qty_total'))
             //計算總價
             //2020-11-23 workshop_products.default_price改為workshop_cart_items.order_price
-            ->addSelect(DB::raw('SUM(if(workshop_cart_items.qty_received is not null , workshop_cart_items.qty_received, workshop_cart_items.qty) * workshop_cart_items.order_price) as total'));
+            ->addSelectTotal($type);
+
 
         //設置關聯表
         $items = $items
@@ -272,6 +320,11 @@ class WorkshopCartItem extends Model
                 $items = $items
                     //2021-01-06 不顯示KB以外的
                     ->where('workshop_cart_items.dept', 'RB');
+                break;
+
+            case 'CU' :
+                $items = $items
+                    ->where('workshop_cart_items.dept', 'CU');
                 break;
 
         }

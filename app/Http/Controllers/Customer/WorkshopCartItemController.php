@@ -48,7 +48,7 @@ class WorkshopCartItemController extends Controller
         }
 
         $items = $this->workshopCartItemService->getCartItemsAndCheckIsInvalid($shopid, $dept, $deli_date);
-        $cats = WorkshopCat::getCatsNotExpired($deli_date , $dept);
+        $cats = WorkshopCat::getCatsNotExpired($deli_date , $shopid);
         $sampleItems = $this->workshopCartItemService->getSampleItemsAndCheckIsInvalid($shopid, $dept, $deli_date, count($items));
         $orderInfos = $this->workshopCartItemService->getOrderInfos($shopid , $dept, $deli_date, $deptArr[$dept]);
 

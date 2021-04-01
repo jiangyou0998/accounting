@@ -19,6 +19,8 @@
             <br/>
             <a href='{{route('order.deli.list',['group'=>'RB'])}}' class='styleA'>改發票(糧友)</a>
             <br/>
+            <a href='{{route('order.deli.list',['group'=>'CU'])}}' class='styleA'>改發票(外客)</a>
+            <br/>
             <a href='{{route('order.select_old_order',['dept'=>'R'])}}' class='styleA'>改舊單(蛋撻王)</a>
             <br/>
             <a href='{{route('rb.order.select_old_order',['dept'=>'RB'])}}' class='styleA'>改舊單(糧友)</a>

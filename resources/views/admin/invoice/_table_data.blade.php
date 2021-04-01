@@ -12,7 +12,13 @@
 {{--            <td align="center">{{ $detail->UoM }}</td>--}}
             <td align="right">${{ $detail->default_price }}</td>
             {{--    <td align="right">$0.00</td>--}}
-            <td align="right">${{number_format($detail->qty_received * $detail->default_price, 2)}}</td>
+            <td align="right">
+                @if(request()->type == 'CUR')
+                    ${{number_format(abs($detail->qty_received * $detail->default_price), 2)}}
+                @else
+                    ${{number_format($detail->qty_received * $detail->default_price, 2)}}
+                @endif
+            </td>
         </tr>
 {{--    @endif--}}
 {{--@endforeach--}}
