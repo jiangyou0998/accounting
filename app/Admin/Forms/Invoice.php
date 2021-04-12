@@ -36,7 +36,10 @@ class Invoice extends Form
     public function form()
     {
         $this->date('deli_date','日期')->required();
-        $this->checkbox('user_ids')->options(User::getAllShopsByShopGroup()->pluck('txt_name', 'id'))->required();
+        $this->checkbox('user_ids','分店')
+            ->canCheckAll()
+            ->options(User::getAllShopsByShopGroup()->pluck('txt_name', 'id'))
+            ->required();
     }
 
     /**

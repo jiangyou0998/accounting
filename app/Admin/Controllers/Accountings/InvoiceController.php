@@ -2,17 +2,13 @@
 
 namespace App\Admin\Controllers\Accountings;
 
-use App\Admin\Actions\Form\Test;
-use App\Admin\Actions\Grid\PrintInvoices;
 use App\Admin\Forms\Invoice;
 use App\Admin\Renderable\ShopTable;
 use App\Admin\Traits\ReportTimeTraits;
 use App\Models\WorkshopCartItem;
 use App\User;
 use Carbon\Carbon;
-use Dcat\Admin\Admin;
 use Dcat\Admin\Controllers\AdminController;
-use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Card;
@@ -125,44 +121,54 @@ class InvoiceController extends AdminController
         }
 
         //根據權限獲取商店id
-        $shopid = $request->shop ?? 0;
+        $shopids = $request->shop ?? 0;
 
-        //送貨單詳細數據
-        $details = WorkshopCartItem::getDeliDetail($deli_date,$shopid);
-        //合計數據
-        $totals = WorkshopCartItem::getDeliTotal($deli_date,$shopid);
+        $shopIDArr = explode('-',$shopids);
+
+        $allData = array();
+
+        foreach ($shopIDArr as $shopid){
+            //送貨單詳細數據
+            $details = WorkshopCartItem::getDeliDetail($deli_date,$shopid);
+            //合計數據
+            $totals = WorkshopCartItem::getDeliTotal($deli_date,$shopid);
 //        dump($details->toArray());
 //        dump($totals->toArray());
 
-        $total = (float)0;
-        foreach ($totals as $v){
-            $total += $v->total;
-        }
+            $total = (float)0;
+            foreach ($totals as $v){
+                $total += $v->total;
+            }
 //        dump($total);
 
-        $user = User::with('address')->find($shopid);
+            $user = User::with('address')->find($shopid);
+            $address = $user->address;
 
-        $address = $user->address;
-
-        //頁面顯示數據
-        $infos = new Collection();
-        $infos->deli_date = $deli_date;
-        $infos->shop = $shopid;
-        $infos->shop_name = $user->txt_name;
-        $infos->now = $now->toDateTimeString();
-        $infos->company_name = $user->company_english_name ?? '';
-        $infos->address = $address->address ?? '';
-        $infos->phone = $address->tel ?? '';
-        $infos->fax = $address->fax ?? '';
-        $infos->total = $total;
+            //頁面顯示數據
+            $infos = new Collection();
+            $infos->deli_date = $deli_date;
+            $infos->shop = $shopid;
+            $infos->shop_name = $user->txt_name;
+            $infos->now = $now->toDateTimeString();
+            $infos->company_name = $user->company_english_name ?? '';
+            $infos->address = $address->address ?? '';
+            $infos->phone = $address->tel ?? '';
+            $infos->fax = $address->fax ?? '';
+            $infos->total = $total;
 //        $infos->total_english = $this->money_to_english($total);
-        $infos->pocode = $user->pocode.Carbon::parse($deli_date)->isoFormat('YYMMDD');
-        //2021-03-01 每頁item數寫進常量
-        $infos->item_count = self::ITEM_COUNT_PER_PAGE;
+            $infos->pocode = $user->pocode.Carbon::parse($deli_date)->isoFormat('YYMMDD');
+            //2021-03-01 每頁item數寫進常量
+            $infos->item_count = self::ITEM_COUNT_PER_PAGE;
 //        dump($infos->shop_info->toArray());
 //        dump($infos->total_english);
+            $allData[$shopid]['details'] = $details;
+            $allData[$shopid]['totals'] = $totals;
+            $allData[$shopid]['infos'] = $infos;
+        }
+//        dump($allData);
 
-        return view('admin.invoice.index',compact('details','totals','infos'));
+//        return view('admin.invoice.index',compact('details','totals','infos'));
+        return view('admin.invoice.index',compact('allData'));
     }
 
     /**
