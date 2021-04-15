@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Library;
 
 
 use App\Http\Controllers\Controller;
+use App\Models\Library\Library;
 use App\Models\Library\LibraryGroup;
 
 class LibraryController extends Controller
@@ -61,31 +62,27 @@ class LibraryController extends Controller
 
     public function child_index($id)
     {
-//        $library_groups = LibraryGroup::with('child_menu_has_libraries')
-//            ->with('libraries')
-//            ->where('id', $id)
-//            ->first();
-//
-//        dump($library_groups->toArray());
-
         $childIds = LibraryGroup::has('libraries')->get()->pluck('id')->toArray();
-//        dump($childIds);
-//        dump($id);
 
         $ids = $this->getIdsAndParentIds($childIds ,$id);
-//        dump($ids);
 
-        $data = LibraryGroup::whereIn('id',$ids)->orderBy('order')->get()->toArray();
+        //當前分類下的子分類
+        $child_groups = LibraryGroup::whereIn('id', $ids)
+            ->where('parent_id', $id)
+            ->orderBy('order')
+            ->get()
+            ->pluck('title','id');
 
-//        dump($data);
-        $library_groups = [];
-        if(!empty($data)){
-            $library_groups = LibraryGroup::generateTree($data);
-        }
-//
-//        dd($library_groups);
-        $library_groups = $library_groups[0] ?? $library_groups;
-        return view('libraries.child_index',compact('library_groups'));
+//        $libraries = Library::canView()->where('group_id',$id)->get();
+//        $libraries = Library::where('group_id',$id)->canView()->get();
+        $library_groups = LibraryGroup::with('libraries')
+            ->where('id',$id)->first();
+        $library_groups->child = $child_groups;
+//        dump($library_groups->toArray());
+//        dump($child_groups);
+//        return 111;
+
+        return view('libraries.child_index', compact('library_groups'));
     }
 
 //    protected function hasLibraries($nodes = [], $parentIds = [])
@@ -140,43 +137,46 @@ class LibraryController extends Controller
 //        return $nodes;
 //
 //    }
-    private function getIdsAndParentIds($childIds,$current_id = null)
+    /**
+     *
+     *
+     * @param array $childIds 所有有library的子分類id
+     * @param integer $current_id 當前分類id
+     *
+     * @return array
+     */
+    private function getIdsAndParentIds($childIds, $current_id = null)
     {
-        $arr = LibraryGroup::all()->pluck('parent_id','id')->toArray();
+        $arr = LibraryGroup::all()->pluck('parent_id', 'id')->toArray();
 
         //獲取所有id(包括父級id)
         $ids = [];
-        foreach ($childIds as $id){
+        foreach ($childIds as $id) {
 
-
-            if($current_id){
+            if ($current_id) {
                 $temp = [];
-                array_push($temp,$id);
-                while($arr[$id]) {
+                array_push($temp, $id);
+                while ($arr[$id]) {
 
                     $id = $arr[$id];
-                    array_push($temp,$id);
-                    if($id == $current_id){
+                    array_push($temp, $id);
+                    if ($id == $current_id) {
                         $ids = $temp;
                     }
                 }
 //                dump('id:'.$id.'---temp:');
 //                dump($temp);
-
-
-            }else{
-                array_push($ids,$id);
-                while($arr[$id]) {
+            } else {
+                array_push($ids, $id);
+                while ($arr[$id]) {
                     $id = $arr[$id];
-                    array_push($ids,$id);
+                    array_push($ids, $id);
                 }
             }
-
 
         }
 
         $ids = array_unique($ids);
-
 //        dump($arr);
 
         return $ids;

@@ -127,6 +127,7 @@ class LibraryController extends AdminController
                         ->uniqueName()
                         ->maxSize(204800)
                         ->autoUpload();
+
                 })
                 ->when('LINK', function (Form $form) {
                     $form->text('link_name');
