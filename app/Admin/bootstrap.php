@@ -24,3 +24,32 @@ use Dcat\Admin\Show;
  * Admin::js('/packages/prettydocs/js/main.js');
  *
  */
+
+//初始化Grid
+Grid::resolving(function (Grid $grid) {
+
+    //禁用詳情按鈕
+    $grid->disableViewButton();
+
+    //启用快速编辑
+    $grid->showQuickEditButton();
+});
+
+//初始化Form
+Form::resolving(function (Form $form) {
+
+    // 去掉`查看`checkbox
+    $form->disableViewCheck();
+
+    // 去掉`继续编辑`checkbox
+    $form->disableEditingCheck();
+
+    // 去掉`继续创建`checkbox
+    $form->disableCreatingCheck();
+
+    $form->tools(function (Form\Tools $tools) {
+        // 去掉`查看`按钮
+        $tools->disableView();
+    });
+
+});
