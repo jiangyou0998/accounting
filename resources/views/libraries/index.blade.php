@@ -18,6 +18,7 @@
 @section('content')
 
     <div class="container">
+        @include('libraries._search_box')
         <div class="py-5 text-center">
 
             <h2>圖書館</h2>

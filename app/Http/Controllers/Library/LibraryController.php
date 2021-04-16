@@ -6,10 +6,15 @@ namespace App\Http\Controllers\Library;
 use App\Http\Controllers\Controller;
 use App\Models\Library\Library;
 use App\Models\Library\LibraryGroup;
+use Illuminate\Http\Request;
 
 class LibraryController extends Controller
 {
-    //
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
 //        $id = Auth::id();
@@ -85,6 +90,22 @@ class LibraryController extends Controller
         return view('libraries.child_index', compact('library_groups'));
     }
 
+    public function search(Request $request){
+
+        $keyword = $request->input('keyword');
+        //獲取所有分組名
+        $library_groups = LibraryGroup::selectOptionsWithoutMain();
+
+        $libraries = Library::where('name', 'like', "%{$keyword}%")->canView()->get();
+
+        //加入分組名
+        foreach ($libraries as $library){
+            $library->group_name = $library_groups[$library->group_id];
+        }
+//        dump($libraries->toArray());
+
+        return view('libraries.search', compact('libraries'));
+    }
 //    protected function hasLibraries($nodes = [], $parentIds = [])
 //    {
 //        if (empty($nodes)) {

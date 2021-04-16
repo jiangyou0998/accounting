@@ -7,7 +7,8 @@
 @section('content')
 
     <div class="container">
-        <div align="left"><a target="_top" href="javascript:history.back(-1);" style="font-size: xx-large;">返回</a></div>
+        @include('libraries._search_box')
+
         <div class="py-5 text-center">
 
             <h2>{{$library_groups->title ?? ''}}</h2>
@@ -15,25 +16,64 @@
         </div>
 
 {{--        @isset($library_groups->child)--}}
-        @foreach($library_groups->child as $child_id => $child_name)
-            <a href="{{ route('library.child.show', $child_id) }}">{{ $child_name }}</a>
-        @endforeach
-{{--        @endisset--}}
 
-        <br><br>
+        @if($library_groups->child->count())
+            <h4>分類</h4>
+            @foreach($library_groups->child as $child_id => $child_name)
+
+                <a class="btn
+                @if($loop->index % 3 == 0)
+                    btn-primary
+                @elseif($loop->index % 3 == 1)
+                    btn-danger
+                @elseif($loop->index % 3 == 2)
+                    btn-success
+                @endif"
+                   href="{{ route('library.child.show', $child_id) }}">
+                    {{ $child_name }}
+                </a>
+
+            @endforeach
+            <br><br>
+        @endif
+        {{--        @endisset--}}
+
+        @if($library_groups->libraries->count())
         <hr>
 
-        @foreach($library_groups->libraries as $library)
-            @if($library->library_type === 'FILE')
-                <div>
-                    <a href="{{ '/libraries/'. $library->file_path }}" target="_blank">{{ $library->name }}</a>
-                </div>
-            @elseif($library->library_type === 'LINK')
-                <div>
-                    <a href="{{ $library->link_path }}" target="_blank">{{ $library->name }}</a>
-                </div>
-            @endif
-        @endforeach
+        <div class="list-group">
+            <h4>文件</h4>
+            @foreach($library_groups->libraries as $library)
+                @if($library->library_type === 'FILE')
+                    <a href="{{ '/libraries/'. $library->file_path }}" target="_blank" class="list-group-item">
+                        <h4 class="d-flex justify-content-between list-group-item-heading">
+                            {{ $library->name }}
+                            <span class="badge badge-secondary">{{ $library->group_name }}</span>
+                        </h4>
+                    </a>
+                @elseif($library->library_type === 'LINK')
+                    <a href="{{ $library->link_path }}" target="_blank" class="list-group-item">
+                        <h4 class="d-flex justify-content-between list-group-item-heading">
+                            {{ $library->name }}
+                            <span class="badge badge-secondary">{{ $library->group_name }}</span>
+                        </h4>
+                    </a>
+                @endif
+            @endforeach
+
+        </div>
+        @endif
+{{--        @foreach($library_groups->libraries as $library)--}}
+{{--            @if($library->library_type === 'FILE')--}}
+{{--                <div>--}}
+{{--                    <a href="{{ '/libraries/'. $library->file_path }}" target="_blank">{{ $library->name }}</a>--}}
+{{--                </div>--}}
+{{--            @elseif($library->library_type === 'LINK')--}}
+{{--                <div>--}}
+{{--                    <a href="{{ $library->link_path }}" target="_blank">{{ $library->name }}</a>--}}
+{{--                </div>--}}
+{{--            @endif--}}
+{{--        @endforeach--}}
 
 {{--        @if($library_groups->libraries)--}}
 {{--            @foreach($library_groups->libraries as $library)--}}

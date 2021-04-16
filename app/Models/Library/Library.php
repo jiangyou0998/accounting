@@ -48,6 +48,7 @@ class Library extends Model
         );
     }
 
+    //判斷當前用戶是否可以查看
     public function scopeCanView($query)
     {
         $id = Auth::id();

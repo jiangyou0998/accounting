@@ -127,8 +127,9 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('addressbook', 'AddressBookController@index')->name('addressbook');
 
-    Route::get('library', 'Library\LibraryController@index')->middleware('auth')->name('library');
+    Route::get('library', 'Library\LibraryController@index')->name('library.index');
     Route::get('library/child/{id}', 'Library\LibraryController@child_index')->name('library.child.show');
+    Route::any('library/search', 'Library\LibraryController@search')->name('library.search');
 
     Route::get('addressbook', 'AddressBookController@index')->name('addressbook');
 
