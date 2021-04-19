@@ -63,27 +63,9 @@
 
         </div>
         @endif
-{{--        @foreach($library_groups->libraries as $library)--}}
-{{--            @if($library->library_type === 'FILE')--}}
-{{--                <div>--}}
-{{--                    <a href="{{ '/libraries/'. $library->file_path }}" target="_blank">{{ $library->name }}</a>--}}
-{{--                </div>--}}
-{{--            @elseif($library->library_type === 'LINK')--}}
-{{--                <div>--}}
-{{--                    <a href="{{ $library->link_path }}" target="_blank">{{ $library->name }}</a>--}}
-{{--                </div>--}}
-{{--            @endif--}}
-{{--        @endforeach--}}
-
-{{--        @if($library_groups->libraries)--}}
-{{--            @foreach($library_groups->libraries as $library)--}}
-{{--                @if($library->library_type === 'FILE')--}}
-{{--                    <a href="{{$library->file_path}}" target="_blank">{{$library->name}}</a>--}}
-{{--                @elseif($library->library_type === 'LINK')--}}
-{{--                    <a href="{{$library->link_path}}" target="_blank">{{$library->name}}</a>--}}
-{{--                @endif--}}
-{{--            @endforeach--}}
-{{--        @endif--}}
+        <br><br>
 
     </div>
+
+
 @endsection

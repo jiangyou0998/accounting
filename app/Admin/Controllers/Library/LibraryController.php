@@ -41,6 +41,7 @@ class LibraryController extends AdminController
 
         return Grid::make($library, function (Grid $grid) {
 
+            $grid->model()->latest();
             $grid->column('id')->sortable();
             $grid->column('name');
             $grid->column('library_type');
