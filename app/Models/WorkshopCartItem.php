@@ -12,7 +12,8 @@ class WorkshopCartItem extends Model
 {
 
     protected $table = 'workshop_cart_items';
-    public $timestamps = false;
+    const CREATED_AT = 'insert_date';
+    const UPDATED_AT = 'order_date';
 
     protected $guarded = [];
 

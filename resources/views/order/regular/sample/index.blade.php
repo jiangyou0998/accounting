@@ -55,6 +55,7 @@
             @endforeach
         </select>
         <button class="btn btn-primary" onclick="addsample()">新增</button>
+        <button class="btn btn-danger" onclick="addtemp()">臨時加單</button>
     </div>
     <hr>
 
@@ -100,6 +101,19 @@
             // alert($('#product').val());
             if($('#product').val()){
                 window.location.href = "/order/regular/sample/create?product_id=" + $('#product').val();
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: "請選擇貨品！",
+                });
+            }
+        }
+
+        //臨時加單
+        function addtemp(){
+            // alert($('#product').val());
+            if($('#product').val()){
+                window.location.href = "/order/regular/temp/create?product_id=" + $('#product').val();
             }else{
                 Swal.fire({
                     icon: 'error',

@@ -77,6 +77,9 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
     Route::put('order/regular/sample/{sample}', 'Regular\RegularOrderSampleController@update')->name('order.regular.sample.update');
     Route::delete('order/regular/sample/{sample}', 'Regular\RegularOrderSampleController@destroy')->name('order.regular.sample.destroy');
 
+    //臨時加單
+    Route::get('order/regular/temp/create', 'Regular\TempOrderController@create')->name('order.regular.temp.create');
+    Route::post('order/regular/temp', 'Regular\TempOrderController@store')->name('order.regular.temp.store');
     //外客
     Route::get('customer/select_customer_group', 'Customer\CustomerController@select_customer_group')->name('customer.select_group');
     Route::get('customer/order/select_old_order', 'Customer\CustomerController@select_old_order')->name('customer.order.select_old_order');
