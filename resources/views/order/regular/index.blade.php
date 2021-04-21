@@ -30,6 +30,10 @@
         <div class="py-5 text-center">
             <div align="left"><a target="_top" href="{{route('order')}}" style="font-size: xx-large;">返回</a></div>
             <h2>固定柯打</h2>
+            <div class="alert alert-danger" role="alert">
+                批量操作會為未下單日進行批量下單<br>
+                已下單日將不會下單
+            </div>
             <div valign="middle" align="center">
                 日期:
                 <input id="start" class="Wdate" type="text" value="{{request()->start}}" onclick="WdatePicker({minDate:'%y-%M-{%d+1}',maxDate:'#F{$dp.$D(\'end\')}'})" autocomplete="off"/>到

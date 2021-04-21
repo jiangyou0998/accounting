@@ -63,7 +63,8 @@
         </div>
 
         <div class="alert alert-warning" role="alert">
-            點擊「提交」按鈕後，將替換現有下單數量，請確認無誤後再提交！
+            點擊「提交」按鈕後，將替換現有下單數量，請確認無誤後再提交！<br>
+            輸入數量必須大於0，數量小於等於0提交後不作修改！
         </div>
 
         <div align="left" style="padding-top: 15px;">
