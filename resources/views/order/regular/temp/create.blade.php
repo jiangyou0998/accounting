@@ -62,6 +62,10 @@
             </strong>
         </div>
 
+        <div class="alert alert-warning" role="alert">
+            點擊「提交」按鈕後，將替換現有下單數量，請確認無誤後再提交！
+        </div>
+
         <div align="left" style="padding-top: 15px;">
             <strong>
                 <span style="color: #FF0000; font-size: 172%; ">選擇時間:</span>

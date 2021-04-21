@@ -155,7 +155,7 @@
                 },
                 success: function (msg) {
                     if (msg) {
-                        alert('發生錯誤!\n');
+                        alert('發生錯誤！請關閉頁面重新進入\n');
                         console.log(msg);
                     } else {
                         // alert('已確認收貨!\n');

@@ -204,7 +204,7 @@
                 // // console.log(msg);
             },
             error:function () {
-                alert('錯誤!');
+                alert('發生錯誤！請關閉頁面重新進入');
                 // window.location.reload();
                 // // console.log(msg);
             }
@@ -230,7 +230,7 @@
                 // // console.log(msg);
             },
             error:function () {
-                alert('錯誤!');
+                alert('發生錯誤！請關閉頁面重新進入');
                 // window.location.reload();
                 // // console.log(msg);
             }

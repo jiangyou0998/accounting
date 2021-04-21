@@ -366,10 +366,10 @@ class ImportController extends Controller
     public function importCustomerPrice()
     {
         $array = [
-//            4 => 'imports\貳號冰室.xlsx',
+            4 => 'imports\erhao.xlsx',
             6 => 'imports\jinji.xlsx',
-//            7 => 'imports\敏華.xlsx',
-//            8 => 'imports\機場.xlsx',
+            7 => 'imports\minhua.xlsx',
+            8 => 'imports\jichang.xlsx',
             9 => 'imports\mantai.xlsx',
             10 => 'imports\togathercafe.xlsx',
         ];
