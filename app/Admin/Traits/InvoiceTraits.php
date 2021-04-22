@@ -14,6 +14,7 @@ trait InvoiceTraits
     //查詢客戶po數組
     public function getCustomerPoArr()
     {
+        $customerPoArr = array();
         $customer_pos = DB::table('customer_pos')->get();
         foreach ($customer_pos as $customer_po){
             $customerPoArr[$customer_po->shop_id][$customer_po->deli_date] = $customer_po->po;

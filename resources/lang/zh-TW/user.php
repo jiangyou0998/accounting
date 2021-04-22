@@ -1,7 +1,7 @@
-<?php 
+<?php
 return [
     'labels' => [
-        'User' => 'User',
+        'User' => '前台用戶管理',
     ],
     'fields' => [
         'name' => '登錄名',

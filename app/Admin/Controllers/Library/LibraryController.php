@@ -41,14 +41,26 @@ class LibraryController extends AdminController
 
         return Grid::make($library, function (Grid $grid) {
 
+            $groups = LibraryGroup::selectOptionsWithoutMain();
+//            dd($groups);
             $grid->model()->latest();
             $grid->column('id')->sortable();
             $grid->column('name');
+            $grid->column('group', '分組')->display(function () use($groups){
+                $group_id = $this->group_id;
+                $url = admin_url('library')."?group_id={$group_id}";
+                $group_name = $groups[$group_id] ?? '';
+                return '<a href="' . $url . '">' . $group_name . '</a>';;
+            });
             $grid->column('library_type');
-            $grid->column('file_name');
-            $grid->column('file_path');
-            $grid->column('link_name');
-            $grid->column('link_path');
+//            $grid->column('file_name');
+            $grid->column('file_path')->display(function ($file_path) {
+                return '<a href="/libraries/' . $file_path . '" target="_blank">查看</a>';
+            });
+//            $grid->column('link_name');
+            $grid->column('link_path')->display(function ($link_path) {
+                return '<a href="' . $link_path . '" target="_blank">' . $link_path . '</a>';
+            });
 
             //回收站恢復
             $grid->actions(function (Grid\Displayers\Actions $actions) {
@@ -75,26 +87,6 @@ class LibraryController extends AdminController
     }
 
     /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     *
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        return Show::make($id, new Library(), function (Show $show) {
-            $show->field('id');
-            $show->field('name');
-            $show->field('library_type');
-            $show->field('file_path');
-            $show->field('file_name');
-            $show->field('link_path');
-            $show->field('link_name');
-        });
-    }
-
-    /**
      * Make a form builder.
      *
      * @return Form
@@ -103,11 +95,6 @@ class LibraryController extends AdminController
     {
         $builder = new Library();
         $builder = $builder->with(['users','frontgroups']);
-
-
-//        dump(Role::with('users')->get()->toArray());
-//        dump(User::with('roles')->get()->toArray());
-//        dump(Library::with('users')->get()->toArray());
 
         return Form::make($builder, function (Form $form){
             $form->display('id');
@@ -139,7 +126,6 @@ class LibraryController extends AdminController
 
 //            dump(LibraryGroup::selectOptions());
 
-
             $form->radio('view_type','可視設定')
                 ->when('GROUP', function (Form $form) {
                     $form->tree('frontgroups','分組')
@@ -154,7 +140,6 @@ class LibraryController extends AdminController
                             return array_column($v, 'id');
                         });
 //                    $form->hidden('users');
-
                 })
                 ->when('SHOP', function (Form $form) {
 
@@ -171,7 +156,6 @@ class LibraryController extends AdminController
                         });
 //                    $form->hidden('frontgroups');
                 })
-
                 ->options($this->viewTypeOptions)
                 ->default('GROUP')->required();
 
@@ -185,8 +169,6 @@ class LibraryController extends AdminController
                 }elseif ($form->view_type == 'SHOP'){
                     $form->input('frontgroups','');
                 }
-
-
 
             });
 

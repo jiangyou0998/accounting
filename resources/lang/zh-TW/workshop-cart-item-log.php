@@ -1,7 +1,7 @@
-<?php 
+<?php
 return [
     'labels' => [
-        'WorkshopCartItemLog' => 'WorkshopCartItemLog',
+        'WorkshopCartItemLog' => '下單日誌',
     ],
     'fields' => [
         'operate_user_id' => '操作用戶',

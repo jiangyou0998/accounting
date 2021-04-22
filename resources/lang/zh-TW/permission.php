@@ -1,7 +1,7 @@
-<?php 
+<?php
 return [
     'labels' => [
-        'Permission' => 'Permission',
+        'Permission' => '前台權限',
     ],
     'fields' => [
         'name' => '權限名稱',

@@ -1,7 +1,7 @@
-<?php 
+<?php
 return [
     'labels' => [
-        'Library' => 'Library',
+        'Library' => '圖書館',
     ],
     'fields' => [
         'name' => '圖書名稱',
