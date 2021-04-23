@@ -336,7 +336,15 @@ class WorkshopProductController extends AdminController
                     ->rules(['regex:/([0-1]{1}[0-9]{1}|[2][0-3])[0-5]{1}[0-9]{1}/','size:4'])
                     ->required();
                 $form->radio('phase')
-                    ->options([1 => '1日前', 2 => '2日前', 3 => '3日前', -1 => '後勤落單'])
+                    ->options([1 => '1日後',
+                        2 => '2日後',
+                        3 => '3日後',
+                        4 => '4日後',
+                        5 => '5日後',
+                        6 => '6日後',
+                        7 => '7日後',
+                        -1 => '後勤落單'
+                    ])
                     ->required();
                 $form->checkbox('canordertime')
                     ->options($week)
