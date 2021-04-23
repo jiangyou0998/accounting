@@ -77,6 +77,7 @@ Route::group([
     $router->get('api/unit', 'ApiController@unit');
     $router->get('api/shopgroup', 'ApiController@shop_group');
 
+    //圖書館
     $router->resource('library', 'Library\LibraryController');
     $router->resource('library_group', 'Library\LibraryGroupController');
 

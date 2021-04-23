@@ -103,11 +103,11 @@ class LibraryGroupController extends AdminController
             $form->display('updated_at', '更新時間');
         })->saved(function (Form $form, $result) {
             if ($result) {
-                return $form->location('library/group', __('front.save_succeeded'));
+                return $form->location('library_group', __('保存成功'));
             }
 
-            return $form->location('library/group', [
-                'message' => __('front.nothing_updated'),
+            return $form->location('library_group', [
+                'message' => __('保存失敗'),
                 'status'  => false,
             ]);
         });
