@@ -29,18 +29,6 @@ class TotalSalesBySearchReportController extends AdminController
     {
         return Grid::make(null, function (Grid $grid) {
 
-            $grid->header(function ($collection) {
-
-                $start = $this->getStartTime();
-                $end = $this->getEndTime();
-
-                // 标题和内容
-                $cardInfo = $start . " 至 " . $end;
-                $card = Card::make('日期:', $cardInfo);
-
-                return $card;
-            });
-
             $start = $this->getStartTime();
             $end = $this->getEndTime();
 
@@ -53,9 +41,6 @@ class TotalSalesBySearchReportController extends AdminController
                 $no_start = $no_end;
                 $no_end = $temp;
             }
-//
-//            $no_start = request()->no->start;
-//            $no_end = request()->no->end;
 
             //當前產品id
             $product_id = isset($_REQUEST['product_id']) ? $_REQUEST['product_id'] : "";
@@ -64,6 +49,28 @@ class TotalSalesBySearchReportController extends AdminController
             $shop = isset($_REQUEST['shop']) ? $_REQUEST['shop'] : "";
 
             $data = $this->generate($start, $end,$no_start,$no_end, $product_id, $shop_id);
+
+            //2021-04-21 新增總價錢統計
+            $total = 0;
+            foreach ($data as $value){
+                $total += $value['總價'];
+            }
+
+            $grid->header(function ($collection) use($total){
+
+                $start = $this->getStartTime();
+                $end = $this->getEndTime();
+
+                // 标题和内容
+                $cardInfo = <<<HTML
+        <h1>日期:<span style="color: red">{$start} 至 {$end}</span></h1>
+        <h1>總計:<span style="color: red">{$total}</span></h1>
+HTML;
+                $card = Card::make('', $cardInfo);
+
+                return $card;
+            });
+
 
             if (count($data) > 0) {
                 $keys = $data->first()->toArray();
