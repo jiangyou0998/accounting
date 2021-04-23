@@ -145,6 +145,11 @@ Route::group(['middleware' => ['auth']], function () {
     //通訊錄
     Route::get('addressbook', 'AddressBookController@index')->name('addressbook');
 
+    //圖書館
+    Route::get('library', 'Library\LibraryController@index')->name('library.index');
+    Route::get('library/child/{id}', 'Library\LibraryController@child_index')->name('library.child.show');
+    Route::any('library/search', 'Library\LibraryController@search')->name('library.search');
+
     //收貨
     Route::get('delivery', 'DeliveryController@index')->name('delivery');
 

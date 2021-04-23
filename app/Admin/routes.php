@@ -58,8 +58,11 @@ Route::group([
     $router->resource('front/roles', 'RoleController');
     $router->resource('pages/front_users', 'UserController');
 
-    //商店分組
+    //價格分組
     $router->resource('shopgroup', 'ShopGroupController');
+
+    //前台用戶分組
+    $router->resource('frontgroup', 'FrontGroupController');
 
     //api
     $router->get('api/group', 'ApiController@group');
@@ -70,6 +73,10 @@ Route::group([
 
     //前台最近登錄用戶
     $router->get('lastlogin', 'LastLoginController@index');
+
+    //圖書館
+    $router->resource('library', 'Library\LibraryController');
+    $router->resource('library_group', 'Library\LibraryGroupController');
 
     //test
 //    $router->get('data/', 'DataChangeController@index');

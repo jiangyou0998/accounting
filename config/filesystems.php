@@ -86,6 +86,13 @@ return [
             'url' => env('APP_URL').'/forms',
         ],
 
+        'library' => [
+            'driver' => 'local',
+            'root' => public_path('libraries'),
+            'visibility' => 'public',
+            'url' => env('APP_URL').'/libraries',
+        ],
+
     ],
 
 ];

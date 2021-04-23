@@ -2,10 +2,13 @@
 
 namespace App;
 
+use App\Models\FrontGroup;
+use App\Models\Library\Library;
 use App\Models\Role;
 use App\Models\ShopAddress;
 use App\Models\ShopGroup;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
@@ -67,6 +70,26 @@ class User extends Authenticatable
         $relatedModel = ShopGroup::class; // 关联模型类名
 
         return $this->belongsToMany($relatedModel, $pivotTable, 'user_id', 'shop_group_id');
+    }
+
+    public function front_groups(): BelongsToMany
+    {
+        $pivotTable = 'front_group_has_users'; // 中间表
+
+        $relatedModel = FrontGroup::class; // 关联模型类名
+
+        return $this->belongsToMany($relatedModel, $pivotTable, 'user_id', 'front_group_id');
+    }
+
+    public function librarys(): MorphToMany
+    {
+        return $this->morphedByMany(
+            Library::class,
+            'model',
+            'front_user_can_views',
+            'user_id',
+            'model_id'
+        );
     }
 
     public function allNodes()
