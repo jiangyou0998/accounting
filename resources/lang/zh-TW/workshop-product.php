@@ -1,7 +1,7 @@
 <?php
 return [
     'labels' => [
-        'WorkshopProduct' => '中央工場-貨品',
+        'WorkshopProduct' => '糧友工場-貨品',
     ],
     'fields' => [
         'product_name' => '名稱',

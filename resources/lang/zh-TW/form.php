@@ -1,7 +1,7 @@
-<?php 
+<?php
 return [
     'labels' => [
-        'Form' => 'Form',
+        'Form' => '表格',
     ],
     'fields' => [
         'form_name' => '表格名稱',

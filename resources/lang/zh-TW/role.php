@@ -1,7 +1,7 @@
-<?php 
+<?php
 return [
     'labels' => [
-        'Role' => 'Role',
+        'Role' => '前台角色',
     ],
     'fields' => [
         'name' => '角色名稱',

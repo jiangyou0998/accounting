@@ -1,7 +1,7 @@
 <?php
 return [
     'labels' => [
-        'Notice' => 'Notice',
+        'Notice' => '通告',
     ],
     'fields' => [
         'notice_name' => '通告名稱',

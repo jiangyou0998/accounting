@@ -1,7 +1,7 @@
 <?php
 return [
     'labels' => [
-        'WorkshopGroup' => '細類',
+        'WorkshopGroup' => '糧友工場-細類',
     ],
     'fields' => [
         'group_name' => '名稱',

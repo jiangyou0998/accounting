@@ -1,7 +1,7 @@
 <?php
 return [
     'labels' => [
-        'WorkshopCat' => '中央工場-大類',
+        'WorkshopCat' => '糧友工場-大類',
     ],
     'fields' => [
         'cat_name' => '名稱',
