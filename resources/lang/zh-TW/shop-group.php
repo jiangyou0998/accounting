@@ -1,7 +1,7 @@
-<?php 
+<?php
 return [
     'labels' => [
-        'ShopGroup' => 'ShopGroup',
+        'ShopGroup' => '價格分組',
     ],
     'fields' => [
         'name' => '分組名',
