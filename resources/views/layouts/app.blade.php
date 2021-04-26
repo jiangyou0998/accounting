@@ -92,6 +92,8 @@
     <div class="container main">
         <div class="col-sm-12 col-md-12 col-12">
 
+            @include('shared._messages')
+
             @yield('content')
         </div>
     </div>
