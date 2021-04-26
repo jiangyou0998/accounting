@@ -55,6 +55,16 @@ class KBWorkshopProduct extends Model
 //        return "{$this->product_name} {$this->product_no}";
 //    }
 
+    public static function getProductCatIds()
+    {
+        $query = self::query();
+        $query = $query->with('cats')->get();
+
+        $catids = $query->mapWithKeys(function ($item, $key) {
+            return [$item['id'] => $item['cats']->id];
+        });
+        return $catids->toArray();
+    }
 
 
 }

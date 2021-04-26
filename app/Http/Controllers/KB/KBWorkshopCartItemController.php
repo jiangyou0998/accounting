@@ -4,6 +4,7 @@ namespace App\Http\Controllers\KB;
 
 
 use App\Http\Controllers\Controller;
+use App\Models\KB\KBSpecialDate;
 use App\Models\KB\KBUser;
 use App\Models\KB\KBWorkshopCartItem;
 use App\Models\KB\KBWorkshopCartItemLog;
@@ -21,6 +22,9 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class KBWorkshopCartItemController extends Controller
 {
+    private $productArr;
+    private $special_dates;
+
     public function update(Request $request, $shopid)
     {
         $user = Auth::User();
@@ -192,12 +196,19 @@ class KBWorkshopCartItemController extends Controller
             $sampleItems = KBWorkshopOrderSample::getRegularOrderItems($shopid, $deliW ,$dept);
         }
 
-        foreach ($items as $item) {
-            $this->checkInvalidOrder($item,$deli_date);
-        }
+        $this->productArr = KBWorkshopProduct::getProductCatIds();
+        $this->special_dates = KBSpecialDate::where('special_date', $deli_date)->get();
 
+        foreach ($items as $item) {
+            //$item必須有product_id
+            $item->product_id = $item->itemID;
+            $this->checkInvalidOrder($item, $deli_date, $shopid);
+        }
+//        dump($items->toArray());
         foreach ($sampleItems as $sampleItem) {
-            $this->checkInvalidOrder($sampleItem,$deli_date);
+            //$sampleItem必須有product_id
+            $sampleItem->product_id = $sampleItem->itemID;
+            $this->checkInvalidOrder($sampleItem, $deli_date, $shopid);
         }
 
 //        dump($items->toArray());
@@ -232,8 +243,10 @@ class KBWorkshopCartItemController extends Controller
     }
 
     //ajax加載產品
-    public function showProduct($groupid, Request $request)
+    public function showProduct($groupid, $shopid, Request $request)
     {
+        $shopid = KBUser::where('rb_user_id', $shopid)->first()->id;
+
         $products = KBWorkshopProduct::with('cats')
             ->with('units')
             ->where('group_id', $groupid)
@@ -252,12 +265,15 @@ class KBWorkshopCartItemController extends Controller
         $infos = new Collection();
         $infos->group_name = $group->group_name;
         $infos->cat_name = $group->cats->cat_name;
+
+        $this->productArr = KBWorkshopProduct::getProductCatIds();
+        $this->special_dates = KBSpecialDate::where('special_date', $deli_date)->get();
 //        dump($infos);
         foreach ($products as $product) {
 //            dump($deli_date.$product->cuttime);
             $productDetail = $product->prices->where('shop_group_id', 5)->first();
 
-            $this->checkInvalidOrder($productDetail,$deli_date);
+            $this->checkInvalidOrder($productDetail, $deli_date , $shopid);
 
             $this->resetProduct($product,$productDetail);
 
@@ -271,7 +287,7 @@ class KBWorkshopCartItemController extends Controller
 
     //判斷是否能下單
     //$product必須有phase,cuttime,canordertime
-    private function checkInvalidOrder($product,$deli_date)
+    private function checkInvalidOrder($product, $deli_date, $shopid)
     {
         $product->order_by_workshop = false;
         $product->cut_order = false;
@@ -310,6 +326,22 @@ class KBWorkshopCartItemController extends Controller
         //送貨日期不在可下單日期時
         if (!in_array($deliW, $canOrderTime)) {
             $product->not_deli_time = true;
+        }
+
+        $productArr = $this->productArr;
+        $special_dates = $this->special_dates;
+
+        foreach ($special_dates as $special_date){
+            $catArr = explode(',', $special_date->cat_ids);
+            $shopArr = explode(',', $special_date->user_ids);
+
+            $cat_id = $productArr[$product->product_id] ?? 0 ;
+
+            if (in_array($cat_id, $catArr) && in_array($shopid, $shopArr)){
+
+                $product->not_deli_time = false;
+                break;
+            }
         }
 
         //只要有一個是true,分店就不能下單

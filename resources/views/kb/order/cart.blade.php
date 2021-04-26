@@ -216,7 +216,7 @@
         console.log(deli_date);
         $.ajax({
             type: "POST",
-            url: "/kb/order/cart/show_product/"+groupid,
+            url: "/kb/order/cart/show_product/"+groupid+'/{{$orderInfos->shopid}}',
             data: {'deli_date':deli_date},
             dataType:'html',
             // headers: {

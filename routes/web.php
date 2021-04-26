@@ -67,7 +67,8 @@ Route::group(['middleware' => ['auth','permission:shop|workshop|operation']], fu
 
     Route::get('kb/order/cart','KB\KBWorkshopCartItemController@cart')->name('kb.cart');
     Route::post('kb/order/cart/show_group/{catid}', 'KB\KBWorkshopCartItemController@showGroup')->name('kb.show_group');
-    Route::post('kb/order/cart/show_product/{groupid}', 'KB\KBWorkshopCartItemController@showProduct')->name('kb.show_product');
+//    Route::post('kb/order/cart/show_product/{groupid}', 'KB\KBWorkshopCartItemController@showProduct')->name('kb.show_product');
+    Route::post('kb/order/cart/show_product/{groupid}/{shopid}', 'KB\KBWorkshopCartItemController@showProduct')->name('kb.show_product');
     Route::put('kb/order/cart/{shopid}', 'KB\KBWorkshopCartItemController@update')->name('kb.cart.update');
 
 });
