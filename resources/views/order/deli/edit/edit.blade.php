@@ -59,10 +59,10 @@
                 //更新項目總數
                 var sum = 0;
                 $(".dept-input[data-id='" + $(this).data('id') + "']").each(function () {
-                    sum += parseInt($(this).val());// * $(this).data('price');
+                    sum += parseFloat($(this).val());// * $(this).data('price');
                 });
                 $("#total_" + $(this).data('id')).html(sum);
-                if (sum != parseInt($(".order-qty[data-id='" + $(this).data('id') + "']").html())) {
+                if (sum != parseFloat($(".order-qty[data-id='" + $(this).data('id') + "']").html())) {
                     $(".reason[data-id='" + $(this).data('id') + "']").prop("disabled", false);
                     $parentTr = $(this).parents('tr').parents('tr');
                     $parentTr.removeClass();
@@ -96,7 +96,7 @@
             });
 
             $(".dept-input").on("blur", function (e) {
-                $(this).val(parseInt($(this).val()));
+                $(this).val(parseFloat($(this).val()));
             });
         });
 
@@ -125,9 +125,9 @@
             $(".dept-input").each(function () {
                 var mysqlid = $(this).data("mysqlid");
                 //修改後數量
-                var receivedqty = $(this).val();
+                var receivedqty = parseFloat($(this).val());
                 //修改前數量
-                var qty = $(this).data("qty");
+                var qty = parseFloat($(this).data("qty"));
 
                 var id = $(this).data("id");
                 // 數據庫有記錄的才寫入對象;

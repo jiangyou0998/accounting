@@ -11,6 +11,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+//改發票
 class DeliController extends Controller
 {
 
@@ -18,19 +19,10 @@ class DeliController extends Controller
     {
         $now = Carbon::now();
         //如果URL沒有送貨日期,使用當日日期
-        if(isset($request->deli_date)){
-            $deli_date = $request->deli_date;
-        }else{
-            $deli_date = $now->toDateString();
-        }
+        $deli_date = $request->deli_date ?? $now->toDateString();
 
-        if(isset($request->group)){
-            $group = $request->group;
-        }else{
-            $group = 'KB';
-        }
+        $group = $request->group ?? 'KB';
 
-//        $deli_date = '2020-10-09';
         $lists = WorkshopCartItem::getDeliLists($deli_date, $group);
 
 //        dump($lists->toArray());
@@ -38,18 +30,14 @@ class DeliController extends Controller
         $infos = new Collection();
         $infos->deli_date = $deli_date;
 
-        return view('order.deli.edit.list',compact('lists','infos'));
+        return view('order.deli.edit.list', compact('lists', 'infos'));
     }
 
     protected function deli_edit(Request $request)
     {
         $now = Carbon::now();
         //如果URL沒有送貨日期,使用當日日期
-        if(isset($request->deli_date)){
-            $deli_date = $request->deli_date;
-        }else{
-            $deli_date = $now->toDateString();
-        }
+        $deli_date = $request->deli_date ?? $now->toDateString();
 
         $shop = $request->shop;
         $group = $request->group;
@@ -57,7 +45,7 @@ class DeliController extends Controller
         $deptArr = config('dept.symbol');
         $deptArrWithName = config('dept.symbol_and_name');
 
-        switch ($group){
+        switch ($group) {
             case 'KB' :
                 $deptArr = config('dept.symbol');
                 $deptArrWithName = config('dept.symbol_and_name');
@@ -76,11 +64,11 @@ class DeliController extends Controller
         }
 
         //送貨單詳細數據
-        $items = WorkshopCartItem::getDeliItem($deli_date,$shop);
+        $items = WorkshopCartItem::getDeliItem($deli_date, $shop);
 
         $dept_price = array();
 
-        foreach($deptArr as $dept){
+        foreach ($deptArr as $dept) {
 
             $dept_price[$dept] = 0;
         }
@@ -90,7 +78,7 @@ class DeliController extends Controller
 //        dump($items);
 
         //處理查詢數據用於頁面顯示
-        foreach ($items as $item){
+        foreach ($items as $item) {
 //    var_dump($po);
 //            $po[$item->product_id]['totalqty'] = 0;
 //            $po[$item->product_id]['totalreceivedqty'] = 0;
@@ -98,15 +86,15 @@ class DeliController extends Controller
             $po[$item->product_id]['unit'] = $item->UoM;
             $po[$item->product_id]['name'] = $item->item_name;
             $po[$item->product_id]['price'] = $item->default_price;
-            if(isset($po[$item->product_id]['totalqty'])){
+            if (isset($po[$item->product_id]['totalqty'])) {
                 $po[$item->product_id]['totalqty'] += $item->dept_qty;
-            }else{
+            } else {
                 $po[$item->product_id]['totalqty'] = $item->dept_qty;
             }
 
-            if(isset($po[$item->product_id]['totalreceivedqty'])){
+            if (isset($po[$item->product_id]['totalreceivedqty'])) {
                 $po[$item->product_id]['totalreceivedqty'] += $item->qty_received;
-            }else{
+            } else {
                 $po[$item->product_id]['totalreceivedqty'] = $item->qty_received;
             }
 
@@ -123,27 +111,27 @@ class DeliController extends Controller
 
         //原因
         $reasonArr = [
-            0=>'請選擇原因',
-            1=>'品質問題 (壞貨)',
-            2=>'執漏貨',
-            3=>'執錯貨',
-            4=>'分店落錯貨，即日收走',
-            5=>'打錯單',
-            6=>'抄碼',
-            7=>'運送途中損爛',
-            8=>'運輸送錯分店',
-            9=>'缺貨',
-            10=>'廠派貨',
-            11=>'分店要求扣數',
-            12=>'分店要求加單',
-            13=>'不明原因'
+            0 => '請選擇原因',
+            1 => '品質問題 (壞貨)',
+            2 => '執漏貨',
+            3 => '執錯貨',
+            4 => '分店落錯貨，即日收走',
+            5 => '打錯單',
+            6 => '抄碼',
+            7 => '運送途中損爛',
+            8 => '運輸送錯分店',
+            9 => '缺貨',
+            10 => '廠派貨',
+            11 => '分店要求扣數',
+            12 => '分店要求加單',
+            13 => '不明原因'
         ];
 
         $infos = new Collection();
         $infos->deli_date = $deli_date;
         $infos->shop = User::find($shop)->txt_name;
 
-        return view('order.deli.edit.edit',compact('po' ,'infos', 'reasonArr' , 'dept_price' , 'total_price' , 'deptArr','deptArrWithName'));
+        return view('order.deli.edit.edit', compact('po', 'infos', 'reasonArr', 'dept_price', 'total_price', 'deptArr', 'deptArrWithName'));
     }
 
     public function deli_update(Request $request)
@@ -154,7 +142,6 @@ class DeliController extends Controller
         // 数据库事务处理
         DB::transaction(function () use ($user, $request) {
 
-
             $updateDatas = json_decode($request->updateData, true);
 
             $ip = $request->ip();
@@ -164,16 +151,14 @@ class DeliController extends Controller
             $now = Carbon::now()->toDateTimeString();
 
 //            dump($updateDatas);
-//            dump($updateDatas);
 //            dump($delDatas);
-
             //更新
             $updateLogsArr = array();
             foreach ($updateDatas as $updateData) {
                 $cartItemModel::where('id', $updateData['mysqlid'])
                     ->update([
                         'qty_received' => $updateData['receivedqty'],
-                        'received_date'=> $now,
+                        'received_date' => $now,
                         'reason' => $updateData['reason'],
                     ]);
 //                $productModel = new WorkshopProduct();
@@ -184,7 +169,7 @@ class DeliController extends Controller
                     'cart_item_id' => $updateData['mysqlid'],
                     'method' => 'MODIFY',
                     'ip' => $ip,
-                    'input' => '後台修改數量，從' . $updateData['oldqty'] . '變為' . $updateData['receivedqty'].'，原因：'.$updateData['reason'],
+                    'input' => '後台修改數量，從' . $updateData['oldqty'] . '變為' . $updateData['receivedqty'] . '，原因：' . $updateData['reason'],
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];
@@ -192,7 +177,6 @@ class DeliController extends Controller
 
             //插入更新LOG
             $cartItemLogsModel->insert($updateLogsArr);
-
 
         });
 

@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\ShopGroup;
 use App\Models\SpecialDate;
 use App\Models\WorkshopCat;
 use App\User;
@@ -54,7 +55,16 @@ class SpecialDateController extends AdminController
     {
         return Form::make(new SpecialDate(), function (Form $form) {
             $form->checkbox('cat_ids')->options(WorkshopCat::all()->pluck('cat_name','id'))->required();
-            $form->checkbox('user_ids')->options(User::getAllShopsByShopGroup()->pluck('txt_name', 'id'))->required();
+//            $form->checkbox('user_ids')->options(User::getAllShopsByShopGroup()->pluck('txt_name', 'id'))->required();
+            $shopGroupIds = ShopGroup::has('users')
+                ->whereIn('id',[1,5])
+                ->pluck('name','id')
+                ->toArray();
+            foreach ($shopGroupIds as $shopGroupId => $shopGroupName){
+                $form->checkbox('user_ids',$shopGroupName)
+                    ->canCheckAll()
+                    ->options(User::getShopsByShopGroup($shopGroupId)->pluck('report_name', 'id'));
+            }
             $form->date('special_date')->required();
         });
     }

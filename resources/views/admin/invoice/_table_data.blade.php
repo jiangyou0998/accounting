@@ -7,7 +7,8 @@
             @if($detail->qty == $detail->qty_received)
                 <td align="right">{{ number_format($detail->qty_received,0) }}&nbsp;{{ $detail->UoM }}</td>
             @else
-                <td align="right" style="color:red;">{{ number_format($detail->qty_received,0) }}&nbsp;{{ $detail->UoM }}</td>
+                {{-- R單--}}
+                <td align="right" style="color:red;">{{ number_format($detail->qty_received,2) }}&nbsp;{{ $detail->UoM }}</td>
             @endif
 {{--            <td align="center">{{ $detail->UoM }}</td>--}}
             <td align="right">${{ $detail->default_price }}</td>

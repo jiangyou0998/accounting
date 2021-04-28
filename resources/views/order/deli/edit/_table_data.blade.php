@@ -11,7 +11,7 @@
         {{$row['totalreceivedqty']}}</span>
         {{$row['unit']}}
     </td>
-    <td width="394px" align="center" bgcolor="#FFFFFF">
+    <td width="434px" align="center" bgcolor="#FFFFFF">
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tbody>
             <tr>
@@ -30,9 +30,9 @@
                                    data-price="{{$row['price']}}"
                                    data-dept="{{$dept}}"
                                    data-id="{{$product_id}}"
-                                   data-qty="{{number_format($row['qty'][$dept]['qty'], 0, '.', ',')}}"
-                                   value="{{number_format($row['qty'][$dept]['qty'], 0, '.', ',')}}"
-                                   class="dept-input" type="number" autocomplete="off"
+                                   data-qty="{{number_format($row['qty'][$dept]['qty'], 2, '.', ',')}}"
+                                   value="{{number_format($row['qty'][$dept]['qty'], 2, '.', ',')}}"
+                                   class="dept-input" type="tel" step="0.01" autocomplete="off"
                                    style="width:95%; margin:auto;">
                         </td>
                     @else
@@ -44,7 +44,7 @@
                                    data-id="{{$product_id}}"
                                    data-qty="0"
                                    value="0"
-                                   class="dept-input" type="number" autocomplete="off"
+                                   class="dept-input" type="tel" step="0.01" autocomplete="off"
                                    style="width:95%; margin:auto;" disabled>
                         </td>
                     @endif
@@ -55,7 +55,7 @@
             </tbody>
         </table>
     </td>
-    <td width="200px" align="center" bgcolor="#FFFFFF">
+    <td width="160px" align="center" bgcolor="#FFFFFF">
         <select name="reason[{{$product_id}}]" class="reason" data-id="{{$product_id}}" style="width:95%; margin:auto; font-size:14px;"
                 @if($row['totalqty'] == $row['totalreceivedqty']) disabled @endif>
 

@@ -4,7 +4,7 @@
     <td width="75px" align="center" bgcolor="#CCCCCC"><strong>單價($)</strong></td>
     <td width="75px" align="center" bgcolor="#CCCCCC"><strong>落單</strong></td>
     <td width="75px" align="center" bgcolor="#CCCCCC"><strong>派貨</strong></td>
-    <td width="394px" align="center" bgcolor="#CCCCCC">
+    <td width="434px" align="center" bgcolor="#CCCCCC">
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tbody>
             <tr>
@@ -18,5 +18,5 @@
             </tbody>
         </table>
     </td>
-    <td width="200px" align="center" bgcolor="#CCCCCC">差異原因</td>
+    <td width="160px" align="center" bgcolor="#CCCCCC">差異原因</td>
 </tr>
