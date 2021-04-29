@@ -142,6 +142,8 @@ Route::group(['middleware' => ['auth']], function () {
 
 });
 
+Route::get('stock', 'StockController@index')->name('stock.index');
+
 //Route::get('/import', 'ImportController@import');
 //Route::get('/import/ryoyuprice', 'ImportController@importRyoyuPrice');
 //Route::get('/import/newryoyuproductandprice', 'ImportController@importNewRyoyuProductAndPrice');

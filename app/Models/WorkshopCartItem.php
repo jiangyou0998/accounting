@@ -32,6 +32,11 @@ class WorkshopCartItem extends Model
         return $this->hasMany(WorkshopCartItemLog::class,"cart_item_id","id");
     }
 
+    public function unit()
+    {
+        return $this->hasOneThrough(WorkshopUnit::class,WorkshopProduct::class,"id" ,"id","product_id","unit_id");
+    }
+
     public function scopeOfShop($query, $shop)
     {
         if($shop === 'kb'){
@@ -383,7 +388,10 @@ class WorkshopCartItem extends Model
 
     }
 
-
+    public function scopeNotDeleted($query)
+    {
+        return $query->where('status', '!=' ,4);
+    }
 
 
 }
