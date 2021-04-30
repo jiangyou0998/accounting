@@ -59,6 +59,10 @@
             <tr>
                 {{--                <td style="width:33%"></td>--}}
                 <td style="width:70%" align="left">
+                    @if($data['infos']->shop_name)
+                        <div><span><b>{{ $data['infos']->shop_name }}</b></span></div>
+                    @endif
+
                     @if($data['infos']->company_name)
                         <div><span><b>{{ $data['infos']->company_name }}</b></span></div>
                     @endif
