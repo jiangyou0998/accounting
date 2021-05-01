@@ -135,7 +135,7 @@
 
     $(document).on('change', '.qty', function () {
         var qty = $(this).val();
-        var maxQty = 600;
+        var maxQty = 2400;
         var base = $(this).data('base');
         var min = $(this).data('min');
         var oldQty = $(this).data('qty');
@@ -360,7 +360,7 @@
             console.log("#qty" + id);
             $("#qty" + id).val(parseInt(qty) + base) ;
             var qty = parseInt(qty) + base;
-            var maxQty = 600;
+            var maxQty = 2400;
 
             if (qty > maxQty) {
                 alertMax(maxQty);
@@ -436,7 +436,7 @@
             var oldQty = $("#qty" + id).data('qty');
             $("#qty" + id).val(parseInt(qty) - base) ;
             var qty = parseInt(qty) - base;
-            var maxQty = 600;
+            var maxQty = 2400;
             if (qty > maxQty) {
                 alertMax(maxQty);
                 // alert("每項目數量最多只可為「" + maxQty + "」");
