@@ -27,6 +27,8 @@
             <br/>
             <a href='{{route('customer.select_group')}}' class='styleA'>外客下單</a>
             <br/>
+            <a href='{{route('customer.sample.index')}}' class='styleA'>外客範本</a>
+            <br/>
             <a href='{{route('order.regular.sample')}}' class='styleA'>固定柯打</a>
             <br/>
             <a href='{{route('order.regular')}}' class='styleA'>批量下單</a>

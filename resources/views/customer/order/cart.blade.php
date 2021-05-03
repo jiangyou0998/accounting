@@ -145,7 +145,7 @@
             isworkshop = true;
         @endcan
 
-        if (qty > maxQty && !isworkshop) {
+        if (qty > maxQty) {
             alertMax(maxQty);
             // alert("每項目數量最多只可為「" + maxQty + "」");
             $(this).val(maxQty);

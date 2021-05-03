@@ -105,8 +105,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::put('sample/{sampleid}', 'WorkshopOrderSampleController@update')->name('sample.update');
     Route::delete('sample/{sampleid}', 'WorkshopOrderSampleController@destroy')->name('sample.destroy');
 
-    Route::post('sample/show_group/{catid}', 'WorkshopOrderSampleController@showGroup')->name('sample.show_group');
-    Route::post('sample/show_product/{groupid}', 'WorkshopOrderSampleController@showProduct')->name('sample.show_product');
+    Route::post('sample/show_group/{catid}/{shopid}', 'WorkshopOrderSampleController@showGroup')->name('sample.show_group');
+    Route::post('sample/show_product/{groupid}/{shopid}', 'WorkshopOrderSampleController@showProduct')->name('sample.show_product');
 
     Route::get('support', 'SupportController@index')->name('support');
 
@@ -143,6 +143,10 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 Route::get('stock', 'StockController@index')->name('stock.index');
+
+Route::group(['middleware' => ['auth','permission:workshop']], function () {
+    Route::get('customer/sample/regular', 'Regular\CustomerRegularController@index')->name('customer.sample.index');
+});
 
 //Route::get('/import', 'ImportController@import');
 //Route::get('/import/ryoyuprice', 'ImportController@importRyoyuPrice');

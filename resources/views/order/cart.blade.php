@@ -143,6 +143,7 @@
 
         @can('workshop')
             isworkshop = true;
+            maxQty = 2400;
         @endcan
 
         if (qty > maxQty && !isworkshop) {
@@ -387,6 +388,9 @@
             $("#qty" + id).val(parseInt(qty) + base) ;
             var qty = parseInt(qty) + base;
             var maxQty = 600;
+            @can('workshop')
+                maxQty = 2400;
+            @endcan
 
             if (qty > maxQty) {
                 alertMax(maxQty);
@@ -471,6 +475,9 @@
             $("#qty" + id).val(parseInt(qty) - base) ;
             var qty = parseInt(qty) - base;
             var maxQty = 600;
+            @can('workshop')
+                maxQty = 2400;
+            @endcan
             if (qty > maxQty) {
                 alertMax(maxQty);
                 // alert("每項目數量最多只可為「" + maxQty + "」");

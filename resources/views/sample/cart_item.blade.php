@@ -17,9 +17,9 @@
         </div>
     @endcan
 
-    @can('operation')
+    @can('workshop')
         <div align="left">
-            <a target="_top" href="{{route('sample.regular',['shopid'=>request()->input('shopid') ? request()->input('shopid') : $sample->user_id])}}" style="font-size: xx-large;">返回</a>
+            <a target="_top" href="{{route('customer.sample.index',['shopid'=>request()->input('shopid') ? request()->input('shopid') : $sample->user_id])}}" style="font-size: xx-large;">返回</a>
         </div>
     @endcan
 

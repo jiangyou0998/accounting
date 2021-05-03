@@ -183,13 +183,7 @@
             });
 
             // $("#btnsubmit").attr('disabled', false);
-
-
         }
     </script>
-
-
-
-
 
 @endsection

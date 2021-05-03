@@ -44,21 +44,18 @@ class WorkshopCat extends Model
     }
 
     //获取所有大類
-    public static function getSampleCats($dept)
+    public static function getSampleCats($shopid)
     {
+        $shop_group_id = User::getShopGroupId($shopid);
         $cats = new WorkshopCat();
-
-        //A第一車,B第二車,C麵頭,D方包
-//        if($dept == 'A' || $dept == 'B'){
-//            $cats = $cats->whereIn('cat_name',['熟細包','熟大包']);
-//        }else if($dept == 'C'){
-//            $cats = $cats->whereIn('cat_name',['麵頭']);
-//        }else if($dept == 'D'){
-//            $cats = $cats->whereIn('cat_name',['方包']);
-//        }
 
         $cats = $cats
             ->whereNotIn('cat_name',['時節產品'])
+            ->whereHas('products', function ($query) use ($shop_group_id){
+                $query->whereHas('prices',function ($query) use ($shop_group_id){
+                    $query->where('shop_group_id',$shop_group_id);
+                });
+            })
             ->orderby('sort')
             ->get();
 

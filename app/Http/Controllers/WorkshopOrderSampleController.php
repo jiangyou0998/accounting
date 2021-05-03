@@ -80,7 +80,7 @@ class WorkshopOrderSampleController extends Controller
         }
 //        $shopid = $user->id;
 
-        $cats = WorkshopCat::getSampleCats($request->dept);
+        $cats = WorkshopCat::getSampleCats($shopid);
 
         $orderInfos = new Collection();
 
@@ -96,6 +96,7 @@ class WorkshopOrderSampleController extends Controller
 
         $orderInfos->shop_name = User::find($shopid)->txt_name;
         $orderInfos->dept_name = $request->dept;
+        $orderInfos->shopid = $shopid;
 
 //        dump($request->dept);
         return view('sample.cart', compact( 'sample','cats',  'orderInfos' ,'checkHtml' ,'sampledate'));
@@ -139,7 +140,7 @@ class WorkshopOrderSampleController extends Controller
 
         $checkHtml = $this->getCheckboxHtml($sampledate , $currentdate);
 
-        $cats = WorkshopCat::getSampleCats($dept);
+        $cats = WorkshopCat::getSampleCats($shopid);
 
         $sampleItems = WorkshopSample::getRegularOrderItems($shopid, $currentdate ,$sample->dept);
 
@@ -148,6 +149,7 @@ class WorkshopOrderSampleController extends Controller
 
         $orderInfos->shop_name = User::find($shopid)->txt_name;
         $orderInfos->dept_name = $sample->dept;
+        $orderInfos->shopid = $shopid;
 
 //        dump($sampleItems);
         return view('sample.cart', compact( 'sample','cats', 'sampleItems', 'orderInfos' ,'checkHtml' ,'currentdate','sampleItems'));
@@ -156,7 +158,7 @@ class WorkshopOrderSampleController extends Controller
     public function store(Request $request)
     {
         $user = Auth::User();
-        if($request->dept == 'F' && $user->can('operation')){
+        if(in_array($request->dept, ['F','CU']) && $user->can('workshop')){
             $shopid = $request->shopid;
         }else if(($request->dept == 'R' || $request->dept == 'R2') && $user->can('shop')){
             $shopid = $user->id;
@@ -240,23 +242,30 @@ class WorkshopOrderSampleController extends Controller
         $sampleModel::where('id',$sampleid)->update(['disabled' => 1]);
     }
 
-    public function showGroup($catid)
+    public function showGroup($catid ,$shopid)
     {
-        $groups = WorkshopGroup::where('cat_id', $catid)->get();
+        $groups = WorkshopGroup::where('cat_id', $catid)->whereHas('products', function (Builder $query) use($shopid){
+            $query->whereHas('prices', function (Builder $query) use($shopid){
+                $shop_group_id = User::getShopGroupId($shopid);
+                $query->where('shop_group_id', '=', $shop_group_id);
+            });
+        })->get();
 
         return view('sample.cart_group', compact('groups'))->render();
     }
 
-    public function showProduct($groupid, Request $request)
+    public function showProduct($groupid, $shopid, Request $request)
     {
+        $shop_group_id = User::getShopGroupId($shopid);
         $products = WorkshopProduct::with('cats')
             ->with('units')
             ->with('prices')
             ->where('group_id', $groupid)
-            ->where('status', '!=', 4)
-            //2021-01-06 KB只能看KB產品
-            ->whereHas('prices', function (Builder $query) {
-                $query->where('shop_group_id', '=', 1);
+            //2021-01-15 不顯示暫停產品
+            ->whereNotIn('status', [2,4])
+            //2021-01-13 根據dept設置分組
+            ->whereHas('prices', function (Builder $query) use($shop_group_id){
+                $query->where('shop_group_id', '=', $shop_group_id);
             })
             ->get();
 //        dump($products->toArray());
@@ -268,7 +277,7 @@ class WorkshopOrderSampleController extends Controller
 
         foreach ($products as $product) {
 
-            $productDetail = $product->prices->where('shop_group_id', 1)->first();
+            $productDetail = $product->prices->where('shop_group_id', $shop_group_id)->first();
 
             $product->order_by_workshop = false;
             $product->cut_order = false;
@@ -373,9 +382,9 @@ class WorkshopOrderSampleController extends Controller
 
     private function getShopidByRoles($request)
     {
-        $user = Auth::User();
+        $user = Auth::user();
 
-        if($request->dept == 'F' && $user->can('workshop')){
+        if(in_array($request->dept, ['F','CU']) && $user->can('workshop')){
             $shopid = $request->shopid;
         }else if(($request->dept == 'R' || ($user->id == 33 && $request->dept == 'R2')) && $user->can('shop')){
             $shopid = $user->id;
@@ -388,9 +397,9 @@ class WorkshopOrderSampleController extends Controller
 
     private function checkEditPermission($dept ,$shopid)
     {
-        $user = Auth::User();
+        $user = Auth::user();
 
-        if($dept == 'F' && $user->can('workshop')){
+        if(in_array($dept, ['F','CU']) && $user->can('workshop')){
             return true;
         }else if(($dept == 'R' || ($user->id == 33 && $dept == 'R2')) && $user->can('shop') && $shopid == $user->id){
             return true;

@@ -32,9 +32,9 @@
                         @include('customer.order._item')
                     @endforeach
 
-{{--                    @foreach($sampleItems as $itemCount => $item)--}}
-{{--                        @include('customer.order._sample_item')--}}
-{{--                    @endforeach--}}
+                    @foreach($sampleItems as $itemCount => $item)
+                        @include('customer.order._sample_item')
+                    @endforeach
                     <tr class="blankline">
                         <td colspan="6">&nbsp;</td>
                     </tr>

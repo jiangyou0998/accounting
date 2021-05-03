@@ -114,6 +114,10 @@
         var min = $(this).data('min');
         var oldQty = $(this).data('qty');
 
+        @can('workshop')
+            maxQty = 2400;
+        @endcan
+
         if (qty > maxQty) {
             alertMax(maxQty);
             // alert("每項目數量最多只可為「" + maxQty + "」");
@@ -160,7 +164,7 @@
         // alert("order/cart/show_group/"+catid);
         $.ajax({
             type: "POST",
-            url: "/sample/show_group/"+catid,
+            url: "/sample/show_group/"+catid+'/{{$orderInfos->shopid}}',
             data: "",
             dataType:'html',
             // headers: {
@@ -186,7 +190,7 @@
         console.log(deli_date);
         $.ajax({
             type: "POST",
-            url: "/sample/show_product/"+groupid,
+            url: "/sample/show_product/"+groupid+'/{{$orderInfos->shopid}}',
             data: {'deli_date':deli_date},
             dataType:'html',
             // headers: {
@@ -351,6 +355,9 @@
             $("#qty" + id).val(parseInt(qty) + base) ;
             var qty = parseInt(qty) + base;
             var maxQty = 600;
+            @can('workshop')
+                maxQty = 2400;
+            @endcan
             if (qty > maxQty) {
                 alertMax(maxQty);
                 // alert("每項目數量最多只可為「" + maxQty + "」");
@@ -424,6 +431,9 @@
             $("#qty" + id).val(parseInt(qty) - base) ;
             var qty = parseInt(qty) - base;
             var maxQty = 600;
+            @can('workshop')
+                maxQty = 2400;
+            @endcan
             if (qty > maxQty) {
                 alertMax(maxQty);
                 // alert("每項目數量最多只可為「" + maxQty + "」");

@@ -51,6 +51,7 @@ class RegularOrderSampleController extends Controller
 //        dump($sampledate);
 //        dd($currentdate);
         $shops = User::getKingBakeryShops();
+        $cu_shops = User::getCustomerShops();
 
 //        dump($shops);
         $info = WorkshopProduct::where('id', $request->product_id)->first();
@@ -64,7 +65,7 @@ class RegularOrderSampleController extends Controller
         //選擇日期checkbox
         $checkHtml = $this->getCheckboxHtml($sampledate);
 
-        return view('order.regular.sample.create_and_edit', compact('sample', 'shops', 'info' , 'itemsArr', 'checkHtml'));
+        return view('order.regular.sample.create_and_edit', compact('sample', 'shops', 'info' , 'itemsArr', 'checkHtml' , 'cu_shops'));
     }
 
     public function edit(RegularOrder $sample)
