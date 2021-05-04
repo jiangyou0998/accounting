@@ -43,6 +43,16 @@
             height: 35px;
         }
 
+        .style4 {
+            color: #FF0000;
+            font-size: 50px;
+        }
+
+        .style5 {
+            font-size: medium;
+            font-weight: bold;
+        }
+
     </style>
 @endsection
 
@@ -51,7 +61,11 @@
 
 
         <div align="left">
-            <a target="_top" href="{{route('order.regular.sample')}}" style="font-size: xx-large;">返回</a>
+            <a target="_top" href="{{route('order.regular.sample', ['shop_group_id' => request()->shop_group_id])}}" style="font-size: xx-large;">返回</a>
+        </div>
+
+        <div class="style5" style="text-align: center;">
+            <span class="style4">{{ \App\Models\ShopGroup::getShopGroupName(request()->shop_group_id) }}</span>
         </div>
 
         <div align="middle">
@@ -109,6 +123,16 @@
 
         <br>
 
+        @if(request()->shop_group_id == 1)
+            <input id="dept" name="dept" type="hidden" value="F"/>
+        @elseif(request()->shop_group_id == 5)
+            <input id="dept" name="dept" type="hidden" value="RB"/>
+        @else
+            <input id="dept" name="dept" type="hidden" value="CU"/>
+        @endif
+
+        <input id="shopgroupid" name="shopgroupid" type="hidden" value="{{request()->shop_group_id}}">
+
     </div>
 
 
@@ -122,6 +146,8 @@
 
             var start = $("#start").val();
             var end = $("#end").val();
+            var shop_group_id = $("#shopgroupid").val();
+            var dept = $("#dept").val();
 
             if(start == ""){
                 Swal.fire({
@@ -135,6 +161,14 @@
                 Swal.fire({
                     icon: 'warning',
                     title: "請選擇結束日期",
+                });
+                return;
+            }
+
+            if(dept == ""){
+                Swal.fire({
+                    icon: 'warning',
+                    title: "請選擇部門",
                 });
                 return;
             }
@@ -163,8 +197,10 @@
                 type: type,
                 url: url,
                 data: {
-                    'start'     : start,
-                    'end'       : end,
+                    'start': start,
+                    'end' : end,
+                    'shop_group_id' : shop_group_id,
+                    'dept' : dept,
                     'productid' : productid,
                     'insertData': JSON.stringify(insertarray)
                 },
@@ -181,7 +217,14 @@
                             //返回
                             window.location.href = '{{route('order.regular.sample')}}';
                         } else {
-                            window.open('/order/regular?start=' + start + '&end=' + end);
+                            if(shop_group_id == 1){
+                                window.open('/order/regular?start=' + start + '&end=' + end + '&dept=' + dept);
+                            }else if(shop_group_id == 5){
+
+                            }else{
+                                window.open('/customer/order/select_old_order?start=' + start + '&end=' + end + '&dept=' + dept + '&shop_group_id=' + shop_group_id);
+                            }
+
                         }
 
                     });

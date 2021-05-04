@@ -36,6 +36,16 @@
             max-width: 2000px;      // 隨螢幕尺寸而變，當螢幕尺寸 ≥ 1200px 時是 1140px。
         }
 
+        .style4 {
+            color: #FF0000;
+            font-size: 50px;
+        }
+
+        .style5 {
+            font-size: medium;
+            font-weight: bold;
+        }
+
     </style>
 @endsection
 
@@ -44,7 +54,12 @@
 
 
         <div align="left">
-            <a target="_top" href="{{route('order.regular.sample')}}" style="font-size: xx-large;">返回</a>
+            <a target="_top" href="{{route('order.regular.sample',['shop_group_id' => $shop_group_id])}}" style="font-size: xx-large;">返回</a>
+        </div>
+
+
+        <div class="style5" style="text-align: center;">
+            <span class="style4">{{ \App\Models\ShopGroup::getShopGroupName($shop_group_id) }}</span>
         </div>
 
         <div align="middle">
@@ -73,21 +88,24 @@
         <table class="table table-bordered table-hover">
             <h4>請填寫固定柯打內容</h4>
 
-            <thead class="thead-dark">
+            @foreach($shops->chunk(20) as $chunk)
+                <thead class="thead-dark">
                 <tr>
-                    @foreach($shops as $shop)
+                    @foreach($chunk as $shop)
                         <th>{{$shop->report_name}}</th>
                     @endforeach
                 </tr>
-            </thead>
-            <tbody style="background-color: white">
+                </thead>
+                <tbody style="background-color: white">
                 <tr>
-                    @foreach($shops as $shop)
-                        <td><input class="qty" type="tel" style="width:50px;" data-id="{{$shop->id}}" value="{{$itemsArr[$shop->id][0]['qty'] ?? '' }}"></td>
+                    @foreach($chunk as $shop)
+                        <td><input class="qty" type="tel" style="width:50px;" data-id="{{$shop->id}}"
+                                   value="{{$itemsArr[$shop->id][0]['qty'] ?? '' }}"></td>
                     @endforeach
                 </tr>
+                </tbody>
+            @endforeach
 
-            </tbody>
         </table>
 
         <div>
@@ -143,6 +161,7 @@
 
             var orderid = {{$sample->id ?? 0}};
             var productid = {{request()->product_id ?? 0}};
+            var shop_group_id = {{$shop_group_id ?? 0}};
             var type = 'POST';
 
             var url = '';
@@ -153,12 +172,21 @@
                 url = '{{route('order.regular.sample.store')}}';
             @endif
 
+            if( ! shop_group_id) {
+                Swal.fire({
+                    icon: 'error',
+                    title: "獲取商店分組失敗,請關閉頁面!",
+                });
+                $("#btnsubmit").attr('disabled', false);
+                return false;
+            }
 
             $.ajax({
                 type: type,
                 url: url,
                 data: {
                     'productid'  : productid,
+                    'shop_group_id'  : shop_group_id,
                     'orderid' : orderid,
                     'orderdates': weekstr,
                     'insertData': JSON.stringify(insertarray)
@@ -173,7 +201,7 @@
                         denyButtonText: '返回',
                     }).then((result) => {
                         if (result.isDenied) {
-                            window.location.href = '{{route('order.regular.sample')}}';
+                            window.location.href = '{{route('order.regular.sample',['shop_group_id' => $shop_group_id])}}';
                         } else {
                             window.location.reload();
                         }

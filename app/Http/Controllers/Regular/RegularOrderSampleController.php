@@ -6,20 +6,24 @@ namespace App\Http\Controllers\Regular;
 use App\Http\Controllers\Controller;
 use App\Models\Regular\RegularOrder;
 use App\Models\Regular\RegularOrderItem;
+use App\Models\ShopGroup;
 use App\Models\WorkshopProduct;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-
+//批量下單範本
 class RegularOrderSampleController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
+        $shop_group_id = $request->input('shop_group_id') ?? 1;
         $sampleModel = new RegularOrder();
         $samples = $sampleModel
             ->select('id', 'orderdates','product_id')
+            //2021-05-04 新增shop_group_id
+            ->where('shop_group_id',$shop_group_id)
             ->where('disabled', 0)
             ->get();
 
@@ -29,29 +33,37 @@ class RegularOrderSampleController extends Controller
 
         $samples = $samples->groupBy('product_id');
 
-        $products = WorkshopProduct::whereNotIn('status', [2, 4])->get();
+        $products = WorkshopProduct::whereNotIn('status', [2, 4])
+            ->whereHas('prices', function ($query) use($shop_group_id){
+                $query->where('shop_group_id', '=', $shop_group_id);
+            })
+            ->get();
         $productArr = $products->pluck('product_name', 'id')->toArray();
         $codeProductArr = $products->pluck('code_product', 'id')->toArray();
 
+        $shop_group_name = ShopGroup::find($shop_group_id)->name ?? "未選擇分組";
+
 //        dump($samples->toArray());
-        return view('order.regular.sample.index', compact('samples','productArr' , 'codeProductArr'));
+//        dump($shop_group_name);
+        return view('order.regular.sample.index', compact('samples','productArr' , 'codeProductArr' , 'shop_group_name' , 'shop_group_id'));
     }
 
     public function create(RegularOrder $sample ,Request $request)
     {
 //        dump($sample);
         $sampleModel = new RegularOrder();
+        $shop_group_id = $request->input('shop_group_id') ?? 1;
 
         $sampledate = $sampleModel
             ->select(DB::raw('group_concat(orderdates) as sampledate'))
             ->where('product_id' ,'=' , $request->product_id)
+            ->where('shop_group_id',$shop_group_id)
             ->where('disabled', 0)
             ->first()->sampledate;
 
 //        dump($sampledate);
 //        dd($currentdate);
-        $shops = User::getKingBakeryShops();
-        $cu_shops = User::getCustomerShops();
+        $shops = User::getShopsByShopGroup($shop_group_id);
 
 //        dump($shops);
         $info = WorkshopProduct::where('id', $request->product_id)->first();
@@ -65,18 +77,20 @@ class RegularOrderSampleController extends Controller
         //選擇日期checkbox
         $checkHtml = $this->getCheckboxHtml($sampledate);
 
-        return view('order.regular.sample.create_and_edit', compact('sample', 'shops', 'info' , 'itemsArr', 'checkHtml' , 'cu_shops'));
+        return view('order.regular.sample.create_and_edit', compact('sample', 'shops', 'info' , 'itemsArr', 'checkHtml' , 'shop_group_id'));
     }
 
     public function edit(RegularOrder $sample)
     {
 //        dump($sample);
         $sampleModel = new RegularOrder();
+        $shop_group_id = $sample->shop_group_id;
 
         $sampledate = $sampleModel
             ->select(DB::raw('group_concat(orderdates) as sampledate'))
             ->where('id' ,'<>' , $sample->id)
             ->where('product_id' ,'=' , $sample->product_id)
+            ->where('shop_group_id', $shop_group_id)
             ->where('disabled', 0)
             ->first()->sampledate;
 
@@ -84,12 +98,13 @@ class RegularOrderSampleController extends Controller
             ->select(DB::raw('group_concat(orderdates) as sampledate'))
             ->where('id' ,'=' , $sample->id)
             ->where('product_id' ,'=' , $sample->product_id)
+            ->where('shop_group_id', $shop_group_id)
             ->where('disabled', 0)
             ->first()->sampledate;
 
 //        dump($sampledate);
 //        dd($currentdate);
-        $shops = User::getKingBakeryShops();
+        $shops = User::getShopsByShopGroup($shop_group_id);
 
 //        dump($shops);
         $info = WorkshopProduct::where('id', $sample->product_id)->first();
@@ -103,7 +118,7 @@ class RegularOrderSampleController extends Controller
         //選擇日期checkbox
         $checkHtml = $this->getCheckboxHtml($sampledate , $currentdate);
 
-        return view('order.regular.sample.create_and_edit', compact('sample', 'shops', 'info' , 'itemsArr', 'currentdate', 'checkHtml'));
+        return view('order.regular.sample.create_and_edit', compact('sample', 'shops', 'info' , 'itemsArr', 'currentdate', 'checkHtml' , 'shop_group_id'));
     }
 
     public function store(Request $request)
@@ -117,6 +132,7 @@ class RegularOrderSampleController extends Controller
             $sampleModel = new RegularOrder();
             $sampleId = $sampleModel::insertGetId([
                 'product_id' => $request->productid,
+                'shop_group_id' => $request->shop_group_id,
                 'orderdates' => $request->orderdates,
                 'disabled' => 0
             ]);

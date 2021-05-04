@@ -28,6 +28,7 @@
                 <div>
                     <span class="style5">
                         <a href="{{route('customer.order.select_old_order' , ['dept' => 'CU', 'shop_group_id' => $shop_group->id])}}">{{$shop_group->name}}</a>
+                        <a class="btn btn-danger" href="{{ route('order.regular.sample',['shop_group_id' => $shop_group->id]) }}">固定柯打</a>
                     </span>
                     <hr>
                 </div>

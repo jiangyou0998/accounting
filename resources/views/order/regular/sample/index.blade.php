@@ -40,15 +40,23 @@
 
 
 
+    @if(in_array($shop_group_id, [1,5]))
+        <div align="left"><a target="_top" href="{{route('order')}}" style="font-size: xx-large;">返回</a></div>
+    @else
+        <div align="left"><a target="_top" href="{{route('customer.select_group')}}" style="font-size: xx-large;">返回</a></div>
+    @endif
 
-    <div align="left"><a target="_top" href="{{route('order')}}" style="font-size: xx-large;">返回</a></div>
+    <div class="style5" style="text-align: center;">
+        <span class="style4">{{ \App\Models\ShopGroup::getShopGroupName(request()->shop_group_id) }}</span>
+    </div>
+
     <div class="style5" style="text-align: center;">
         <span class="style4">固定柯打</span>
     </div>
 
     <hr>
     <div align="middle">
-        <select class="product" id="product" name="product">
+        <select class="product" id="product" name="product" style="min-width: 30%">
             <option value="">-- 請選擇貨品 --</option>
             @foreach($codeProductArr as $key => $value)
                 <option value="{{$key}}">{{$value}}</option>
@@ -68,7 +76,7 @@
                 <span class="style4">{{$productArr[$key]}}</span>
             </div>
             <div style="margin-bottom: 10px;">
-                <button class="sizefont"><a class="btn btn-primary" href="{{route('order.regular.sample.create',['product_id'=> $key])}}">新建「{{$productArr[$key]}}」固定柯打</a></button>
+                <button class="sizefont"><a class="btn btn-primary" href="{{route('order.regular.sample.create',['product_id'=> $key , 'shop_group_id' => $shop_group_id])}}">新建「{{$productArr[$key]}}」固定柯打</a></button>
             </div>
             @foreach($items as $sample)
 
@@ -99,8 +107,9 @@
 
         function addsample(){
             // alert($('#product').val());
+            let shop_group_id = {{ $shop_group_id ?? 0 }};
             if($('#product').val()){
-                window.location.href = "/order/regular/sample/create?product_id=" + $('#product').val();
+                window.location.href = "/order/regular/sample/create?product_id=" + $('#product').val() + "&shop_group_id=" + shop_group_id;
             }else{
                 Swal.fire({
                     icon: 'error',
@@ -112,8 +121,9 @@
         //臨時加單
         function addtemp(){
             // alert($('#product').val());
+            let shop_group_id = {{ $shop_group_id ?? 0 }};
             if($('#product').val()){
-                window.location.href = "/order/regular/temp/create?product_id=" + $('#product').val();
+                window.location.href = "/order/regular/temp/create?product_id=" + $('#product').val() + "&shop_group_id=" + shop_group_id;
             }else{
                 Swal.fire({
                     icon: 'error',
@@ -163,19 +173,12 @@
                                 icon: 'error',
                                 title: "刪除失敗!",
                             });
-
                         }
                     });
-
                 }
             })
 
-
         }
     </script>
-
-
-
-
 
 @endsection

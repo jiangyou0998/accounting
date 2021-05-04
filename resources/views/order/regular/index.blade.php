@@ -30,6 +30,7 @@
         <div class="py-5 text-center">
             <div align="left"><a target="_top" href="{{route('order')}}" style="font-size: xx-large;">返回</a></div>
             <h2>固定柯打</h2>
+            <input type="radio" name="dept" id="dept" value="F" @if(request()->dept == 'F') checked @endif>樓面
             <div class="alert alert-danger" role="alert">
                 批量操作會為未下單日進行批量下單<br>
                 已下單日將不會下單
@@ -64,7 +65,7 @@
             </div>
         </div>
 
-
+        <input id="shopgroupid" name="shopgroupid" type="hidden" value="{{request()->shop_group_id}}">
 @endsection
 
 @section('script')
@@ -104,6 +105,8 @@
         function order() {
             var start = $("#start").val();
             var end = $("#end").val();
+            var shop_group_id = $("#shopgroupid").val();
+            var dept = $("#dept").val();
 
             if(start == ""){
                 Swal.fire({
@@ -117,6 +120,14 @@
                 Swal.fire({
                     icon: 'warning',
                     title: "請選擇結束日期",
+                });
+                return;
+            }
+
+            if(dept == ""){
+                Swal.fire({
+                    icon: 'warning',
+                    title: "請選擇部門",
                 });
                 return;
             }
@@ -136,7 +147,9 @@
                         url: "{{route('order.regular.store')}}",
                         data: {
                             'start': start,
-                            'end' : end
+                            'end' : end,
+                            'shop_group_id' : shop_group_id,
+                            'dept' : dept
                         },
                         success: function (msg) {
                             if (msg) {
@@ -144,7 +157,7 @@
                                 console.log(msg);
                             } else {
                                 // alert('已確認收貨!\n');
-                                window.location.href = "{{route('order.regular')}}" + "?start=" + start + "&end=" + end;
+                                window.location.href = "{{route('order.regular')}}" + "?start=" + start + "&end=" + end + "&dept=" + dept+ "&shop_group_id=" + shop_group_id;
                             }
                         }
                     });

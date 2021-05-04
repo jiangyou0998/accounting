@@ -23,22 +23,25 @@ class TempOrderController extends Controller
 
     public function create(Request $request)
     {
-        $shops = User::getKingBakeryShops();
+        $shop_group_id = $request->input('shop_group_id') ?? 1;
+        $shops = User::getShopsByShopGroup($shop_group_id);
         $info = WorkshopProduct::where('id', $request->product_id)->first();
         return view('order.regular.temp.create', compact('info', 'shops'));
     }
 
     public function store(Request $request){
 
-        $shops = User::getKingBakeryShops();
+        $shop_group_id = $request->input('shop_group_id') ?? 1;
+        $shops = User::getShopsByShopGroup($shop_group_id);
+        $dept = $request->dept;
+
+        if ( ! $shop_group_id) return "error";
+        if ( ! $dept) return "error";
 
         $shopids = $shops->pluck('id');
 
         $start_date = $request->start;
         $end_date = $request->end;
-        $dept = 'F';
-
-        $shop_group_id = 1;
 
         //2021-01-06 下單時候價格改為從prices表獲取
         $prices = WorkshopProduct::with('prices')->whereHas('prices', function (Builder $query) use($shop_group_id){

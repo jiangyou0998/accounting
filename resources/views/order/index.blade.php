@@ -29,9 +29,9 @@
             <br/>
             <a href='{{route('customer.sample.index')}}' class='styleA'>外客範本</a>
             <br/>
-            <a href='{{route('order.regular.sample')}}' class='styleA'>固定柯打</a>
+            <a href='{{route('order.regular.sample',['shop_group_id' => 1])}}' class='styleA'>固定柯打(蛋撻王)</a>
             <br/>
-            <a href='{{route('order.regular')}}' class='styleA'>批量下單</a>
+            <a href='{{route('order.regular',[ 'dept' => 'F' ,'shop_group_id' => 1])}}' class='styleA'>批量下單(蛋撻王)</a>
             <br/>
             <a href='{{route('order.select_deli')}}' class='styleA'>送貨單查詢</a>
         @endcan

@@ -50,8 +50,11 @@
         <br>
         <br>
 
-        <input type="radio" name="dept" id="radio" value="CU" @if(request()->dept == 'CU') checked @endif>外客
-
+        <input type="radio" name="dept" id="dept" value="CU" @if(request()->dept == 'CU') checked @endif>外客
+        <div class="alert alert-danger" role="alert">
+            批量操作會為未下單日進行批量下單<br>
+            已下單日將不會下單
+        </div>
     </div>
 
     <hr>
@@ -61,11 +64,13 @@
         {{--               onclick="WdatePicker({maxDate:'',isShowClear:false})" style="width:125px" readonly>--}}
         <input id="start" class="Wdate" type="text" value="{{request()->start}}" onclick="WdatePicker({maxDate:'#F{$dp.$D(\'end\')}'})" autocomplete="off"/>到
         <input id="end" class="Wdate" type="text" value="{{request()->end}}" onclick="WdatePicker({minDate:'#F{$dp.$D(\'start\')}'})" autocomplete="off"/>
-        <button class="btn btn-primary" onclick="opensupplier()">查詢</button>
+        <button class="btn btn-primary" onclick="search()">查詢</button>
+        <button class="btn btn-danger" onclick="order()">批量下單</button>
     </div>
 
     {{--    查詢內容--}}
     <div class="container">
+
         <div class="py-5 text-center">
 
             <h2>
@@ -101,7 +106,7 @@
 
         @section('script')
             <script>
-                function opensupplier() {
+                function search() {
                     var Obj = document.getElementsByName("dept");
                     var bool = false;
                     for (var i = 0; i < Obj.length; i++) {
@@ -140,6 +145,71 @@
                             title: "請先選擇部門",
                         });
                     }
+
+                }
+
+                function order() {
+                    var start = $("#start").val();
+                    var end = $("#end").val();
+                    var shop_group_id = $("#shopgroupid").val();
+                    var dept = $("#dept").val();
+
+                    if(start == ""){
+                        Swal.fire({
+                            icon: 'warning',
+                            title: "請選擇開始日期",
+                        });
+                        return;
+                    }
+
+                    if(end == ""){
+                        Swal.fire({
+                            icon: 'warning',
+                            title: "請選擇結束日期",
+                        });
+                        return;
+                    }
+
+                    if(dept == ""){
+                        Swal.fire({
+                            icon: 'warning',
+                            title: "請選擇部門",
+                        });
+                        return;
+                    }
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: "確定要批量下單嗎?",
+                        html: "下單時間: " + start + " 到 " + end + "</br></br>" + "批量操作會為未下單日進行批量下單" + "</br>" + "已下單日將不會下單",
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: '確定',
+                        cancelButtonText: '返回',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                type: "POST",
+                                url: "{{route('order.regular.store')}}",
+                                data: {
+                                    'start': start,
+                                    'end' : end,
+                                    'shop_group_id' : shop_group_id,
+                                    'dept' : dept
+                                },
+                                success: function (msg) {
+                                    if (msg) {
+                                        alert('發生錯誤！請關閉頁面重新進入\n');
+                                        console.log(msg);
+                                    } else {
+                                        // alert('已確認收貨!\n');
+                                        window.location.href = "{{route('customer.order.select_old_order')}}" + "?start=" + start + "&end=" + end + "&dept=" + dept+ "&shop_group_id=" + shop_group_id;
+                                    }
+                                }
+                            });
+                        }
+
+                    });
 
                 }
 

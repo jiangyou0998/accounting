@@ -47,5 +47,11 @@ class ShopGroup extends Model
         return $query->whereNotIn('name',['蛋撻王','共食薈','一口烘焙','糧友'])->get();
     }
 
+    public static function getShopGroupName($id)
+    {
+        $query = self::query();
+        return $query->find($id)->name ?? '';
+    }
+
 
 }
