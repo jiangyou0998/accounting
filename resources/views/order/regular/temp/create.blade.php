@@ -100,21 +100,23 @@
         <table class="table table-bordered table-hover">
             <h4>請填寫固定柯打內容</h4>
 
-            <thead class="thead-dark">
-            <tr>
-                @foreach($shops as $shop)
-                    <th>{{$shop->report_name}}</th>
-                @endforeach
-            </tr>
-            </thead>
-            <tbody style="background-color: white">
-            <tr>
-                @foreach($shops as $shop)
-                    <td><input class="qty" type="tel" style="width:50px;" data-id="{{$shop->id}}" value="{{$itemsArr[$shop->id][0]['qty'] ?? '' }}"></td>
-                @endforeach
-            </tr>
+            @foreach($shops->chunk(20) as $chunk)
+                <thead class="thead-dark">
+                <tr>
+                    @foreach($chunk as $shop)
+                        <th>{{$shop->report_name}}</th>
+                    @endforeach
+                </tr>
+                </thead>
+                <tbody style="background-color: white">
+                <tr>
+                    @foreach($chunk as $shop)
+                        <td><input class="qty" type="tel" style="width:50px;" data-id="{{$shop->id}}" value="{{$itemsArr[$shop->id][0]['qty'] ?? '' }}"></td>
+                    @endforeach
+                </tr>
 
-            </tbody>
+                </tbody>
+            @endforeach
         </table>
 
         <div>
@@ -215,7 +217,7 @@
                     }).then((result) => {
                         if (result.isDenied) {
                             //返回
-                            window.location.href = '{{route('order.regular.sample')}}';
+                            window.location.href = '/order/regular/sample?shop_group_id=' + shop_group_id;
                         } else {
                             if(shop_group_id == 1){
                                 window.open('/order/regular?start=' + start + '&end=' + end + '&dept=' + dept);
