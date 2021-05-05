@@ -2,8 +2,8 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Renderable\Price;
 use App\Models\Price as PriceModel;
+use App\Models\ShopGroup;
 use App\Models\WorkshopCheck;
 use App\Models\WorkshopGroup;
 use App\Models\WorkshopProduct;
@@ -23,8 +23,6 @@ class WorkshopProductController extends AdminController
      */
     protected function grid()
     {
-//        dd(Admin::user()->can('menus'));
-//        Permission::check('factory-menus');
         return Grid::make(new WorkshopProduct(), function (Grid $grid) {
 
             if(Admin::user()->can('factory-menus-edit') === false){
@@ -34,11 +32,8 @@ class WorkshopProductController extends AdminController
                 $grid->disableActions();
             }
 
-            //2021-03-18 禁用詳情、刪除按鈕
-            $grid->disableViewButton();
+            //2021-03-18 禁用刪除按鈕
             $grid->disableDeleteButton();
-
-            $grid->showQuickEditButton();
 
             // 表格快捷搜索
             $grid->quickSearch('product_no','product_name')
@@ -58,7 +53,6 @@ class WorkshopProductController extends AdminController
                         'report_name' => $check->report_name
                     ];
                 }
-
             }
 
             //單位數組
@@ -75,17 +69,20 @@ class WorkshopProductController extends AdminController
             $groupArr = array();
             $groups = $groups::with('cats')->get();
             foreach ($groups as $group) {
-//                dump($group->toArray()['tbl_order_z_cat']);
                 $groupArr[$group['id']] = $group->toArray()['cats']['cat_name'].'-'.$group['group_name'];
             }
 
-            //2021-01-13 價格數組
-            $kbPricesArr = PriceModel::where('shop_group_id', 1)->get()->mapToGroups(function ($item, $key) {
-                return [$item['product_id'] => $item];
-            })->toArray();
-            $rbPricesArr = PriceModel::where('shop_group_id', 5)->get()->mapToGroups(function ($item, $key) {
-                return [$item['product_id'] => $item];
-            })->toArray();
+            //2021-05-05 價格數組
+            $prices = PriceModel::all()->groupBy('shop_group_id');
+            $priceArr = array();
+            foreach ($prices as $key => $value){
+                foreach ($value as $price){
+                    $priceArr[$price->product_id][$key] = $price;
+                }
+            }
+
+            //2021-05-05 價格分組數組
+            $shopGroupArr = ShopGroup::orderBy('sort')->pluck('name','id');
 
             $grid->model()
                 ->with(['cats'])
@@ -100,19 +97,33 @@ class WorkshopProductController extends AdminController
             $grid->product_no->sortable();
             $grid->product_name;
             $grid->column('units.unit_name',"單位");
-//            $grid->price->display('View')->modal('Price', Price::make(['int_id' => $this->int_id]));
-//            $grid->price->display('分組價格')->expand(function () {
-//                // 允许在比包内返回异步加载类的实例
-//                return Price::make(['id' => $this->id]);
-//            });
 
             //2021-01-13 顯示價格
-            $grid->column('蛋撻王價格')->display(function () use ($kbPricesArr) {
-                return $kbPricesArr[$this->id][0]['price'] ?? '';
-            })->badge();
-            $grid->column('糧友價格')->display(function () use ($rbPricesArr) {
-                return $rbPricesArr[$this->id][0]['price'] ?? '';
-            })->badge('danger');
+//            $grid->column('蛋撻王價格')->display(function () use ($kbPricesArr) {
+//                return $kbPricesArr[$this->id][0]['price'] ?? '';
+//            })->badge();
+//            $grid->column('糧友價格')->display(function () use ($rbPricesArr) {
+//                return $rbPricesArr[$this->id][0]['price'] ?? '';
+//            })->badge('danger');
+
+            $grid->column('價格')->display(function () use ($priceArr, $shopGroupArr) {
+                $html = "";
+                foreach ($priceArr[$this->id] as $key => $value){
+                    $html .= $shopGroupArr[$key];
+                    switch ($key){
+                        case 1:
+                            $html .= '<span class="badge" style="background:#586cb1">'.$value->price.'</span><br>';
+                            break;
+                        case 5:
+                            $html .= '<span class="badge" style="background:#ea5455">'.$value->price.'</span><br>';
+                            break;
+                        default:
+                            $html .= '<span class="badge" style="background:#21b978">'.$value->price.'</span><br>';
+                            break;
+                    }
+                }
+                return $html;
+            });
 
             $grid->column('cats.cat_name',"大類");
             $grid->column('groups.group_name',"細類");
@@ -150,53 +161,32 @@ class WorkshopProductController extends AdminController
                 'unit_id' => '包裝' ,
                 ];
             $shop_group = request()->_selector['price'] ?? 0;
-            switch ($shop_group) {
-                case 0:
-                    $titles['kb_price'] = '蛋撻王單價';
-                    $titles['kb_min'] = '蛋撻王MOQ';
-                    $titles['rb_price'] = '糧友單價';
-                    $titles['rb_min'] = '糧友MOQ';
-                    break;
-                case 1:
-                    $titles['kb_price'] = '蛋撻王單價';
-                    $titles['kb_min'] = '蛋撻王MOQ';
-                    break;
-                case 5:
-                    $titles['rb_price'] = '糧友單價';
-                    $titles['rb_min'] = '糧友MOQ';
-                    break;
-                default:
-                    $titles['kb_price'] = '蛋撻王單價';
-                    $titles['kb_min'] = '蛋撻王MOQ';
-                    $titles['rb_price'] = '糧友單價';
-                    $titles['rb_min'] = '糧友MOQ';
+
+            //2021-05-05 excel輸出所有價格分組
+            if ($shop_group === 0) {
+                foreach ($shopGroupArr as $key => $value) {
+                    $titles[$key . '_price'] = $value . '單價';
+                    $titles[$key . '_min'] = $value . 'MOQ';
+                }
+            } else {
+                $titles[$shop_group . '_price'] = $shopGroupArr[$shop_group] ?? '' . '單價';
+                $titles[$shop_group . '_min'] = $shopGroupArr[$shop_group] ?? '' . 'MOQ';
             }
 
-            $grid->export($titles)->csv()->rows(function (array $rows) use ($groupArr, $unitArr, $kbPricesArr, $rbPricesArr, $shop_group) {
+            $grid->export($titles)->csv()->rows(function (array $rows) use ($groupArr, $unitArr, $shop_group, $shopGroupArr, $priceArr) {
                 foreach ($rows as $index => &$row) {
                     $row['group_id'] = $groupArr[$row['group_id']];
                     $row['unit_id'] = $unitArr[$row['unit_id']];
 
-                    switch ($shop_group) {
-                        case 0:
-                            $row['kb_price'] = $kbPricesArr[$row['id']][0]['price'] ?? '';
-                            $row['kb_min'] = $kbPricesArr[$row['id']][0]['min'] ?? '';
-                            $row['rb_price'] = $rbPricesArr[$row['id']][0]['price'] ?? '';
-                            $row['rb_min'] = $rbPricesArr[$row['id']][0]['min'] ?? '';
-                            break;
-                        case 1:
-                            $row['kb_price'] = $kbPricesArr[$row['id']][0]['price'] ?? '';
-                            $row['kb_min'] = $kbPricesArr[$row['id']][0]['min'] ?? '';
-                            break;
-                        case 5:
-                            $row['rb_price'] = $rbPricesArr[$row['id']][0]['price'] ?? '';
-                            $row['rb_min'] = $rbPricesArr[$row['id']][0]['min'] ?? '';
-                            break;
-                        default:
-                            $row['kb_price'] = $kbPricesArr[$row['id']][0]['price'] ?? '';
-                            $row['kb_min'] = $kbPricesArr[$row['id']][0]['min'] ?? '';
-                            $row['rb_price'] = $rbPricesArr[$row['id']][0]['price'] ?? '';
-                            $row['rb_min'] = $rbPricesArr[$row['id']][0]['min'] ?? '';
+                    //2021-05-05 excel輸出所有價格分組
+                    if ($shop_group === 0) {
+                        foreach ($shopGroupArr as $key => $value) {
+                            $row[$key . '_price'] = $priceArr[$row['id']][$key]->price ?? '';
+                            $row[$key . '_min'] = $priceArr[$row['id']][$key]->min ?? '';
+                        }
+                    } else {
+                        $row[$shop_group . '_price'] = $priceArr[$row['id']][$shop_group]->price ?? '';
+                        $row[$shop_group . '_min'] = $priceArr[$row['id']][$shop_group]->min ?? '';
                     }
 
                 }
@@ -235,12 +225,9 @@ class WorkshopProductController extends AdminController
             });
 
             //選擇器
-            $grid->selector(function (Grid\Tools\Selector $selector) {
+            $grid->selector(function (Grid\Tools\Selector $selector) use($shopGroupArr){
 
-                $selector->selectOne('price', '有價格', [
-                    1 => '蛋撻王',
-                    5 => '糧友',
-                ], function ($query, $value) {
+                $selector->selectOne('price', '有價格', $shopGroupArr, function ($query, $value) {
 //                    $value = current($value);
                     $query->whereHas('prices', function ($query) use($value){
                         $query->where('shop_group_id', $value);
