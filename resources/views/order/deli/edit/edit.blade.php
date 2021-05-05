@@ -37,7 +37,7 @@
 
             });
 
-            $(".dept-input").on("input", function (e) {
+            $(".dept-input").on("blur", function (e) {
                 var v = $(this).val();
                 if (v == '') {
                     $(this).val(0);
@@ -46,15 +46,19 @@
                 if (isNaN(v)) {
                     $(this).val(e.target.defaultValue);
                 }
-                //檢查Format
-                var patt = /^\d+\.{0,1}\d{0,1}$/gi;
-                var res = patt.test($(this).val());
-                if (res == false) {
-                    $(this).val(e.target.defaultValue);
-                }
+                // //檢查Format
+                // var patt = /^\d+\.{0,1}\d{0,1}$/gi;
+                // var patt = /^([0-9]*|0)(\.[0-9]*)?$/;
+                // var res = patt.test($(this).val());
+                // console.log(res);
+                // if (res == false) {
+                //     $(this).val(e.target.defaultValue);
+                // }
 
                 //更新數值
-                e.target.defaultValue = $(this).val();
+                // e.target.defaultValue = parseFloat(parseFloat($(this).val()).toFixed(2));
+                let val = parseFloat(parseFloat($(this).val()).toFixed(2));
+                $(this).val(val);
 
                 //更新項目總數
                 var sum = 0;
@@ -169,7 +173,7 @@
                             cancelButtonText: '返回',
                         }).then((result) => {
                             if (result.isDismissed) {
-                                window.location.href = '{{route('order.deli.list')}}';
+                                window.location.href = '{{route('order.deli.list',['group' => request()->group])}}';
                             } else {
                                 window.location.reload();
                             }

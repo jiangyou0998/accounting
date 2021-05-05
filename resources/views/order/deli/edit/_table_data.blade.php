@@ -32,7 +32,7 @@
                                    data-id="{{$product_id}}"
                                    data-qty="{{number_format($row['qty'][$dept]['qty'], 2, '.', ',')}}"
                                    value="{{number_format($row['qty'][$dept]['qty'], 2, '.', ',')}}"
-                                   class="dept-input" type="tel" step="0.01" autocomplete="off"
+                                   class="dept-input" type="number" autocomplete="off"
                                    style="width:95%; margin:auto;">
                         </td>
                     @else
@@ -44,7 +44,7 @@
                                    data-id="{{$product_id}}"
                                    data-qty="0"
                                    value="0"
-                                   class="dept-input" type="tel" step="0.01" autocomplete="off"
+                                   class="dept-input" type="number" autocomplete="off"
                                    style="width:95%; margin:auto;" disabled>
                         </td>
                     @endif
