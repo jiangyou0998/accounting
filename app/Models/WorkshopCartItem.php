@@ -4,6 +4,7 @@ namespace App\Models;
 
 
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -110,6 +111,25 @@ class WorkshopCartItem extends Model
             return $query;
         }
     }
+
+    //2021-05-06 最近幾個月(從上個月開始算)
+    public function scopeLastMonths($query, $months = 1)
+    {
+        $start_date = Carbon::now()->subMonth($months)->firstOfMonth()->toDateString();
+        $end_date = Carbon::now()->subMonth(1)->endOfMonth()->toDateString();
+        return $query->whereBetween('deli_date', [$start_date, $end_date]);
+    }
+
+    //2021-05-06 下單數量大於0的
+    public function scopeHasQty($query)
+    {
+        return $query->where(function($query) {
+            $query->where('qty_received', '>' , 0)
+                ->orWhere('qty', '>' , 0);
+        });
+    }
+
+
 
     public static function getCartItems($shop , $dept , $deli_date){
 

@@ -32,6 +32,11 @@ class WorkshopProduct extends Model
         return $this->hasMany(Price::class,"product_id","id");
     }
 
+    public function cartitems()
+    {
+        return $this->hasMany(WorkshopCartItem::class,"product_id","id");
+    }
+
     public function allProduct()
     {
         $cats = new WorkshopCat();
