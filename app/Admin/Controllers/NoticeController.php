@@ -173,6 +173,7 @@ class NoticeController extends AdminController
                         ->accept('xls,xlsx,csv,pdf,mp4,mov,jpg,jpeg,png')
                         ->uniqueName()
                         ->maxSize(204800)
+                        ->disableChunked()
                         ->autoUpload();
                 })
                 ->when(1, function (Form $form) {
@@ -185,6 +186,7 @@ class NoticeController extends AdminController
                             ->accept('xls,xlsx,csv,pdf,mp4,mov,jpg,jpeg,png')
                             ->uniqueName()
                             ->maxSize(204800)
+                            ->disableChunked()
                             ->autoUpload();
                     });
                 })
