@@ -114,7 +114,7 @@ class LibraryController extends AdminController
                         ->accept('xls,xlsx,csv,pdf,mp4,mov,jpg,jpeg,png')
                         ->uniqueName()
                         ->maxSize(204800)
-                        ->disableChunked()
+//                        ->disableChunked()
                         ->autoUpload();
 
                 })
