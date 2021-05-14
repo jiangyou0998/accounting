@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Mail\NoticeShipped;
 use App\Models\Notice;
 use App\Models\Role;
 use Carbon\Carbon;
@@ -12,6 +13,7 @@ use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Widgets\Alert;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class NoticeController extends AdminController
 {
@@ -46,7 +48,11 @@ class NoticeController extends AdminController
             $grid->column('users.name','操作人');
 //            dump($this->is_directory);
             $grid->column('file_path')->display(function ($file_path) {
-                return '<a href="/notices/' . $file_path . '" target="_blank">查看</a>';
+                //多文件不顯示
+                if( ! $this->is_directory){
+                    return '<a href="/notices/' . $file_path . '" target="_blank">查看</a>';
+                }
+                return ;
             });
             $grid->column('first_path')->display(function ($first_path) {
                 return '<a href="http://' . $first_path . '" target="_blank">' . $first_path . '</a>';
@@ -173,6 +179,7 @@ class NoticeController extends AdminController
                         ->accept('xls,xlsx,csv,pdf,mp4,mov,jpg,jpeg,png')
                         ->uniqueName()
                         ->maxSize(204800)
+//                        ->disableChunked()
                         ->autoUpload();
                 })
                 ->when(1, function (Form $form) {
@@ -185,6 +192,7 @@ class NoticeController extends AdminController
                             ->accept('xls,xlsx,csv,pdf,mp4,mov,jpg,jpeg,png')
                             ->uniqueName()
                             ->maxSize(204800)
+//                            ->disableChunked()
                             ->autoUpload();
                     });
                 })
@@ -214,6 +222,26 @@ class NoticeController extends AdminController
                     $form->input('expired_date', '9999-12-31');
                 }
 
+            });
+
+            $form->saved(function (Form $form, $result) {
+                // 判断是否是新增操作
+                if ($form->isCreating()) {
+                    // 自增ID
+                    $newId = $result;
+                    // 也可以这样获取自增ID
+                    $newId = $form->getKey();
+
+                    if (! $newId) {
+                        return $form->error('数据保存失败');
+                    }
+                    
+                    Mail::to(["kbpost@kingbakery.com.hk"])
+                        ->queue(new NoticeShipped($newId));
+//                        ->send(new NoticeShipped($newId));
+                }
+
+                // 修改操作
             });
         });
     }
