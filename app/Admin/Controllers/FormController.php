@@ -109,14 +109,14 @@ class FormController extends AdminController
                 ->disk('forms')
                 ->accept('xls,xlsx,csv,pdf')
                 ->uniqueName()
-                ->disableChunked()
+//                ->disableChunked()
                 ->autoUpload();
 
             $form->file('sample_path')
                 ->disk('forms')
                 ->accept('xls,xlsx,csv,pdf')
                 ->uniqueName()
-                ->disableChunked()
+//                ->disableChunked()
                 ->autoUpload();
 //            $forms->text('user_id');
 
