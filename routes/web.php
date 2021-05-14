@@ -143,6 +143,8 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 Route::get('stock', 'StockController@index')->name('stock.index');
+Route::post('stock', 'StockController@add')->name('stock.add');
+Route::get('stock/supplier', 'SupplierStockController@index')->name('stock.supplier.index');
 
 Route::group(['middleware' => ['auth','permission:workshop']], function () {
     Route::get('customer/sample/regular', 'Regular\CustomerRegularController@index')->name('customer.sample.index');
@@ -154,7 +156,7 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
 //Route::get('/import/customer', 'ImportController@importCustomer');
 //Route::get('/import/reset/price', 'ImportController@resetPrice');
 //Route::get('/import/customer/price', 'ImportController@importCustomerPrice');
-
+Route::get('/import/supplier', 'ImportController@importSupplierItems');
 
 //Route::get('/api/resetpassword', 'Api\ApiController@resetAllPassword');
 //Route::get('/api/resetshoppassword', 'Api\ApiController@resetShopPassword');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use App\Models\Price;
 use App\Models\ShopAddress;
+use App\Models\Supplier\SupplierProduct;
 use App\Models\WorkshopCat;
 use App\Models\WorkshopGroup;
 use App\Models\WorkshopProduct;
@@ -478,6 +479,121 @@ class ImportController extends Controller
                 $priceModel->save();
             }
         });
+
+        return 'success';
+    }
+
+    public function importSupplierItems()
+    {
+        $reader = ReaderFactory::createFromType(Type::XLSX);
+
+        $reader->open('imports\supplierimport.xlsx');
+
+        $supplierArr = [];
+        $catArr = [];
+
+        $unitArr = WorkshopUnit::all()->pluck( 'id','unit_name')->toArray();
+        dump($unitArr);
+
+        foreach ($reader->getSheetIterator() as $sheet) {
+
+            foreach ($sheet->getRowIterator() as $rowKey => $row) {
+                // do stuff with the row
+//                if($rowKey == 1) continue;
+                $rowValues = $row->toArray();
+
+                $pos = mb_strrpos($rowValues[6], "/");
+
+                $min_unit = $rowValues[6];
+                $unit = $rowValues[6];
+
+                if($pos){
+                    $min_unit = $rowValues[10] = mb_substr($rowValues[6], $pos - 1, 1);
+                    $unit = $rowValues[6] = mb_substr($rowValues[6], $pos + 1, 1);
+                }
+                if($unit === '箱'){
+//                    print_r($min_unit);
+                }
+
+
+                if (!in_array($rowValues[8], $supplierArr)) {
+                    $supplierArr[] = $rowValues[8];
+                }
+
+                if (!in_array($rowValues[9], $catArr)) {
+                    $catArr[] = $rowValues[9];
+                }
+
+                //產品數組
+                $productArr[] = $rowValues;
+
+            }
+        }
+
+        foreach ($productArr as $key => &$value){
+
+            if($value[6] !== '箱'){
+                $value[10] = $value[6];
+            }else{
+                if( $key > 0 && $value[0] === $productArr[$key-1][0]){
+                    $value[10] = $productArr[$key-1][6];
+                }else{
+//                    dump($value[0].'/'.$value[6].'/'.$value[10]);
+                }
+            }
+//            dump($value[0].'/'.$value[6].'/'.$value[10]);
+        }
+
+        foreach ($productArr as $key => &$value){
+
+            $value[6] = $unitArr[$value[6]] ?? 0;
+            $value[10] = $unitArr[$value[10]] ?? 0;
+
+            if($value[6] == "" || $value[10] == "")
+            dump($value[0].'/'.$value[6].'/'.$value[10]);
+        }
+
+//        dump($supplierArr);
+//        dump($catArr);
+//        dump($productArr);
+
+//        0 => array:11 [▼
+//            0 => "8150001"
+//            1 => "星牌氣仔(Gas)"
+//            2 => 0
+//            3 => "x"
+//            4 => 0
+//            5 => 0
+//            6 => 14
+//            7 => 11
+//            8 => "鴻發號"
+//            9 => "消耗品"
+//            10 => 14
+//          ]
+
+
+        // 数据库事务处理
+        DB::transaction(function() use($productArr){
+
+            foreach ($productArr as $key => $value){
+                $supplierProductModel = new SupplierProduct();
+                $supplierProductModel->product_name = $value[1];
+                $supplierProductModel->product_no  = $value[0];
+                $supplierProductModel->supplier_id = 1;
+                $supplierProductModel->group_id = 1;
+                $supplierProductModel->unit_id = $value[6];
+                $supplierProductModel->base_unit_id = $value[10];
+                $supplierProductModel->base_qty  = $value[2];
+                $supplierProductModel->default_price  = $value[7];
+                $supplierProductModel->disabled = 0;
+                $supplierProductModel->weight = $value[4];
+                $supplierProductModel->weight_unit = $value[5];
+                $supplierProductModel->save();
+            }
+
+        });
+
+        $reader->close();
 
         return 'success';
     }

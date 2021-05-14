@@ -70,6 +70,9 @@ Route::group([
     //前台用戶分組
     $router->resource('frontgroup', 'FrontGroupController');
 
+    //供應商產品
+    $router->resource('supplier_products', 'SupplierProductController');
+
     //api
     $router->get('api/group', 'ApiController@group');
     $router->get('api/group2', 'ApiController@group2');

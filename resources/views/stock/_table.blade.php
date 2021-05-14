@@ -4,10 +4,10 @@
 
         <thead class="thead-dark">
         <tr>
-            <th scope="col">編號</th>
-            <th scope="col">貨名</th>
-            <th scope="col">結存</th>
-            <th scope="col">包裝</th>
+            <th scope="col" width="15%">編號</th>
+            <th scope="col" width="50%">貨名</th>
+            <th scope="col" width="20%">結存</th>
+            <th scope="col" width="15%">包裝</th>
         </tr>
         </thead>
 
@@ -16,7 +16,11 @@
                 <tr @if($product->units->unit_name === '箱') class="table-danger @endif">
                     <td>{{$product->product_no}}</td>
                     <td>{{$product->product_name}}</td>
-                    <td><input type="number" name="" id=""></td>
+                    <td>
+                        <input class="qty" type="number" name="" id=""
+                               data-id="{{$product->id}}"
+                               value="{{ $stockitems[$product->id] ?? ''}}">
+                    </td>
                     <td>{{$product->units->unit_name}}</td>
                 </tr>
             @endforeach
