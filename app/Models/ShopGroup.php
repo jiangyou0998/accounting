@@ -40,6 +40,11 @@ class ShopGroup extends Model
         return $this->users()->with('address');
     }
 
+    public function scopeCustomerShop($query)
+    {
+        return $query->whereNotIn('id', [1, 5]);
+    }
+
     //獲取外客分組
     public static function getCustomerGroup()
     {
@@ -52,6 +57,8 @@ class ShopGroup extends Model
         $query = self::query();
         return $query->find($id)->name ?? '';
     }
+
+
 
 
 }

@@ -62,10 +62,13 @@ Route::group([
     $router->resource('front/menu', 'MenuController');
     $router->resource('front/permissions', 'PermissionController');
     $router->resource('front/roles', 'RoleController');
+    $router->resource('front/shop_groups', 'ShopGroupController');
     $router->resource('pages/front_users', 'UserController');
 
     //價格分組
     $router->resource('shopgroup', 'ShopGroupController');
+    //分店用戶管理
+    $router->resource('shopusers', 'ShopUserController');
 
     //前台用戶分組
     $router->resource('frontgroup', 'FrontGroupController');

@@ -6,11 +6,29 @@ use App\Models\ShopGroup;
 use App\User;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
+use Dcat\Admin\IFrameGrid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
 
 class ShopGroupController extends AdminController
 {
+    protected function iFrameGrid()
+    {
+        $grid = new IFrameGrid(new ShopGroup());
+//        $grid->model()->with('permissions');
+
+        // 表格快捷搜索
+        $grid->quickSearch('name')
+            ->placeholder('輸入「名稱」快速搜索');
+
+        // 指定行选择器选中时显示的值的字段名称
+        // 如果表格数据中带有 “name”、“title”或“username”字段，则可以不用设置
+        $grid->rowSelector()->titleColumn('name');
+
+        $grid->name;
+
+        return $grid;
+    }
     /**
      * Make a grid builder.
      *
