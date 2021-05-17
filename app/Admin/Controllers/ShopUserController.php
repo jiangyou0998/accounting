@@ -8,6 +8,7 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
+use Dcat\Admin\Widgets\Alert;
 use Illuminate\Support\Facades\Hash;
 
 class ShopUserController extends AdminController
@@ -99,6 +100,9 @@ class ShopUserController extends AdminController
             $form->display('id');
             $id = $form->getKey();
 
+            //2021-05-17 新增提示
+            $alertText = '登入名稱請以「cu」開頭！';
+            $form->html(Alert::make($alertText, '提示')->info());
             $form->text('name', '登入名稱(英文)')->required()->rules("required|
                 unique:users,name,{$form->getKey()},id", [
                 'unique'   => '用戶名已存在',
@@ -108,6 +112,9 @@ class ShopUserController extends AdminController
             $form->text('report_name', '報告名稱')->required();
 
             $form->email('email');
+            //2021-05-17 新增提示
+            $alertText = '排序不填寫時將自動以最大值寫入！';
+            $form->html(Alert::make($alertText, '提示')->info());
             $form->text('sort','報表排序');
             $form->text('company_chinese_name','公司名(中文)');
             $form->text('company_english_name','公司名(英文)');
