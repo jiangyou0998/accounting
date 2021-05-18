@@ -22,18 +22,20 @@ class NoticeShipped extends Mailable implements ShouldQueue
      * @var Notice
      */
     public $notice;
+    public $from_name;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($id)
+    public function __construct($id, $name)
     {
         $notice = Notice::with('attachments')
             ->find($id);
 
         $this->notice = $notice;
+        $this->from_name = $name  ?? 'King Bakery';
     }
 
     /**
@@ -43,10 +45,10 @@ class NoticeShipped extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        $user = Admin::user();
+
         $notice = $this->notice;
         $files = $notice->getFile();
-        $mail = $this->from(env('MAIL_USERNAME','xxx@kingbakery.com.hk'), $user->name)
+        $mail = $this->from(env('MAIL_USERNAME'), $this->from_name)
             ->view('emails.notice.shipped', compact('files', 'notice'))
             ->subject($notice->notice_name);
 

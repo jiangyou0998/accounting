@@ -235,10 +235,11 @@ class NoticeController extends AdminController
                     if (! $newId) {
                         return $form->error('数据保存失败');
                     }
-                    
-                    Mail::to(["kbpost@kingbakery.com.hk"])
-                        ->queue(new NoticeShipped($newId));
-//                        ->send(new NoticeShipped($newId));
+
+                    $user = Admin::user();
+                    Mail::to('jianli@kingbakery.com.hk')
+                        ->queue(new NoticeShipped($newId, $user->name));
+//                        ->send(new NoticeShipped($newId, $user->name));
                 }
 
                 // 修改操作

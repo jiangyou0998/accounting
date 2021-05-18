@@ -5,11 +5,12 @@ namespace App\Mail;
 use App\Models\Itsupport\Itsupport;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Auth;
 
-class ItSupportShipped extends Mailable
+class ItSupportShipped extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
