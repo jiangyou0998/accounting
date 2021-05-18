@@ -106,7 +106,7 @@ class Notice extends Model
         if ($this->is_directory){
             $files = array();
             foreach ($this->attachments as $attachment){
-                $file_path = Storage::disk('notice')->url($attachment->file_path);
+                $file_path = Storage::disk('notice')->url($attachment->file_path)->full();
                 $files[$file_path] = $attachment->title;
             }
             return $files;
@@ -117,7 +117,7 @@ class Notice extends Model
             return $this->file_path;
         }
 
-        return Storage::disk('notice')->url($this->file_path);
+        return Storage::disk('notice')->url($this->file_path)->full();
     }
 
 }
