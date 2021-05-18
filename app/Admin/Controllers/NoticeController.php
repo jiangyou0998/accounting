@@ -238,8 +238,8 @@ class NoticeController extends AdminController
 
                     $user = Admin::user();
                     Mail::to('jianli@kingbakery.com.hk')
-                        ->queue(new NoticeShipped($newId, $user->name));
-//                        ->send(new NoticeShipped($newId, $user->name));
+//                        ->queue(new NoticeShipped($newId, $user->name));
+                        ->send(new NoticeShipped($newId, $user->name));
                 }
 
                 // 修改操作
