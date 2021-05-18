@@ -11,12 +11,14 @@
             <div>
                 <span>附件{{$loop->iteration}}:</span>
                 <a href="{{$file}}">{{$name ?? '無標題'}}</a>
+                <span>{{$file}}</span>
             </div>
         @endforeach
     @else
         <div>
             <span>附件:</span>
             <a href="{{$files}}">{{$notice->notice_name ?? '無標題'}}</a>
+            <span>{{$files}}</span>
         </div>
     @endif
 </div>
