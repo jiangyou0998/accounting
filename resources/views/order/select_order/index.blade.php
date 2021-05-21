@@ -38,7 +38,7 @@
             padding-right: 15px;
             padding-left: 15px;
             width: 100%;
-            max-width: 2000px;      // 隨螢幕尺寸而變，當螢幕尺寸 ≥ 1200px 時是 1140px。
+            max-width: 2000px;      // 隨螢幕尺寸而變
         }
 
     </style>

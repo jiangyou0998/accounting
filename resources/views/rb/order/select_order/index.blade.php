@@ -32,6 +32,15 @@
             color: #FF0000;
         }
 
+        .container {
+            margin-right: auto;
+            margin-left: auto;
+            padding-right: 15px;
+            padding-left: 15px;
+            width: 100%;
+            max-width: 2000px;      // 隨螢幕尺寸而變
+        }
+
     </style>
 
     <div align="left"><a target="_top" href="{{route('order')}}" style="font-size: xx-large;">返回</a></div>

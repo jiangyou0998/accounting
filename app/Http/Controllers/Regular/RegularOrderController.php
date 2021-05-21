@@ -127,8 +127,8 @@ class RegularOrderController extends Controller
         $shop_group_id = $request->shop_group_id;
         $dept = $request->dept;
 
-        if ( ! $shop_group_id) return "error";
-        if ( ! $dept) return "error";
+        if ( ! $shop_group_id) return "no shop group id error";
+        if ( ! $dept) return "no dept error";
 
         $shops = User::getShopsByShopGroup($shop_group_id);
 

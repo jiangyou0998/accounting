@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    固定柯打
+    批量下單
 @stop
 
 @section('js')
@@ -29,7 +29,7 @@
     <div class="container">
         <div class="py-5 text-center">
             <div align="left"><a target="_top" href="{{route('order')}}" style="font-size: xx-large;">返回</a></div>
-            <h2>固定柯打</h2>
+            <h2>批量下單</h2>
             <input type="radio" name="dept" id="dept" value="F" @if(request()->dept == 'F') checked @endif>樓面
             <div class="alert alert-danger" role="alert">
                 批量操作會為未下單日進行批量下單<br>
@@ -81,6 +81,8 @@
 
             var start = $("#start").val();
             var end = $("#end").val();
+            var shop_group_id = $("#shopgroupid").val();
+            var dept = $("#dept").val();
 
             if(start == ""){
                 Swal.fire({
@@ -98,7 +100,15 @@
                 return;
             }
 
-            window.location.href = "{{route('order.regular')}}" + "?start=" + start + "&end=" + end;
+            if(dept == ""){
+                Swal.fire({
+                    icon: 'warning',
+                    title: "請選擇部門",
+                });
+                return;
+            }
+
+            window.location.href = "{{route('order.regular')}}" + "?start=" + start + "&end=" + end + "&dept=" + dept + "&shop_group_id=" + shop_group_id;
 
         }
 
