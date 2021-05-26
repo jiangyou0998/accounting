@@ -73,11 +73,18 @@ class WorkshopCartItemController extends AdminController
 
                 $shop = User::getKingBakeryShops()->toArray();
                 $rbshop = User::getRyoyuBakeryShops()->toArray();
+                $cushop = User::getCustomerShops()->toArray();
                 $shops = array_column($shop, 'report_name', 'id');
                 $rbshops = array_column($rbshop, 'report_name', 'id');
+                $cushops = array_column($cushop, 'report_name', 'id');
 
                 $selector->select('user_id', '蛋撻王', $shops);
                 $selector->select('user_id2', '糧友', $rbshops, function ($query, $value) {
+
+                    $query->where('user_id', $value);
+                });
+
+                $selector->select('user_id3', '外客', $cushops, function ($query, $value) {
 
                     $query->where('user_id', $value);
                 });
@@ -97,7 +104,9 @@ class WorkshopCartItemController extends AdminController
 
                 });
 
-                $selector->select('dept', '部門', config('dept.symbol_and_name_all'));
+                $depts = config('dept.symbol_and_name_all');
+                $depts['CU'] = '外客';
+                $selector->select('dept', '部門', $depts);
 
                 $selector->select('change', '修改過', [
                     1 => '有改過',
