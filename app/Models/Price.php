@@ -11,7 +11,7 @@ class Price extends Model
 
     public function products()
     {
-        return $this->belongsTo(WorkshopProduct::class , "product_id" , "id" );
+        return $this->belongsTo(WorkshopProduct::class , "product_id" , "id" )->with(['groups', 'cats']);
     }
 
     public function shopGroup()

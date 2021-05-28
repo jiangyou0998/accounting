@@ -76,6 +76,9 @@ Route::group([
     //供應商產品
     $router->resource('supplier_products', 'SupplierProductController');
 
+    //價格查詢
+    $router->resource('prices', 'PriceController');
+
     //api
     $router->get('api/group', 'ApiController@group');
     $router->get('api/group2', 'ApiController@group2');
@@ -96,7 +99,7 @@ Route::group([
 //    $router->put('data/form', 'DataChangeController@changeForms');
 
 //    $router->resource('menus2', 'WorkshopProductExportController');
-//    $router->resource('price/export', 'PriceExportController');
+
 
 //    $router->get('test',function (){
 //       return view('admin.checks.layout');
