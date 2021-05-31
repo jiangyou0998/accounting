@@ -14,6 +14,7 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
+use Illuminate\Support\Facades\DB;
 
 
 class PriceController extends AdminController
@@ -40,6 +41,7 @@ class PriceController extends AdminController
             $grid->export()->disableExportSelectedRow();
 
             $grid->model()
+                ->select(DB::raw('prices.*,workshop_products.product_no'))
                 ->whereHas('products',function ($query){
                     $query->where('status','!=',4);
                 })
@@ -49,7 +51,7 @@ class PriceController extends AdminController
                 ->orderBy('shop_group_id')
                 ->orderBy('workshop_products.product_no');
 
-            $grid->id()->sortable();
+            $grid->column('id')->sortable();
             $grid->column('products.product_no', '產品編號');
             $grid->column('products.product_name', '產品名稱');
             $grid->column('products.cats.cat_name', '大類');
