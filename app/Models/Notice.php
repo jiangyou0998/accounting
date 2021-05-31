@@ -6,6 +6,8 @@ namespace App\Models;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Notice extends Model
 {
@@ -97,19 +99,26 @@ class Notice extends Model
         return $notices;
     }
 
-//    public static function setAdminRoles()
-//    {
-//        $depts = DB::table('tbl_dept')->get();
-//        dump($depts);
-//        $now = Carbon::now()->toDateTimeString();
-//        foreach ($depts as $dept){
-//            $insertArr = ['name' => $dept->txt_dept , 'slug'=>Str::before($dept->txt_dept,' '),'created_at' => $now , 'updated_at' => $now];
-//            DB::table('admin_roles')->insert($insertArr);
-////            dump($insertArr);
-//        }
-//
-//
-//    }
+    // 定义一个public方法访问图片或文件
+    public function getFile()
+    {
+        //有附件
+        if ($this->is_directory){
+            $files = array();
+            foreach ($this->attachments as $attachment){
+                $file_path = Storage::disk('notice')->url($attachment->file_path);
+                $files[$file_path] = $attachment->title;
+            }
+            return $files;
+        }
+
+        //無附件
+        if (Str::contains($this->file_path, '//')) {
+            return $this->file_path;
+        }
+
+        return Storage::disk('notice')->url($this->file_path);
+    }
 
 
 }
