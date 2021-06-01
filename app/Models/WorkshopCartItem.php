@@ -49,44 +49,15 @@ class WorkshopCartItem extends Model
 //        }
 //    }
 
-    public function scopeOfShop($query, $shop)
+    public function scopeOfShop($query, $shops)
     {
-        $shop_group_id = 0;
-        switch ($shop) {
-            case 'kb':
-                $shop_group_id = 1;
-                break;
-            case 'rb':
-                $shop_group_id = 5;
-                break;
-            case '2cafe':
-                $shop_group_id = 4;
-                break;
-            case 'cu':
-                $shop_group_id = -1;
-                break;
-            default:
-                $shop_group_id = 0;
-                break;
-        }
+        $shop_group_ids = $shop_group_ids = explode(',', $shops);
 
-        if($shop_group_id === 0){
-            return $query;
-        }else if($shop_group_id < 0){
-            //外客
-            return $query->whereHas('users', function ($query) use($shop_group_id){
-                $query->whereHas('shop_groups', function ($query) use($shop_group_id){
-                    $query->whereNotIn('id', [1,4,5]);
-                });
+        return $query->whereHas('users', function ($query) use($shop_group_ids){
+            $query->whereHas('shop_groups', function ($query) use($shop_group_ids){
+                $query->whereIn('id', $shop_group_ids);
             });
-        }else{
-            //蛋撻王,糧友,貳號
-            return $query->whereHas('users', function ($query) use($shop_group_id){
-                $query->whereHas('shop_groups', function ($query) use($shop_group_id){
-                    $query->where('id', $shop_group_id);
-                });
-            });
-        }
+        });
     }
 
     public function scopeOfDept($query, $dept)

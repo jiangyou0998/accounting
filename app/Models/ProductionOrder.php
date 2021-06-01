@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Support\Renderable;
 use Dcat\Admin\Admin;
+use Illuminate\Support\Collection;
 
 class ProductionOrder implements Renderable
 {
@@ -48,9 +49,16 @@ JS;
             ->orderBy('cut_time')
             ->get('cut_time');
 
+        $shop_groups = new Collection();
+        $shop_groups->kb = 1;
+        $shop_groups->rb = 5;
+        $customerIdArr = ShopGroup::whereNotIn('id', [1,5])->pluck('id')->toArray();
+        $shop_groups->cu = implode(',', $customerIdArr);
+
+//        dump($shop_groups);
 //        dump($cutdays->toArray());
 
 //        return view('admin.production.index',compact('cats'))->render();
-        return view('admin.production.index',compact('checks','cutdays' ,'cuttimes'))->render();
+        return view('admin.production.index',compact('checks','cutdays' , 'cuttimes', 'shop_groups'))->render();
     }
 }
