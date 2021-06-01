@@ -71,6 +71,10 @@
         background-color: #ffffff;
         font-size: 250%;
     }
+
+    .form-check-label{
+        font-size: large;
+    }
 </style>
 
 <div align="center" width="100%">
@@ -143,6 +147,32 @@
                 <a href="javascript:;" target="_blank" onclick="createReportSelected()">批量預覽</a>
             </div>
         </div>
+{{--        分組radio--}}
+        <div class="input-group input-group-sm" style="margin-top: 15px;">
+            <div class='col-sm-12'>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input shops-radio" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="kb">
+                    <label class="form-check-label" for="inlineRadio1">蛋撻王</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input shops-radio" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="rb">
+                    <label class="form-check-label" for="inlineRadio2">糧友</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input shops-radio" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="2cafe">
+                    <label class="form-check-label" for="inlineRadio3">貳號冰室</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input shops-radio" type="radio" name="inlineRadioOptions" id="inlineRadio4" value="cu">
+                    <label class="form-check-label" for="inlineRadio4">外客</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input shops-radio" type="radio" name="inlineRadioOptions" id="inlineRadio5" value="all" checked>
+                    <label class="form-check-label" for="inlineRadio5">全部</label>
+                </div>
+            </div>
+
+        </div>
 
     </div>
     <input type="hidden" name="downstr" id="downstr" value=""/>
@@ -189,6 +219,7 @@
         var isSelectedTime = true;
         var delidate = $('#datepicker').val();
         var downstr = $('#downstr').val();
+        var shops = $('.shops-radio:checked').val();
         if (delidate == '') {
             alert('請選擇收貨日期!');
             isSelectedTime = false;
@@ -199,10 +230,15 @@
             isSelectedTime = false;
             return false;
         }
+        if (shops == '') {
+            alert('請選擇分組!');
+            isSelectedTime = false;
+            return false;
+        }
         // $('#loading').show();
         {{--window.location.href = "{{route('admin.order_print')}}?deli_date=" + delidate + "&check_id=" + downstr;--}}
         if(isSelectedTime){
-            window.open("{{route('admin.order_print')}}?deli_date=" + delidate + "&check_id=" + downstr);
+            window.open("{{route('admin.order_print')}}?deli_date=" + delidate + "&check_id=" + downstr + "&shops=" + shops);
         }
     }
 
@@ -235,6 +271,12 @@
                 defaultDate : '{{\Carbon\Carbon::now()->addDay(request()->cutday ?? 2)->toDateString()}}',
                 // icon : 'glyphicon glyphicon-calendar',
 
+            });
+
+            $('.shops-radio').iCheck({
+                checkboxClass: 'icheckbox_square-blue',
+                radioClass: 'iradio_square-blue',
+                increaseArea: '20%' // optional
             });
         });
     });

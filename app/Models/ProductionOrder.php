@@ -11,9 +11,11 @@ class ProductionOrder implements Renderable
     public static $js = [
         '/vendors/dcat-admin/dcat/plugins/moment/moment-with-locales.min.js?v1.7.0',
         '/vendors/dcat-admin/dcat/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js?v1.7.0',
+        '/icheck/icheck.min.js',
     ];
     public static $css = [
         '/vendors/dcat-admin/dcat/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css?v1.7.0',
+        '/icheck/skins/square/blue.css',
     ];
 
     public function script()

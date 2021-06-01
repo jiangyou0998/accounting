@@ -38,14 +38,54 @@ class WorkshopCartItem extends Model
         return $this->hasOneThrough(WorkshopUnit::class,WorkshopProduct::class,"id" ,"id","product_id","unit_id");
     }
 
+//    public function scopeOfShop($query, $shop)
+//    {
+//        if($shop === 'kb'){
+//            return $query->where('users.name','like', 'kb%')
+//                ->orWhere('users.name','like','ces%')
+//                ->orWhere('users.name','like','b&b%');
+//        }else if($shop === 'rb'){
+//            return $query->where('users.name','like', 'rb%');
+//        }
+//    }
+
     public function scopeOfShop($query, $shop)
     {
-        if($shop === 'kb'){
-            return $query->where('users.name','like', 'kb%')
-                ->orWhere('users.name','like','ces%')
-                ->orWhere('users.name','like','b&b%');
-        }else if($shop === 'rb'){
-            return $query->where('users.name','like', 'rb%');
+        $shop_group_id = 0;
+        switch ($shop) {
+            case 'kb':
+                $shop_group_id = 1;
+                break;
+            case 'rb':
+                $shop_group_id = 5;
+                break;
+            case '2cafe':
+                $shop_group_id = 4;
+                break;
+            case 'cu':
+                $shop_group_id = -1;
+                break;
+            default:
+                $shop_group_id = 0;
+                break;
+        }
+
+        if($shop_group_id === 0){
+            return $query;
+        }else if($shop_group_id < 0){
+            //外客
+            return $query->whereHas('users', function ($query) use($shop_group_id){
+                $query->whereHas('shop_groups', function ($query) use($shop_group_id){
+                    $query->whereNotIn('id', [1,4,5]);
+                });
+            });
+        }else{
+            //蛋撻王,糧友,貳號
+            return $query->whereHas('users', function ($query) use($shop_group_id){
+                $query->whereHas('shop_groups', function ($query) use($shop_group_id){
+                    $query->where('id', $shop_group_id);
+                });
+            });
         }
     }
 
