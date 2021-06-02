@@ -138,6 +138,7 @@ class User extends Authenticatable
         return $shops;
     }
 
+    //獲取蛋撻王和糧友所有分店
     public static function getAllShops(){
 
         $users = new User();
@@ -146,6 +147,20 @@ class User extends Authenticatable
             ->orWhere('name','like','ces%')
             ->orWhere('name','like','b&b%')
             ->orWhere('name','like','rb%')
+            ->orderBy('name')
+            ->get(['id','report_name']);
+
+        return $shops;
+    }
+
+    //獲取 蛋撻王 和 糧友 和 外客 所有分店
+    public static function getAllShopsAndCustomerShops(){
+
+        $users = new User();
+        $shops = $users
+            ->leftJoin('shop_group_has_users', 'shop_group_has_users.user_id', '=', 'users.id')
+            ->has('shop_groups')
+            ->orderBy('shop_group_has_users.shop_group_id')
             ->orderBy('name')
             ->get(['id','report_name']);
 
