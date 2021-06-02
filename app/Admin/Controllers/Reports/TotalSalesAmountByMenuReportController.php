@@ -27,8 +27,8 @@ class TotalSalesAmountByMenuReportController extends AdminController
         return Grid::make(null, function (Grid $grid) {
 
             $grid->header(function ($collection) {
-                $start = $this->getStartTime();
-                $end = $this->getEndTime();
+                $start = getStartTime();
+                $end = getEndTime();
 
                 // 标题和内容
                 $cardInfo = $start." 至 ".$end ;
@@ -37,10 +37,10 @@ class TotalSalesAmountByMenuReportController extends AdminController
                 return $card;
             });
 
-            $start = $this->getStartTime();
-            $end = $this->getEndTime();
+            $start = getStartTime();
+            $end = getEndTime();
 
-            $shop_group = request()->group ?? 'all';
+            $shop_group = request()->group ?? 0;
 //            dump(request()->_selector['group']);
 
             $data = $this->generate($start, $end, $shop_group);
@@ -73,7 +73,7 @@ class TotalSalesAmountByMenuReportController extends AdminController
                 // 更改为 panel 布局
                 $filter->panel();
                 $filter->between('between', '報表日期')->date();
-                $filter->equal('group', '分組')->select(config('report.report_group'));
+                $filter->equal('group', '分組')->select(getReportShop());
             });
 
             $filename = '分店每月銷售數量報告 '.$start.'至'.$end ;
@@ -95,19 +95,12 @@ class TotalSalesAmountByMenuReportController extends AdminController
         $last_month_start = (new Carbon($start))->subMonth()->firstOfMonth()->toDateString();
         $last_month_end = (new Carbon($start))->subMonth()->endOfMonth()->toDateString();
 
-        switch ($shop_group) {
-            case 'all':
-                $shops = User::getAllShops();
-                break;
-            case 'kb':
-                $shops = User::getKingBakeryShops();
-                break;
-            case 'rb':
-                $shops = User::getRyoyuBakeryShops();
-                break;
-            default:
-                $shops = User::getAllShops();
+        if($shop_group === 0){
+            $shops = User::getAllShopsAndCustomerShops();
+        }else{
+            $shops = User::getShopsByShopGroup($shop_group);
         }
+
         $shopids = $shops->pluck('id');
 
         $cartitem = new WorkshopCartItem();
@@ -156,24 +149,6 @@ class TotalSalesAmountByMenuReportController extends AdminController
 
     }
 
-    public function getStartTime(){
-        if(isset($_REQUEST['between']['start'])){
-            $start = $_REQUEST['between']['start'];
-        }else{
-            //上个月第一天
-            $start = Carbon::now()->subMonth()->firstOfMonth()->toDateString();
-        }
-        return $start;
-    }
 
-    public function getEndTime(){
-        if(isset($_REQUEST['between']['end'])){
-            $end = $_REQUEST['between']['end'];
-        }else{
-            //上个月最后一天
-            $end = Carbon::now()->subMonth()->lastOfMonth()->toDateString();
-        }
-        return $end;
-    }
 
 }
