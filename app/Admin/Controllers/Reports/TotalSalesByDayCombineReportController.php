@@ -30,21 +30,15 @@ class TotalSalesByDayCombineReportController extends AdminController
         return Grid::make(null, function (Grid $grid) {
 
             $grid->header(function ($collection) {
-                $shop_group = request()->group ?? 'all';
-                switch ($shop_group) {
-                    case 'all':
-                        $shop_group_name = '全部';
-                        break;
-                    case 'kb':
-                        $shop_group_name = '蛋撻王';
-                        break;
-                    case 'rb':
-                        $shop_group_name = '糧友';
-                        break;
-                    default:
-                        $shop_group_name = '全部';
+                $shop_group = request()->group ?? 0;
+
+                if($shop_group === 0){
+                    $shop_group_name = '全部';
+                }else{
+                    $shopGroupArr = getReportShop()->toArray();
+                    $shop_group_name = $shopGroupArr[$shop_group];
                 }
-                $month = $this->getMonth();
+                $month = getMonth();
 
                 // 标题和内容
                 $cardInfo = <<<HTML
@@ -58,7 +52,7 @@ HTML;
                 return $card;
             });
 
-            $month = $this->getMonth();
+            $month = getMonth();
             $shop_group = request()->group ?? 0;
 
             $data = $this->generate($month, $shop_group);
@@ -169,39 +163,6 @@ HTML;
 
         return $cartitem;
 
-    }
-
-    public function getStartTime()
-    {
-        if (isset($_REQUEST['between']['start'])) {
-            $start = $_REQUEST['between']['start'];
-        } else {
-            //上个月第一天
-            $start = Carbon::now()->subMonth()->firstOfMonth()->toDateString();
-        }
-        return $start;
-    }
-
-    public function getEndTime()
-    {
-        if (isset($_REQUEST['between']['end'])) {
-            $end = $_REQUEST['between']['end'];
-        } else {
-            //上个月最后一天
-            $end = Carbon::now()->subMonth()->lastOfMonth()->toDateString();
-        }
-        return $end;
-    }
-
-    public function getMonth()
-    {
-        if (isset($_REQUEST['month']) && $_REQUEST['month'] != '') {
-            $month = $_REQUEST['month'];
-        } else {
-            //上个月最后一天
-            $month = Carbon::now()->subMonth()->isoFormat('Y-MM');
-        }
-        return $month;
     }
 
 }

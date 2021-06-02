@@ -29,8 +29,8 @@ class TotalSalesBySearchReportController extends AdminController
     {
         return Grid::make(null, function (Grid $grid) {
 
-            $start = $this->getStartTime();
-            $end = $this->getEndTime();
+            $start = getStartTimeWithoutDefault();
+            $end = getEndTimeWithoutDefault();
 
             $no_start = request()->start_no ?? "";
 
@@ -61,8 +61,8 @@ class TotalSalesBySearchReportController extends AdminController
 
             $grid->header(function ($collection) use($total){
 
-                $start = $this->getStartTime();
-                $end = $this->getEndTime();
+                $start = getStartTimeWithoutDefault();
+                $end = getEndTimeWithoutDefault();
 
                 // 标题和内容
                 $cardInfo = <<<HTML
@@ -218,39 +218,6 @@ HTML;
 
         return $cartitem;
 
-    }
-
-    public function getStartTime()
-    {
-        if (isset($_REQUEST['between']['start'])) {
-            $start = $_REQUEST['between']['start'];
-        } else {
-            //上个月第一天
-            $start = "";
-        }
-        return $start;
-    }
-
-    public function getEndTime()
-    {
-        if (isset($_REQUEST['between']['end'])) {
-            $end = $_REQUEST['between']['end'];
-        } else {
-            //上个月最后一天
-            $end = "";
-        }
-        return $end;
-    }
-
-    public function getMonth()
-    {
-        if (isset($_REQUEST['month'])) {
-            $month = $_REQUEST['month'];
-        } else {
-            //上个月最后一天
-            $month = Carbon::now()->subMonth()->isoFormat('Y-MM');
-        }
-        return $month;
     }
 
 }

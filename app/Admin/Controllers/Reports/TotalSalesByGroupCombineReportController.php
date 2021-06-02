@@ -30,8 +30,8 @@ class TotalSalesByGroupCombineReportController extends AdminController
         return Grid::make(null, function (Grid $grid) {
 
             $grid->header(function ($collection) {
-                $start = $this->getStartTime();
-                $end = $this->getEndTime();
+                $start = getStartTime();
+                $end = getEndTime();
 
                 // 标题和内容
                 $cardInfo = $start . " 至 " . $end;
@@ -40,8 +40,8 @@ class TotalSalesByGroupCombineReportController extends AdminController
                 return $card;
             });
 
-            $start = $this->getStartTime();
-            $end = $this->getEndTime();
+            $start = getStartTime();
+            $end = getEndTime();
 
             $shop_group = request()->group ?? 0;
 
@@ -173,28 +173,6 @@ class TotalSalesByGroupCombineReportController extends AdminController
 
         return $cartitem;
 
-    }
-
-    public function getStartTime()
-    {
-        if (isset($_REQUEST['between']['start']) && $_REQUEST['between']['start'] != '') {
-            $start = $_REQUEST['between']['start'];
-        } else {
-            //上个月第一天
-            $start = Carbon::now()->subMonth()->firstOfMonth()->toDateString();
-        }
-        return $start;
-    }
-
-    public function getEndTime()
-    {
-        if (isset($_REQUEST['between']['end']) && $_REQUEST['between']['end'] != '') {
-            $end = $_REQUEST['between']['end'];
-        } else {
-            //上个月最后一天
-            $end = Carbon::now()->subMonth()->lastOfMonth()->toDateString();
-        }
-        return $end;
     }
 
 }
