@@ -59,7 +59,7 @@ HTML;
             });
 
             $month = $this->getMonth();
-            $shop_group = request()->group ?? 'all';
+            $shop_group = request()->group ?? 0;
 
             $data = $this->generate($month, $shop_group);
 
@@ -93,8 +93,7 @@ HTML;
                 // 更改为 panel 布局
                 $filter->panel();
                 $filter->month('month', '報表日期');
-                $filter->equal('group', '分組')->select(config('report.report_group'));
-
+                $filter->equal('group', '分組')->select(getReportShop());
 
             });
 
@@ -113,19 +112,12 @@ HTML;
      */
     public function generate($month ,$shop_group)
     {
-        switch ($shop_group) {
-            case 'all':
-                $shops = User::getAllShops();
-                break;
-            case 'kb':
-                $shops = User::getKingBakeryShops();
-                break;
-            case 'rb':
-                $shops = User::getRyoyuBakeryShops();
-                break;
-            default:
-                $shops = User::getAllShops();
+        if($shop_group === 0){
+            $shops = User::getAllShopsAndCustomerShops();
+        }else{
+            $shops = User::getShopsByShopGroup($shop_group);
         }
+
         $shopids = $shops->pluck('id');
 
         $cats = WorkshopCat::getCats();
@@ -167,6 +159,14 @@ HTML;
 
         }
 
+        //新增小計字樣
+        if($cartitem->count()){
+            foreach ($cartitem as $key => &$value){
+                if( ! $value->day) $value->day = '本週小計';
+            }
+            $cartitem->last()->day = '總計';
+        }
+
         return $cartitem;
 
     }
@@ -195,7 +195,7 @@ HTML;
 
     public function getMonth()
     {
-        if (isset($_REQUEST['month'])) {
+        if (isset($_REQUEST['month']) && $_REQUEST['month'] != '') {
             $month = $_REQUEST['month'];
         } else {
             //上个月最后一天
