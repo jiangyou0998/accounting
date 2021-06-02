@@ -159,8 +159,16 @@
                     <label class="form-check-label" for="inlineRadio2">糧友</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input shops-checkbox" type="checkbox" name="inlineRadioOptions" id="inlineRadio4" value="{{ $shop_groups->cu }}">
-                    <label class="form-check-label" for="inlineRadio4">外客</label>
+                    <input class="form-check-input shops-checkbox" type="checkbox" name="inlineRadioOptions" id="inlineRadio3" value="{{ $shop_groups->tc }}">
+                    <label class="form-check-label" for="inlineRadio2">貳號冰室</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input shops-checkbox" type="checkbox" name="inlineRadioOptions" id="inlineRadio4" value="{{ $shop_groups->la }}">
+                    <label class="form-check-label" for="inlineRadio2">機場</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input shops-checkbox" type="checkbox" name="inlineRadioOptions" id="inlineRadio5" value="{{ $shop_groups->cu }}">
+                    <label class="form-check-label" for="inlineRadio4">其他外客</label>
                 </div>
 
             </div>

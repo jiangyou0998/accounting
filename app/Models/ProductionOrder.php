@@ -52,7 +52,11 @@ JS;
         $shop_groups = new Collection();
         $shop_groups->kb = 1;
         $shop_groups->rb = 5;
-        $customerIdArr = ShopGroup::whereNotIn('id', [1,5])->pluck('id')->toArray();
+        //貳號
+        $shop_groups->tc = 4;
+        //機場Lagardere
+        $shop_groups->la = 8;
+        $customerIdArr = ShopGroup::whereNotIn('id', [1,5,4,8])->pluck('id')->toArray();
         $shop_groups->cu = implode(',', $customerIdArr);
 
 //        dump($shop_groups);
