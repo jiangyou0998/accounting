@@ -15,12 +15,11 @@ class ShopTable extends LazyRenderable
 
         return Grid::make(new User(), function (Grid $grid) {
             $grid->model()
+                ->leftJoin('shop_group_has_users', 'shop_group_has_users.user_id', '=', 'users.id')
                 ->where(function($query) {
-                    $query->where('name','like','kb%')
-                        ->orWhere('name','like','ces%')
-                        ->orWhere('name','like','b&b%')
-                        ->orWhere('name','like','rb%');
+                    $query->has('shop_groups');
                 })
+                ->orderBy('shop_group_has_users.shop_group_id')
                 ->orderBy('name');
 
             $grid->column('name',"登入名");
