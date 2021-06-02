@@ -43,7 +43,7 @@ class TotalSalesByGroupCombineReportController extends AdminController
             $start = $this->getStartTime();
             $end = $this->getEndTime();
 
-            $shop_group = request()->group ?? 'all';
+            $shop_group = request()->group ?? 0;
 
             $data = $this->generate($start, $end, $shop_group);
 
@@ -82,7 +82,7 @@ class TotalSalesByGroupCombineReportController extends AdminController
                 // 更改为 panel 布局
                 $filter->panel();
                 $filter->between('between', '報表日期')->date();
-                $filter->equal('group', '分組')->select(config('report.report_group'));
+                $filter->equal('group', '分組')->select(getReportShop());
 
             });
 
@@ -105,19 +105,12 @@ class TotalSalesByGroupCombineReportController extends AdminController
         $last_month_start = (new Carbon($start))->subMonth()->firstOfMonth()->toDateString();
         $last_month_end = (new Carbon($start))->subMonth()->endOfMonth()->toDateString();
 
-        switch ($shop_group) {
-            case 'all':
-                $shops = User::getAllShops();
-                break;
-            case 'kb':
-                $shops = User::getKingBakeryShops();
-                break;
-            case 'rb':
-                $shops = User::getRyoyuBakeryShops();
-                break;
-            default:
-                $shops = User::getAllShops();
+        if($shop_group === 0){
+            $shops = User::getAllShopsAndCustomerShops();
+        }else{
+            $shops = User::getShopsByShopGroup($shop_group);
         }
+
         $shopids = $shops->pluck('id');
 
         $cats = WorkshopCat::getCatsExceptResale();
@@ -184,7 +177,7 @@ class TotalSalesByGroupCombineReportController extends AdminController
 
     public function getStartTime()
     {
-        if (isset($_REQUEST['between']['start'])) {
+        if (isset($_REQUEST['between']['start']) && $_REQUEST['between']['start'] != '') {
             $start = $_REQUEST['between']['start'];
         } else {
             //上个月第一天
@@ -195,7 +188,7 @@ class TotalSalesByGroupCombineReportController extends AdminController
 
     public function getEndTime()
     {
-        if (isset($_REQUEST['between']['end'])) {
+        if (isset($_REQUEST['between']['end']) && $_REQUEST['between']['end'] != '') {
             $end = $_REQUEST['between']['end'];
         } else {
             //上个月最后一天
