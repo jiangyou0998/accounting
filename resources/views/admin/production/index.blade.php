@@ -151,24 +151,24 @@
         <div class="input-group input-group-sm" style="margin-top: 15px;">
             <div class='col-sm-12'>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input shops-checkbox" type="checkbox" name="inlineRadioOptions" id="inlineRadio1" value="{{ $shop_groups->kb }}">
+                    <input class="form-check-input shops-checkbox" type="checkbox" id="inlineRadio1" value="{{ $shop_groups->kb }}">
                     <label class="form-check-label" for="inlineRadio1">蛋撻王</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input shops-checkbox" type="checkbox" name="inlineRadioOptions" id="inlineRadio2" value="{{ $shop_groups->rb }}">
+                    <input class="form-check-input shops-checkbox" type="checkbox" id="inlineRadio2" value="{{ $shop_groups->rb }}">
                     <label class="form-check-label" for="inlineRadio2">糧友</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input shops-checkbox" type="checkbox" name="inlineRadioOptions" id="inlineRadio3" value="{{ $shop_groups->tc }}">
-                    <label class="form-check-label" for="inlineRadio2">貳號冰室</label>
+                    <input class="form-check-input shops-checkbox" type="checkbox" id="inlineRadio3" value="{{ $shop_groups->tc }}">
+                    <label class="form-check-label" for="inlineRadio3">貳號冰室</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input shops-checkbox" type="checkbox" name="inlineRadioOptions" id="inlineRadio4" value="{{ $shop_groups->la }}">
-                    <label class="form-check-label" for="inlineRadio2">機場</label>
+                    <input class="form-check-input shops-checkbox" type="checkbox" id="inlineRadio4" value="{{ $shop_groups->la }}">
+                    <label class="form-check-label" for="inlineRadio4">機場</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input shops-checkbox" type="checkbox" name="inlineRadioOptions" id="inlineRadio5" value="{{ $shop_groups->cu }}">
-                    <label class="form-check-label" for="inlineRadio4">其他外客</label>
+                    <input class="form-check-input shops-checkbox" type="checkbox" id="inlineRadio5" value="{{ $shop_groups->cu }}">
+                    <label class="form-check-label" for="inlineRadio5">其他外客</label>
                 </div>
 
             </div>
