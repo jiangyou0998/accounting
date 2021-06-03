@@ -27,8 +27,8 @@ class TotalSalesAmountByMenuReportController extends AdminController
         return Grid::make(null, function (Grid $grid) {
 
             $grid->header(function ($collection) {
-                $start = getStartTime();
-                $end = getEndTime();
+                $start = getStartTimeWithoutDefault();
+                $end = getEndTimeWithoutDefault();
 
                 // 标题和内容
                 $cardInfo = $start." 至 ".$end ;
@@ -37,8 +37,8 @@ class TotalSalesAmountByMenuReportController extends AdminController
                 return $card;
             });
 
-            $start = getStartTime();
-            $end = getEndTime();
+            $start = getStartTimeWithoutDefault();
+            $end = getEndTimeWithoutDefault();
 
             $shop_group = request()->group ?? 0;
 //            dump(request()->_selector['group']);
