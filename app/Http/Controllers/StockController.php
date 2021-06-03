@@ -48,6 +48,7 @@ class StockController extends Controller
             ->toArray();
 
 //        dump($stockitems);
+//        dump($groups);
         return view('stock.index' , compact('products', 'groups', 'stockitems'));
     }
 

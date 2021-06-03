@@ -4,17 +4,84 @@
     庫存
 @stop
 
+@section('style')
+    <style type="text/css">
+
+        /*.main-div{*/
+        /*    display: flex;*/
+        /*    width: 100%;*/
+        /*}*/
+
+        .left-div{
+            width: 50%;
+            height: 60vh;
+            overflow: auto;
+
+        }
+
+        .right-div{
+            width: 40%;
+            height: 60vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+
+        }
+
+
+    </style>
+@endsection
+
+
 @section('content')
 
     <div class="container">
+        <div class="d-flex justify-content-end input-group">
+
+            <form class="card p-1" method="POST" action="http://kbhdev.test/library/search">
+                <div class="input-group">
+                    @csrf
+                    <input id="keyword" name="keyword" type="text" class="form-control" placeholder="" value="">
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">查詢</button>
+                    </div>
+                </div>
+            </form>
+        </div>
         <div class="py-5 text-center">
 
             <h2>庫存-{{\Carbon\Carbon::now()->subMonth()->monthName}}</h2>
         </div>
-        <div class="row">
-            @foreach($groups as $key => $value)
-                @include('stock._table')
-            @endforeach
+        <div class="container-fluid">
+            <div class="row main-div">
+
+                <div class="col-md-4 mb-4 left-div">
+                    <h4 class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="text-muted">部門</span>
+                    </h4>
+                    <ul class="list-group mb-3">
+                        @foreach($groups as $key => $value)
+                            <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                <div>
+                                    <h6 class="my-0">
+                                        <a href="">
+                                            {{$value}}
+                                        </a>
+                                    </h6>
+
+                                </div>
+
+                            </li>
+                        @endforeach
+
+                    </ul>
+
+                </div>
+                <div class="col-md-8 mb-8 right-div">
+                    @foreach($groups as $key => $value)
+                        @include('stock._table')
+                    @endforeach
+                </div>
+            </div>
         </div>
     </div>
 

@@ -17,8 +17,9 @@
                     <td>{{$product->product_no}}</td>
                     <td>{{$product->product_name}}</td>
                     <td>
-                        <input class="qty" type="number" name="" id=""
+                        <input class="qty" type="number"
                                data-id="{{$product->id}}"
+                               style="width:100%"
                                value="{{ $stockitems[$product->id] ?? ''}}">
                     </td>
                     <td>{{$product->units->unit_name}}</td>
