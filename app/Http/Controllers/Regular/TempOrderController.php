@@ -31,11 +31,11 @@ class TempOrderController extends Controller
 
     public function store(Request $request){
 
-        $shop_group_id = $request->input('shop_group_id') ?? 1;
+        $shop_group_id = $request->input('shop_group_id') ?? 0;
         $shops = User::getShopsByShopGroup($shop_group_id);
         $dept = $request->dept;
 
-        if ( ! $shop_group_id) return "error";
+        if ( ! $shop_group_id || $shop_group_id === 0) return "error";
         if ( ! $dept) return "error";
 
         $shopids = $shops->pluck('id');

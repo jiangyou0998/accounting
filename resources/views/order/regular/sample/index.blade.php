@@ -1,7 +1,11 @@
 @extends('layouts.app')
 
 @section('title')
-    固定柯打
+    @if(request()->shop_group_id == 5)
+        臨時加單
+    @else
+        固定柯打
+    @endif
 @stop
 
 @section('js')
@@ -51,7 +55,13 @@
     </div>
 
     <div class="style5" style="text-align: center;">
-        <span class="style4">固定柯打</span>
+        <span class="style4">
+            @if(request()->shop_group_id == 5)
+                臨時加單
+            @else
+                固定柯打
+            @endif
+        </span>
     </div>
 
     <hr>
@@ -62,7 +72,9 @@
                 <option value="{{$key}}">{{$value}}</option>
             @endforeach
         </select>
+        @if(request()->shop_group_id != 5)
         <button class="btn btn-primary" onclick="addsample()">新增</button>
+        @endif
         <button class="btn btn-danger" onclick="addtemp()">臨時加單</button>
     </div>
     <hr>

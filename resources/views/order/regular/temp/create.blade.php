@@ -222,7 +222,7 @@
                             if(shop_group_id == 1){
                                 window.open('/order/regular?start=' + start + '&end=' + end + '&dept=' + dept);
                             }else if(shop_group_id == 5){
-
+                                window.open('/order/select_rb_old_order?start=' + start + '&end=' + end + '&dept=' + dept);
                             }else{
                                 window.open('/customer/order/select_old_order?start=' + start + '&end=' + end + '&dept=' + dept + '&shop_group_id=' + shop_group_id);
                             }
