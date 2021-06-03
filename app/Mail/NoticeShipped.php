@@ -30,7 +30,7 @@ class NoticeShipped extends Mailable implements ShouldQueue
      */
     public function __construct($id)
     {
-        $notice = Notice::with('attachments')
+        $notice = Notice::with(['attachments','admin_role'])
             ->find($id);
 
         $this->notice = $notice;
@@ -43,10 +43,10 @@ class NoticeShipped extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        $user = Admin::user();
+//        $user = Admin::user();
         $notice = $this->notice;
         $files = $notice->getFile();
-        $mail = $this->from(env('MAIL_USERNAME','xxx@kingbakery.com.hk'), $user->name)
+        $mail = $this->from(env('MAIL_USERNAME','notice@kingbakery.com.hk'), $notice->admin_role->name)
             ->view('emails.notice.shipped', compact('files', 'notice'))
             ->subject($notice->notice_name);
 

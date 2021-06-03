@@ -34,6 +34,13 @@ class Notice extends Model
         return $this->belongsTo($userModel,"user_id","id");
     }
 
+    public function admin_role()
+    {
+        $roleModel = new \Dcat\Admin\Models\Role();
+
+        return $this->belongsTo($roleModel,"admin_role_id","id");
+    }
+
     public function attachments()
     {
         return $this->hasMany(NoticeAttachment::class,"notice_id","id");
