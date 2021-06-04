@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Models\ForbiddenDate;
 use App\Models\SpecialDate;
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopCartItemLog;
@@ -23,6 +24,7 @@ class WorkshopCartItemController extends Controller
 {
     private $productArr;
     private $special_dates;
+    private $forbidden_dates;
 
     public function update(Request $request, $shopid)
     {
@@ -206,6 +208,7 @@ class WorkshopCartItemController extends Controller
 
         $this->productArr = WorkshopProduct::getProductCatIds();
         $this->special_dates = SpecialDate::where('special_date', $deli_date)->get();
+        $this->forbidden_dates = ForbiddenDate::where('forbidden_date', $deli_date)->get();
 
 //        dump($items);
         foreach ($items as $item) {
@@ -274,6 +277,7 @@ class WorkshopCartItemController extends Controller
 
         $this->productArr = WorkshopProduct::getProductCatIds();
         $this->special_dates = SpecialDate::where('special_date', $deli_date)->get();
+        $this->forbidden_dates = ForbiddenDate::where('forbidden_date', $deli_date)->get();
 //        dump($this->productArr->toArray());
 
         foreach ($products as $product) {
@@ -334,7 +338,9 @@ class WorkshopCartItemController extends Controller
 
         $productArr = $this->productArr;
         $special_dates = $this->special_dates;
+        $forbidden_dates = $this->forbidden_dates;
 //        dump($special_dates);
+        //開放特別下單日子
         foreach ($special_dates as $special_date){
             $catArr = explode(',', $special_date->cat_ids);
             $shopArr = explode(',', $special_date->user_ids);
@@ -345,6 +351,22 @@ class WorkshopCartItemController extends Controller
 
             if (in_array($cat_id, $catArr) && in_array($shopid, $shopArr)){
                 $product->not_deli_time = false;
+                break;
+            }
+        }
+
+        // 2021-06-04 特別禁止下單日子
+        //"禁止下單" 優先級高於 "特別下單"
+        foreach ($forbidden_dates as $forbidden_date){
+            $catArr = explode(',', $forbidden_date->cat_ids);
+            $shopArr = explode(',', $forbidden_date->user_ids);
+//            dump($catArr);
+//            dump($shopArr);
+
+            $cat_id = $productArr[$product->product_id] ?? 0 ;
+
+            if (in_array($cat_id, $catArr) && in_array($shopid, $shopArr)){
+                $product->not_deli_time = true;
                 break;
             }
         }
