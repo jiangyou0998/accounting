@@ -2,6 +2,8 @@
 
 namespace App\Admin\Controllers\Accountings;
 
+use App\Admin\Forms\Statement;
+use App\Admin\Traits\StatementTraits;
 use App\Models\WorkshopCartItem;
 use App\User;
 use Carbon\Carbon;
@@ -9,6 +11,7 @@ use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Card;
+use Dcat\Admin\Widgets\Modal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -16,10 +19,13 @@ use Illuminate\Support\Facades\DB;
 
 class StatementController extends AdminController
 {
+    use StatementTraits;
+
     public function index(Content $content)
     {
         return $content
             ->header('分店STATEMENT')
+            ->body($this->render())
             ->body($this->grid());
     }
 
@@ -82,53 +88,9 @@ class StatementController extends AdminController
     //statement
     public function statement(Request $request)
     {
-        $now = Carbon::now();
-        //如果URL沒有送貨日期,使用當日日期
-        if(isset($request->deli_date)){
-            $deli_date = $request->deli_date;
-        }else{
-            $deli_date = $now->toDateString();
-        }
+        $allData = $this->getStatementData($request);
 
-        //根據權限獲取商店id
-        $shopid = $request->shop ?? 42;
-
-        $month = $this->getMonth();
-
-        $datas = $this->generateStatement($month ,$shopid);
-//        dump($datas->toArray());
-
-        $total = (float)0;
-        foreach ($datas as $data){
-            $total += $data->Total;
-        }
-//        dump($total);
-//        dump($details->toArray());
-//        dump($totals->toArray());
-
-        $user = User::with('address')->find($shopid);
-        $address = $user->address;
-
-        $start_date = (new Carbon($month))->firstOfMonth()->toDateString();
-        $end_date = (new Carbon($month))->endOfMonth()->toDateString();
-
-        //頁面顯示數據
-        $infos = new Collection();
-        $infos->deli_date = $deli_date;
-        $infos->shop = $shopid;
-        $infos->shop_name = $user->txt_name;
-        $infos->now = $now->toDateTimeString();
-        $infos->start_date = $start_date;
-        $infos->end_date = $end_date;
-        $infos->company_name = $user->company_english_name ?? '';
-        $infos->address = $address->address ?? '';
-        $infos->phone = $address->tel ?? '';
-        $infos->fax = $address->fax ?? '';
-        $infos->total = $total;
-        $infos->pocode_prefix = $user->pocode;
-//        dump($infos);
-
-        return view('admin.statement.index',compact('datas','infos'));
+        return view('admin.statement.index',compact('allData'));
     }
 
     /**
@@ -215,6 +177,24 @@ class StatementController extends AdminController
     {
         $month = (request()->month) ?? (Carbon::now()->subMonth()->isoFormat('Y-MM'));
         return $month;
+    }
+
+    protected function batchStatement()
+    {
+        return Modal::make()
+            ->lg()
+            ->title('批量預覽Statement')
+            ->body(Statement::make())
+            ->button('<button class="btn btn-danger"><i class="feather icon-grid"></i>&nbsp;批量預覽Statement</button>');
+    }
+
+    //生成頂部按鈕
+    protected function render()
+    {
+        return <<<HTML
+{$this->batchStatement()}
+<br><br>
+HTML;
     }
 
 }

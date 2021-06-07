@@ -1,11 +1,11 @@
-@foreach($datas as $data)
+@foreach($datas['datas'] as $data)
     <tr>
         <td style="text-align: center;">{{ $data->day }}</td>
         <td style="text-align: left;">
-            <a href="{{route('admin.invoice.view',['shop'=> $infos->shop,'deli_date'=> $data->day])}}"
+            <a href="{{route('admin.invoice.view',['shop'=> $datas['infos']->shop,'deli_date'=> $data->day])}}"
                style="text-decoration:none;"
                target="_blank">
-                {{ $infos->pocode_prefix.\Carbon\Carbon::parse($data->day)->isoFormat('YYMMDD') }}
+                {{ $datas['infos']->pocode_prefix.\Carbon\Carbon::parse($data->day)->isoFormat('YYMMDD') }}
             </a>
         </td>
         <td style="text-align: left;">Invoice</td>

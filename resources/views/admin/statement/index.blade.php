@@ -34,68 +34,77 @@
             .left span{font-weight: bold;}
             .right span{font-weight: bold;}
 
+            .footer {
+                page-break-after:always;
+                bottom : 0;
+            }
+
         </style>
         </head>
 <body>
-<div class="form-inline" style="margin-top: 10px;margin-bottom: 10px;">
+@foreach($allData as $datas)
+    @if($datas['infos']->total > 0)
+        <div class="form-inline" style="margin-top: 10px;margin-bottom: 10px;">
 
-</div>
-<div>
-    <img src="/images/invoice_top.jpeg" alt="Top Header" style="width:100%; border:0px solid black;" border="0">
-</div>
-<br>
-<h3 style="text-align: center;padding-bottom: 6px;"><u>STATEMENT</u></h3>
-<table style="width:100%">
-    <td style="width:70%" align="left">
-        <div><span><b>{{ $infos->company_name }}</b></span></div>
-        <div><span>{{ $infos->address }}</span></div>
-        <div><span>Phone&nbsp;:&nbsp;{{ $infos->phone }}</span></div>
-        <div><span>Fax&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;{{ $infos->fax }}</span></div>
-    </td>
-    <td style="width:30%" align="left">
-
-        <div class='parent'>
-            <div class="left">
-                <div>
-                    <span>Date</span>
-                </div>
-                <div>
-                    <span>From Date</span>
-                </div>
-                <div>
-                    <span>To Date</span>
-                </div>
-            </div>
-            <div class="right">
-                <div>
-                    <span>：{{ $infos->deli_date }}</span>
-                </div>
-                <div>
-                    <span>：{{ $infos->start_date }}</span>
-                </div>
-                <div>
-                    <span>：{{ $infos->end_date }}</span>
-                </div>
-            </div>
         </div>
+        <div>
+            <img src="/images/invoice_top.jpeg" alt="Top Header" style="width:100%; border:0px solid black;" border="0">
+        </div>
+        <br>
+        <h3 style="text-align: center;padding-bottom: 6px;"><u>STATEMENT</u></h3>
+        <table style="width:100%">
+            <td style="width:70%" align="left">
+                <div><span><b>{{ $datas['infos']->shop_name }}</b></span></div>
+                <div><span><b>{{ $datas['infos']->company_name }}</b></span></div>
+                <div><span>{{ $datas['infos']->address }}</span></div>
+                <div><span>Phone&nbsp;:&nbsp;{{ $datas['infos']->phone }}</span></div>
+                <div><span>Fax&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;{{ $datas['infos']->fax }}</span></div>
+            </td>
+            <td style="width:30%" align="left">
 
-    </td>
+                <div class='parent'>
+                    <div class="left">
+                        <div>
+                            <span>Date</span>
+                        </div>
+                        <div>
+                            <span>From Date</span>
+                        </div>
+                        <div>
+                            <span>To Date</span>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div>
+                            <span>：{{ $datas['infos']->deli_date }}</span>
+                        </div>
+                        <div>
+                            <span>：{{ $datas['infos']->start_date }}</span>
+                        </div>
+                        <div>
+                            <span>：{{ $datas['infos']->end_date }}</span>
+                        </div>
+                    </div>
+                </div>
 
-</table>
-<br/>
-<table id="content"  border="0" style="width:100%" cellspacing="0" cellpadding="0" border="2">
+            </td>
 
-    {{--          表頭  --}}
-    @include('admin.statement._table_head')
-    {{--        具體內容--}}
-    @include('admin.statement._table_data')
+        </table>
+        <br/>
+        <table id="content" border="0" style="width:100%" cellspacing="0" cellpadding="0" border="2">
+
+            {{--          表頭  --}}
+            @include('admin.statement._table_head')
+            {{--        具體內容--}}
+            @include('admin.statement._table_data')
 
 
-</table>
-{{--        合計--}}
-@include('admin.statement._total')
-{{--    footer--}}
-@include('admin.statement._footer')
+        </table>
+        {{--        合計--}}
+        @include('admin.statement._total')
+        {{--    footer--}}
+        @include('admin.statement._footer')
+    @endif
+@endforeach
 </body>
-
 </html>
