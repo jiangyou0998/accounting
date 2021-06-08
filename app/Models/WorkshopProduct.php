@@ -4,7 +4,6 @@ namespace App\Models;
 
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class WorkshopProduct extends Model
 {
@@ -35,6 +34,28 @@ class WorkshopProduct extends Model
     public function cartitems()
     {
         return $this->hasMany(WorkshopCartItem::class,"product_id","id");
+    }
+
+    public function stockitems()
+    {
+        return $this->hasMany(StockItem::class,"product_id","id");
+    }
+
+    public function scopeOfGroup($query, $group)
+    {
+        if ($group) {
+            return $query->where('group_id', $group);
+        }
+    }
+
+    public function scopeOfSearch($query, $search)
+    {
+        if ($search) {
+            return $query->where(function($query) use($search){
+                $query->where('product_name', 'like', "%$search%")
+                    ->orWhere('product_no', 'like', "%$search%");
+            });
+        }
     }
 
     public function allProduct()

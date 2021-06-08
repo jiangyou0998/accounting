@@ -124,10 +124,11 @@ class WorkshopCartItem extends Model
     }
 
     //2021-05-06 最近幾個月(從上個月開始算)
-    public function scopeLastMonths($query, $months = 1)
+    public function scopeLastMonths($query, int $months = 1)
     {
-        $start_date = Carbon::now()->subMonth($months)->firstOfMonth()->toDateString();
-        $end_date = Carbon::now()->subMonth(1)->endOfMonth()->toDateString();
+        if($months > 0) $submonth = $months - 1;
+        $start_date = Carbon::now()->subMonth($submonth)->firstOfMonth()->toDateString();
+        $end_date = Carbon::now()->endOfMonth()->toDateString();
         return $query->whereBetween('deli_date', [$start_date, $end_date]);
     }
 

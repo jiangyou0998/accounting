@@ -143,7 +143,8 @@ Route::group(['middleware' => ['auth']], function () {
 });
 
 Route::get('stock', 'StockController@index')->name('stock.index');
-Route::post('stock', 'StockController@add')->name('stock.add');
+Route::post('stock', 'StockController@index')->name('stock.search');
+Route::post('stock/add', 'StockController@add')->name('stock.add');
 Route::get('stock/supplier', 'SupplierStockController@index')->name('stock.supplier.index');
 
 Route::group(['middleware' => ['auth','permission:workshop']], function () {

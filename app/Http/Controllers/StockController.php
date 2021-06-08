@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\StockItem;
-use App\Models\WorkshopCartItem;
 use App\Models\WorkshopGroup;
 use App\Models\WorkshopProduct;
-use App\Models\WorkshopUnit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +18,9 @@ class StockController extends Controller
 
     public function index(Request $request){
 
+        $group = $request->group ?? '';
+        $search = $request->search ?? '';
+
         $productModel = WorkshopProduct::query()
             ->with('units')
             ->whereHas('cartitems', function ($query){
@@ -28,6 +29,8 @@ class StockController extends Controller
                     ->hasQty()
                     ->where('user_id', Auth::id());
             })
+            ->OfGroup($group)
+            ->OfSearch($search)
             ->groupBy('id')
             ->orderBy('product_no')
             ->get();
@@ -36,7 +39,17 @@ class StockController extends Controller
             return [$item['group_id'] => $item];
         });
 
-        $groups = WorkshopGroup::all()->pluck('group_name', 'id')->toArray();
+        $product_ids = WorkshopProduct::query()
+            ->whereHas('cartitems', function ($query) {
+                $query->notDeleted()
+                    ->lastMonths(4)
+                    ->hasQty()
+                    ->where('user_id', Auth::id());
+            })->pluck('id');
+
+        $groups = WorkshopGroup::whereHas('products', function ($query) use($product_ids){
+            $query->whereIn('id', $product_ids);
+        })->pluck('group_name', 'id')->toArray();
 
         //格式:202104
         $lastmonth = Carbon::now()->subMonth()->isoFormat('YMM');
@@ -48,6 +61,7 @@ class StockController extends Controller
             ->toArray();
 
 //        dump($stockitems);
+//        dump($product_ids);
 //        dump($groups);
         return view('stock.index' , compact('products', 'groups', 'stockitems'));
     }

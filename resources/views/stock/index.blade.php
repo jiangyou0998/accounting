@@ -35,22 +35,30 @@
 @section('content')
 
     <div class="container">
+{{--        搜索框--}}
         <div class="d-flex justify-content-end input-group">
 
-            <form class="card p-1" method="POST" action="http://kbhdev.test/library/search">
+            <form class="card p-1" method="POST" action="{{ route('stock.search') }}">
                 <div class="input-group">
                     @csrf
-                    <input id="keyword" name="keyword" type="text" class="form-control" placeholder="" value="">
+                    <input id="search" name="search" type="text" class="form-control" placeholder="" value="{{ request()->search ?? '' }}">
                     <div class="input-group-append">
                         <button type="submit" class="btn btn-primary">查詢</button>
                     </div>
                 </div>
             </form>
         </div>
-        <div class="py-5 text-center">
+{{--        標題--}}
+        <div class="py-4 text-center">
 
-            <h2>庫存-{{\Carbon\Carbon::now()->subMonth()->monthName}}</h2>
+            <h2>庫存-{{\Carbon\Carbon::now()->monthName}}</h2>
         </div>
+{{--        頂部按鈕--}}
+        <div class="d-flex justify-content-end input-group">
+            <a href="{{ route('stock.index') }}" class="btn btn-danger" style="margin-right: 5px;">全部</a>
+            <a href="{{ route('stock.index', ['type' => 'empty']) }}" class="btn btn-success">未填寫</a>
+        </div>
+        <hr>
         <div class="container-fluid">
             <div class="row main-div">
 
@@ -63,7 +71,7 @@
                             <li class="list-group-item d-flex justify-content-between lh-condensed">
                                 <div>
                                     <h6 class="my-0">
-                                        <a href="">
+                                        <a href="{{ route('stock.index', ['group' => $key]) }}">
                                             {{$value}}
                                         </a>
                                     </h6>
@@ -77,9 +85,11 @@
 
                 </div>
                 <div class="col-md-8 mb-8 right-div">
-                    @foreach($groups as $key => $value)
+                    @if(count($products))
                         @include('stock._table')
-                    @endforeach
+                    @else
+                        <h1>暫無查詢結果!</h1>
+                    @endif
                 </div>
             </div>
         </div>
