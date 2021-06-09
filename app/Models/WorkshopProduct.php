@@ -58,6 +58,18 @@ class WorkshopProduct extends Model
         }
     }
 
+    public function scopeOfShopGroup($query, $shop_group_id)
+    {
+        return $query->whereHas('prices', function ($query) use($shop_group_id){
+            $query->where('shop_group_id', $shop_group_id);
+        });
+    }
+
+    public function scopeNotDisabled($query)
+    {
+        return $query->where('status', '!=', 4);
+    }
+
     public function allProduct()
     {
         $cats = new WorkshopCat();

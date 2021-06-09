@@ -46,6 +46,8 @@ Route::group([
     $router->resource('reports/total_sales_by_day_combine', 'Reports\TotalSalesByDayCombineReportController');
     //分店銷售查詢
     $router->resource('reports/total_sales_by_search', 'Reports\TotalSalesBySearchReportController');
+    //每月庫存報告
+    $router->resource('reports/stock_by_month', 'Reports\StockByMonthReportController');
 
     //會計相關
     //statement
