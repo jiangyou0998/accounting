@@ -52,8 +52,8 @@ class StockController extends Controller
         })->pluck('group_name', 'id')->toArray();
 
         //格式:202104
-        $lastmonth = Carbon::now()->subMonth()->isoFormat('YMM');
-        $month = $request->input('month') ?? $lastmonth;
+        $currentmonth = Carbon::now()->isoFormat('YMM');
+        $month = $request->input('month') ?? $currentmonth;
         $stockitems = StockItem::all()
             ->where('user_id', Auth::id())
             ->where('month', $month)
@@ -69,10 +69,10 @@ class StockController extends Controller
     public function add(Request $request)
     {
         //格式:202104
-        $lastmonth = Carbon::now()->subMonth()->isoFormat('YMM');
+        $currentmonth = Carbon::now()->isoFormat('YMM');
         $user = $request->user();
         $product_id = $request->input('product_id');
-        $month = $request->input('month') ?? $lastmonth;
+        $month = $request->input('month') ?? $currentmonth;
         $qty = $request->input('qty');
 
         // 从数据库中查询该商品是否已经在购物车中
