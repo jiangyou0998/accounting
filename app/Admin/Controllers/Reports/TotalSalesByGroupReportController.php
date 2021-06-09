@@ -2,7 +2,6 @@
 
 namespace App\Admin\Controllers\Reports;
 
-use App\Models\TblUser;
 use App\Models\WorkshopCartItem;
 use App\User;
 use Carbon\Carbon;

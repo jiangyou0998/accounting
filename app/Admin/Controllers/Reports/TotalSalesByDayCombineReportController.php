@@ -2,8 +2,6 @@
 
 namespace App\Admin\Controllers\Reports;
 
-use App\Models\TblOrderZCat;
-use App\Models\TblOrderZGroup;
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopCat;
 use App\User;
