@@ -59,6 +59,8 @@ class WorkshopCartItemLogController extends AdminController
                    'DELETE' => '刪除',
                    'MODIFY' => '改單'
                 ]);
+
+                $filter->like('operate_users.txt_name','操作人');
             });
         });
     }
