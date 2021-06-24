@@ -45,3 +45,19 @@ function getMonth()
     }
     return $month;
 }
+
+//PHP自动给URl添加http://前缀
+//https://blog.csdn.net/qq_27968607/article/details/51744874
+function fixUrl($url, $def = false, $prefix = false)
+{
+    $url = trim($url);
+    if (empty($url)) {
+        return $def;
+    }
+
+    if (count(explode('://', $url)) > 1) {
+        return $url;
+    } else {
+        return $prefix === false ? 'http://' . $url : $prefix . $url;
+    }
+}
