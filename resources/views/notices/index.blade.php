@@ -90,7 +90,7 @@
                     <td width="20%">{{$dept_names[$notice->admin_role_id]}}</td>
                     <td width="10%">
                         @if($notice->first_path)
-                            <a href="{{'http://'.$notice->first_path}}" target="_blank">鏈接</a>
+                            <a href="{{ fixUrl($notice->first_path) }}" target="_blank">鏈接</a>
                         @endif
                     </td>
                 </tr>
