@@ -95,8 +95,8 @@ class LibraryController extends Controller
         $keyword = $request->input('keyword');
         //獲取所有分組名
         $library_groups = LibraryGroup::selectOptionsWithoutMain();
-
-        $libraries = Library::where('name', 'like', "%{$keyword}%")->canView()->get();
+        
+        $libraries = Library::whereRaw('lower(name) like lower(?)', ["%{$keyword}%"])->canView()->get();
 
         //加入分組名
         foreach ($libraries as $library){
