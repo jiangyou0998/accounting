@@ -50,7 +50,10 @@ class TotalSalesBySearchReportController extends AdminController
             $shop_id = isset($_REQUEST['shop_id']) ? $_REQUEST['shop_id'] : "";
             $shop = isset($_REQUEST['shop']) ? $_REQUEST['shop'] : "";
 
-            $data = $this->generate($start, $end,$no_start,$no_end, $product_id, $shop_id);
+            $shop_group = request()->group ?? 0;
+            $product_group = request()->product_group ?? 0;
+
+            $data = $this->generate($start, $end, $no_start, $no_end, $product_id, $product_group, $shop_id, $shop_group);
 
             //2021-04-21 新增總價錢統計
             $total = 0;
@@ -103,14 +106,19 @@ HTML;
                 // 更改为 panel 布局
                 $filter->panel();
 
+                //2021-07-15 根據細類查詢
+                $filter->equal('product_group', '細類')->select('api/group2')->default("");
+
                 $filter->equal('product_id', '產品')
                     ->multipleSelectTable(ProductTable::make()) // 设置渲染类实例，并传递自定义参数
                     ->title('弹窗标题')
                     ->dialogWidth('50%') // 弹窗宽度，默认 800px
                     ->model(WorkshopProduct::class, 'id', 'product_name'); // 设置编辑数据显示
-//                $filter->equal('shop', '分店')->select('api/kbshop');
 
 //                $filter->month('month', '報表日期');
+
+                //2021-07-15 根據價格分組查詢
+                $filter->equal('group', '分組')->select(getReportShop());
 
                 $filter->equal('shop_id', '分店')
                     ->multipleSelectTable(ShopTable::make()) // 设置渲染类实例，并传递自定义参数
@@ -125,16 +133,17 @@ HTML;
                     ->sortBy('product_no')
                     ->pluck('product_name','product_no');
 
-
                 $product_nos = $product_nos->map(function ($item, $key) {
                     return $key.'-'.$item;
                 });
 
-                $filter->equal('start_no', '開始編號')
-                    ->select($product_nos);
-
-                $filter->equal('end_no', '結束編號')
-                    ->select($product_nos);
+//                $filter->equal('start_no', '開始編號')
+//                    ->select($product_nos);
+//                $filter->equal('end_no', '結束編號')
+//                    ->select($product_nos);
+                
+                $filter->equal('start_no', '開始編號');
+                $filter->equal('end_no', '結束編號');
 
             });
 
@@ -152,11 +161,27 @@ HTML;
      *
      * @return array
      */
-    public function generate($start, $end,$no_start,$no_end, $product_id, $shop_id)
+    public function generate($start, $end, $no_start, $no_end, $product_id, $product_group, $shop_id, $shop_group)
     {
         $product_ids = explode(',', $product_id);
 //        dump($product_ids);
-        $shop_ids = explode(',', $shop_id);
+        $shop_ids = $shop_id ? explode(',', $shop_id) : [];
+
+        if($shop_group === 0){
+            $shops = User::getAllShopsAndCustomerShops();
+        }else{
+            $shops = User::getShopsByShopGroup($shop_group);
+        }
+
+        //2021-07-15 添加根據分組選擇分店
+        $shop_ids_by_group = $shops->pluck('id')->toArray();
+
+        if(count($shop_ids) > 0){
+            $shop_ids = array_intersect($shop_ids, $shop_ids_by_group);
+        }else{
+            $shop_ids = $shop_ids_by_group;
+        }
+
 //        $cats = TblOrderZCat::getCats();
         $testids = User::getTestUserIDs();
 
@@ -194,8 +219,12 @@ HTML;
             $cartitem = $cartitem->whereIn('workshop_products.id', $product_ids);
         }
 
-//        dump($shop_ids);
-        if ($shop_id) {
+        if ($product_group) {
+            $cartitem = $cartitem->where('workshop_products.group_id', $product_group);
+        }
+
+        //2021-07-15 分組 或 分店 隨便填一個就添加條件
+        if ($shop_id || $shop_group) {
             $cartitem = $cartitem->whereIn('users.id', $shop_ids);
         }
 
