@@ -118,7 +118,7 @@ HTML;
 //                $filter->month('month', '報表日期');
 
                 //2021-07-15 根據價格分組查詢
-                $filter->equal('group', '分組')->select(getReportShop());
+                $filter->equal('group', '分組')->multipleSelect(getReportShop());
 
                 $filter->equal('shop_id', '分店')
                     ->multipleSelectTable(ShopTable::make()) // 设置渲染类实例，并传递自定义参数
@@ -141,7 +141,7 @@ HTML;
 //                    ->select($product_nos);
 //                $filter->equal('end_no', '結束編號')
 //                    ->select($product_nos);
-                
+
                 $filter->equal('start_no', '開始編號');
                 $filter->equal('end_no', '結束編號');
 

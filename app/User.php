@@ -198,7 +198,11 @@ class User extends Authenticatable
         $users = new User();
         $shops = $users
             ->whereHas('shop_groups', function ($query) use($shop_group_id){
-                $query->where('id', '=', $shop_group_id);
+                if(is_array($shop_group_id)){
+                    $query->whereIn('id', $shop_group_id);
+                }else{
+                    $query->where('id', '=', $shop_group_id);
+                }
             })
             ->orderBy('name')
             ->get(['id','report_name']);
