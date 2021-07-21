@@ -169,8 +169,8 @@ class WorkshopProductController extends AdminController
                     $titles[$key . '_min'] = $value . 'MOQ';
                 }
             } else {
-                $titles[$shop_group . '_price'] = $shopGroupArr[$shop_group] ?? '' . '單價';
-                $titles[$shop_group . '_min'] = $shopGroupArr[$shop_group] ?? '' . 'MOQ';
+                $titles[$shop_group . '_price'] = ( $shopGroupArr[$shop_group] ?? '' ). '單價';
+                $titles[$shop_group . '_min'] = ( $shopGroupArr[$shop_group] ?? '' ). 'MOQ';
             }
 
             $grid->export($titles)->csv()->rows(function (array $rows) use ($groupArr, $unitArr, $shop_group, $shopGroupArr, $priceArr) {
