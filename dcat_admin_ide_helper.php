@@ -46,6 +46,7 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection guard_name
      * @property Grid\Column|Collection permissions
      * @property Grid\Column|Collection users
+     * @property Grid\Column|Collection price
      * @property Grid\Column|Collection type
      * @property Grid\Column|Collection detail
      * @property Grid\Column|Collection is_enabled
@@ -77,6 +78,9 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection payload
      * @property Grid\Column|Collection exception
      * @property Grid\Column|Collection failed_at
+     * @property Grid\Column|Collection cat_ids
+     * @property Grid\Column|Collection user_ids
+     * @property Grid\Column|Collection forbidden_date
      * @property Grid\Column|Collection form_name
      * @property Grid\Column|Collection admin_role_id
      * @property Grid\Column|Collection file_path
@@ -121,7 +125,6 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection token
      * @property Grid\Column|Collection product_id
      * @property Grid\Column|Collection shop_group_id
-     * @property Grid\Column|Collection price
      * @property Grid\Column|Collection cuttime
      * @property Grid\Column|Collection phase
      * @property Grid\Column|Collection canordertime
@@ -143,8 +146,6 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection eng_address
      * @property Grid\Column|Collection int_area
      * @property Grid\Column|Collection oper_time
-     * @property Grid\Column|Collection cat_ids
-     * @property Grid\Column|Collection user_ids
      * @property Grid\Column|Collection special_date
      * @property Grid\Column|Collection month
      * @property Grid\Column|Collection supplier_id
@@ -238,6 +239,7 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection guard_name(string $label = null)
      * @method Grid\Column|Collection permissions(string $label = null)
      * @method Grid\Column|Collection users(string $label = null)
+     * @method Grid\Column|Collection price(string $label = null)
      * @method Grid\Column|Collection type(string $label = null)
      * @method Grid\Column|Collection detail(string $label = null)
      * @method Grid\Column|Collection is_enabled(string $label = null)
@@ -269,6 +271,9 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection payload(string $label = null)
      * @method Grid\Column|Collection exception(string $label = null)
      * @method Grid\Column|Collection failed_at(string $label = null)
+     * @method Grid\Column|Collection cat_ids(string $label = null)
+     * @method Grid\Column|Collection user_ids(string $label = null)
+     * @method Grid\Column|Collection forbidden_date(string $label = null)
      * @method Grid\Column|Collection form_name(string $label = null)
      * @method Grid\Column|Collection admin_role_id(string $label = null)
      * @method Grid\Column|Collection file_path(string $label = null)
@@ -313,7 +318,6 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection token(string $label = null)
      * @method Grid\Column|Collection product_id(string $label = null)
      * @method Grid\Column|Collection shop_group_id(string $label = null)
-     * @method Grid\Column|Collection price(string $label = null)
      * @method Grid\Column|Collection cuttime(string $label = null)
      * @method Grid\Column|Collection phase(string $label = null)
      * @method Grid\Column|Collection canordertime(string $label = null)
@@ -335,8 +339,6 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection eng_address(string $label = null)
      * @method Grid\Column|Collection int_area(string $label = null)
      * @method Grid\Column|Collection oper_time(string $label = null)
-     * @method Grid\Column|Collection cat_ids(string $label = null)
-     * @method Grid\Column|Collection user_ids(string $label = null)
      * @method Grid\Column|Collection special_date(string $label = null)
      * @method Grid\Column|Collection month(string $label = null)
      * @method Grid\Column|Collection supplier_id(string $label = null)
@@ -435,6 +437,7 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection guard_name
      * @property Show\Field|Collection permissions
      * @property Show\Field|Collection users
+     * @property Show\Field|Collection price
      * @property Show\Field|Collection type
      * @property Show\Field|Collection detail
      * @property Show\Field|Collection is_enabled
@@ -466,6 +469,9 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection payload
      * @property Show\Field|Collection exception
      * @property Show\Field|Collection failed_at
+     * @property Show\Field|Collection cat_ids
+     * @property Show\Field|Collection user_ids
+     * @property Show\Field|Collection forbidden_date
      * @property Show\Field|Collection form_name
      * @property Show\Field|Collection admin_role_id
      * @property Show\Field|Collection file_path
@@ -510,7 +516,6 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection token
      * @property Show\Field|Collection product_id
      * @property Show\Field|Collection shop_group_id
-     * @property Show\Field|Collection price
      * @property Show\Field|Collection cuttime
      * @property Show\Field|Collection phase
      * @property Show\Field|Collection canordertime
@@ -532,8 +537,6 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection eng_address
      * @property Show\Field|Collection int_area
      * @property Show\Field|Collection oper_time
-     * @property Show\Field|Collection cat_ids
-     * @property Show\Field|Collection user_ids
      * @property Show\Field|Collection special_date
      * @property Show\Field|Collection month
      * @property Show\Field|Collection supplier_id
@@ -627,6 +630,7 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection guard_name(string $label = null)
      * @method Show\Field|Collection permissions(string $label = null)
      * @method Show\Field|Collection users(string $label = null)
+     * @method Show\Field|Collection price(string $label = null)
      * @method Show\Field|Collection type(string $label = null)
      * @method Show\Field|Collection detail(string $label = null)
      * @method Show\Field|Collection is_enabled(string $label = null)
@@ -658,6 +662,9 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection payload(string $label = null)
      * @method Show\Field|Collection exception(string $label = null)
      * @method Show\Field|Collection failed_at(string $label = null)
+     * @method Show\Field|Collection cat_ids(string $label = null)
+     * @method Show\Field|Collection user_ids(string $label = null)
+     * @method Show\Field|Collection forbidden_date(string $label = null)
      * @method Show\Field|Collection form_name(string $label = null)
      * @method Show\Field|Collection admin_role_id(string $label = null)
      * @method Show\Field|Collection file_path(string $label = null)
@@ -702,7 +709,6 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection token(string $label = null)
      * @method Show\Field|Collection product_id(string $label = null)
      * @method Show\Field|Collection shop_group_id(string $label = null)
-     * @method Show\Field|Collection price(string $label = null)
      * @method Show\Field|Collection cuttime(string $label = null)
      * @method Show\Field|Collection phase(string $label = null)
      * @method Show\Field|Collection canordertime(string $label = null)
@@ -724,8 +730,6 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection eng_address(string $label = null)
      * @method Show\Field|Collection int_area(string $label = null)
      * @method Show\Field|Collection oper_time(string $label = null)
-     * @method Show\Field|Collection cat_ids(string $label = null)
-     * @method Show\Field|Collection user_ids(string $label = null)
      * @method Show\Field|Collection special_date(string $label = null)
      * @method Show\Field|Collection month(string $label = null)
      * @method Show\Field|Collection supplier_id(string $label = null)

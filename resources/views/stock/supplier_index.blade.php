@@ -113,28 +113,40 @@
                     </thead>
 
                     <tbody class="table-striped" style="background-color: white">
-                    <tr>
-                    <td>1000001</td>
-                    <td>咸麵粒</td>
-                    <td><input class="input-sm" type="number" name="" id="" style="width:100%"></td>
-                    <td><select name="" id="">
-                            <option value="">個</option>
-                            <option value="">箱</option>
-                        </select></td>
-                    </tr>
-                    <tr>
-                        <td>1000001</td>
-                        <td>咸麵粒咸麵粒咸麵粒咸麵粒咸麵粒咸麵粒</td>
-                        <td><input class="input-sm" type="number" name="" id="" style="width:100%"></td>
-                        <td>個</td>
-                    </tr>
+{{--                    <tr>--}}
+{{--                    <td>1000001</td>--}}
+{{--                    <td>咸麵粒</td>--}}
+{{--                    <td><input class="input-sm" type="number" name="" id="" style="width:100%"></td>--}}
+{{--                    <td><select name="" id="">--}}
+{{--                            <option value="">個</option>--}}
+{{--                            <option value="">箱</option>--}}
+{{--                        </select></td>--}}
+{{--                    </tr>--}}
 
-                    </tbody>
-                </table>
+                    @foreach($products as $product)
+                        <tr>
+                            <td>{{ $product->product_no }}</td>
+                            <td>{{ $product->product_name }}</td>
+                            <td><input class="input-sm" type="number" name="" id="" style="width:100%"></td>
+                            <td>
+                                @if($product->unit_id === $product->base_unit_id)
+                                    {{ $product->unit->unit_name }}
+                                @else
+                                    <select name="" id="">
+                                        <option value="">{{ $product->unit->unit_name ?? '' }}</option>
+                                        <option value="">{{ $product->base_unit->unit_name ?? '' }}</option>
+                                    </select>
+                                @endif
+                            </td>
+                        </tr>
+                    @endforeach
+
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-    </div>
 
-@endsection
+    @endsection
 
 

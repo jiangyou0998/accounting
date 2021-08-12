@@ -158,6 +158,7 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
 //Route::get('/import/reset/price', 'ImportController@resetPrice');
 //Route::get('/import/customer/price', 'ImportController@importCustomerPrice');
 //Route::get('/import/supplier', 'ImportController@importSupplierItems');
+Route::get('/import/supplier/product', 'ImportController@importSupplierProduct');
 
 //Route::get('/api/resetpassword', 'Api\ApiController@resetAllPassword');
 //Route::get('/api/resetshoppassword', 'Api\ApiController@resetShopPassword');

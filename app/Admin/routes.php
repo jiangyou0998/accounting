@@ -68,6 +68,15 @@ Route::group([
     $router->resource('front/shop_groups', 'ShopGroupController');
     $router->resource('pages/front_users', 'UserController');
 
+    //供應商
+    $router->resource('suppliers', 'SupplierController');
+    //供應商產品
+    $router->resource('supplier_products', 'SupplierProductController');
+    //
+    $router->resource('supplier_stock_items', 'SupplierStockItemController');
+    //
+    $router->resource('supplier_stock_item_list', 'SupplierStockItemListController');
+
     //價格分組
     $router->resource('shopgroup', 'ShopGroupController');
     //分店用戶管理
@@ -76,8 +85,6 @@ Route::group([
     //前台用戶分組
     $router->resource('frontgroup', 'FrontGroupController');
 
-    //供應商產品
-    $router->resource('supplier_products', 'SupplierProductController');
 
     //價格查詢
     $router->resource('prices', 'PriceController');
