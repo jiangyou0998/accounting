@@ -45,6 +45,11 @@ class ShopGroup extends Model
         return $query->whereNotIn('id', [1, 5]);
     }
 
+    public function scopeOnlyKB($query)
+    {
+        return $query->where('id', 1);
+    }
+
     //獲取外客分組
     public static function getCustomerGroup()
     {

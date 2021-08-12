@@ -10,9 +10,10 @@ class AddressBookController extends Controller
     //
     public function index(Request $request)
     {
-        $shop_groups = ShopGroup::has('users')->pluck('name','id');
+        $shop_groups = ShopGroup::has('users')->onlyKB()->pluck('name','id');
 
         $shop_addresses = ShopGroup::has('users')
+            ->onlyKB()
             ->with('users_with_addresses');
 
         if(isset($request->group)){
