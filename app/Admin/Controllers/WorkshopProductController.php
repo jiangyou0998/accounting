@@ -265,7 +265,9 @@ class WorkshopProductController extends AdminController
             });
 
             $form->display('id',"ID");
-            $form->text('product_name')->required();
+            $form->text('product_name')->required()->rules('required|regex:/^[^\'\"]+$/', [
+                'regex' => '「名稱」不能包含引號',
+            ]);
             $form->text('product_no')->required()->rules("required|
                 max:7|unique:workshop_products,product_no,{$form->getKey()},id", [
                 'max' => '編號最大長度為7',
