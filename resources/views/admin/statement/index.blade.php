@@ -52,6 +52,12 @@
         </div>
         <br>
         <h3 style="text-align: center;padding-bottom: 6px;"><u>STATEMENT</u></h3>
+        {{--            2021-09-09 新增列印時間顯示--}}
+        <tr>
+            <div align="right" style="font-weight: bold;">
+                <span>Print Time：{{ \Carbon\Carbon::now()->toDateTimeString() }}</span>
+            </div>
+        </tr>
         <table style="width:100%">
             <td style="width:70%" align="left">
                 <div><span><b>{{ $datas['infos']->shop_name }}</b></span></div>

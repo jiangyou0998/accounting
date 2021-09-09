@@ -56,6 +56,14 @@
         <br>
         <table style="width:100%">
             <h3 style="text-align: center;padding-bottom: 6px;"><u>Delivery Note : {{ $data['infos']->pocode }}</u></h3>
+
+            {{--            2021-09-09 新增列印時間顯示--}}
+            <tr>
+                <div align="right" style="font-weight: bold;">
+                    <span>Print Time：{{ \Carbon\Carbon::now()->toDateTimeString() }}</span>
+                </div>
+            </tr>
+            
             <tr>
                 {{--                <td style="width:33%"></td>--}}
                 <td style="width:70%" align="left">

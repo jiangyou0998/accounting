@@ -64,6 +64,14 @@
                     @endif
                 </u>
             </h3>
+
+{{--            2021-09-09 新增列印時間顯示--}}
+            <tr>
+                <div align="right" style="font-weight: bold;">
+                    <span>Print Time：{{ \Carbon\Carbon::now()->toDateTimeString() }}</span>
+                </div>
+            </tr>
+
             <tr>
                 {{--                <td style="width:33%"></td>--}}
                 <td style="width:70%" align="left">
