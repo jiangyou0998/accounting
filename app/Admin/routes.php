@@ -78,6 +78,17 @@ Route::group([
     $router->resource('library', 'Library\LibraryController');
     $router->resource('library_group', 'Library\LibraryGroupController');
 
+    //員工
+    $router->resource('employees', 'EmployeeController');
+
+    //索償等級
+    $router->resource('claim_levels', 'ClaimLevelController');
+    $router->resource('claim_level_details', 'ClaimLevelDetailController');
+
+    //索償
+    $router->resource('claims', 'ClaimController');
+
+
     //test
 //    $router->get('data/', 'DataChangeController@index');
 //    $router->put('data/test', 'DataChangeController@test');

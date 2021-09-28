@@ -118,6 +118,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('kb/sample/show_group/{catid}', 'KB\KBWorkshopOrderSampleController@showGroup')->name('kb.sample.show_group');
     Route::post('kb/sample/show_product/{groupid}', 'KB\KBWorkshopOrderSampleController@showProduct')->name('kb.sample.show_product');
 
+    //HR
+    //醫療索償
+    Route::get('claim', 'ClaimController@index')->name('claim');
+    Route::post('claim', 'ClaimController@store')->name('claim.store');
+    Route::post('claim/message', 'ClaimController@claimMessage')->name('claim.message');
+
     //報告
     Route::get('support', 'SupportController@index')->name('support');
 
@@ -162,6 +168,7 @@ Route::group(['middleware' => ['auth']], function () {
 
 
 //Route::get('/import', 'ImportController@import');
+//Route::get('/import/employee', 'Import\EmployeeImportController@import');
 //Route::get('/importryoyuprice', 'ImportController@importRyoyuPrice');
 //Route::get('/api/resetpassword', 'Api\ApiController@resetAllPassword');
 //Route::get('/api/resetshoppassword', 'Api\ApiController@resetShopPassword');
