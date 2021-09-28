@@ -86,7 +86,9 @@ class EmployeeController extends AdminController
                 'max' => '編號最大長度為7',
                 'unique'   => '編號已存在',
             ]);
+            $form->text('title')->required();
             $form->text('claim_level')->required();
+            $form->date('employment_date')->required();
             $form->radio('is_worked')
                 ->when(0, function (Form $form) {
                     $alertText = '離職日期不填寫，默認為今天';

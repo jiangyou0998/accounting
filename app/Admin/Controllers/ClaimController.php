@@ -9,6 +9,7 @@ use App\Models\Claim;
 use App\Models\ClaimLevel;
 use App\Models\Employee;
 use Carbon\Carbon;
+use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
@@ -26,6 +27,14 @@ class ClaimController extends AdminController
     protected function grid()
     {
         return Grid::make(new Claim(), function (Grid $grid) {
+
+            if(Admin::user()->isAdministrator() === false){
+                // 禁用创建按钮
+                $grid->disableCreateButton();
+                // 禁用行操作按钮
+                $grid->disableActions();
+            }
+
             $grid->model()->with(['user', 'employee', 'claim_level', 'illness']);
             $grid->column('id')->sortable();
             $grid->column('employee.name', '員工');
@@ -56,51 +65,9 @@ class ClaimController extends AdminController
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
 
-//            $grid->tools(new ApproveClaim());
-//            $grid->render(new ApproveClaim());
-//            $grid->xxx->display('審核')->modal(function ($modal) {
-//                $modal->title('自定义弹窗标题');
-//
-//                // 允许在闭包内返回异步加载类的实例
-//                return ApproveClaim::make();
-//            });;
-
-//            $grid->actions([new ApproveClaim()]);
-//
-//
-//            $grid->column('star', '-')
-//                ->action(new RowApproveClaim())
-//
-//                ->button('default')
-//                ;
-
-//            $grid->column('star2', '-2')
-////                ->action(new ApproveClaim())->title('666666')
-//                ->button('<button class="btn btn-danger"><i class="feather icon-grid"></i>&nbsp;不批准</button>');
-//
-//            $grid->column('button','button')->display('審核')->modal(function ($modal) {
-//                $modal->title('自定义弹窗标题');
-//
-//                // 允许在闭包内返回异步加载类的实例
-//                return RowApproveClaim::make();
-//            });
-
             $grid->column('button2','審批')->display('審批')->modal(function ($modal) {
                 return ApproveClaim::make()->payload(['id' => $this->id]);
             });
-
-//            $model1 = $this->model1();
-//            $grid->column('id','查看')->display(function ($id){
-//                return $this->model1();
-//            });
-
-//            $grid->actions(function (Grid\Displayers\Actions $actions) {
-//                // append一个操作
-//                $actions->append('<a href=""><i class="fa fa-eye"></i></a>');
-//
-//                // prepend一个操作
-//                $actions->prepend('<a href=""><i class="fa fa-paper-plane"></i></a>');
-//            });
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
