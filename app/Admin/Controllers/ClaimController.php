@@ -37,7 +37,7 @@ class ClaimController extends AdminController
 
             $grid->model()->with(['user', 'employee', 'claim_level', 'illness']);
             $grid->column('id')->sortable();
-            $grid->column('employee.name', '員工');
+            $grid->column('employee.name', '員工')->link(admin_url('claims' , ['employee_id' => 1]));
             $grid->column('claim_level.plan_no', '索償等級');
             $grid->column('claim_level.type_name', '索償類型');
             $grid->column('user.name', '批准人');

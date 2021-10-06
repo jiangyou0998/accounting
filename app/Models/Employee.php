@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Employee extends Model
@@ -13,9 +14,9 @@ class Employee extends Model
 
     public $timestamps = true;
 
-    public static function getEmployees(){
+    public static function getEmployees(int $date_before = 0){
 
-        $employees = self::isWorked()->get();
+        $employees = self::isWorked()->beforeDate($date_before)->get();
         foreach ($employees as $employee){
             $employee->code_and_name = $employee->code . '-' .$employee->name;
         }
@@ -26,5 +27,11 @@ class Employee extends Model
     public function scopeIsWorked($query)
     {
         return $query->where('is_worked', 1);
+    }
+
+    public function scopeBeforeDate($query, int $date_before)
+    {
+        $date = Carbon::today()->subDays($date_before)->toDateString();
+        return $query->where('employment_date', '<' , $date);
     }
 }

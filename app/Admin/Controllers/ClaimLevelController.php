@@ -9,6 +9,7 @@ use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Widgets\Alert;
+use Dcat\Admin\Widgets\Card;
 use Illuminate\Support\Facades\DB;
 
 class ClaimLevelController extends AdminController
@@ -22,9 +23,21 @@ class ClaimLevelController extends AdminController
     {
         return Grid::make(new ClaimLevel(), function (Grid $grid) {
 //            $grid->column('id')->sortable();
+            $grid->header(function ($collection) {
+                $alertText = '注意！相同分組共用索償次數！';
+//                $grid->html(Alert::make($alertText, '提示')->info());
+                $card = Card::make('', Alert::make($alertText, '提示')->danger());
+
+                return $card;
+            });
+
             $grid->model()->orderBy('plan_no');
             $grid->column('plan_no')->display(function($plan_no){
                 return 'Plan'.$plan_no;
+            });
+
+            $grid->column('plan_code')->display(function($plan_no){
+                return '分組'.$plan_no;
             });
 
             $grid->column('type_name')->link(function ($type_name) {
@@ -75,6 +88,7 @@ class ClaimLevelController extends AdminController
         return Form::make($builder, function (Form $form) {
             $form->display('id');
             $form->text('plan_no')->required();
+            $form->text('plan_code')->required()->placeholder('相同分組共用次數');
             $form->text('type_name')->required()->placeholder('例如：門診、住院');
 
 //            $form->hasMany('details', '索償設置', function (Form\NestedForm $form){

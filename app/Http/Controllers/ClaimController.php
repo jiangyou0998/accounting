@@ -18,15 +18,15 @@ use Symfony\Component\Console\Input\Input;
 class ClaimController extends Controller
 {
     //
-    public function index(Request $request)
+    public function index()
     {
-        $employees = Employee::getEmployees();
+        $employees = Employee::getEmployees(365);
 
 //        dump(old());
 //        dump($employees->toArray());
         $claim_levels = ClaimLevel::getClaimLevelsGroupByPlanNo();
 
-        $claims = Claim::where('status', 1)->get()->groupBy('employee_id');
+//        $claims = Claim::where('status', 1)->get()->groupBy('employee_id');
 
         $claim_illness = SelectorItem::getSelectorItems('claim_illness')
             ->pluck('item_name', 'id');
@@ -59,6 +59,8 @@ class ClaimController extends Controller
             session()->flash('danger', '申請次數達到上限！');
             return redirect()->back()->withInput();
         }
+
+        //todo 入職一年才能索償
 
         //只能申請90天內
         $expired_day = 90;

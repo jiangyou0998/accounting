@@ -44,27 +44,13 @@ class ApproveClaim extends Form implements LazyRenderable
 
         if($status == Claim::STATUS_APPROVED){
             $claim_date = $claim->claim_date;
+            $employee_id = $claim->employee_id;
             $claim_level_id = $claim->claim_level_id;
-            $times_of_day = Claim::where('claim_date', $claim_date)
-                ->where('employee_id', $claim->employee_id)
-                ->where('claim_level_id', $claim_level_id)
-                ->where('id', '!=', $id)
-                ->where('status', 1)
-                ->count();
+            $times_of_day = Claim::getTimesOfDay($employee_id, $claim_level_id, $claim_date, $id);
 
-            $year_start = Carbon::parse($claim_date)->firstOfYear()->toDateString();
-            $year_end = Carbon::parse($claim_date)->endOfYear()->toDateString();
-            $times_of_year = Claim::whereBetween('claim_date', [ $year_start, $year_end ])
-                ->where('employee_id', $claim->employee_id)
-                ->where('claim_level_id', $claim_level_id)
-                ->where('id', '!=', $id)
-                ->where('status', 1)
-                ->count();
+            $times_of_year = Claim::getTimesOfYear($employee_id, $claim_level_id, $claim_date, $id);
 
-            $claim_level = ClaimLevelDetail::where('claim_level_id', $claim->claim_level_id)
-                ->where('start_date', '<=', $claim->claim_date)
-                ->where('end_date', '>=', $claim->claim_date)
-                ->first();
+            $claim_level = ClaimLevelDetail::getClaimLevelDetail($claim_level_id, $claim_date);
             $times_per_day = $claim_level->times_per_day;
             $times_per_year = $claim_level->times_per_year;
 
@@ -93,7 +79,8 @@ class ApproveClaim extends Form implements LazyRenderable
         $claim->approver_id = Admin::user()->id;
         $claim->save();
 
-        return $this->success();
+//        dd(request());
+//        return $this->addSavedScript();
     }
 
     /**
@@ -107,7 +94,7 @@ class ApproveClaim extends Form implements LazyRenderable
 //        $this->confirm('您确定要提交表单吗');
         $this->html('<img src="'.$claim->file_path.'" alt=""  width="500">', '圖片');
         $this->radio('status', '審批狀態')->options([ 0 => '申請中', 1 => '已批核', 2 => '不理賠'])->default($status)->required();
-        $this->text('remark', '備註')->required();
+        $this->text('remark', '備註');
     }
 
     /**
@@ -120,6 +107,35 @@ class ApproveClaim extends Form implements LazyRenderable
         return [
 
         ];
+    }
+
+    /**
+     * 设置表单保存成功后执行的JS
+     *
+     * v1.6.5 版本之前请用 buildSuccessScript 方法
+     *
+     * @return string|void
+     */
+    protected function addSavedScript()
+    {
+        return <<<JS
+        // data 为接口返回数据
+        if (! data.status) {
+            Dcat.error(data.message);
+
+            return false;
+        }
+
+        Dcat.success('審批成功');
+
+        if (data.redirect) {
+            //reload頁面,保留搜索條件
+            Dcat.reload();
+        }
+
+        // 中止后续逻辑（默认逻辑）
+        return false;
+JS;
     }
 
 }

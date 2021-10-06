@@ -62,13 +62,43 @@ class Claim extends Model
 
     }
 
+    //獲取所有相同plan_code的claim_level_id
+    public static function getAllClaimLevelID($claim_level_id){
+
+        $claim_level = ClaimLevel::find($claim_level_id);
+        $plan_code = $claim_level->plan_code ?? -1;
+        $all_claim_level_id = ClaimLevel::where('plan_code', $plan_code)->pluck('id');
+
+        return $all_claim_level_id;
+    }
+
     //
-    public static function getTimesOfYear($employee_id, $claim_level_id, $claim_date){
+    public static function getTimesOfDay($employee_id, $claim_level_id, $claim_date, $id = 0){
+
+        $all_claim_level_id = self::getAllClaimLevelID($claim_level_id);
+
+        $times_of_day = self::where('claim_date', $claim_date)
+            ->where('employee_id', $employee_id)
+            ->whereIn('claim_level_id', $all_claim_level_id)
+            ->where('id', '!=', $id)
+            ->where('status', 1)
+            ->count();
+
+        return $times_of_day;
+    }
+
+
+    //
+    public static function getTimesOfYear($employee_id, $claim_level_id, $claim_date, $id = 0){
+
+        $all_claim_level_id = self::getAllClaimLevelID($claim_level_id);
+
         $year_start = Carbon::parse($claim_date)->firstOfYear()->toDateString();
         $year_end = Carbon::parse($claim_date)->endOfYear()->toDateString();
         $times_of_year = self::whereBetween('claim_date', [ $year_start, $year_end ])
             ->where('employee_id', $employee_id)
-            ->where('claim_level_id', $claim_level_id)
+            ->whereIn('claim_level_id', $all_claim_level_id)
+            ->where('id', '!=', $id)
             ->where('status', 1)
             ->count();
 
@@ -90,10 +120,7 @@ class Claim extends Model
 //        $data->times_of_year = $times_of_year;
 
         $claim_level = ClaimLevel::find($claim_level_id);
-        $claim_level_detail = ClaimLevelDetail::where('claim_level_id', $claim_level_id)
-            ->where('start_date', '<=', $claim_date)
-            ->where('end_date', '>=' , $claim_date)
-            ->first();
+        $claim_level_detail = ClaimLevelDetail::getClaimLevelDetail($claim_level_id, $claim_date);
 
         $data = [
 //            'times_of_day_applying' => $times_of_day_applying,
@@ -123,11 +150,11 @@ class Claim extends Model
     //檢測是否超過索償時間
     public static function checkExpiredDate($claim_date, $expired_day){
 
-        $now = Carbon::now();
+        $now = Carbon::today();
         $claim_date_carbon = carbon::parse($claim_date);
         $diff = $now->diffInDays($claim_date_carbon);
 
-        return $diff <= $expired_day && $diff > 0;
+        return $diff <= $expired_day && $diff >= 0;
 
     }
 
