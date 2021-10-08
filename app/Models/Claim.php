@@ -36,8 +36,22 @@ class Claim extends Model
             ->where('type_name', '=', 'claim_illness');
     }
 
-    public static function getClaims(){
+    public function scopeOfClaimLevel($query, $claim_level_ids = [])
+    {
+        if($claim_level_ids){
+            return $query->whereIn('claim_level_id', $claim_level_ids);
+        }else{
+            return $query;
+        }
+    }
 
+    public function scopeOfStatus($query, $status = -1)
+    {
+        if($status >= 0){
+            return $query->where('status', $status);
+        }else{
+            return $query;
+        }
     }
 
     public static function calculateClaimCost($cost, $claim_level_id, $claim_date)

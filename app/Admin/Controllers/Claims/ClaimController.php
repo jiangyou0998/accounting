@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Controllers;
+namespace App\Admin\Controllers\Claims;
 
 use App\Admin\Forms\ApproveClaim;
 use App\Models\Claim;

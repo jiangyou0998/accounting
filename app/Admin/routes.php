@@ -82,11 +82,12 @@ Route::group([
     $router->resource('employees', 'EmployeeController');
 
     //索償等級
-    $router->resource('claim_levels', 'ClaimLevelController');
-    $router->resource('claim_level_details', 'ClaimLevelDetailController');
+    $router->resource('claim_levels', 'Claims\ClaimLevelController');
+    $router->resource('claim_level_details', 'Claims\ClaimLevelDetailController');
 
     //索償
-    $router->resource('claims', 'ClaimController');
+    $router->resource('claims', 'Claims\ClaimController');
+    $router->resource('claim/report', 'Claims\ClaimReportController');
 
 
     //test

@@ -27,6 +27,26 @@ function getEndTime(){
     return $end;
 }
 
+function getStartTimeOfYear(){
+    if(isset($_REQUEST['between']['start'])){
+        $start = $_REQUEST['between']['start'];
+    }else{
+        //本年第一天
+        $start = Carbon::now()->firstOfYear()->toDateString();
+    }
+    return $start;
+}
+
+function getEndTimeOfYear(){
+    if(isset($_REQUEST['between']['end'])){
+        $end = $_REQUEST['between']['end'];
+    }else{
+        //本年最后一天
+        $end = Carbon::now()->lastOfYear()->toDateString();
+    }
+    return $end;
+}
+
 function getStartTimeWithoutDefault(){
     return $_REQUEST['between']['start'] ?? '';
 }
