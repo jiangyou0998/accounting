@@ -1,7 +1,7 @@
 <?php
 return [
     'labels' => [
-        'Employee' => 'Employee',
+        'Employee' => '僱員管理',
     ],
     'fields' => [
         'name' => '員工名稱',

@@ -2,7 +2,6 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Renderable\UserTable;
 use App\Models\Employee;
 use Carbon\Carbon;
 use Dcat\Admin\Form;
@@ -14,6 +13,7 @@ use Dcat\Admin\Widgets\Alert;
 class EmployeeController extends AdminController
 {
     protected $is_worked = [0 => '離職', 1 => '在職'];
+
     /**
      * Make a grid builder.
      *
@@ -22,6 +22,9 @@ class EmployeeController extends AdminController
     protected function grid()
     {
         return Grid::make(new Employee(), function (Grid $grid) {
+
+            $grid->quickSearch(['name', 'code'])->placeholder('可填入「名稱」或「編號」');
+
             $grid->column('id')->sortable();
             $grid->column('name');
             $grid->column('code');
@@ -42,8 +45,13 @@ class EmployeeController extends AdminController
             $grid->column('updated_at')->sortable();
 
             $grid->filter(function (Grid\Filter $filter) {
+                $filter->panel();
                 $filter->equal('id');
-                $filter->like('name');
+                $names = Employee::all()->pluck('name', 'name');
+                $filter->equal('name')->select($names);
+                $filter->like('code');
+                $filter->between('employment_date')->date();
+                $filter->between('leave_date')->date();
                 $filter->equal('is_worked','在職狀態')->select($this->is_worked);
 
             });
@@ -122,4 +130,5 @@ class EmployeeController extends AdminController
             });
         });
     }
+
 }

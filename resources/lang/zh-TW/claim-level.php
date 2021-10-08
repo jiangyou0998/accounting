@@ -1,7 +1,7 @@
 <?php
 return [
     'labels' => [
-        'ClaimLevel' => '索償等級設置',
+        'ClaimLevel' => '醫療索償等級',
     ],
     'fields' => [
         'plan_no' => '索償計劃編號',

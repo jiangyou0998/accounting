@@ -1,7 +1,7 @@
 <?php
 return [
     'labels' => [
-        'Claim' => 'Claim',
+        'Claim' => '醫療索償審批',
     ],
     'fields' => [
         'employee_id' => '員工',
@@ -12,6 +12,7 @@ return [
         'claim_cost' => '索償金額',
         'claim_date' => '診症日期',
         'status' => '申請狀態',
+        'remark' => '備註',
         'file_path' => '圖片位置',
     ],
     'options' => [

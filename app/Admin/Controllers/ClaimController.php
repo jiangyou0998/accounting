@@ -2,18 +2,15 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\Grid\RowApproveClaim;
 use App\Admin\Forms\ApproveClaim;
-use App\Admin\Forms\Invoice;
 use App\Models\Claim;
 use App\Models\ClaimLevel;
 use App\Models\Employee;
-use Carbon\Carbon;
 use Dcat\Admin\Admin;
+use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
-use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Widgets\Modal;
 
 class ClaimController extends AdminController
@@ -35,9 +32,14 @@ class ClaimController extends AdminController
                 $grid->disableActions();
             }
 
-            $grid->model()->with(['user', 'employee', 'claim_level', 'illness']);
+            $grid->model()->with(['user', 'employee', 'claim_level', 'illness'])->orderBy('id', 'desc');
             $grid->column('id')->sortable();
-            $grid->column('employee.name', '員工')->link(admin_url('claims' , ['employee_id' => 1]));
+            $grid->column('employee.name', '員工')->display(function ($name) {
+                $employee_id = $this->employee_id;
+                $url = admin_url('claims')."?employee_id={$employee_id}";
+
+                return '<a href="' . $url . '">' . $name . '</a>';
+            });
             $grid->column('claim_level.plan_no', '索償等級');
             $grid->column('claim_level.type_name', '索償類型');
             $grid->column('user.name', '批准人');
@@ -76,6 +78,12 @@ class ClaimController extends AdminController
                 $filter->equal('status')->select($this->status);
                 $filter->between('claim_date')->date();
 
+            });
+
+            $grid->selector(function (Grid\Tools\Selector $selector) {
+                $selector->select('status', '申請狀態', $this->status);
+                $claim_levels = ClaimLevel::all()->pluck('type_name', 'id');
+                $selector->select('claim_level_id', '索償類型', $claim_levels);
             });
         });
     }

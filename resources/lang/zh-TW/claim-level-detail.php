@@ -1,7 +1,7 @@
 <?php
 return [
     'labels' => [
-        'ClaimLevelDetail' => '索償詳情',
+        'ClaimLevelDetail' => '醫療索償等級詳情',
     ],
     'fields' => [
         'claim_level_id' => 'claim_level_id',
