@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\DB;
 //分店銷售查詢
 class ClaimReportController extends AdminController
 {
-    protected $status = [ 0 => '申請中', 1 => '已批核', 2 => '不理賠'];
+    protected $status = [ -1 => '全部', 0 => '申請中', 1 => '已批核', 2 => '不理賠'];
 
     public function index(Content $content)
     {
@@ -38,7 +38,7 @@ class ClaimReportController extends AdminController
             $end = getEndTimeOfYear();
 
             $claim_level_id = request()->claim_level_id ?? [];
-            $status = request()->status ?? -1;
+            $status = request()->status ?? 1;
 
             $data = $this->generate($start, $end, $claim_level_id, $status);
 
@@ -134,7 +134,6 @@ HTML;
                 return $exports;
             })->csv()->filename($filename);
 
-
             //禁用 导出所有 选项
             $grid->export()->disableExportAll();
             //禁用 导出选中行 选项
@@ -155,10 +154,10 @@ HTML;
                 $filter->panel();
 
                 $filter->between('between', '診症日')->date();
-                $filter->equal('status', '申請狀態')->select($this->status);
+                $filter->equal('status', '申請狀態')->select($this->status)->default(1);
 
                 $claim_levels = ClaimLevel::getClaimLevels();
-                $filter->in('claim_level_id', '索償類型')->multipleSelect($claim_levels);
+                $filter->in('claim_level_id', '索償類型(可多選)')->multipleSelect($claim_levels);
 
             });
 
