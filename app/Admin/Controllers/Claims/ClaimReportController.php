@@ -73,7 +73,12 @@ HTML;
                 $grid->column('currency', '貨幣');
                 $grid->column('cost', '索償金額');
                 $grid->column('claim_cost', '應得賠償金額');
-                $grid->column('upload', '上載文件/圖片');
+//                $grid->column('upload', '上載文件/圖片');
+                $grid->column('file_path', '上載文件/圖片')->display(function ($file_path) {
+                    if($file_path){
+                        return '<a href="' . $file_path . '" target="_blank">查看</a>';
+                    }
+                });
                 $grid->column('remark', '備註');
                 $grid->column('status', '申請狀態(HR專用)')
                     ->using($this->status)
