@@ -87,7 +87,7 @@
                 <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#6f42c1"></rect><text x="50%" y="50%" fill="#6f42c1" dy=".3em">32x32</text></svg>
 
                 <p class="media-body pb-3 mb-0 lh-125 border-bottom border-gray">
-                    <strong class="d-block text-gray-dark">Rate</strong>
+                    <strong class="d-block text-gray-dark">賠償率</strong>
                     <span id="rate"></span>%
                 </p>
             </div>
@@ -151,10 +151,10 @@
                 <div class="row">
 
                     <div class="col-md-4 mb-3">
-                        <label for="cost">花費</label>
+                        <label for="cost">收據總額</label>
                         <input type="number" class="form-control" name="cost" id="cost" value="{{ old('cost') ?? '' }}" autocomplete="off" placeholder="" required="">
                         <div class="invalid-feedback">
-                            請填寫「花費」
+                            請填寫「收據總額」
                         </div>
                     </div>
 

@@ -8,7 +8,7 @@ return [
         'claim_level_id' => '索償等級',
         'approver_id' => '批准人',
         'illness_id' => '病症',
-        'cost' => '花費',
+        'cost' => '收據總額',
         'claim_cost' => '索償金額',
         'claim_date' => '診症日期',
         'status' => '申請狀態',

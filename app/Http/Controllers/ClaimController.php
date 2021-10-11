@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Handlers\FileUploadHandler;
+use App\Mail\ClaimShipped;
 use App\Models\Claim;
 use App\Models\ClaimLevel;
 use App\Models\Employee;
@@ -12,6 +13,7 @@ use App\Models\SelectorItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Symfony\Component\Console\Input\Input;
 
 
@@ -66,7 +68,7 @@ class ClaimController extends Controller
         $expired_day = 90;
         $is_vaild_date = Claim::checkExpiredDate($claim_date, $expired_day);
         if($is_vaild_date === false){
-            session()->flash('danger', '只能在'.$expired_day.'天內申請！');
+            session()->flash('danger', 'Late claim submission');
             return redirect()->back()->withInput();
         }
 
@@ -87,7 +89,8 @@ class ClaimController extends Controller
 //        $emails = Role::getEmail('IT');
 //        Mail::to($emails)->send(new ItSupportShipped($itSupport->id));
 
-//        Mail::to([0=>'jianli@kingbakery.com.hk',1=>'fs378354476@outlook.com'])->send(new ItSupportShipped($itSupport->id));
+//        Mail::to([0=>'jianli@kingbakery.com.hk',1=>'winnielau@kingbakery.com.hk'])->send(new ClaimShipped($claim->id));
+        Mail::to([0=>'jianli@kingbakery.com.hk'])->send(new ClaimShipped($claim->id));
 //        return redirect()->route('users.show', $user->id)->with('success', '个人资料更新成功！');
         return redirect()->route('claim')->with('success', '成功提交申請！');
     }
