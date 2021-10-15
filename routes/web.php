@@ -88,6 +88,10 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
     Route::post('customer/order/cart/show_group/{catid}', 'Customer\WorkshopCartItemController@showGroup')->name('customer.show_group');
     Route::post('customer/order/cart/show_product/{groupid}', 'Customer\WorkshopCartItemController@showProduct')->name('customer.show_product');
     Route::put('customer/order/cart/{shopid}', 'Customer\WorkshopCartItemController@update')->name('customer.cart.update');
+
+    //2021-10-15 柯打改期
+    Route::get('order/order_change','OrderChangeController@index')->name('order.change.index');
+    Route::put('order/order_change/modify','OrderChangeController@order_modify')->name('order.change.modify');
 });
 
 Route::group(['middleware' => ['auth','permission:shop']], function () {

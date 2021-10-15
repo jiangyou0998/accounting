@@ -425,5 +425,39 @@ class WorkshopCartItem extends Model
         return $query->where('status', '!=' ,4);
     }
 
+    public function updateBatch(array $attributes = [])
+    {
+        try {
+            $tableName = $this->table;
+            $firstRow = current($attributes);
+            $columns = array_keys($firstRow);
+
+            $referenceColumn = isset($firstRow['id']) ? 'id' : current($columns);
+            unset($columns[0]);
+            // 拼接sql语句
+            $updateSql = "UPDATE ".$tableName." SET ";
+            $sets = [];
+            $bindings = [];
+            foreach ($columns as $column) {
+                $setSql = "`".$column."` = CASE ";
+                foreach ($attributes as $data) {
+                    $setSql .= "WHEN `".$referenceColumn."` = ? THEN ? ";
+                    $bindings[] = $data[$referenceColumn];
+                    $bindings[] = $data[$column];
+                }
+                $setSql .= "ELSE `".$column."` END ";
+                $sets[] = $setSql;
+            }
+            $updateSql .= implode(', ', $sets);
+            $whereIn = collect($attributes)->pluck($referenceColumn)->values()->all();
+            $bindings = array_merge($bindings, $whereIn);
+            $whereIn = rtrim(str_repeat('?,', count($whereIn)), ',');
+            $updateSql = rtrim($updateSql, ", ")." WHERE `".$referenceColumn."` IN (".$whereIn.")";
+
+            return DB::update($updateSql, $bindings);
+        } catch (\Exception $exception) {
+            return false;
+        }
+    }
 
 }
