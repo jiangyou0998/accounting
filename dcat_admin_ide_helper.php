@@ -46,6 +46,8 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection guard_name
      * @property Grid\Column|Collection permissions
      * @property Grid\Column|Collection users
+     * @property Grid\Column|Collection user_id
+     * @property Grid\Column|Collection month
      * @property Grid\Column|Collection price
      * @property Grid\Column|Collection type
      * @property Grid\Column|Collection detail
@@ -54,7 +56,6 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection order
      * @property Grid\Column|Collection icon
      * @property Grid\Column|Collection uri
-     * @property Grid\Column|Collection user_id
      * @property Grid\Column|Collection path
      * @property Grid\Column|Collection method
      * @property Grid\Column|Collection ip
@@ -70,9 +71,25 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection password
      * @property Grid\Column|Collection avatar
      * @property Grid\Column|Collection remember_token
+     * @property Grid\Column|Collection plan_no
+     * @property Grid\Column|Collection max_claim_money
+     * @property Grid\Column|Collection rate
+     * @property Grid\Column|Collection type_name
+     * @property Grid\Column|Collection times_per_day
+     * @property Grid\Column|Collection times_per_year
+     * @property Grid\Column|Collection employee_id
+     * @property Grid\Column|Collection claim_level_id
+     * @property Grid\Column|Collection approver_id
+     * @property Grid\Column|Collection illness_id
+     * @property Grid\Column|Collection claim_date
+     * @property Grid\Column|Collection file_path
      * @property Grid\Column|Collection shop_id
      * @property Grid\Column|Collection deli_date
      * @property Grid\Column|Collection po
+     * @property Grid\Column|Collection code
+     * @property Grid\Column|Collection claim_level
+     * @property Grid\Column|Collection is_worked
+     * @property Grid\Column|Collection leave_date
      * @property Grid\Column|Collection connection
      * @property Grid\Column|Collection queue
      * @property Grid\Column|Collection payload
@@ -83,7 +100,6 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection forbidden_date
      * @property Grid\Column|Collection form_name
      * @property Grid\Column|Collection admin_role_id
-     * @property Grid\Column|Collection file_path
      * @property Grid\Column|Collection created_date
      * @property Grid\Column|Collection modify_date
      * @property Grid\Column|Collection deleted_date
@@ -97,7 +113,6 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection model_id
      * @property Grid\Column|Collection front_group_id
      * @property Grid\Column|Collection group
-     * @property Grid\Column|Collection code
      * @property Grid\Column|Collection item_id
      * @property Grid\Column|Collection it_support_no
      * @property Grid\Column|Collection itsupport_item_id
@@ -147,7 +162,7 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection int_area
      * @property Grid\Column|Collection oper_time
      * @property Grid\Column|Collection special_date
-     * @property Grid\Column|Collection month
+     * @property Grid\Column|Collection product_name_short
      * @property Grid\Column|Collection supplier_id
      * @property Grid\Column|Collection unit_id
      * @property Grid\Column|Collection base_unit_id
@@ -155,6 +170,7 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection default_price
      * @property Grid\Column|Collection weight
      * @property Grid\Column|Collection weight_unit
+     * @property Grid\Column|Collection item_list
      * @property Grid\Column|Collection int_dept
      * @property Grid\Column|Collection address_id
      * @property Grid\Column|Collection chr_mobile
@@ -191,7 +207,6 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection int_page
      * @property Grid\Column|Collection int_all_shop
      * @property Grid\Column|Collection shop_list
-     * @property Grid\Column|Collection item_list
      * @property Grid\Column|Collection int_main_item
      * @property Grid\Column|Collection cut_time
      * @property Grid\Column|Collection sampledate
@@ -239,6 +254,8 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection guard_name(string $label = null)
      * @method Grid\Column|Collection permissions(string $label = null)
      * @method Grid\Column|Collection users(string $label = null)
+     * @method Grid\Column|Collection user_id(string $label = null)
+     * @method Grid\Column|Collection month(string $label = null)
      * @method Grid\Column|Collection price(string $label = null)
      * @method Grid\Column|Collection type(string $label = null)
      * @method Grid\Column|Collection detail(string $label = null)
@@ -247,7 +264,6 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection order(string $label = null)
      * @method Grid\Column|Collection icon(string $label = null)
      * @method Grid\Column|Collection uri(string $label = null)
-     * @method Grid\Column|Collection user_id(string $label = null)
      * @method Grid\Column|Collection path(string $label = null)
      * @method Grid\Column|Collection method(string $label = null)
      * @method Grid\Column|Collection ip(string $label = null)
@@ -263,9 +279,25 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection password(string $label = null)
      * @method Grid\Column|Collection avatar(string $label = null)
      * @method Grid\Column|Collection remember_token(string $label = null)
+     * @method Grid\Column|Collection plan_no(string $label = null)
+     * @method Grid\Column|Collection max_claim_money(string $label = null)
+     * @method Grid\Column|Collection rate(string $label = null)
+     * @method Grid\Column|Collection type_name(string $label = null)
+     * @method Grid\Column|Collection times_per_day(string $label = null)
+     * @method Grid\Column|Collection times_per_year(string $label = null)
+     * @method Grid\Column|Collection employee_id(string $label = null)
+     * @method Grid\Column|Collection claim_level_id(string $label = null)
+     * @method Grid\Column|Collection approver_id(string $label = null)
+     * @method Grid\Column|Collection illness_id(string $label = null)
+     * @method Grid\Column|Collection claim_date(string $label = null)
+     * @method Grid\Column|Collection file_path(string $label = null)
      * @method Grid\Column|Collection shop_id(string $label = null)
      * @method Grid\Column|Collection deli_date(string $label = null)
      * @method Grid\Column|Collection po(string $label = null)
+     * @method Grid\Column|Collection code(string $label = null)
+     * @method Grid\Column|Collection claim_level(string $label = null)
+     * @method Grid\Column|Collection is_worked(string $label = null)
+     * @method Grid\Column|Collection leave_date(string $label = null)
      * @method Grid\Column|Collection connection(string $label = null)
      * @method Grid\Column|Collection queue(string $label = null)
      * @method Grid\Column|Collection payload(string $label = null)
@@ -276,7 +308,6 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection forbidden_date(string $label = null)
      * @method Grid\Column|Collection form_name(string $label = null)
      * @method Grid\Column|Collection admin_role_id(string $label = null)
-     * @method Grid\Column|Collection file_path(string $label = null)
      * @method Grid\Column|Collection created_date(string $label = null)
      * @method Grid\Column|Collection modify_date(string $label = null)
      * @method Grid\Column|Collection deleted_date(string $label = null)
@@ -290,7 +321,6 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection model_id(string $label = null)
      * @method Grid\Column|Collection front_group_id(string $label = null)
      * @method Grid\Column|Collection group(string $label = null)
-     * @method Grid\Column|Collection code(string $label = null)
      * @method Grid\Column|Collection item_id(string $label = null)
      * @method Grid\Column|Collection it_support_no(string $label = null)
      * @method Grid\Column|Collection itsupport_item_id(string $label = null)
@@ -340,7 +370,7 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection int_area(string $label = null)
      * @method Grid\Column|Collection oper_time(string $label = null)
      * @method Grid\Column|Collection special_date(string $label = null)
-     * @method Grid\Column|Collection month(string $label = null)
+     * @method Grid\Column|Collection product_name_short(string $label = null)
      * @method Grid\Column|Collection supplier_id(string $label = null)
      * @method Grid\Column|Collection unit_id(string $label = null)
      * @method Grid\Column|Collection base_unit_id(string $label = null)
@@ -348,6 +378,7 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection default_price(string $label = null)
      * @method Grid\Column|Collection weight(string $label = null)
      * @method Grid\Column|Collection weight_unit(string $label = null)
+     * @method Grid\Column|Collection item_list(string $label = null)
      * @method Grid\Column|Collection int_dept(string $label = null)
      * @method Grid\Column|Collection address_id(string $label = null)
      * @method Grid\Column|Collection chr_mobile(string $label = null)
@@ -384,7 +415,6 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection int_page(string $label = null)
      * @method Grid\Column|Collection int_all_shop(string $label = null)
      * @method Grid\Column|Collection shop_list(string $label = null)
-     * @method Grid\Column|Collection item_list(string $label = null)
      * @method Grid\Column|Collection int_main_item(string $label = null)
      * @method Grid\Column|Collection cut_time(string $label = null)
      * @method Grid\Column|Collection sampledate(string $label = null)
@@ -437,6 +467,8 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection guard_name
      * @property Show\Field|Collection permissions
      * @property Show\Field|Collection users
+     * @property Show\Field|Collection user_id
+     * @property Show\Field|Collection month
      * @property Show\Field|Collection price
      * @property Show\Field|Collection type
      * @property Show\Field|Collection detail
@@ -445,7 +477,6 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection order
      * @property Show\Field|Collection icon
      * @property Show\Field|Collection uri
-     * @property Show\Field|Collection user_id
      * @property Show\Field|Collection path
      * @property Show\Field|Collection method
      * @property Show\Field|Collection ip
@@ -461,9 +492,25 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection password
      * @property Show\Field|Collection avatar
      * @property Show\Field|Collection remember_token
+     * @property Show\Field|Collection plan_no
+     * @property Show\Field|Collection max_claim_money
+     * @property Show\Field|Collection rate
+     * @property Show\Field|Collection type_name
+     * @property Show\Field|Collection times_per_day
+     * @property Show\Field|Collection times_per_year
+     * @property Show\Field|Collection employee_id
+     * @property Show\Field|Collection claim_level_id
+     * @property Show\Field|Collection approver_id
+     * @property Show\Field|Collection illness_id
+     * @property Show\Field|Collection claim_date
+     * @property Show\Field|Collection file_path
      * @property Show\Field|Collection shop_id
      * @property Show\Field|Collection deli_date
      * @property Show\Field|Collection po
+     * @property Show\Field|Collection code
+     * @property Show\Field|Collection claim_level
+     * @property Show\Field|Collection is_worked
+     * @property Show\Field|Collection leave_date
      * @property Show\Field|Collection connection
      * @property Show\Field|Collection queue
      * @property Show\Field|Collection payload
@@ -474,7 +521,6 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection forbidden_date
      * @property Show\Field|Collection form_name
      * @property Show\Field|Collection admin_role_id
-     * @property Show\Field|Collection file_path
      * @property Show\Field|Collection created_date
      * @property Show\Field|Collection modify_date
      * @property Show\Field|Collection deleted_date
@@ -488,7 +534,6 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection model_id
      * @property Show\Field|Collection front_group_id
      * @property Show\Field|Collection group
-     * @property Show\Field|Collection code
      * @property Show\Field|Collection item_id
      * @property Show\Field|Collection it_support_no
      * @property Show\Field|Collection itsupport_item_id
@@ -538,7 +583,7 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection int_area
      * @property Show\Field|Collection oper_time
      * @property Show\Field|Collection special_date
-     * @property Show\Field|Collection month
+     * @property Show\Field|Collection product_name_short
      * @property Show\Field|Collection supplier_id
      * @property Show\Field|Collection unit_id
      * @property Show\Field|Collection base_unit_id
@@ -546,6 +591,7 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection default_price
      * @property Show\Field|Collection weight
      * @property Show\Field|Collection weight_unit
+     * @property Show\Field|Collection item_list
      * @property Show\Field|Collection int_dept
      * @property Show\Field|Collection address_id
      * @property Show\Field|Collection chr_mobile
@@ -582,7 +628,6 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection int_page
      * @property Show\Field|Collection int_all_shop
      * @property Show\Field|Collection shop_list
-     * @property Show\Field|Collection item_list
      * @property Show\Field|Collection int_main_item
      * @property Show\Field|Collection cut_time
      * @property Show\Field|Collection sampledate
@@ -630,6 +675,8 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection guard_name(string $label = null)
      * @method Show\Field|Collection permissions(string $label = null)
      * @method Show\Field|Collection users(string $label = null)
+     * @method Show\Field|Collection user_id(string $label = null)
+     * @method Show\Field|Collection month(string $label = null)
      * @method Show\Field|Collection price(string $label = null)
      * @method Show\Field|Collection type(string $label = null)
      * @method Show\Field|Collection detail(string $label = null)
@@ -638,7 +685,6 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection order(string $label = null)
      * @method Show\Field|Collection icon(string $label = null)
      * @method Show\Field|Collection uri(string $label = null)
-     * @method Show\Field|Collection user_id(string $label = null)
      * @method Show\Field|Collection path(string $label = null)
      * @method Show\Field|Collection method(string $label = null)
      * @method Show\Field|Collection ip(string $label = null)
@@ -654,9 +700,25 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection password(string $label = null)
      * @method Show\Field|Collection avatar(string $label = null)
      * @method Show\Field|Collection remember_token(string $label = null)
+     * @method Show\Field|Collection plan_no(string $label = null)
+     * @method Show\Field|Collection max_claim_money(string $label = null)
+     * @method Show\Field|Collection rate(string $label = null)
+     * @method Show\Field|Collection type_name(string $label = null)
+     * @method Show\Field|Collection times_per_day(string $label = null)
+     * @method Show\Field|Collection times_per_year(string $label = null)
+     * @method Show\Field|Collection employee_id(string $label = null)
+     * @method Show\Field|Collection claim_level_id(string $label = null)
+     * @method Show\Field|Collection approver_id(string $label = null)
+     * @method Show\Field|Collection illness_id(string $label = null)
+     * @method Show\Field|Collection claim_date(string $label = null)
+     * @method Show\Field|Collection file_path(string $label = null)
      * @method Show\Field|Collection shop_id(string $label = null)
      * @method Show\Field|Collection deli_date(string $label = null)
      * @method Show\Field|Collection po(string $label = null)
+     * @method Show\Field|Collection code(string $label = null)
+     * @method Show\Field|Collection claim_level(string $label = null)
+     * @method Show\Field|Collection is_worked(string $label = null)
+     * @method Show\Field|Collection leave_date(string $label = null)
      * @method Show\Field|Collection connection(string $label = null)
      * @method Show\Field|Collection queue(string $label = null)
      * @method Show\Field|Collection payload(string $label = null)
@@ -667,7 +729,6 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection forbidden_date(string $label = null)
      * @method Show\Field|Collection form_name(string $label = null)
      * @method Show\Field|Collection admin_role_id(string $label = null)
-     * @method Show\Field|Collection file_path(string $label = null)
      * @method Show\Field|Collection created_date(string $label = null)
      * @method Show\Field|Collection modify_date(string $label = null)
      * @method Show\Field|Collection deleted_date(string $label = null)
@@ -681,7 +742,6 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection model_id(string $label = null)
      * @method Show\Field|Collection front_group_id(string $label = null)
      * @method Show\Field|Collection group(string $label = null)
-     * @method Show\Field|Collection code(string $label = null)
      * @method Show\Field|Collection item_id(string $label = null)
      * @method Show\Field|Collection it_support_no(string $label = null)
      * @method Show\Field|Collection itsupport_item_id(string $label = null)
@@ -731,7 +791,7 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection int_area(string $label = null)
      * @method Show\Field|Collection oper_time(string $label = null)
      * @method Show\Field|Collection special_date(string $label = null)
-     * @method Show\Field|Collection month(string $label = null)
+     * @method Show\Field|Collection product_name_short(string $label = null)
      * @method Show\Field|Collection supplier_id(string $label = null)
      * @method Show\Field|Collection unit_id(string $label = null)
      * @method Show\Field|Collection base_unit_id(string $label = null)
@@ -739,6 +799,7 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection default_price(string $label = null)
      * @method Show\Field|Collection weight(string $label = null)
      * @method Show\Field|Collection weight_unit(string $label = null)
+     * @method Show\Field|Collection item_list(string $label = null)
      * @method Show\Field|Collection int_dept(string $label = null)
      * @method Show\Field|Collection address_id(string $label = null)
      * @method Show\Field|Collection chr_mobile(string $label = null)
@@ -775,7 +836,6 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection int_page(string $label = null)
      * @method Show\Field|Collection int_all_shop(string $label = null)
      * @method Show\Field|Collection shop_list(string $label = null)
-     * @method Show\Field|Collection item_list(string $label = null)
      * @method Show\Field|Collection int_main_item(string $label = null)
      * @method Show\Field|Collection cut_time(string $label = null)
      * @method Show\Field|Collection sampledate(string $label = null)

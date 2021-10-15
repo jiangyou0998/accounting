@@ -1,10 +1,7 @@
 <?php
 
-use Dcat\Admin\Admin;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Form;
-use Dcat\Admin\Grid\Filter;
-use Dcat\Admin\Show;
 
 /**
  * Dcat-admin - admin builder based on Laravel.
@@ -27,6 +24,14 @@ use Dcat\Admin\Show;
 
 //初始化Grid
 Grid::resolving(function (Grid $grid) {
+
+    //清空搜索條件
+    $grid->tools(function (Grid\Tools $tools){
+        $previewUrl = '/'.request()->path();
+        $class = 'btn-white';
+        $clear_filter_button =  "<a href='{$previewUrl}' class='btn {$class} clear-filter'> &nbsp;&nbsp;&nbsp;<i class=' fa  fa-refresh'></i>&nbsp;清空搜索條件&nbsp;&nbsp;&nbsp; </a>";
+        $tools->append($clear_filter_button);
+    });
 
     //禁用詳情按鈕
     $grid->disableViewButton();

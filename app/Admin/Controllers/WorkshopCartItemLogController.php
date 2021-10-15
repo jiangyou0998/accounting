@@ -3,8 +3,10 @@
 namespace App\Admin\Controllers;
 
 use App\Admin\Renderable\ProductTable;
+use App\Admin\Renderable\ShopTable;
 use App\Models\WorkshopCartItemLog;
 use App\Models\WorkshopProduct;
+use App\User;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
@@ -46,6 +48,12 @@ class WorkshopCartItemLogController extends AdminController
                 $filter->between('updated_at')->datetime();
 
                 $filter->between('cart_items.deli_date', '送貨時間')->date();
+
+                $filter->equal('shop_id', '分店')
+                    ->multipleSelectTable(ShopTable::make()) // 设置渲染类实例，并传递自定义参数
+                    ->title('弹窗标题')
+                    ->dialogWidth('50%') // 弹窗宽度，默认 800px
+                    ->model(User::class, 'id', 'txt_name'); // 设置编辑数据显示
 
                 $filter->in('products.product_id', '產品')
                     ->multipleSelectTable(ProductTable::make()) // 设置渲染类实例，并传递自定义参数
