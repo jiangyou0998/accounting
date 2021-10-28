@@ -172,19 +172,22 @@ class LibraryController extends Controller
 
         //獲取所有id(包括父級id)
         $ids = [];
+//        dump($childIds);
         foreach ($childIds as $id) {
-
+//            $temp = [];
             if ($current_id) {
-                $temp = [];
-                array_push($temp, $id);
-                while ($arr[$id]) {
 
-                    $id = $arr[$id];
-                    array_push($temp, $id);
-                    if ($id == $current_id) {
-                        $ids = $temp;
-                    }
-                }
+//                array_push($temp, $id);
+//                while ($arr[$id]) {
+//                    dump($id);
+//                    $id = $arr[$id];
+//                    array_push($temp, $id);
+////                    if ($id == $current_id) {
+////
+////                    }
+//                    $ids = $temp;
+//                }
+                $ids = $childIds;
 //                dump('id:'.$id.'---temp:');
 //                dump($temp);
             } else {
@@ -196,9 +199,9 @@ class LibraryController extends Controller
             }
 
         }
-
-        $ids = array_unique($ids);
 //        dump($arr);
+        $ids = array_unique($ids);
+//        dump($ids);
 
         return $ids;
     }
