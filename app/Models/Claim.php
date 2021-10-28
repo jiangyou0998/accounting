@@ -157,6 +157,10 @@ class Claim extends Model
 
         $times_per_year = ClaimLevelDetail::getTimesPerYear($claim_level_id, $claim_date);
 
+        if ($times_per_year === 0){
+            return 'NO_PLAN';
+        }
+
         return $times_of_year < $times_per_year;
 
     }

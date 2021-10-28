@@ -57,7 +57,10 @@ class ClaimController extends Controller
 
         //申請次數檢測
         $is_over_times = Claim::checkClaimTimes($employee_id, $claim_level_id, $claim_date);
-        if($is_over_times === false){
+        if($is_over_times === 'NO_PLAN'){
+            session()->flash('danger', 'Treatment date is out of member\'s effective period');
+            return redirect()->back()->withInput();
+        }elseif($is_over_times === false){
             session()->flash('danger', '申請次數達到上限！');
             return redirect()->back()->withInput();
         }
@@ -90,7 +93,7 @@ class ClaimController extends Controller
 //        Mail::to($emails)->send(new ItSupportShipped($itSupport->id));
 
 //        Mail::to([0=>'jianli@kingbakery.com.hk',1=>'winnielau@kingbakery.com.hk'])->send(new ClaimShipped($claim->id));
-        Mail::to([0=>'jianli@kingbakery.com.hk'])->send(new ClaimShipped($claim->id));
+        Mail::to([0=>'hr@kingbakery.com.hk'])->send(new ClaimShipped($claim->id));
 //        return redirect()->route('users.show', $user->id)->with('success', '个人资料更新成功！');
         return redirect()->route('claim')->with('success', '成功提交申請！');
     }

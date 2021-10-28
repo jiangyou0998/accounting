@@ -4,28 +4,26 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.css"
           id="theme-styles">
-@stop
-
-@section('js')
-{{--    bootstrap-fileinput--}}
     <link href="/vendors/bootstrap-fileinput/css/fileinput.css" media="all" rel="stylesheet" type="text/css"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
     <link href="/vendors/bootstrap-fileinput/themes/explorer-fas/theme.css" media="all" rel="stylesheet"
           type="text/css"/>
+@stop
+
+@section('js')
+{{--    bootstrap-fileinput--}}
     <script src="/vendors/bootstrap-fileinput/js/plugins/piexif.js" type="text/javascript"></script>
     <script src="/vendors/bootstrap-fileinput/js/plugins/sortable.js" type="text/javascript"></script>
     <script src="/vendors/bootstrap-fileinput/js/fileinput.js" type="text/javascript"></script>
     <script src="/vendors/bootstrap-fileinput/js/locales/zh-TW.js" type="text/javascript"></script>
     <script src="/vendors/bootstrap-fileinput/themes/fas/theme.js" type="text/javascript"></script>
     <script src="/vendors/bootstrap-fileinput/themes/explorer-fas/theme.js" type="text/javascript"></script>
-{{--    layui--}}
-    <script src="../layui/layui.all.js"></script>
+{{--    laydate--}}
+    <script src="../layui/laydate/laydate.js"></script>
 {{--    select2--}}
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10/dist/sweetalert2.min.js"></script>
 
-{{--<script src="//res.layui.com/layui/dist/layui.js?t=1631518058775"></script>--}}
-{{--    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css" rel="stylesheet">--}}
 @endsection
 
 @section('style')
@@ -40,13 +38,6 @@
             line-height: calc(2.25rem + 2px);
         }
 
-        .layui-icon {
-            font-family: layui-icon!important;
-            font-size: 16px;
-            font-style: normal;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
     </style>
 @endsection
 
@@ -91,17 +82,7 @@
                     <span id="rate"></span>%
                 </p>
             </div>
-{{--            <div class="media text-muted pt-3">--}}
-{{--                <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#e83e8c"></rect><text x="50%" y="50%" fill="#e83e8c" dy=".3em">32x32</text></svg>--}}
 
-{{--                <p class="media-body pb-3 mb-0 lh-125 border-bottom border-gray">--}}
-{{--                    <strong class="d-block text-gray-dark">索償金額上限</strong>--}}
-{{--                    HKD$<span id="max_claim_money"></span>--}}
-{{--                </p>--}}
-{{--            </div>--}}
-{{--            <small class="d-block text-right mt-3">--}}
-{{--                <a href="#">All updates</a>--}}
-{{--            </small>--}}
         </div>
 {{--        頂部索償數據查詢--}}
 
@@ -264,9 +245,6 @@
                             },
                         });
 
-
-
-
                     });
 
                 //如有舊表單數據,選中"索償類型"框並觸發
@@ -274,24 +252,11 @@
                 $('#claim_level_id').trigger('change');
             });
 
-            //
-            // ;!function(){
-            //     //无需再执行layui.use()方法加载模块，直接使用即可
-            //     var form = layui.form
-            //         ,layer = layui.layer;
-            //
-            //     //…
-            // }();
-
-            layui.use('laydate', function(){
-                var laydate = layui.laydate;
-
-                //执行一个laydate实例
-                laydate.render({
-                    elem: '#claim_date' //指定元素
-                    ,min: -90 //90天前
-                    ,max: 0 //今日
-                });
+            // laydate初始化
+            laydate.render({
+                elem: '#claim_date' //指定元素
+                ,min: -90 //90天前
+                ,max: 0 //今日
             });
 
             (function () {
@@ -350,98 +315,6 @@
                     trigger: 'hover'
                 });
             });
-
-            // $(function(){
-            //     $(".open-modal").click(function(){
-            //         var itsupportid = $(this).data('id');
-            //         var frameSrc = "/itsupport/"+ itsupportid +"/edit";
-            //         $("#updateFrame").attr("src", frameSrc);
-            //         $('#exampleModal').modal({ show: true, backdrop: 'static' });
-            //     });
-            // });
-            //
-            // $(function(){
-            //     $(".open-layui").click(function(){
-            //         var itsupportid = $(this).data('id');
-            //         var frameSrc = "/itsupport/"+ itsupportid +"/edit";
-            //         layer.open({
-            //             type: 2,
-            //             content: frameSrc, //这里content是一个普通的String
-            //             area: ['550px', '600px'],
-            //             zIndex: layer.zIndex, //重点1
-            //             success: function(layero){
-            //                 layer.setTop(layero); //重点2
-            //             },
-            //             cancel: function(index, layero){
-            //                 layer.close(index);
-            //                 document.body.style.overflow='';//出现滚动条
-            //                 document.removeEventListener("touchmove",mo,false);
-            //             },
-            //             // end: function () {
-            //             //     window.location.reload();
-            //             // }
-            //
-            //         });
-            //         document.body.style.overflow='hidden';
-            //         document.addEventListener("touchmove",mo,false);//禁止页面滑动
-            //     });
-            //
-            //     $(".open-layui-finish").click(function(){
-            //         var itsupportid = $(this).data('id');
-            //         var frameSrc = "/itsupport/"+ itsupportid;
-            //         layer.open({
-            //             type: 2,
-            //             content: frameSrc, //这里content是一个普通的String
-            //             area: ['550px', '600px'],
-            //             zIndex: layer.zIndex, //重点1
-            //             success: function(layero){
-            //                 layer.setTop(layero); //重点2
-            //             },
-            //             cancel: function(index, layero){
-            //                 layer.close(index);
-            //                 document.body.style.overflow='';//出现滚动条
-            //                 document.removeEventListener("touchmove",mo,false);
-            //             },
-            //             // end: function () {
-            //             //     window.location.reload();
-            //             // }
-            //
-            //         });
-            //         document.body.style.overflow='hidden';
-            //         document.addEventListener("touchmove",mo,false);//禁止页面滑动
-            //     });
-            // });
-            //
-            // $(document).on('click','.delete-btn',function(){
-            //     Swal.fire({
-            //         title: '確定取消編號為【' + $(this).data('no') + '】的IT求助項目嗎？?',
-            //         icon: 'warning',
-            //         showCancelButton: true,
-            //         confirmButtonColor: '#3085d6',
-            //         cancelButtonColor: '#d33',
-            //         confirmButtonText: '確認刪除',
-            //         cancelButtonText: '取消'
-            //     }).then((result) => {
-            //         if (result.isConfirmed) {
-            //                 $.ajax({
-            //                     type: "DELETE",
-            //                     url: "/itsupport/" + $(this).data('id'),
-            //                     headers: {
-            //                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //                     },
-            //                     success: function (msg) {
-            //                         // console.log(msg);
-            //                         // alert('範本刪除成功!');
-            //                         window.location.reload();
-            //                     }
-            //                 });
-            //             }
-            //
-            //     })
-            //
-            // })
-
-
 
         </script>
 
