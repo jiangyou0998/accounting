@@ -95,7 +95,7 @@ class LibraryController extends Controller
         $keyword = $request->input('keyword');
         //獲取所有分組名
         $library_groups = LibraryGroup::selectOptionsWithoutMain();
-        
+
         $libraries = Library::whereRaw('lower(name) like lower(?)', ["%{$keyword}%"])->canView()->get();
 
         //加入分組名
@@ -175,18 +175,9 @@ class LibraryController extends Controller
         foreach ($childIds as $id) {
 
             if ($current_id) {
-                $temp = [];
-                array_push($temp, $id);
-                while ($arr[$id]) {
 
-                    $id = $arr[$id];
-                    array_push($temp, $id);
-                    if ($id == $current_id) {
-                        $ids = $temp;
-                    }
-                }
-//                dump('id:'.$id.'---temp:');
-//                dump($temp);
+                $ids = $childIds;
+
             } else {
                 array_push($ids, $id);
                 while ($arr[$id]) {
