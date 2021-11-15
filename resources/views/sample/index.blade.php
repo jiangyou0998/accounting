@@ -37,6 +37,13 @@
         <span class="style4">創建範本</span>
     </div>
 
+    <div align="center">
+        <strong>
+            <font color="#FF0000" size="+2">設定範本後，需到下單頁面點擊「落貨」按鈕，訂單才會正式提交。</font>
+            <font color="#FF0000" size="+2"><br>請注意，如只設定範本而沒有到下單頁面提交訂單，當天分店將不會收到任何貨品。</font>
+        </strong>
+    </div>
+
 {{--    烘焙--}}
     <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0">
         <div class="style5" style="text-align: center;">

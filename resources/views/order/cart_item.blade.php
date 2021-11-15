@@ -18,6 +18,12 @@
         <img src="/images/del_3.png" width="20" height="20">不在貨期&nbsp
         <img src="/images/help1.png" width="20" height="20">後勤落單
     </div>
+    <div align="center">
+        <strong>
+            <font color="#FF0000" size="+2">產品未截單前，可隨時修改落貨數量，點擊「落貨」按鈕即可改單。</font>
+            <font color="#FF0000" size="+2"><br>請注意，超過截單時間後，已截單產品將無法修改數量！！！</font>
+        </strong>
+    </div>
 </div>
 
 
