@@ -3,8 +3,10 @@
 namespace App\Admin\Controllers\Reports;
 
 use App\Models\WorkshopCartItem;
+use App\Models\WorkshopProduct;
 use App\User;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Layout\Content;
@@ -124,6 +126,10 @@ class TotalSalesAmountByMenuReportController extends AdminController
         $cartitem = $cartitem
             ->addSelect(DB::raw($sql));
 
+        //查詢單位
+        $cartitem = $cartitem
+            ->addSelect('workshop_units.unit_name as 單位');
+
         foreach ($shops as $shop){
 //                $sql = "sum(case when workshop_cart_items.user_id = '$shop->id' then workshop_cart_items.qty else 0 end) as '$shop->chr_report_name'";
 //                dump($sql);
@@ -137,6 +143,9 @@ class TotalSalesAmountByMenuReportController extends AdminController
         $cartitem = $cartitem
             ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
             ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
+            ->leftJoin('workshop_units', 'workshop_units.id', '=', 'workshop_products.unit_id');
+
+        $cartitem = $cartitem
             ->whereBetween('workshop_cart_items.deli_date', [$last_month_start, $end])
             ->where('workshop_cart_items.status', '<>', 4)
             ->whereIn('workshop_cart_items.user_id', $shopids)
@@ -144,6 +153,27 @@ class TotalSalesAmountByMenuReportController extends AdminController
             ->groupBy('workshop_products.id')
             ->orderBy('workshop_products.product_no')
             ->get();
+
+
+        if($shop_group !== 0){
+            $prices = WorkshopProduct::with('prices')->whereHas('prices', function (Builder $query) use($shop_group){
+                $query->where('shop_group_id', '=', $shop_group);
+            })->get()->mapWithKeys(function ($item) use($shop_group){
+                $price = $item['prices']->where('shop_group_id', $shop_group)->first()->price;
+                return [$item['product_no'] => $price ];
+            });
+//            dump($prices);
+
+            foreach ($cartitem as $v){
+//                dd($v);
+                $v->單價 = $prices[$v->編號] ?? '\\';
+//                $v->splice(4, 0, ['單價'=> $prices[$v->編號]]);
+            }
+        }
+
+
+
+//        dd($cartitem->toArray());
 
         return $cartitem;
 
