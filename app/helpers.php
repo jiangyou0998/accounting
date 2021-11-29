@@ -61,3 +61,30 @@ function fixUrl($url, $def = false, $prefix = false)
         return $prefix === false ? 'http://' . $url : $prefix . $url;
     }
 }
+
+//獲取需要發送通知的Email
+function getNotificationEmails(string $type = '')
+{
+    $is_test = isTestEnvironment();
+
+    return \App\Models\NotificationEmail::query()->where([
+        'type'      => $type,
+        'is_test'   => $is_test,
+    ])->get(['name', 'email']);
+
+}
+
+//獲取需要發送通知的Email
+function isTestEnvironment()
+{
+    if(app()->environment('local')){
+        $is_test = 1;
+    }
+
+    if(app()->environment('production')){
+        $is_test = 0;
+    }
+
+    return $is_test;
+
+}
