@@ -107,7 +107,7 @@ class InvoiceController extends AdminController
     //invoice
     public function invoice(Request $request)
     {
-       $allData = $this->getInoviceData($request);
+        $allData = $this->getInoviceData($request);
 
 //        return view('admin.invoice.index',compact('details','totals','infos'));
         return view('admin.invoice.index',compact('allData'));

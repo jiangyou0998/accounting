@@ -84,6 +84,18 @@ trait InvoiceTraits
             $infos->customer_po = $this->getCustomerPo($shopid ,$deli_date);
             //2021-03-01 每頁item數寫進常量
             $infos->item_count = self::ITEM_COUNT_PER_PAGE;
+
+            //2021-11-23 訂單如果修改過 revised標記為true
+            $infos->revised = false;
+            if(count($details) > 0){
+                foreach ($details as $detail){
+                    if($detail->qty != $detail->qty_received){
+                        $infos->revised = true;
+                        break;
+                    }
+                }
+            }
+
 //        dump($infos->shop_info->toArray());
 //        dump($infos->total_english);
             $allData[$shopid]['details'] = $details;
