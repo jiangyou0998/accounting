@@ -82,8 +82,9 @@ class RepairController extends Controller
 
 //        $emails = Role::getEmail('Maintenance');
 //        Mail::to($emails)->send(new RepairShipped($repair->id));
+        $notification_emails = getNotificationEmails('repair');
 
-        Mail::to(['jianli@kingbakery.com.hk','fs378354476@outlook.com'])->send(new RepairShipped($repair->id));
+        Mail::to($notification_emails)->send(new RepairShipped($repair->id));
 //        return redirect()->route('users.show', $user->id)->with('success', '个人资料更新成功！');
         return redirect()->route('repair');
     }
@@ -134,6 +135,7 @@ class RepairController extends Controller
         $repair->finished_end_time = $request->end;
         $repair->handle_staff = $request->staff;
         $repair->last_update_user = $user->id;
+        $repair->fee = $request->fee;
 
         //已完成狀態改為99
         if($request->complete){

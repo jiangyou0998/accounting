@@ -137,6 +137,7 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection notice_no
      * @property Grid\Column|Collection expired_date
      * @property Grid\Column|Collection is_directory
+     * @property Grid\Column|Collection is_test
      * @property Grid\Column|Collection token
      * @property Grid\Column|Collection product_id
      * @property Grid\Column|Collection shop_group_id
@@ -154,6 +155,7 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection repair_project_no
      * @property Grid\Column|Collection repair_item_id
      * @property Grid\Column|Collection repair_detail_id
+     * @property Grid\Column|Collection fee
      * @property Grid\Column|Collection shop_name
      * @property Grid\Column|Collection tel
      * @property Grid\Column|Collection fax
@@ -345,6 +347,7 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection notice_no(string $label = null)
      * @method Grid\Column|Collection expired_date(string $label = null)
      * @method Grid\Column|Collection is_directory(string $label = null)
+     * @method Grid\Column|Collection is_test(string $label = null)
      * @method Grid\Column|Collection token(string $label = null)
      * @method Grid\Column|Collection product_id(string $label = null)
      * @method Grid\Column|Collection shop_group_id(string $label = null)
@@ -362,6 +365,7 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection repair_project_no(string $label = null)
      * @method Grid\Column|Collection repair_item_id(string $label = null)
      * @method Grid\Column|Collection repair_detail_id(string $label = null)
+     * @method Grid\Column|Collection fee(string $label = null)
      * @method Grid\Column|Collection shop_name(string $label = null)
      * @method Grid\Column|Collection tel(string $label = null)
      * @method Grid\Column|Collection fax(string $label = null)
@@ -558,6 +562,7 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection notice_no
      * @property Show\Field|Collection expired_date
      * @property Show\Field|Collection is_directory
+     * @property Show\Field|Collection is_test
      * @property Show\Field|Collection token
      * @property Show\Field|Collection product_id
      * @property Show\Field|Collection shop_group_id
@@ -575,6 +580,7 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection repair_project_no
      * @property Show\Field|Collection repair_item_id
      * @property Show\Field|Collection repair_detail_id
+     * @property Show\Field|Collection fee
      * @property Show\Field|Collection shop_name
      * @property Show\Field|Collection tel
      * @property Show\Field|Collection fax
@@ -766,6 +772,7 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection notice_no(string $label = null)
      * @method Show\Field|Collection expired_date(string $label = null)
      * @method Show\Field|Collection is_directory(string $label = null)
+     * @method Show\Field|Collection is_test(string $label = null)
      * @method Show\Field|Collection token(string $label = null)
      * @method Show\Field|Collection product_id(string $label = null)
      * @method Show\Field|Collection shop_group_id(string $label = null)
@@ -783,6 +790,7 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection repair_project_no(string $label = null)
      * @method Show\Field|Collection repair_item_id(string $label = null)
      * @method Show\Field|Collection repair_detail_id(string $label = null)
+     * @method Show\Field|Collection fee(string $label = null)
      * @method Show\Field|Collection shop_name(string $label = null)
      * @method Show\Field|Collection tel(string $label = null)
      * @method Show\Field|Collection fax(string $label = null)

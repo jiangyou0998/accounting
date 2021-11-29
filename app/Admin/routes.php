@@ -103,6 +103,9 @@ Route::group([
     //前台最近登錄用戶
     $router->get('lastlogin', 'LastLoginController@index');
 
+    //通知電郵設定
+    $router->resource('notification_emails', 'NotificationEmailController');
+
     //test
 //    $router->get('data/', 'DataChangeController@index');
 //    $router->put('data/test', 'DataChangeController@test');

@@ -91,6 +91,13 @@
     </div>
 
     <div class="layui-form-item">
+        <label class="layui-form-label">維修費用</label>
+        <div class="layui-input-block">
+            <input type="number" name="fee" value="{{$repair->fee}}" required lay-verify="required" placeholder="維修費用" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
         <label class="layui-form-label">已完成</label>
         <div class="layui-input-block">
             <input type="checkbox" name="complete" lay-skin="switch" lay-filter="switchTest" lay-text="已完成|未完成">

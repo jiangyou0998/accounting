@@ -76,6 +76,11 @@
     <label class="layui-form-label-col">{{$repair->handle_staff}}</label>
 </div>
 
+<div class="layui-form-item">
+    <label class="layui-form-label">維修費用</label>
+    <label class="layui-form-label-col">${{$repair->fee}}</label>
+</div>
+
 
 <hr style="width:98%; margin:8px auto;">
 

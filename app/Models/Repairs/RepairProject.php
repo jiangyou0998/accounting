@@ -5,6 +5,7 @@ namespace App\Models\Repairs;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
@@ -13,24 +14,29 @@ class RepairProject extends Model
     protected $table = 'repair_projects';
     protected $guarded = [];
 
-    public const IMPORTANCE = [1 => '高', 2 => '中', 3 => '低', 4 => '定期性'];
+//    protected $with = ['users', 'locations', 'items', 'details'];
 
-    public function users()
+    const IMPORTANCE = [1 => '高', 2 => '中', 3 => '低', 4 => '定期性'];
+    const STATUS_UNFINISHED = 1;
+    const STATUS_CANCELED = 4;
+    const STATUS_FINISHED = 99;
+
+    public function users(): HasOne
     {
         return $this->hasOne(User::class,'id','user_id');
     }
 
-    public function locations()
+    public function locations(): HasOne
     {
         return $this->hasOne(RepairLocation::class,'id','repair_location_id');
     }
 
-    public function items()
+    public function items(): HasOne
     {
         return $this->hasOne(RepairItem::class,'id','repair_item_id');
     }
 
-    public function details()
+    public function details(): HasOne
     {
         return $this->hasOne(RepairDetail::class,'id','repair_detail_id');
     }
@@ -54,11 +60,7 @@ class RepairProject extends Model
 
     public static function getUnfinishedSupport()
     {
-        $allUnfinished = RepairProject::with('users')
-            ->with('locations')
-            ->with('items')
-            ->with('details')
-            ->where('status',1)
+        $allUnfinished = RepairProject::where('status',1)
             ->CurrUser()
             ->orderByDesc('updated_at')
             ->get();
@@ -71,11 +73,7 @@ class RepairProject extends Model
 
     public static function getFinishedSupport()
     {
-        $allFinished =  RepairProject::with('users')
-            ->with('locations')
-            ->with('items')
-            ->with('details')
-            ->where('status',99)
+        $allFinished =  RepairProject::where('status',99)
             ->CurrUser()
             ->NotExpired(14)
             ->orderByDesc('updated_at')
@@ -89,11 +87,7 @@ class RepairProject extends Model
 
     public static function getCanceledSupport()
     {
-        $allCanceled =  RepairProject::with('users')
-            ->with('locations')
-            ->with('items')
-            ->with('details')
-            ->where('status',4)
+        $allCanceled =  RepairProject::where('status',4)
             ->CurrUser()
             ->NotExpired(14)
             ->orderByDesc('updated_at')

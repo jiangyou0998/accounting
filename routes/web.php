@@ -153,6 +153,7 @@ Route::get('stock/supplier', 'SupplierStockController@index')->name('stock.suppl
 
 Route::group(['middleware' => ['auth','permission:workshop']], function () {
     Route::get('customer/sample/regular', 'Regular\CustomerRegularController@index')->name('customer.sample.index');
+    Route::get('update/price', 'UpdatePriceController@index');
 });
 
 //Route::get('/import', 'ImportController@import');
@@ -161,8 +162,14 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
 //Route::get('/import/customer', 'ImportController@importCustomer');
 //Route::get('/import/reset/price', 'ImportController@resetPrice');
 //Route::get('/import/customer/price', 'ImportController@importCustomerPrice');
+
+//Supplier 導入
 //Route::get('/import/supplier', 'ImportController@importSupplierItems');
-//Route::get('/import/supplier/product', 'ImportController@importSupplierProduct');
+//Route::get('/import/supplier/food', 'Import\SupplierFoodImportController@importSupplierProduct');
+//Route::get('/import/supplier/package', 'Import\SupplierPackageImportController@importSupplierProduct');
+
+//Repair Item 導入
+//Route::get('/import/repair/item', 'Import\RepairItemImportController@importRepairItem');
 
 //Route::get('/api/resetpassword', 'Api\ApiController@resetAllPassword');
 //Route::get('/api/resetshoppassword', 'Api\ApiController@resetShopPassword');
