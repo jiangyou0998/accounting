@@ -60,7 +60,7 @@ class RepairProject extends Model
 
     public static function getUnfinishedSupport()
     {
-        $allUnfinished = RepairProject::where('status',1)
+        $allUnfinished = RepairProject::where('status', self::STATUS_UNFINISHED)
             ->CurrUser()
             ->orderByDesc('updated_at')
             ->get();
@@ -73,7 +73,7 @@ class RepairProject extends Model
 
     public static function getFinishedSupport()
     {
-        $allFinished =  RepairProject::where('status',99)
+        $allFinished =  RepairProject::where('status', self::STATUS_FINISHED)
             ->CurrUser()
             ->NotExpired(14)
             ->orderByDesc('updated_at')
@@ -87,7 +87,7 @@ class RepairProject extends Model
 
     public static function getCanceledSupport()
     {
-        $allCanceled =  RepairProject::where('status',4)
+        $allCanceled =  RepairProject::where('status', self::STATUS_CANCELED)
             ->CurrUser()
             ->NotExpired(14)
             ->orderByDesc('updated_at')

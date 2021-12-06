@@ -100,7 +100,7 @@
 </div>
 
 <div class="layui-form-item">
-    <label class="layui-form-label">負責人</label>
+    <label class="layui-form-label">最後操作</label>
     <label class="layui-form-label-col">{{$repair->users->txt_name}}</label>
 </div>
 

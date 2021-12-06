@@ -81,15 +81,21 @@
     <div class="layui-form-item">
         <label class="layui-form-label">到店時間</label>
         <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
-            <input type="text" class="layui-input" id="start" name="start" value="{{$repair->finished_start_time}}" autocomplete="off"  required lay-verify="required">
-        </div>
+            <input type="number" class="layui-input" id="start_hour" name="start_hour" value="{{ $repair->finished_start_hour }}" autocomplete="off"  required lay-verify="required|number|hour">
+        </div>時
+        <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
+            <input type="number" class="layui-input" id="start_minute" name="start_minute" value="{{ $repair->finished_start_minute }}" autocomplete="off"  required lay-verify="required|number|minute">
+        </div>分
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">離開時間</label>
         <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
-            <input type="text" class="layui-input" id="end" name="end" value="{{$repair->finished_end_time}}" autocomplete="off" required lay-verify="required">
-        </div>
+            <input type="number" class="layui-input" id="end_hour" name="end_hour" value="{{ $repair->finished_end_hour }}" autocomplete="off" required lay-verify="required|number|hour">
+        </div>時
+        <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
+            <input type="number" class="layui-input" id="end_minute" name="end_minute" value="{{ $repair->finished_end_minute }}" autocomplete="off"  required lay-verify="required|number|minute">
+        </div>分
     </div>
 
 
@@ -133,7 +139,7 @@
 </div>
 
 <div class="layui-form-item">
-    <label class="layui-form-label">負責人</label>
+    <label class="layui-form-label">最後操作</label>
     <label class="layui-form-label-col">{{$repair->users->txt_name}}</label>
 </div>
 
@@ -148,18 +154,36 @@
             elem: '#cDate' //指定元素
         });
 
-        //时间选择器
-        laydate.render({
-            elem: '#start'
-            ,format: 'HH:mm'
-            ,type: 'time'
+        form.verify({
+            hour: function(value, item){ //value：表单的值、item：表单的DOM对象
+
+                if(/^(0?[0-9]|1[0-9]|2[0-3])$/.test(value) === false){
+                    return '小時數輸入格式不正確';
+                }
+
+            }
+
+            ,minute: function(value, item){ //value：表单的值、item：表单的DOM对象
+
+                if(/^(0?[0-9]|[1-5][0-9])$/.test(value) === false){
+                    return '分鐘數輸入格式不正確';
+                }
+
+            }
         });
 
-        laydate.render({
-            elem: '#end'
-            ,format: 'HH:mm'
-            ,type: 'time'
-        });
+        // //时间选择器
+        // laydate.render({
+        //     elem: '#start'
+        //     ,format: 'HH:mm'
+        //     ,type: 'time'
+        // });
+        //
+        // laydate.render({
+        //     elem: '#end'
+        //     ,format: 'HH:mm'
+        //     ,type: 'time'
+        // });
     });
 </script>
 

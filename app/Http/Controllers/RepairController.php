@@ -22,24 +22,14 @@ class RepairController extends Controller
     public function index(Request $request)
     {
         $locations = RepairLocation::orderBy('sort')->get()->pluck('name','id');
-
         $items = RepairItem::orderBy('sort')->get()->pluck('name','id');
-
         $details = RepairDetail::orderBy('sort')->get()->pluck('name','id');
 
-//        dump($items->toArray());
-
         $allUnfinished = RepairProject::getUnfinishedSupport();
-
         $allFinished =  RepairProject::getFinishedSupport();
-
         $allCanceled =  RepairProject::getCanceledSupport();
 
         $importances = RepairProject::IMPORTANCE;
-
-//        dd($allUnfinished->toArray());
-
-//        dump($items->toArray());
 
         return view('support.repair.index',compact('locations' ,'items','details' , 'importances' ,'allUnfinished' ,'allFinished','allCanceled'));
     }
@@ -64,12 +54,6 @@ class RepairController extends Controller
         //2021-11-30 增加負責人
         $data['contact_person'] = $request->contact_person;
 
-
-//        dd($repairNo);
-
-//        dump($request);
-//        dd($data);
-
         //保存文件
         if ($request->file) {
             $result = $uploader->save($request->file, 'repairs', $user->id);
@@ -80,12 +64,9 @@ class RepairController extends Controller
 
         $repair = RepairProject::create($data);
 
-//        $emails = Role::getEmail('Maintenance');
-//        Mail::to($emails)->send(new RepairShipped($repair->id));
         $notification_emails = getNotificationEmails('repair');
-
         Mail::to($notification_emails)->send(new RepairShipped($repair->id));
-//        return redirect()->route('users.show', $user->id)->with('success', '个人资料更新成功！');
+
         return redirect()->route('repair');
     }
 
@@ -119,6 +100,12 @@ class RepairController extends Controller
             $repair->importance = "";
         }
 
+        //分解時間 (格式 11:00)
+        $repair->finished_start_hour = substr($repair->finished_start_time, 0, 2);
+        $repair->finished_start_minute = substr($repair->finished_start_time,  -2);
+        $repair->finished_end_hour = substr($repair->finished_end_time, 0, 2);
+        $repair->finished_end_minute = substr($repair->finished_end_time,  -2);
+
         return view('support.repair.edit',compact('repair'));
     }
 
@@ -127,18 +114,25 @@ class RepairController extends Controller
         $user = Auth::user();
         $repair = RepairProject::find($repairid);
 
-//        $repair->id = $repairid;
+        //時間補0後拼接
+        $start_hour = str_pad($request->start_hour,2,"0", STR_PAD_LEFT);
+        $start_minute = str_pad($request->start_minute,2,"0", STR_PAD_LEFT);
+        $end_hour = str_pad($request->end_hour,2,"0", STR_PAD_LEFT);
+        $end_minute = str_pad($request->end_minute,2,"0", STR_PAD_LEFT);
+        $finished_start_time = $start_hour . ':' . $start_minute;
+        $finished_end_time = $end_hour . ':' . $end_minute;
+
         $repair->comment = $request->comment;
         $repair->complete_date = $request->cDate;
-        $repair->finished_start_time = $request->start;
-        $repair->finished_end_time = $request->end;
+        $repair->finished_start_time = $finished_start_time;
+        $repair->finished_end_time = $finished_end_time;
         $repair->handle_staff = $request->staff;
         $repair->last_update_user = $user->id;
         $repair->fee = $request->fee;
 
         //已完成狀態改為99
         if($request->complete){
-            $repair->status = 99;
+            $repair->status = RepairProject::STATUS_FINISHED;
         }
 
         $repair->save();
@@ -151,7 +145,7 @@ class RepairController extends Controller
     {
         $repair = RepairProject::find($id);
         $repair->last_update_user = Auth::id();
-        $repair->status = 4;
+        $repair->status = RepairProject::STATUS_CANCELED;
         $repair->save();
     }
 
