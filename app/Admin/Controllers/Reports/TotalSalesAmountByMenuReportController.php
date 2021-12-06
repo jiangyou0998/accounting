@@ -126,10 +126,6 @@ class TotalSalesAmountByMenuReportController extends AdminController
         $cartitem = $cartitem
             ->addSelect(DB::raw($sql));
 
-        //查詢單位
-        $cartitem = $cartitem
-            ->addSelect('workshop_units.unit_name as 單位');
-
         foreach ($shops as $shop){
 //                $sql = "sum(case when workshop_cart_items.user_id = '$shop->id' then workshop_cart_items.qty else 0 end) as '$shop->chr_report_name'";
 //                dump($sql);
@@ -140,9 +136,13 @@ class TotalSalesAmountByMenuReportController extends AdminController
                 ->addSelect(DB::raw($sql));
         }
 
+        //查詢單位
+        $cartitem = $cartitem
+            ->addSelect('workshop_units.unit_name as 單位');
+
         $cartitem = $cartitem
             ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
-            ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
+//            ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
             ->leftJoin('workshop_units', 'workshop_units.id', '=', 'workshop_products.unit_id');
 
         $cartitem = $cartitem
@@ -170,10 +170,6 @@ class TotalSalesAmountByMenuReportController extends AdminController
 //                $v->splice(4, 0, ['單價'=> $prices[$v->編號]]);
             }
         }
-
-
-
-//        dd($cartitem->toArray());
 
         return $cartitem;
 
