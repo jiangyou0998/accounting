@@ -28,7 +28,7 @@
 </div>
 
 <div class="layui-form-item">
-    <label class="layui-form-label">分店/部門</label>
+    <label class="layui-form-label">分店/用戶</label>
     <label class="layui-form-label-col">{{$repair->users->txt_name}}</label>
 </div>
 
@@ -38,8 +38,18 @@
 </div>
 
 <div class="layui-form-item">
+    <label class="layui-form-label">位置</label>
+    <label class="layui-form-label-col">{{$repair->locations->name}}</label>
+</div>
+
+<div class="layui-form-item">
     <label class="layui-form-label">求助事宜</label>
     <label class="layui-form-label-col">{{$repair->items->name}} - {{$repair->details->name}}</label>
+</div>
+
+<div class="layui-form-item">
+    <label class="layui-form-label">負責人</label>
+    <label class="layui-form-label-col">{{$repair->contact_person}}</label>
 </div>
 
 <div class="layui-form-item">

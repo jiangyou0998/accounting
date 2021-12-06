@@ -68,7 +68,7 @@ class NotificationEmailController extends AdminController
 //                })->pluck('text', 'email');
 //            $form->select('email')->options($emails);
             $form->email('email');
-            $form->text('type');
+            $form->select('type')->options(NotificationEmail::TPYE);
             $form->hidden('is_test');
 
             $form->submitted(function (Form $form) {

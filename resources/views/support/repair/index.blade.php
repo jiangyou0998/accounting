@@ -55,6 +55,9 @@
                         <label for="state">維修項目</label>
                         <select class="custom-select d-block w-100" name="items" id="items" required="">
                             <option value="">- 請選擇 -</option>
+                            @foreach($items as $itemid => $item)
+                                <option value="{{$itemid}}">{{$item}} </option>
+                            @endforeach
                         </select>
                         <div class="invalid-feedback">
                             請選擇「維修項目」
@@ -65,6 +68,9 @@
                         <label for="state">求助事宜</label>
                         <select class="custom-select d-block w-100" name="details" id="details" required="">
                             <option value="">- 請選擇 -</option>
+                            @foreach($details as $detailid => $detail)
+                                <option value="{{$detailid}}">{{$detail}} </option>
+                            @endforeach
                         </select>
                         <div class="invalid-feedback">
                             請選擇「求助事宜」
@@ -86,6 +92,11 @@
 
                             </div>
                             <div class="col-md-12 mb-3">
+                                <label for="contact_person">負責人</label>
+                                <input type="text" class="form-control" name="contact_person" id="cc-contact_person" placeholder="">
+
+                            </div>
+                            <div class="col-md-12 mb-3">
                                 <label for="cc-expiration">其他資料提供</label>
                                 <textarea class="form-control" name="textarea" id="textarea" cols="30"
                                           rows="8"></textarea>
@@ -103,7 +114,7 @@
 {{--        <button type="button" class="btn btn-primary open-modal" data-toggle="modal" data-target="#exampleModal" data-id="4">Open modal for @fat</button>--}}
 {{--        <button type="button" class="btn btn-primary open-modal" data-toggle="modal" data-target="#exampleModal" data-id="5">Open modal for @getbootstrap</button>--}}
 
-        @include('support.repair._modal')
+{{--        @include('support.repair._modal')--}}
 
         <div class="text-center">
             <h2>未完成處理</h2>
@@ -130,65 +141,6 @@
         <hr class="mb-4">
 
         <script type="text/javascript">
-            $(document).ready(function () {
-                //绑定分类下拉框选项变化事件
-                $("#locations").on('change',
-                    function () {
-                        var locations = $(this).val();
-                        $('#items').val('').trigger('change');
-
-                        if (locations == '') {
-                            $("#items").empty().append('<option value="" >- 請選擇 -</option>');
-                            return;
-                        }
-
-                        var items = @json($items);
-
-                        var projectsMap = {};
-                        var projectsMap = items[locations];
-
-                        console.log(projectsMap);
-
-                        var option = "";
-                        for (var i in projectsMap[0]) {
-                            option += '<option value="' + i + '"  >' + projectsMap[0][i] + '</option>';
-                        }
-
-                        $("#items").empty().append('<option value="" >- 請選擇 -</option>' + option);
-
-
-                    });
-
-
-                $("#items").on('change',
-                    function () {
-                        var items = $(this).val();
-                        $('#details').val('').trigger('change');
-
-                        if (items == '') {
-                            $("#details").empty().append('<option value="" >- 請選擇 -</option>');
-                            return;
-                        }
-
-                        var details = @json($details);
-
-                        var projectsMap = {};
-                        var projectsMap = details[items];
-
-                        // console.log(projectsMap);
-
-
-                        var option = "";
-                        for (var i in projectsMap[0]) {
-                            option += '<option value="' + i + '"  >' + projectsMap[0][i] + '</option>';
-                        }
-
-                        $("#details").empty().append('<option value="" >- 請選擇 -</option>' + option);
-
-
-                    });
-
-            });
 
             ;!function(){
                 //无需再执行layui.use()方法加载模块，直接使用即可
@@ -210,6 +162,7 @@
                             }else if (form.checkValidity() === true) {
                                 //2020-12-08 認證成功禁止按鈕再次點擊
                                 document.getElementById("submit").disabled = true;
+                                document.getElementById("submit").innerHTML = '正在提交中，請稍等！';
                             }
                             form.classList.add('was-validated');
                         }, false);

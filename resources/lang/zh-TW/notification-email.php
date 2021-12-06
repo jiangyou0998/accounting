@@ -1,7 +1,7 @@
-<?php 
+<?php
 return [
     'labels' => [
-        'NotificationEmail' => 'NotificationEmail',
+        'NotificationEmail' => '通知電郵設定',
     ],
     'fields' => [
         'name' => '名稱',

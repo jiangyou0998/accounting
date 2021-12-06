@@ -1,5 +1,11 @@
 <br>
 
+@if (config('app.debug'))
+    <div>
+        <span style="color: red;font-size: x-large">TEST EMAIL</span>
+    </div>
+@endif
+
 <div>
     時間:{{\Carbon\Carbon::now()->toDateTimeString()}}
 </div>

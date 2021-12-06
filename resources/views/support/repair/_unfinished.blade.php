@@ -8,16 +8,17 @@
         <tr bgcolor="#CCFFFF">
 
             <td align="center" width="3%"><b>#</b></td>
-            <td align="center" width="6%"><b>編號</b></td>
+            <td align="center" width="7%"><b>編號</b></td>
 
-            <td align="center" width="14%"><b>最近更新日期</b></td>
+            <td align="center" width="13%"><b>最近更新日期</b></td>
 
             <td align="center" width="10%"><b>分店/用戶</b></td>
             <td align="center" width="5%"><b>緊急性</b></td>
-            <td align="center" width="8%"><b>位置</b></td>
-            <td align="center" width="8%"><b>維修項目</b></td>
-            <td align="center" width="8%"><b>求助事宜</b></td>
+            <td align="center" width="7%"><b>位置</b></td>
+            <td align="center" width="7%"><b>維修項目</b></td>
+            <td align="center" width="7%"><b>求助事宜</b></td>
             <td align="center" width="7%"><b>機器號碼#</b></td>
+            <td align="center" width="6%"><b>負責人</b></td>
             <td align="center" width="10%"><b>其他資料提供</b></td>
             <td align="center" width="6%"><b>上傳文檔</b></td>
 
@@ -41,8 +42,9 @@
             <td align="center">{{$unfinished->details->name ?? ''}}</td>
 
             <td align="center">{{$unfinished->machine_code}}</td>
+            <td align="center">{{$unfinished->contact_person}}</td>
             @if($unfinished->other)
-                <td data-toggle="popover" data-trigger="hover" title="{{$unfinished->it_support_no}}" data-content="{{$unfinished->other}}">
+                <td data-toggle="popover" data-trigger="hover" title="{{$unfinished->repair_project_no}}" data-content="{{$unfinished->other}}">
                     <span>
                     {{\Illuminate\Support\Str::limit($unfinished->other,8)}}
                     </span>
