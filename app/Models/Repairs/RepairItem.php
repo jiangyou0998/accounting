@@ -11,9 +11,4 @@ class RepairItem extends Model
     protected $table = 'repair_items';
     public $timestamps = false;
 
-    public function details()
-    {
-        return $this->hasMany(RepairDetail::class , 'item_id' , 'id');
-    }
-
 }

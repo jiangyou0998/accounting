@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Handlers\FileUploadHandler;
 use App\Mail\ItSupportShipped;
 use App\Mail\RepairShipped;
+use App\Models\Repairs\RepairDetail;
 use App\Models\Repairs\RepairItem;
 use App\Models\Repairs\RepairLocation;
 use App\Models\Repairs\RepairProject;
@@ -22,13 +23,9 @@ class RepairController extends Controller
     {
         $locations = RepairLocation::orderBy('sort')->get()->pluck('name','id');
 
-        $items = RepairLocation::with('items')->orderBy('sort')->get()->mapToGroups(function ($item, $key) {
-            return [$item['id'] => $item['items']->pluck('name','id')];
-        });
+        $items = RepairItem::orderBy('sort')->get()->pluck('name','id');
 
-        $details = RepairItem::with('details')->orderBy('sort')->get()->mapToGroups(function ($item, $key) {
-            return [$item['id'] => $item['details']->pluck('name','id')];
-        });
+        $details = RepairDetail::orderBy('sort')->get()->pluck('name','id');
 
 //        dump($items->toArray());
 
@@ -64,6 +61,9 @@ class RepairController extends Controller
         $data['repair_project_no'] = $repairNo;
         $data['ip'] = $request->ip();
 
+        //2021-11-30 增加負責人
+        $data['contact_person'] = $request->contact_person;
+
 
 //        dd($repairNo);
 
@@ -92,8 +92,7 @@ class RepairController extends Controller
     public function show($id)
     {
         $repair = RepairProject::with('users')
-            ->with('items')
-            ->with('details')
+            ->with(['locations', 'items', 'details'])
             ->find($id);
 
         $importanceArr = RepairProject::IMPORTANCE;
