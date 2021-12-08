@@ -11,6 +11,7 @@ use App\Models\Repairs\RepairItem;
 use App\Models\Repairs\RepairLocation;
 use App\Models\Repairs\RepairProject;
 use App\Models\Role;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Mail;
 class RepairController extends Controller
 {
     //
-    public function index(Request $request)
+    public function index()
     {
         $locations = RepairLocation::orderBy('sort')->get()->pluck('name','id');
         $items = RepairItem::orderBy('sort')->get()->pluck('name','id');
@@ -34,6 +35,15 @@ class RepairController extends Controller
         return view('support.repair.index',compact('locations' ,'items','details' , 'importances' ,'allUnfinished' ,'allFinished','allCanceled'));
     }
 
+    public function phoneIndex()
+    {
+        $allUnfinished = RepairProject::getUnfinishedSupport()->groupBy('user_id');
+
+        $users = User::all()->pluck('txt_name', 'id');
+
+        return view('support.repair.phone.index', compact('allUnfinished', 'users'));
+    }
+
     public function store(Request $request, FileUploadHandler $uploader)
     {
         $user = Auth::user();
@@ -45,7 +55,7 @@ class RepairController extends Controller
         $data['repair_detail_id'] = $request->details;
         $data['machine_code'] = $request->machine_code;
         $data['other'] = $request->textarea;
-        $data['status'] = 1;
+        $data['status'] = RepairProject::STATUS_UNFINISHED;
         $data['user_id'] = $user->id;
         $data['last_update_user'] = $user->id;
         $data['repair_project_no'] = $repairNo;

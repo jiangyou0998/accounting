@@ -118,19 +118,8 @@ class RepairProject extends Model
 
     public function scopeCurrUser($query)
     {
-//        if(Auth::user()->can('shop')){
-//            //分店獲取當前登錄id
-//            return $query->where('user_id', Auth::id());
-//        }else if(Auth::user()->can('IT')){
-//            //IT獲取全部
-//            return $query;
-//        }else{
-//            //其他獲取不存在的id
-//            return $query->where('user_id', 0);
-//        }
-
-        if(Auth::user()->can('IT')){
-            //IT獲取全部
+        if(Auth::user()->can('maintenance')){
+            //maintenance角色獲取全部
             return $query;
         }else{
             //其他獲取當前登錄id
