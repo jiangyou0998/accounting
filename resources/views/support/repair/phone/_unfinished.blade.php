@@ -12,7 +12,7 @@
             </div>
 
             <div>
-                分店/用戶:<span style="color: red;font-size: large">{{ $repair->users->txt_name }}</span>
+                分店/用戶:<span style="color: red;font-size: large">{{ $repair->users->txt_name ?? '' }}</span>
             </div>
 
             <div>
@@ -24,15 +24,15 @@
             </div>
 
             <div>
-                位置:{{ $repair->locations->name }}
+                位置:{{ $repair->locations->name ?? '' }}
             </div>
 
             <div>
-                維修項目:{{ $repair->items->name }}
+                維修項目:{{ $repair->items->name ?? '' }}
             </div>
 
             <div>
-                求助事宜:{{ $repair->details->name }}
+                求助事宜:{{ $repair->details->name ?? '' }}
             </div>
 
             @if( $repair->machine_code )

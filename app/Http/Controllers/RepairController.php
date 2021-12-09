@@ -103,13 +103,6 @@ class RepairController extends Controller
             ->with('details')
             ->find($id);
 
-        $importanceArr = RepairProject::IMPORTANCE;
-        if(isset($importanceArr[$repair->importance])){
-            $repair->importance = $importanceArr[$repair->importance];
-        }else{
-            $repair->importance = "";
-        }
-
         //分解時間 (格式 11:00)
         $repair->finished_start_hour = substr($repair->finished_start_time, 0, 2);
         $repair->finished_start_minute = substr($repair->finished_start_time,  -2);

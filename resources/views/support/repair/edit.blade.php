@@ -79,23 +79,43 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">到店時間</label>
-        <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
-            <input type="number" class="layui-input" id="start_hour" name="start_hour" value="{{ $repair->finished_start_hour }}" autocomplete="off"  required lay-verify="required|number|hour">
-        </div>時
-        <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
-            <input type="number" class="layui-input" id="start_minute" name="start_minute" value="{{ $repair->finished_start_minute }}" autocomplete="off"  required lay-verify="required|number|minute">
-        </div>分
+        <div class="layui-inline">
+            <label class="layui-form-label">到店時間</label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="number" class="layui-input"
+                       id="start_hour" name="start_hour" value="{{ $repair->finished_start_hour }}"
+                       min="0" max="23"
+                       autocomplete="off" required lay-verify="required|number|hour">
+            </div>
+            <div class="layui-form-mid">時</div>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="number" class="layui-input"
+                       id="start_minute" name="start_minute" value="{{ $repair->finished_start_minute }}"
+                       min="0" max="59"
+                       autocomplete="off" required lay-verify="required|number|minute">
+            </div>
+            <div class="layui-form-mid">分</div>
+        </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">離開時間</label>
-        <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
-            <input type="number" class="layui-input" id="end_hour" name="end_hour" value="{{ $repair->finished_end_hour }}" autocomplete="off" required lay-verify="required|number|hour">
-        </div>時
-        <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
-            <input type="number" class="layui-input" id="end_minute" name="end_minute" value="{{ $repair->finished_end_minute }}" autocomplete="off"  required lay-verify="required|number|minute">
-        </div>分
+        <div class="layui-inline">
+            <label class="layui-form-label">離開時間</label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="number" class="layui-input"
+                       id="end_hour" name="end_hour" value="{{ $repair->finished_end_hour }}"
+                       min="0" max="23"
+                       autocomplete="off" required lay-verify="required|number|hour">
+            </div>
+            <div class="layui-form-mid">時</div>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="number" class="layui-input"
+                       id="end_minute" name="end_minute" value="{{ $repair->finished_end_minute }}"
+                       min="0" max="59"
+                       autocomplete="off" required lay-verify="required|number|minute">
+            </div>
+            <div class="layui-form-mid">分</div>
+        </div>
     </div>
 
 
@@ -109,7 +129,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">維修費用</label>
         <div class="layui-input-block">
-            <input type="number" name="fee" value="{{$repair->fee}}" required lay-verify="required" placeholder="維修費用" autocomplete="off" class="layui-input">
+            <input type="number" name="fee" value="{{$repair->fee}}" min="0" required lay-verify="required" placeholder="$" autocomplete="off" class="layui-input">
         </div>
     </div>
 
@@ -172,18 +192,6 @@
             }
         });
 
-        // //时间选择器
-        // laydate.render({
-        //     elem: '#start'
-        //     ,format: 'HH:mm'
-        //     ,type: 'time'
-        // });
-        //
-        // laydate.render({
-        //     elem: '#end'
-        //     ,format: 'HH:mm'
-        //     ,type: 'time'
-        // });
     });
 </script>
 
