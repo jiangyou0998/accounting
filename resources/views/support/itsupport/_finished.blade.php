@@ -6,15 +6,16 @@
         <tr bgcolor="#CCFFFF">
 
             <td align="center" width="3%"><b>#</b></td>
-            <td align="center" width="6%"><b>編號</b></td>
+            <td align="center" width="7%"><b>編號</b></td>
 
-            <td align="center" width="14%"><b>最近更新日期</b></td>
+            <td align="center" width="13%"><b>最近更新日期</b></td>
 
             <td align="center" width="10%"><b>分店/用戶</b></td>
             <td align="center" width="5%"><b>緊急性</b></td>
-            <td align="center" width="12%"><b>器材</b></td>
-            <td align="center" width="12%"><b>求助事宜</b></td>
+            <td align="center" width="8%"><b>器材</b></td>
+            <td align="center" width="8%"><b>求助事宜</b></td>
             <td align="center" width="7%"><b>機器號碼#</b></td>
+            <td align="center" width="6%"><b>負責人</b></td>
             <td align="center" width="10%"><b>其他資料提供</b></td>
             <td align="center" width="6%"><b>上傳文檔</b></td>
 
@@ -37,6 +38,7 @@
             <td align="center">{{$finished->details->name ?? ''}}</td>
 
             <td align="center">{{$finished->machine_code}}</td>
+            <td align="center">{{$finished->contact_person}}</td>
             @if($finished->other)
                 <td data-toggle="popover" data-trigger="hover" title="{{$finished->it_support_no}}" data-content="{{$finished->other}}">
                     <span>

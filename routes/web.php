@@ -121,6 +121,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::patch('itsupport/{itsupportid}', 'ItSupportController@update')->name('itsupport.update');
     Route::delete('itsupport/{itsupport}', 'ItSupportController@destroy')->name('itsupport.destroy');
 
+    Route::get('phone/itsupport', 'ItSupportController@phoneIndex')->name('itsupport.phone');
+
     Route::get('repair', 'RepairController@index')->name('repair');
     Route::post('repair', 'RepairController@store')->name('repair.store');
     Route::get('repair/{repair}/edit', 'RepairController@edit')->name('repair.edit');

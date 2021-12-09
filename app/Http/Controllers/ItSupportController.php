@@ -7,6 +7,7 @@ use App\Handlers\FileUploadHandler;
 use App\Mail\ItSupportShipped;
 use App\Models\Itsupport\Itsupport;
 use App\Models\Itsupport\ItsupportItem;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -24,18 +25,21 @@ class ItSupportController extends Controller
         });
 
         $allUnfinished = Itsupport::getUnfinishedSupport();
-
         $allFinished =  Itsupport::getFinishedSupport();
-
         $allCanceled =  Itsupport::getCanceledSupport();
 
         $importances = Itsupport::IMPORTANCE;
 
-//        dump($unfinisheds->toArray());
-
-//        dump($items->toArray());
-
         return view('support.itsupport.index',compact('items','details' , 'importances' ,'allUnfinished' ,'allFinished','allCanceled'));
+    }
+
+    public function phoneIndex()
+    {
+        $allUnfinished = Itsupport::getUnfinishedSupport()->groupBy('user_id');
+
+        $users = User::all()->pluck('txt_name', 'id');
+
+        return view('support.itsupport.phone.index', compact('allUnfinished', 'users'));
     }
 
     public function store(Request $request, FileUploadHandler $uploader)
@@ -48,17 +52,14 @@ class ItSupportController extends Controller
         $data['itsupport_detail_id'] = $request->details;
         $data['machine_code'] = $request->machine_code;
         $data['other'] = $request->textarea;
-        $data['status'] = 1;
+        $data['status'] = Itsupport::STATUS_UNFINISHED;
         $data['user_id'] = $user->id;
         $data['last_update_user'] = $user->id;
         $data['it_support_no'] = $itSupportNo;
         $data['ip'] = $request->ip();
 
-
-//        dd($itSupportNo);
-
-//        dump($request);
-//        dd($data);
+        //2021-11-30 增加負責人
+        $data['contact_person'] = $request->contact_person;
 
         //保存文件
         if ($request->file) {
@@ -70,11 +71,11 @@ class ItSupportController extends Controller
 
         $itSupport = Itsupport::create($data);
 
-//        $emails = Role::getEmail('IT');
-//        Mail::to($emails)->send(new ItSupportShipped($itSupport->id));
+        $notification_emails = getNotificationEmails('itsupport');
+        if($notification_emails){
+            Mail::to($notification_emails)->send(new ItSupportShipped($itSupport->id));
+        }
 
-        Mail::to([0=>'jianli@kingbakery.com.hk',1=>'fs378354476@outlook.com'])->send(new ItSupportShipped($itSupport->id));
-//        return redirect()->route('users.show', $user->id)->with('success', '个人资料更新成功！');
         return redirect()->route('itsupport');
     }
 
@@ -93,6 +94,13 @@ class ItSupportController extends Controller
             ->with('items')
             ->with('details')
             ->find($id);
+
+        //分解時間 (格式 11:00)
+        $itsupport->finished_start_hour = substr($itsupport->finished_start_time, 0, 2);
+        $itsupport->finished_start_minute = substr($itsupport->finished_start_time,  -2);
+        $itsupport->finished_end_hour = substr($itsupport->finished_end_time, 0, 2);
+        $itsupport->finished_end_minute = substr($itsupport->finished_end_time,  -2);
+
         return view('support.itsupport.edit',compact('itsupport'));
     }
 
@@ -101,17 +109,25 @@ class ItSupportController extends Controller
         $user = Auth::user();
         $itsupport = Itsupport::find($itsupportid);
 
-//        $itsupport->id = $itsupportid;
+        //時間補0後拼接
+        $start_hour = str_pad($request->start_hour,2,"0", STR_PAD_LEFT);
+        $start_minute = str_pad($request->start_minute,2,"0", STR_PAD_LEFT);
+        $end_hour = str_pad($request->end_hour,2,"0", STR_PAD_LEFT);
+        $end_minute = str_pad($request->end_minute,2,"0", STR_PAD_LEFT);
+        $finished_start_time = $start_hour . ':' . $start_minute;
+        $finished_end_time = $end_hour . ':' . $end_minute;
+
         $itsupport->comment = $request->comment;
         $itsupport->complete_date = $request->cDate;
-        $itsupport->finished_start_time = $request->start;
-        $itsupport->finished_end_time = $request->end;
+        $itsupport->finished_start_time = $finished_start_time;
+        $itsupport->finished_end_time = $finished_end_time;
         $itsupport->handle_staff = $request->staff;
         $itsupport->last_update_user = $user->id;
+        $itsupport->fee = $request->fee;
 
         //已完成狀態改為99
         if($request->complete){
-            $itsupport->status = 99;
+            $itsupport->status = Itsupport::STATUS_FINISHED;
         }
 
         $itsupport->save();
@@ -124,7 +140,7 @@ class ItSupportController extends Controller
     {
         $itsupport = Itsupport::find($id);
         $itsupport->last_update_user = Auth::id();
-        $itsupport->status = 4;
+        $itsupport->status = Itsupport::STATUS_CANCELED;
         $itsupport->save();
     }
 

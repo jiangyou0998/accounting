@@ -75,6 +75,11 @@
 
                             </div>
                             <div class="col-md-12 mb-3">
+                                <label for="contact_person">負責人</label>
+                                <input type="text" class="form-control" name="contact_person" id="cc-contact_person" placeholder="">
+
+                            </div>
+                            <div class="col-md-12 mb-3">
                                 <label for="cc-expiration">其他資料提供</label>
                                 <textarea class="form-control" name="textarea" id="textarea" cols="30"
                                           rows="8"></textarea>
@@ -171,6 +176,7 @@
                             }else if (form.checkValidity() === true) {
                                 //2020-12-08 認證成功禁止按鈕再次點擊
                                 document.getElementById("submit").disabled = true;
+                                document.getElementById("submit").innerHTML = '正在提交中，請稍等！';
                             }
                             form.classList.add('was-validated');
                         }, false);
