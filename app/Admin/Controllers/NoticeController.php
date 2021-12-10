@@ -236,9 +236,12 @@ class NoticeController extends AdminController
                         return $form->error('数据保存失败');
                     }
 
-                    Mail::to(["rbpost@ryoyubakery.com.hk"])
+                    $notification_emails = getNotificationEmails('notice');
+                    if($notification_emails){
+                        Mail::to($notification_emails)
 //                        ->queue(new NoticeShipped($newId));
-                        ->send(new NoticeShipped($newId));
+                            ->send(new NoticeShipped($newId));
+                    }
                 }
 
             });

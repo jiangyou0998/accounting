@@ -75,7 +75,9 @@ class RepairController extends Controller
         $repair = RepairProject::create($data);
 
         $notification_emails = getNotificationEmails('repair');
-        Mail::to($notification_emails)->send(new RepairShipped($repair->id));
+        if($notification_emails){
+            Mail::to($notification_emails)->send(new RepairShipped($repair->id));
+        }
 
         return redirect()->route('repair');
     }

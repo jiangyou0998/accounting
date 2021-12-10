@@ -89,12 +89,11 @@ class ClaimController extends Controller
 
         $claim = Claim::create($data);
 
-//        $emails = Role::getEmail('IT');
-//        Mail::to($emails)->send(new ItSupportShipped($itSupport->id));
+        $notification_emails = getNotificationEmails('claim');
+        if($notification_emails){
+            Mail::to($notification_emails)->send(new ClaimShipped($claim->id));
+        }
 
-//        Mail::to([0=>'jianli@kingbakery.com.hk',1=>'winnielau@kingbakery.com.hk'])->send(new ClaimShipped($claim->id));
-        Mail::to([0=>'hr@kingbakery.com.hk'])->send(new ClaimShipped($claim->id));
-//        return redirect()->route('users.show', $user->id)->with('success', '个人资料更新成功！');
         return redirect()->route('claim')->with('success', '成功提交申請！');
     }
 
