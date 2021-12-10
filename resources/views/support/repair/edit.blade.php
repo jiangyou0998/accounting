@@ -29,7 +29,7 @@
 
 <div class="layui-form-item">
     <label class="layui-form-label">分店/用戶</label>
-    <label class="layui-form-label-col">{{$repair->users->txt_name}}</label>
+    <label class="layui-form-label-col">{{$repair->users->txt_name ?? ''}}</label>
 </div>
 
 <div class="layui-form-item">
@@ -39,12 +39,12 @@
 
 <div class="layui-form-item">
     <label class="layui-form-label">位置</label>
-    <label class="layui-form-label-col">{{$repair->locations->name}}</label>
+    <label class="layui-form-label-col">{{$repair->locations->name ?? ''}}</label>
 </div>
 
 <div class="layui-form-item">
     <label class="layui-form-label">求助事宜</label>
-    <label class="layui-form-label-col">{{$repair->items->name}} - {{$repair->details->name}}</label>
+    <label class="layui-form-label-col">{{$repair->items->name ?? ''}} - {{$repair->details->name ?? ''}}</label>
 </div>
 
 <div class="layui-form-item">

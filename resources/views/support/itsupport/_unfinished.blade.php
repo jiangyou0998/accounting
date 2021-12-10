@@ -34,7 +34,7 @@
             <td align="center" height="25">
                 {{\Carbon\Carbon::parse($unfinished->updated_at)->toDateString()}}(<span style="color: red; ">{{\Carbon\Carbon::parse($unfinished->updated_at)->diffInDays(\Carbon\Carbon::now())}}</span>)
             </td>
-            <td align="center" height="25">{{$unfinished->users->txt_name}}</td>
+            <td align="center" height="25">{{$unfinished->users->txt_name ?? ''}}</td>
             <td align="center">{{$unfinished->importance}}</td>
             <td align="center">{{$unfinished->items->name ?? ''}}</td>
             <td align="center">{{$unfinished->details->name ?? ''}}</td>
