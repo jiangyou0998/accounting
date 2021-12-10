@@ -89,6 +89,8 @@ Route::group([
     $router->resource('claims', 'Claims\ClaimController');
     $router->resource('claim/report', 'Claims\ClaimReportController');
 
+    //通知電郵設定
+    $router->resource('notification_emails', 'NotificationEmailController');
 
     //test
 //    $router->get('data/', 'DataChangeController@index');

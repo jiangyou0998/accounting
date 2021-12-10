@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title> - Ryoyu Bakery</title>
+    <title> - King Bakery</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -28,8 +28,8 @@
 </div>
 
 <div class="layui-form-item">
-    <label class="layui-form-label">分店/部門</label>
-    <label class="layui-form-label-col">{{$repair->users->txt_name}}</label>
+    <label class="layui-form-label">分店/用戶</label>
+    <label class="layui-form-label-col">{{$repair->users->txt_name ?? ''}}</label>
 </div>
 
 <div class="layui-form-item">
@@ -38,8 +38,18 @@
 </div>
 
 <div class="layui-form-item">
+    <label class="layui-form-label">位置</label>
+    <label class="layui-form-label-col">{{$repair->locations->name ?? ''}}</label>
+</div>
+
+<div class="layui-form-item">
     <label class="layui-form-label">求助事宜</label>
-    <label class="layui-form-label-col">{{$repair->items->name}} - {{$repair->details->name}}</label>
+    <label class="layui-form-label-col">{{$repair->items->name ?? ''}} - {{$repair->details->name ?? ''}}</label>
+</div>
+
+<div class="layui-form-item">
+    <label class="layui-form-label">負責人</label>
+    <label class="layui-form-label-col">{{$repair->contact_person}}</label>
 </div>
 
 <div class="layui-form-item">
@@ -69,16 +79,42 @@
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">到店時間</label>
-        <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
-            <input type="text" class="layui-input" id="start" name="start" value="{{$repair->finished_start_time}}" autocomplete="off"  required lay-verify="required">
+        <div class="layui-inline">
+            <label class="layui-form-label">到店時間</label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="number" class="layui-input"
+                       id="start_hour" name="start_hour" value="{{ $repair->finished_start_hour }}"
+                       min="0" max="23"
+                       autocomplete="off" required lay-verify="required|number|hour">
+            </div>
+            <div class="layui-form-mid">時</div>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="number" class="layui-input"
+                       id="start_minute" name="start_minute" value="{{ $repair->finished_start_minute }}"
+                       min="0" max="59"
+                       autocomplete="off" required lay-verify="required|number|minute">
+            </div>
+            <div class="layui-form-mid">分</div>
         </div>
     </div>
 
     <div class="layui-form-item">
-        <label class="layui-form-label">離開時間</label>
-        <div class="layui-inline"> <!-- 注意：这一层元素并不是必须的 -->
-            <input type="text" class="layui-input" id="end" name="end" value="{{$repair->finished_end_time}}" autocomplete="off" required lay-verify="required">
+        <div class="layui-inline">
+            <label class="layui-form-label">離開時間</label>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="number" class="layui-input"
+                       id="end_hour" name="end_hour" value="{{ $repair->finished_end_hour }}"
+                       min="0" max="23"
+                       autocomplete="off" required lay-verify="required|number|hour">
+            </div>
+            <div class="layui-form-mid">時</div>
+            <div class="layui-input-inline" style="width: 100px;">
+                <input type="number" class="layui-input"
+                       id="end_minute" name="end_minute" value="{{ $repair->finished_end_minute }}"
+                       min="0" max="59"
+                       autocomplete="off" required lay-verify="required|number|minute">
+            </div>
+            <div class="layui-form-mid">分</div>
         </div>
     </div>
 
@@ -87,6 +123,13 @@
         <label class="layui-form-label">維修員</label>
         <div class="layui-input-block">
             <input type="text" name="staff" value="{{$repair->handle_staff}}" required lay-verify="required" placeholder="維修員" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">維修費用</label>
+        <div class="layui-input-block">
+            <input type="number" name="fee" value="{{$repair->fee}}" min="0" required lay-verify="required" placeholder="$" autocomplete="off" class="layui-input">
         </div>
     </div>
 
@@ -116,7 +159,7 @@
 </div>
 
 <div class="layui-form-item">
-    <label class="layui-form-label">負責人</label>
+    <label class="layui-form-label">最後操作</label>
     <label class="layui-form-label-col">{{$repair->users->txt_name}}</label>
 </div>
 
@@ -131,18 +174,24 @@
             elem: '#cDate' //指定元素
         });
 
-        //时间选择器
-        laydate.render({
-            elem: '#start'
-            ,format: 'HH:mm'
-            ,type: 'time'
+        form.verify({
+            hour: function(value, item){ //value：表单的值、item：表单的DOM对象
+
+                if(/^(0?[0-9]|1[0-9]|2[0-3])$/.test(value) === false){
+                    return '小時數輸入格式不正確';
+                }
+
+            }
+
+            ,minute: function(value, item){ //value：表单的值、item：表单的DOM对象
+
+                if(/^(0?[0-9]|[1-5][0-9])$/.test(value) === false){
+                    return '分鐘數輸入格式不正確';
+                }
+
+            }
         });
 
-        laydate.render({
-            elem: '#end'
-            ,format: 'HH:mm'
-            ,type: 'time'
-        });
     });
 </script>
 

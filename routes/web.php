@@ -143,6 +143,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::patch('repair/{repairid}', 'RepairController@update')->name('repair.update');
     Route::delete('repair/{repair}', 'RepairController@destroy')->name('repair.destroy');
 
+    Route::get('phone/repair', 'RepairController@phoneIndex')->name('repair.phone');
+
     //通告
     Route::any('notice', 'NoticeController@index')->middleware('auth')->name('notice');
     Route::get('notice/attachment/{id}', 'NoticeController@attachment')->middleware('auth')->name('notice.attachment');

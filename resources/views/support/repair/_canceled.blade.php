@@ -10,8 +10,8 @@
             <td align="center" width="3%"><b>#</b></td>
             <td align="center" width="6%"><b>編號</b></td>
 
-            <td align="center" width="14%"><b>維修單日期</b></td>
-            <td align="center" width="13%"><b>取消時間</b></td>
+            <td align="center" width="13%"><b>維修單日期</b></td>
+            <td align="center" width="10%"><b>取消時間</b></td>
 
             <td align="center" width="10%"><b>分店/用戶</b></td>
             <td align="center" width="5%"><b>緊急性</b></td>
@@ -19,6 +19,7 @@
             <td align="center" width="8%"><b>維修項目</b></td>
             <td align="center" width="8%"><b>求助事宜</b></td>
             <td align="center" width="7%"><b>機器號碼#</b></td>
+            <td align="center" width="6%"><b>負責人</b></td>
             <td align="center" width="10%"><b>其他資料提供</b></td>
             <td align="center" width="6%"><b>上傳文檔</b></td>
 
@@ -35,13 +36,14 @@
             <td align="center" height="25">
                 {{\Carbon\Carbon::parse($canceled->updated_at)->toDateString()}}
             </td>
-            <td align="center" height="25">{{$canceled->users->txt_name}}</td>
+            <td align="center" height="25">{{$canceled->users->txt_name ?? ''}}</td>
             <td align="center">{{$canceled->importance}}</td>
             <td align="center">{{$canceled->locations->name ?? ''}}</td>
             <td align="center">{{$canceled->items->name ?? ''}}</td>
             <td align="center">{{$canceled->details->name ?? ''}}</td>
 
             <td align="center">{{$canceled->machine_code}}</td>
+            <td align="center">{{$canceled->contact_person}}</td>
             @if($canceled->other)
                 <td data-toggle="popover" data-trigger="hover" title="{{$canceled->it_support_no}}" data-content="{{$canceled->other}}">
                     <span>
