@@ -14,7 +14,10 @@ class Itsupport extends Model
 
     protected $guarded = [];
 
-    public const IMPORTANCE = [1 => '高', 2 => '中', 3 => '低', 4 => '定期性'];
+    const IMPORTANCE = [1 => '高', 2 => '中', 3 => '低', 4 => '定期性'];
+    const STATUS_UNFINISHED = 1;
+    const STATUS_CANCELED = 4;
+    const STATUS_FINISHED = 99;
 
     public function users()
     {
@@ -50,10 +53,8 @@ class Itsupport extends Model
 
     public static function getUnfinishedSupport()
     {
-        $allUnfinished = Itsupport::with('users')
-            ->with('items')
-            ->with('details')
-            ->where('status',1)
+        $allUnfinished = Itsupport::with(['users', 'items', 'details'])
+            ->where('status',self::STATUS_UNFINISHED)
             ->CurrUser()
             ->orderByDesc('updated_at')
             ->get();
@@ -66,10 +67,8 @@ class Itsupport extends Model
 
     public static function getFinishedSupport()
     {
-        $allFinished =  Itsupport::with('users')
-            ->with('items')
-            ->with('details')
-            ->where('status',99)
+        $allFinished =  Itsupport::with(['users', 'items', 'details'])
+            ->where('status',self::STATUS_FINISHED)
             ->CurrUser()
             ->NotExpired(14)
             ->orderByDesc('updated_at')
@@ -83,10 +82,8 @@ class Itsupport extends Model
 
     public static function getCanceledSupport()
     {
-        $allCanceled =  Itsupport::with('users')
-            ->with('items')
-            ->with('details')
-            ->where('status',4)
+        $allCanceled =  Itsupport::with(['users', 'items', 'details'])
+            ->where('status',self::STATUS_CANCELED)
             ->CurrUser()
             ->NotExpired(14)
             ->orderByDesc('updated_at')
@@ -117,17 +114,6 @@ class Itsupport extends Model
 
     public function scopeCurrUser($query)
     {
-//        if(Auth::user()->can('shop')){
-//            //分店獲取當前登錄id
-//            return $query->where('user_id', Auth::id());
-//        }else if(Auth::user()->can('IT')){
-//            //IT獲取全部
-//            return $query;
-//        }else{
-//            //其他獲取不存在的id
-//            return $query->where('user_id', 0);
-//        }
-
         if(Auth::user()->can('IT')){
             //IT獲取全部
             return $query;

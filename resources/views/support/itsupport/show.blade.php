@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title> - Ryoyu Bakery</title>
+    <title> - King Bakery</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -28,7 +28,7 @@
 </div>
 
 <div class="layui-form-item">
-    <label class="layui-form-label">分店/部門</label>
+    <label class="layui-form-label">分店/用戶</label>
     <label class="layui-form-label-col">{{$itsupport->users->txt_name}}</label>
 </div>
 
@@ -40,6 +40,11 @@
 <div class="layui-form-item">
     <label class="layui-form-label">求助事宜</label>
     <label class="layui-form-label-col">{{$itsupport->items->name}} - {{$itsupport->details->name}}</label>
+</div>
+
+<div class="layui-form-item">
+    <label class="layui-form-label">負責人</label>
+    <label class="layui-form-label-col">{{$itsupport->contact_person}}</label>
 </div>
 
 <div class="layui-form-item">
@@ -85,7 +90,7 @@
 </div>
 
 <div class="layui-form-item">
-    <label class="layui-form-label">負責人</label>
+    <label class="layui-form-label">最後操作</label>
     <label class="layui-form-label-col">{{$itsupport->users->txt_name}}</label>
 </div>
 
