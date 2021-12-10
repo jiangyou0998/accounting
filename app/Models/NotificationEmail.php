@@ -15,6 +15,7 @@ class NotificationEmail extends Model
         'notice'    => '通告',
         'itsupport' => 'IT求助',
         'repair'    => '維修',
+        'claim'     => '醫療索償',
     ];
 
     public function scopeIsTest($query)
