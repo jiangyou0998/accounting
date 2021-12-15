@@ -48,9 +48,40 @@ class SupplierProductController extends AdminController
             $grid->column('created_at')->hide();
             $grid->column('updated_at')->sortable()->hide();
 
+
+            $titles = [
+                'id' => 'ID',
+                'product_no' => '編號',
+                'product_name' => '名稱',
+                'product_name_short' => '簡略名稱',
+                'supplier_id' => '供應商',
+                'group_id' => '分類',
+                'unit_id' => '單位',
+                'base_qty' => '包裝數量',
+                'base_unit_id' => '包裝單位',
+                'weight' => '重量',
+                'weight_unit' => '重量單位',
+                'default_price' => '價格',
+                'status' => '狀態',
+            ];
+            $grid->export()->rows(function (array $rows) {
+                $status = [0 => '啟用', 1 => '禁用'];
+                foreach ($rows as $index => &$row) {
+                    $row['supplier_id'] = $row['supplier']['name'];
+                    $row['group_id'] = $row['supplier_group']['name'];
+                    $row['unit_id'] = $row['unit']['unit_name'];
+                    $row['base_unit_id'] = $row['base_unit']['unit_name'];
+                    $row['status'] = $status[$row['status']];
+                }
+
+                return $rows;
+            })->titles($titles);
+
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
                 $filter->equal('id');
+                $filter->like('product_name');
+                $filter->equal('unit.unit_name');
                 $supplierArr = Supplier::all()->pluck('name', 'id');
                 $filter->equal('supplier_id', '供應商')->select($supplierArr);
                 $filter->equal('status','狀態')->select([0 => '啟用', 1 => '禁用']);
