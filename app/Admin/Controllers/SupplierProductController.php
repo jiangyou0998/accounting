@@ -62,8 +62,8 @@ class SupplierProductController extends AdminController
                 'base_unit_id' => '包裝單位',
                 'weight' => '重量',
                 'weight_unit' => '重量單位',
-                'default_price' => '價格',
-                'base_price' => '來貨價',
+                'default_price' => '來貨價',
+                'base_price' => '單價',
                 'status' => '狀態',
             ];
             $grid->export()->rows(function (array $rows) {

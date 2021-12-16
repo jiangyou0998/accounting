@@ -186,8 +186,9 @@ class SupplierImportController extends Controller
                 $supplierProductModel->base_unit_id = $unitArr[$value['base_unit']];
                 //包裝數量
                 $supplierProductModel->base_qty  =  !empty($value[5]) ? $value[5] : 0;
-                //來貨價(每個包裝價格)
+                //每個包裝價格
                 $supplierProductModel->base_price  = $value[9];
+                //來貨價
                 $supplierProductModel->default_price  = $value[4];
                 $supplierProductModel->status = 0;
                 $supplierProductModel->weight = !empty($value[7]) ? $value[7] : 0;
