@@ -15,6 +15,7 @@ return [
         'weight' => '重量',
         'weight_unit' => '重量單位',
         'default_price' => '價格',
+        'base_price' => '來貨價',
         'status' => '狀態',
     ],
     'options' => [

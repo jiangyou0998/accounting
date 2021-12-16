@@ -36,6 +36,7 @@ class SupplierProductController extends AdminController
             $grid->column('weight');
             $grid->column('weight_unit');
             $grid->column('default_price');
+            $grid->column('base_price');
             $grid->column('status')->using([0 => '啟用', 1 => '禁用'])
                 ->dot(
                     [
@@ -62,6 +63,7 @@ class SupplierProductController extends AdminController
                 'weight' => '重量',
                 'weight_unit' => '重量單位',
                 'default_price' => '價格',
+                'base_price' => '來貨價',
                 'status' => '狀態',
             ];
             $grid->export()->rows(function (array $rows) {
