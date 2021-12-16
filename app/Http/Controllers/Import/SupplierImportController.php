@@ -64,7 +64,7 @@ class SupplierImportController extends Controller
                     $supplierArr[] = $supplier;
                 }
 
-                $group = trim($rowValues[11]);
+                $group = trim($rowValues[12]);
                 $groupArr[] = $group;
 
                 //true為不合法名稱

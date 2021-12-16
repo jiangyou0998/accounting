@@ -114,6 +114,7 @@ class SupplierProductController extends AdminController
             $form->select('base_unit_id', '包裝單位')->options(WorkshopUnit::all()->pluck('unit_name','id'));
             $form->text('base_qty', '包裝數量');
             $form->text('default_price');
+            $form->text('base_price');
             $form->text('weight');
             $form->text('weight_unit');
             $form->select('status', '狀態')->options([0 => '啟用', 1 => '禁用']);
