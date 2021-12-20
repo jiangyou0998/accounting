@@ -89,9 +89,16 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
     Route::post('customer/order/cart/show_product/{groupid}', 'Customer\WorkshopCartItemController@showProduct')->name('customer.show_product');
     Route::put('customer/order/cart/{shopid}', 'Customer\WorkshopCartItemController@update')->name('customer.cart.update');
 
+    Route::get('customer/sample/regular', 'Regular\CustomerRegularController@index')->name('customer.sample.index');
+
     //2021-10-15 柯打改期
     Route::get('order/order_change','OrderChangeController@index')->name('order.change.index');
     Route::put('order/order_change/modify','OrderChangeController@order_modify')->name('order.change.modify');
+
+    //2021-12-10 更新新價錢
+    Route::get('order/update_price', 'UpdatePriceController@index');
+    Route::post('order/update_price/check','UpdatePriceController@check')->name('order.update_price.check');
+    Route::put('order/update_price/modify','UpdatePriceController@modify')->name('order.update_price.modify');
 });
 
 Route::group(['middleware' => ['auth','permission:shop']], function () {
