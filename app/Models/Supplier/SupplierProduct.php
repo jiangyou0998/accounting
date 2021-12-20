@@ -44,9 +44,11 @@ class SupplierProduct extends Model
 
     }
 
-    public static function getProducts($ids = null){
+    public static function getProducts($ids = null, $group = null, $search = null){
         $products = SupplierProduct::with(['unit', 'base_unit'])
             ->ofIds($ids)
+            ->OfGroup($group)
+            ->OfSearch($search)
             ->where('status', 0)
             ->orderBy('supplier_id')
             ->orderBy('group_id')
@@ -58,6 +60,24 @@ class SupplierProduct extends Model
         });
 
         return $products;
+    }
+
+    public function scopeOfGroup($query, $group)
+    {
+        if ($group) {
+            return $query->where('group_id', $group);
+        }
+    }
+
+    public function scopeOfSearch($query, $search)
+    {
+        if ($search) {
+            return $query->where(function($query) use($search){
+                $query->where('product_name', 'like', "%$search%")
+                    ->orWhere('product_name_short', 'like', "%$search%")
+                    ->orWhere('product_no', 'like', "%$search%");
+            });
+        }
     }
 
 }

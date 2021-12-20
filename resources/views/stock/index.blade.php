@@ -68,7 +68,9 @@
                     </h4>
                     <ul class="list-group mb-3">
                         @foreach($groups as $key => $value)
-                            <li class="list-group-item d-flex justify-content-between lh-condensed">
+                            <li class="list-group-item
+                                @if(request()->group == $key) list-group-item-secondary @endif
+                                d-flex justify-content-between lh-condensed">
                                 <div>
                                     <h6 class="my-0">
                                         <a href="{{ route('stock.index', ['group' => $key]) }}">

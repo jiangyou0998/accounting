@@ -3,24 +3,23 @@
 namespace App\Admin\Controllers;
 
 
-
+use App\Models\FrontGroup;
 use App\Models\Supplier\Supplier;
 use App\Models\Supplier\SupplierProduct;
 use App\Models\Supplier\SupplierStockItemList;
 use App\Models\SupplierGroup;
-use Carbon\Carbon;
+use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Controllers\AdminController;
-use Dcat\Admin\Widgets\Card;
 
 class SupplierStockItemListController extends AdminController
 {
     public function index(Content $content)
     {
         return $content
-            ->header('xxxxxxxxxx')
+            ->header('供應商庫存產品List')
             ->body($this->grid());
     }
 
@@ -28,42 +27,19 @@ class SupplierStockItemListController extends AdminController
     {
         return Grid::make(new SupplierStockItemList(), function (Grid $grid) {
 
-            $month = getMonth();
-            $grid->header(function ($collection) use($month){
+            //禁用快速編輯按鈕
+            $grid->disableQuickEditButton();
 
+            if(Admin::user()->isAdministrator() === false){
+                // 禁用刪除按钮
+                $grid->disableDeleteButton();
+            }
 
+            $grid->model()->with('front_group');
 
-                // 标题和内容
-                $cardInfo = <<<HTML
-        <h1>月份:<span style="color: red">$month</span></h1>
-HTML;
-                $card = Card::make('', $cardInfo);
+            $grid->number();
+            $grid->column('front_group.name', '分組');
 
-
-                return $card;
-            });
-
-            //禁用操作按鈕
-//            $grid->disableActions();
-
-            $grid->model()->select('id','user_id','month')
-//                ->distinct()
-            ;
-
-            $grid->user_id();
-            $grid->month();
-
-
-            $grid->filter(function (Grid\Filter $filter) {
-                // 更改为 panel 布局
-                $filter->panel();
-                // 展开过滤器
-                $filter->expand();
-                $filter->where('month', function ($query) {
-                    $query->where('month', Carbon::parse($this->input)->isoFormat('YMM'));
-                }, '月份')->month();
-
-            });
         });
     }
 
@@ -75,8 +51,12 @@ HTML;
     protected function form()
     {
         return Form::make(new SupplierStockItemList(), function (Form $form) {
-            $form->text('user_id');
-            $form->date('month')->format('YYYY-MM');
+            $form->select('front_group_id', '分組')
+                ->options(FrontGroup::all()->pluck('name', 'id'))
+                ->required()
+                ->rules("required|unique:supplier_stock_item_lists,front_group_id,{$form->getKey()},id", [
+                    'unique'   => '分組已存在',
+                ]);
 
 //            $suppliers = SupplierProduct::all()->mapToGroups(function ($item, $key) {
 //                return [$item['supplier_id'] => [$item['group_id'] => $item]];
@@ -98,27 +78,6 @@ HTML;
                             ->pluck('product_name_short', 'id'));
                 }
             }
-
-
-//
-//
-//            $form->listbox('item_list', 'List2')
-//                ->options(SupplierProduct::where('supplier_id', 1)
-//                    ->where('group_id',1)
-//                    ->pluck('product_name', 'id'));
-//
-//            $form->listbox('item_list', 'List3')
-//                ->options(SupplierProduct::where('supplier_id', 1)
-//                    ->where('group_id',3)
-//                    ->pluck('product_name', 'id'));
-
-            $form->submitted(function (Form $form) {
-                // 获取用户提交参数
-                $month = $form->input('month');
-
-                $form->month = Carbon::parse($month)->isoFormat('YMM');
-
-            });
 
         });
     }
