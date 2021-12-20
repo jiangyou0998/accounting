@@ -154,11 +154,9 @@ Route::get('stock', 'StockController@index')->name('stock.index');
 Route::post('stock', 'StockController@index')->name('stock.search');
 Route::post('stock/add', 'StockController@add')->name('stock.add');
 Route::get('stock/supplier', 'SupplierStockController@index')->name('stock.supplier.index');
+Route::post('stock/supplier', 'SupplierStockController@index')->name('stock.supplier.search');
+Route::post('stock/supplier/add', 'SupplierStockController@add')->name('stock.supplier.add');
 
-Route::group(['middleware' => ['auth','permission:workshop']], function () {
-    Route::get('customer/sample/regular', 'Regular\CustomerRegularController@index')->name('customer.sample.index');
-    Route::get('update/price', 'UpdatePriceController@index');
-});
 
 //Route::get('/import', 'ImportController@import');
 //Route::get('/import/ryoyuprice', 'ImportController@importRyoyuPrice');
@@ -171,6 +169,7 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
 //Route::get('/import/supplier', 'ImportController@importSupplierItems');
 //Route::get('/import/supplier/food', 'Import\SupplierFoodImportController@importSupplierProduct');
 //Route::get('/import/supplier/package', 'Import\SupplierPackageImportController@importSupplierProduct');
+//Route::get('/import/supplier/product', 'Import\SupplierImportController@importSupplierProduct');
 
 //Repair Item 導入
 //Route::get('/import/repair/item', 'Import\RepairItemImportController@importRepairItem');
