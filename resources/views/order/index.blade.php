@@ -36,6 +36,8 @@
             <a href='{{route('order.regular.sample',['shop_group_id' => 5])}}' class='styleA'>臨時加單(糧友)</a>
             <br/>
             <a href='{{route('order.select_deli')}}' class='styleA'>送貨單查詢</a>
+            <br/>
+            <a href='{{route('order.update_price')}}' class='styleA'>更新價錢</a>
         @endcan
 
         @can('operation')
