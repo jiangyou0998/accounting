@@ -72,15 +72,37 @@
 
 @section('script')
     <script>
-        //确定离开当前页面
-        // window.onbeforeunload = function (e) {
-        //     var e = window.event || e;
-        //     e.returnValue = ("确定离开当前页面吗？");
-        // }
 
-        $('.qty').blur(function () {
+        //更改單位時寫入數據
+        $(document).on('change', '.select_unit', function () {
+            let unit_id = $(this).val();
+            let product_id = $(this).data('id');
+            let qty_input = $(".qty[data-id=" + product_id + "]");
+            let qty = qty_input.val();
+
+            if (qty == null || qty == undefined || qty == "") {
+                return ;
+            }
+            qty_input.attr('data-unit', unit_id);
+
+            submit(qty, product_id, unit_id);
+        });
+
+        // $('.qty').blur(function () {
+        $(document).on('blur', '.qty', function () {
 
             let qty = $(this).val();
+            let unit_id = $(this).attr('data-unit');
+            let product_id = $(this).data('id');
+
+            // console.log(qty);
+            // console.log(unit_id);
+            submit(qty, product_id, unit_id);
+
+        });
+
+        //提交每一行數據
+        function submit(qty, product_id, unit_id){
 
             if(isNaN(qty)){
                 return ;
@@ -102,8 +124,9 @@
                 type: "POST",
                 url: "{{ route('stock.supplier.add') }}",
                 data: {
-                    'product_id': $(this).data('id'),
-                    'qty': qty
+                    'product_id': product_id,
+                    'qty': qty,
+                    'unit_id': unit_id,
                 },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -114,11 +137,12 @@
                 error:function () {
                     Swal.fire({
                         icon: 'error',
-                        title: "系统错误",
+                        title: "發生错误，請嘗試關閉頁面後重新進入",
                     });
                 }
             });
 
-        });
+        }
+
     </script>
 @endsection

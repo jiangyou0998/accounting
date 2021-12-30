@@ -15,45 +15,32 @@
 
                 <tbody class="table-striped" style="background-color: white">
                 @foreach($products[$supplier_id][$group_id] as $product)
-                    @if(request()->type !== 'empty')
+                    @if(request()->type !== 'empty' ||
+                        ( request()->type === 'empty' && ! isset($stockitems[$product->id]) )
+                        )
                         <tr @if($product->unit->unit_name === '箱') class="table-danger @endif">
                             <td>{{$product->product_no}}</td>
                             <td>{{$product->product_name}}</td>
                             <td>
                                 <input class="qty" type="number"
                                        data-id="{{$product->id}}"
+                                       data-unit="{{ $product->unit->id ?? 0 }}"
                                        style="width:100%"
                                        value="{{ $stockitems[$product->id] ?? ''}}">
                             </td>
                             <td>
                                 @if($product->unit_id === $product->base_unit_id)
-                                    {{ $product->unit->unit_name }}
+                                    <span>{{ $product->unit->unit_name }}</span>
                                 @else
-                                    <select name="" id="">
-                                        <option value="">{{ $product->unit->unit_name ?? '' }}</option>
-                                        <option value="">{{ $product->base_unit->unit_name ?? '' }}</option>
-                                    </select>
-                                @endif
-                            </td>
-                        </tr>
-                        {{--                    只顯示未填寫的--}}
-                    @elseif(request()->type === 'empty' && ! isset($stockitems[$product->id]))
-                        <tr @if($product->unit->unit_name === '箱') class="table-danger @endif">
-                            <td>{{$product->product_no}}</td>
-                            <td>{{$product->product_name}}</td>
-                            <td>
-                                <input class="qty" type="number"
-                                       data-id="{{$product->id}}"
-                                       style="width:100%"
-                                       value="">
-                            </td>
-                            <td>
-                                @if($product->unit_id === $product->base_unit_id)
-                                    {{ $product->unit->unit_name }}
-                                @else
-                                    <select name="" id="">
-                                        <option value="">{{ $product->unit->unit_name ?? '' }}</option>
-                                        <option value="">{{ $product->base_unit->unit_name ?? '' }}</option>
+                                    <select class="select_unit" data-id="{{$product->id}}">
+                                        <option value="{{ $product->unit->id ?? 0 }}"
+                                                @if(isset($stockitem_units[$product->id]) && $stockitem_units[$product->id] === $product->unit->id) selected @endif>
+                                            {{ $product->unit->unit_name ?? '' }}
+                                        </option>
+                                        <option value="{{ $product->base_unit->id ?? 0 }}"
+                                                @if(isset($stockitem_units[$product->id]) && $stockitem_units[$product->id] === $product->base_unit->id) selected @endif>
+                                            {{ $product->base_unit->unit_name ?? '' }}
+                                        </option>
                                     </select>
                                 @endif
                             </td>
