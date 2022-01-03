@@ -60,10 +60,16 @@ class StockController extends Controller
             ->pluck('qty','product_id')
             ->toArray();
 
+        $stockitem_units = StockItem::all()
+            ->where('user_id', Auth::id())
+            ->where('month', $month)
+            ->pluck('unit_id','product_id')
+            ->toArray();
+
 //        dump($stockitems);
 //        dump($product_ids);
 //        dump($groups);
-        return view('stock.index' , compact('products', 'groups', 'stockitems'));
+        return view('stock.index' , compact('products', 'groups', 'stockitems', 'stockitem_units'));
     }
 
     public function add(Request $request)
@@ -74,6 +80,7 @@ class StockController extends Controller
         $product_id = $request->input('product_id');
         $month = $request->input('month') ?? $currentmonth;
         $qty = $request->input('qty');
+        $unit_id = $request->input('unit_id');
 
         // 从数据库中查询该商品是否已经在购物车中
         if ($stock = StockItem::query()
@@ -85,11 +92,12 @@ class StockController extends Controller
             // 如果存在则直接叠加商品数量
             $stock->update([
                 'qty' => $qty,
+                'unit_id' => $unit_id,
             ]);
         } else {
 
             // 否则创建一个新的购物车记录
-            $stock = new StockItem(['qty' => $qty]);
+            $stock = new StockItem(['qty' => $qty, 'unit_id' => $unit_id]);
             $stock->product_id = $product_id;
             $stock->user_id = $user->id;
             $stock->month = $month;

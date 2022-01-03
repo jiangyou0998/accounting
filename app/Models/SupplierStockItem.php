@@ -25,4 +25,9 @@ class SupplierStockItem extends Model
         return $this->belongsTo(SupplierProduct::class,'product_id','id');
     }
 
+    public function unit()
+    {
+        return $this->belongsTo(WorkshopUnit::class,'unit_id','id');
+    }
+
 }

@@ -26,6 +26,12 @@ class WorkshopProduct extends Model
         return $this->belongsTo(WorkshopUnit::class,"unit_id","id");
     }
 
+    //之前寫錯,再寫一個方法,可以不帶s
+    public function unit()
+    {
+        return $this->belongsTo(WorkshopUnit::class,"unit_id","id");
+    }
+
     public function prices()
     {
         return $this->hasMany(Price::class,"product_id","id");

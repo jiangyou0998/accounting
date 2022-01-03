@@ -101,15 +101,19 @@
 
 @section('script')
     <script>
-        //确定离开当前页面
-        // window.onbeforeunload = function (e) {
-        //     var e = window.event || e;
-        //     e.returnValue = ("确定离开当前页面吗？");
-        // }
 
         $('.qty').blur(function () {
 
             let qty = $(this).val();
+            let unit_id = $(this).attr('data-unit');
+            let product_id = $(this).data('id');
+
+            submit(qty, product_id, unit_id)
+
+        });
+
+        //提交每一行數據
+        function submit(qty, product_id, unit_id){
 
             if(isNaN(qty)){
                 return ;
@@ -131,8 +135,9 @@
                 type: "POST",
                 url: "{{ route('stock.add') }}",
                 data: {
-                    'product_id': $(this).data('id'),
-                    'qty': qty
+                    'product_id': product_id,
+                    'qty': qty,
+                    'unit_id': unit_id,
                 },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -143,12 +148,12 @@
                 error:function () {
                     Swal.fire({
                         icon: 'error',
-                        title: "系统错误",
+                        title: "發生错误，請嘗試關閉頁面後重新進入",
                     });
                 }
             });
 
-        });
+        }
     </script>
 @endsection
 

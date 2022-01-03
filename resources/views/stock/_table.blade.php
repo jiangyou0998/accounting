@@ -14,30 +14,22 @@
 
             <tbody class="table-striped" style="background-color: white">
             @foreach($products[$key] as $product)
-                @if(request()->type !== 'empty')
-                    <tr @if($product->units->unit_name === '箱') class="table-danger @endif">
+                @if(request()->type !== 'empty' ||
+                    ( request()->type === 'empty' && ! isset($stockitems[$product->id]) )
+                    )
+                    <tr @if($product->unit->unit_name === '箱') class="table-danger @endif">
                         <td>{{$product->product_no}}</td>
                         <td>{{$product->product_name}}</td>
                         <td>
                             <input class="qty" type="number"
                                    data-id="{{$product->id}}"
+                                   data-unit="{{ $product->unit->id ?? 0 }}"
                                    style="width:100%"
                                    value="{{ $stockitems[$product->id] ?? ''}}">
                         </td>
-                        <td>{{$product->units->unit_name}}</td>
-                    </tr>
-                    {{--                    只顯示未填寫的--}}
-                @elseif(request()->type === 'empty' && ! isset($stockitems[$product->id]))
-                    <tr @if($product->units->unit_name === '箱') class="table-danger @endif">
-                        <td>{{$product->product_no}}</td>
-                        <td>{{$product->product_name}}</td>
                         <td>
-                            <input class="qty" type="number"
-                                   data-id="{{$product->id}}"
-                                   style="width:100%"
-                                   value="">
+                            <span>{{ $product->unit->unit_name }}</span>
                         </td>
-                        <td>{{$product->units->unit_name}}</td>
                     </tr>
                 @endif
             @endforeach
