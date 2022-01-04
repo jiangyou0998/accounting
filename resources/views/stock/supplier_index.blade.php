@@ -144,5 +144,38 @@
 
         }
 
+        //刪除(x按鈕),刪除庫存
+        $(document).on('click', '.delstock', function () {
+
+            let product_id = $(this).data('id');
+            let qty_input = $(".qty[data-id=" + product_id + "]");
+            let qty = qty_input.val();
+
+            if (qty == null || qty == undefined || qty == "") {
+                return ;
+            }
+
+            $.ajax({
+                type: "DELETE",
+                url: "{{ route('stock.supplier.delete') }}",
+                data: {
+                    'product_id': product_id,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (msg) {
+                    qty_input.val('');
+                },
+                error:function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: "發生错误，請嘗試關閉頁面後重新進入",
+                    });
+                }
+            });
+
+        });
+
     </script>
 @endsection

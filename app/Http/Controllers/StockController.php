@@ -106,4 +106,23 @@ class StockController extends Controller
 
         return [];
     }
+
+    public function delete(Request $request)
+    {
+        //格式:202104
+        $currentmonth = Carbon::now()->isoFormat('YMM');
+        $user = $request->user();
+        $product_id = $request->input('product_id');
+        $month = $request->input('month') ?? $currentmonth;
+
+
+        // 刪除數據
+        StockItem::query()
+            ->where('product_id', $product_id)
+            ->where('user_id', $user->id)
+            ->where('month', $month)
+            ->delete();
+
+        return [];
+    }
 }

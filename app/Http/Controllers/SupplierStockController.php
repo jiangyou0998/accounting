@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 
-use App\Models\StockItem;
 use App\Models\Supplier\Supplier;
 use App\Models\Supplier\SupplierProduct;
 use App\Models\Supplier\SupplierStockItemList;
@@ -103,6 +102,25 @@ class SupplierStockController extends Controller
             $stock->month = $month;
             $stock->save();
         }
+
+        return [];
+    }
+
+    public function delete(Request $request)
+    {
+        //格式:202104
+        $currentmonth = Carbon::now()->isoFormat('YMM');
+        $user = $request->user();
+        $product_id = $request->input('product_id');
+        $month = $request->input('month') ?? $currentmonth;
+
+
+        // 刪除數據
+        SupplierStockItem::query()
+            ->where('product_id', $product_id)
+            ->where('user_id', $user->id)
+            ->where('month', $month)
+            ->delete();
 
         return [];
     }
