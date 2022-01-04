@@ -51,7 +51,7 @@
 {{--        標題--}}
         <div class="py-4 text-center">
 
-            <h2>庫存-{{\Carbon\Carbon::now()->monthName}}</h2>
+            <h2>庫存-{{$monthname}}</h2>
         </div>
 {{--        頂部按鈕--}}
         <div class="d-flex justify-content-end input-group">

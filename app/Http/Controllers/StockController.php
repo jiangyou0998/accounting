@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 
 class StockController extends Controller
 {
+    //可以推遲幾天提交
+    const DELAY_DAY = 7;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -22,7 +25,7 @@ class StockController extends Controller
         $search = $request->search ?? '';
 
         $productModel = WorkshopProduct::query()
-            ->with('units')
+            ->with('unit')
             ->whereHas('cartitems', function ($query){
                 $query->notDeleted()
                     ->lastMonths(4)
@@ -52,7 +55,7 @@ class StockController extends Controller
         })->pluck('group_name', 'id')->toArray();
 
         //格式:202104
-        $currentmonth = Carbon::now()->isoFormat('YMM');
+        $currentmonth = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMM');
         $month = $request->input('month') ?? $currentmonth;
         $stockitems = StockItem::all()
             ->where('user_id', Auth::id())
@@ -66,16 +69,18 @@ class StockController extends Controller
             ->pluck('unit_id','product_id')
             ->toArray();
 
+        $monthname = Carbon::now()->subDays(self::DELAY_DAY)->monthName;
+
 //        dump($stockitems);
 //        dump($product_ids);
 //        dump($groups);
-        return view('stock.index' , compact('products', 'groups', 'stockitems', 'stockitem_units'));
+        return view('stock.index' , compact('products', 'groups', 'stockitems', 'stockitem_units', 'monthname'));
     }
 
     public function add(Request $request)
     {
         //格式:202104
-        $currentmonth = Carbon::now()->isoFormat('YMM');
+        $currentmonth = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMM');
         $user = $request->user();
         $product_id = $request->input('product_id');
         $month = $request->input('month') ?? $currentmonth;
@@ -110,11 +115,10 @@ class StockController extends Controller
     public function delete(Request $request)
     {
         //格式:202104
-        $currentmonth = Carbon::now()->isoFormat('YMM');
+        $currentmonth = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMM');
         $user = $request->user();
         $product_id = $request->input('product_id');
         $month = $request->input('month') ?? $currentmonth;
-
 
         // 刪除數據
         StockItem::query()

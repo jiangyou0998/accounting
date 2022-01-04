@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Auth;
 
 class SupplierStockController extends Controller
 {
+    //可以推遲幾天提交
+    const DELAY_DAY = 7;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -52,7 +55,7 @@ class SupplierStockController extends Controller
         }
 
         //格式:202104
-        $currentmonth = Carbon::now()->isoFormat('YMM');
+        $currentmonth = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMM');
         $month = $request->input('month') ?? $currentmonth;
         $stockitems = SupplierStockItem::all()
             ->where('user_id', Auth::id())
@@ -66,15 +69,16 @@ class SupplierStockController extends Controller
             ->pluck('unit_id','product_id')
             ->toArray();
 
+        $monthname = Carbon::now()->subDays(self::DELAY_DAY)->monthName;
 //        dump($stockitem_units);
 
-        return view('stock.supplier_index', compact('products', 'groups', 'suppliers', 'stockitems', 'stockitem_units'));
+        return view('stock.supplier_index', compact('products', 'groups', 'suppliers', 'stockitems', 'stockitem_units', 'monthname'));
     }
 
     public function add(Request $request)
     {
         //格式:202104
-        $currentmonth = Carbon::now()->isoFormat('YMM');
+        $currentmonth = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMM');
         $user = $request->user();
         $product_id = $request->input('product_id');
         $month = $request->input('month') ?? $currentmonth;
@@ -109,7 +113,7 @@ class SupplierStockController extends Controller
     public function delete(Request $request)
     {
         //格式:202104
-        $currentmonth = Carbon::now()->isoFormat('YMM');
+        $currentmonth = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMM');
         $user = $request->user();
         $product_id = $request->input('product_id');
         $month = $request->input('month') ?? $currentmonth;
