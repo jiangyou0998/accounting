@@ -51,6 +51,12 @@ class SupplierStockItemListController extends AdminController
     protected function form()
     {
         return Form::make(new SupplierStockItemList(), function (Form $form) {
+
+            if(Admin::user()->isAdministrator() === false){
+                // 禁用刪除按钮
+                $form->disableDeleteButton();
+            }
+
             $form->select('front_group_id', '分組')
                 ->options(FrontGroup::all()->pluck('name', 'id'))
                 ->required()

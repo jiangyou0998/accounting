@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Models\Supplier\Supplier;
 use App\Models\Supplier\SupplierProduct;
+use App\Models\SupplierGroup;
 use App\Models\WorkshopUnit;
 use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
@@ -109,7 +110,7 @@ class SupplierProductController extends AdminController
             $form->text('product_name');
             $form->text('product_name_short');
             $form->select('supplier_id','供應商')->options(Supplier::all()->pluck('name','id'));
-            $form->text('group_id');
+            $form->select('group_id')->options(SupplierGroup::all()->pluck('name','id'));
             $form->select('unit_id', '單位')->options(WorkshopUnit::all()->pluck('unit_name','id'));
             $form->select('base_unit_id', '包裝單位')->options(WorkshopUnit::all()->pluck('unit_name','id'));
             $form->text('base_qty', '包裝數量');

@@ -169,9 +169,13 @@ HTML;
             ->where('month', $month);
 
 //        dd($items->toArray());
-
+//        $classId = ['蛋撻王工場'];
         $items = $factory_items->union($supplier_items)
             ->orderBy('shop_name')
+            ->orderBy('type')
+//            ->orderByRaw(DB::raw("FIND_IN_SET(supplier_name, '" . implode(',', $classId) . "'" . ')'))//按照指定顺序排序
+            ->orderBy('group_name')
+            ->orderBy('supplier_name')
             ->get();
 
         $factory_prices = Price::getProductPriceByShopGroup(1);
