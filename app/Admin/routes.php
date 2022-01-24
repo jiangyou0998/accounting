@@ -50,6 +50,9 @@ Route::group([
     $router->resource('reports/stock_by_month', 'Reports\StockByMonthReportController');
     $router->resource('reports/stock', 'Reports\StockReportController');
 
+    //維修報表
+    $router->resource('reports/repair_project', 'Reports\RepairProjectController');
+
     //會計相關
     //statement
     $router->get('reports/statement', 'Accountings\StatementController@index');

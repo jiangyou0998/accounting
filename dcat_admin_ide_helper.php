@@ -46,8 +46,6 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection guard_name
      * @property Grid\Column|Collection permissions
      * @property Grid\Column|Collection users
-     * @property Grid\Column|Collection user_id
-     * @property Grid\Column|Collection month
      * @property Grid\Column|Collection price
      * @property Grid\Column|Collection type
      * @property Grid\Column|Collection detail
@@ -56,6 +54,7 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection order
      * @property Grid\Column|Collection icon
      * @property Grid\Column|Collection uri
+     * @property Grid\Column|Collection user_id
      * @property Grid\Column|Collection path
      * @property Grid\Column|Collection method
      * @property Grid\Column|Collection ip
@@ -126,6 +125,8 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection handle_staff
      * @property Grid\Column|Collection finished_start_time
      * @property Grid\Column|Collection finished_end_time
+     * @property Grid\Column|Collection fee
+     * @property Grid\Column|Collection contact_person
      * @property Grid\Column|Collection library_type
      * @property Grid\Column|Collection file_name
      * @property Grid\Column|Collection link_path
@@ -151,11 +152,12 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection r_order_id
      * @property Grid\Column|Collection qty
      * @property Grid\Column|Collection orderdates
-     * @property Grid\Column|Collection repair_location_id
+     * @property Grid\Column|Collection order_no
      * @property Grid\Column|Collection repair_project_no
+     * @property Grid\Column|Collection repair_location_id
      * @property Grid\Column|Collection repair_item_id
      * @property Grid\Column|Collection repair_detail_id
-     * @property Grid\Column|Collection fee
+     * @property Grid\Column|Collection repair_order_id
      * @property Grid\Column|Collection shop_name
      * @property Grid\Column|Collection tel
      * @property Grid\Column|Collection fax
@@ -164,11 +166,13 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection int_area
      * @property Grid\Column|Collection oper_time
      * @property Grid\Column|Collection special_date
+     * @property Grid\Column|Collection month
+     * @property Grid\Column|Collection unit_id
      * @property Grid\Column|Collection product_name_short
      * @property Grid\Column|Collection supplier_id
-     * @property Grid\Column|Collection unit_id
      * @property Grid\Column|Collection base_unit_id
      * @property Grid\Column|Collection base_qty
+     * @property Grid\Column|Collection base_price
      * @property Grid\Column|Collection default_price
      * @property Grid\Column|Collection weight
      * @property Grid\Column|Collection weight_unit
@@ -256,8 +260,6 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection guard_name(string $label = null)
      * @method Grid\Column|Collection permissions(string $label = null)
      * @method Grid\Column|Collection users(string $label = null)
-     * @method Grid\Column|Collection user_id(string $label = null)
-     * @method Grid\Column|Collection month(string $label = null)
      * @method Grid\Column|Collection price(string $label = null)
      * @method Grid\Column|Collection type(string $label = null)
      * @method Grid\Column|Collection detail(string $label = null)
@@ -266,6 +268,7 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection order(string $label = null)
      * @method Grid\Column|Collection icon(string $label = null)
      * @method Grid\Column|Collection uri(string $label = null)
+     * @method Grid\Column|Collection user_id(string $label = null)
      * @method Grid\Column|Collection path(string $label = null)
      * @method Grid\Column|Collection method(string $label = null)
      * @method Grid\Column|Collection ip(string $label = null)
@@ -336,6 +339,8 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection handle_staff(string $label = null)
      * @method Grid\Column|Collection finished_start_time(string $label = null)
      * @method Grid\Column|Collection finished_end_time(string $label = null)
+     * @method Grid\Column|Collection fee(string $label = null)
+     * @method Grid\Column|Collection contact_person(string $label = null)
      * @method Grid\Column|Collection library_type(string $label = null)
      * @method Grid\Column|Collection file_name(string $label = null)
      * @method Grid\Column|Collection link_path(string $label = null)
@@ -361,11 +366,12 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection r_order_id(string $label = null)
      * @method Grid\Column|Collection qty(string $label = null)
      * @method Grid\Column|Collection orderdates(string $label = null)
-     * @method Grid\Column|Collection repair_location_id(string $label = null)
+     * @method Grid\Column|Collection order_no(string $label = null)
      * @method Grid\Column|Collection repair_project_no(string $label = null)
+     * @method Grid\Column|Collection repair_location_id(string $label = null)
      * @method Grid\Column|Collection repair_item_id(string $label = null)
      * @method Grid\Column|Collection repair_detail_id(string $label = null)
-     * @method Grid\Column|Collection fee(string $label = null)
+     * @method Grid\Column|Collection repair_order_id(string $label = null)
      * @method Grid\Column|Collection shop_name(string $label = null)
      * @method Grid\Column|Collection tel(string $label = null)
      * @method Grid\Column|Collection fax(string $label = null)
@@ -374,11 +380,13 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection int_area(string $label = null)
      * @method Grid\Column|Collection oper_time(string $label = null)
      * @method Grid\Column|Collection special_date(string $label = null)
+     * @method Grid\Column|Collection month(string $label = null)
+     * @method Grid\Column|Collection unit_id(string $label = null)
      * @method Grid\Column|Collection product_name_short(string $label = null)
      * @method Grid\Column|Collection supplier_id(string $label = null)
-     * @method Grid\Column|Collection unit_id(string $label = null)
      * @method Grid\Column|Collection base_unit_id(string $label = null)
      * @method Grid\Column|Collection base_qty(string $label = null)
+     * @method Grid\Column|Collection base_price(string $label = null)
      * @method Grid\Column|Collection default_price(string $label = null)
      * @method Grid\Column|Collection weight(string $label = null)
      * @method Grid\Column|Collection weight_unit(string $label = null)
@@ -471,8 +479,6 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection guard_name
      * @property Show\Field|Collection permissions
      * @property Show\Field|Collection users
-     * @property Show\Field|Collection user_id
-     * @property Show\Field|Collection month
      * @property Show\Field|Collection price
      * @property Show\Field|Collection type
      * @property Show\Field|Collection detail
@@ -481,6 +487,7 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection order
      * @property Show\Field|Collection icon
      * @property Show\Field|Collection uri
+     * @property Show\Field|Collection user_id
      * @property Show\Field|Collection path
      * @property Show\Field|Collection method
      * @property Show\Field|Collection ip
@@ -551,6 +558,8 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection handle_staff
      * @property Show\Field|Collection finished_start_time
      * @property Show\Field|Collection finished_end_time
+     * @property Show\Field|Collection fee
+     * @property Show\Field|Collection contact_person
      * @property Show\Field|Collection library_type
      * @property Show\Field|Collection file_name
      * @property Show\Field|Collection link_path
@@ -576,11 +585,12 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection r_order_id
      * @property Show\Field|Collection qty
      * @property Show\Field|Collection orderdates
-     * @property Show\Field|Collection repair_location_id
+     * @property Show\Field|Collection order_no
      * @property Show\Field|Collection repair_project_no
+     * @property Show\Field|Collection repair_location_id
      * @property Show\Field|Collection repair_item_id
      * @property Show\Field|Collection repair_detail_id
-     * @property Show\Field|Collection fee
+     * @property Show\Field|Collection repair_order_id
      * @property Show\Field|Collection shop_name
      * @property Show\Field|Collection tel
      * @property Show\Field|Collection fax
@@ -589,11 +599,13 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection int_area
      * @property Show\Field|Collection oper_time
      * @property Show\Field|Collection special_date
+     * @property Show\Field|Collection month
+     * @property Show\Field|Collection unit_id
      * @property Show\Field|Collection product_name_short
      * @property Show\Field|Collection supplier_id
-     * @property Show\Field|Collection unit_id
      * @property Show\Field|Collection base_unit_id
      * @property Show\Field|Collection base_qty
+     * @property Show\Field|Collection base_price
      * @property Show\Field|Collection default_price
      * @property Show\Field|Collection weight
      * @property Show\Field|Collection weight_unit
@@ -681,8 +693,6 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection guard_name(string $label = null)
      * @method Show\Field|Collection permissions(string $label = null)
      * @method Show\Field|Collection users(string $label = null)
-     * @method Show\Field|Collection user_id(string $label = null)
-     * @method Show\Field|Collection month(string $label = null)
      * @method Show\Field|Collection price(string $label = null)
      * @method Show\Field|Collection type(string $label = null)
      * @method Show\Field|Collection detail(string $label = null)
@@ -691,6 +701,7 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection order(string $label = null)
      * @method Show\Field|Collection icon(string $label = null)
      * @method Show\Field|Collection uri(string $label = null)
+     * @method Show\Field|Collection user_id(string $label = null)
      * @method Show\Field|Collection path(string $label = null)
      * @method Show\Field|Collection method(string $label = null)
      * @method Show\Field|Collection ip(string $label = null)
@@ -761,6 +772,8 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection handle_staff(string $label = null)
      * @method Show\Field|Collection finished_start_time(string $label = null)
      * @method Show\Field|Collection finished_end_time(string $label = null)
+     * @method Show\Field|Collection fee(string $label = null)
+     * @method Show\Field|Collection contact_person(string $label = null)
      * @method Show\Field|Collection library_type(string $label = null)
      * @method Show\Field|Collection file_name(string $label = null)
      * @method Show\Field|Collection link_path(string $label = null)
@@ -786,11 +799,12 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection r_order_id(string $label = null)
      * @method Show\Field|Collection qty(string $label = null)
      * @method Show\Field|Collection orderdates(string $label = null)
-     * @method Show\Field|Collection repair_location_id(string $label = null)
+     * @method Show\Field|Collection order_no(string $label = null)
      * @method Show\Field|Collection repair_project_no(string $label = null)
+     * @method Show\Field|Collection repair_location_id(string $label = null)
      * @method Show\Field|Collection repair_item_id(string $label = null)
      * @method Show\Field|Collection repair_detail_id(string $label = null)
-     * @method Show\Field|Collection fee(string $label = null)
+     * @method Show\Field|Collection repair_order_id(string $label = null)
      * @method Show\Field|Collection shop_name(string $label = null)
      * @method Show\Field|Collection tel(string $label = null)
      * @method Show\Field|Collection fax(string $label = null)
@@ -799,11 +813,13 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection int_area(string $label = null)
      * @method Show\Field|Collection oper_time(string $label = null)
      * @method Show\Field|Collection special_date(string $label = null)
+     * @method Show\Field|Collection month(string $label = null)
+     * @method Show\Field|Collection unit_id(string $label = null)
      * @method Show\Field|Collection product_name_short(string $label = null)
      * @method Show\Field|Collection supplier_id(string $label = null)
-     * @method Show\Field|Collection unit_id(string $label = null)
      * @method Show\Field|Collection base_unit_id(string $label = null)
      * @method Show\Field|Collection base_qty(string $label = null)
+     * @method Show\Field|Collection base_price(string $label = null)
      * @method Show\Field|Collection default_price(string $label = null)
      * @method Show\Field|Collection weight(string $label = null)
      * @method Show\Field|Collection weight_unit(string $label = null)

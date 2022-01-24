@@ -137,7 +137,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::patch('repair/{repairid}', 'RepairController@update')->name('repair.update');
     Route::delete('repair/{repair}', 'RepairController@destroy')->name('repair.destroy');
 
+    Route::get('repair_order', 'RepairOrderController@index')->name('repair_order');
+    Route::post('repair_order', 'RepairOrderController@store')->name('repair_order.store');
+
     Route::get('phone/repair', 'RepairController@phoneIndex')->name('repair.phone');
+    Route::get('phone/repair/{shop_id}', 'RepairController@phoneView')->name('repair.phone.view');
 
     Route::any('notice', 'NoticeController@index')->middleware('auth')->name('notice');
     Route::get('notice/attachment/{id}', 'NoticeController@attachment')->middleware('auth')->name('notice.attachment');

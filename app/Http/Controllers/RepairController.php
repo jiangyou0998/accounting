@@ -9,6 +9,7 @@ use App\Mail\RepairShipped;
 use App\Models\Repairs\RepairDetail;
 use App\Models\Repairs\RepairItem;
 use App\Models\Repairs\RepairLocation;
+use App\Models\Repairs\RepairOrder;
 use App\Models\Repairs\RepairProject;
 use App\Models\Role;
 use App\User;
@@ -42,6 +43,17 @@ class RepairController extends Controller
         $users = User::all()->pluck('txt_name', 'id');
 
         return view('support.repair.phone.index', compact('allUnfinished', 'users'));
+    }
+
+    public function phoneView(Request $request, $shop_id)
+    {
+        $orders = RepairOrder::getRepairOrderByShop($shop_id)->groupBy('user_id');
+
+        $users = User::all()->pluck('txt_name', 'id');
+
+//        dump($orders->toArray());
+
+        return view('support.repair.phone.view', compact('orders', 'users'));
     }
 
     public function store(Request $request, FileUploadHandler $uploader)

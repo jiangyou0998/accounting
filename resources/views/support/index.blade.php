@@ -24,7 +24,6 @@
         <a href='{{route('repair.phone')}}' class='styleA'>未完成處理(手機版)</a>
         <br/>
         <br/>
-        <br/>
 
     </div>
 

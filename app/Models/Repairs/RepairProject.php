@@ -5,6 +5,7 @@ namespace App\Models\Repairs;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -39,6 +40,11 @@ class RepairProject extends Model
     public function details(): HasOne
     {
         return $this->hasOne(RepairDetail::class,'id','repair_detail_id');
+    }
+
+    public function order(): belongsTo
+    {
+        return $this->belongsTo(RepairOrder::class,'repair_order_id','id');
     }
 
     public static function getMaxSupportNo()
