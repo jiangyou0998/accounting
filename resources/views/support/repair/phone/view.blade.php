@@ -53,11 +53,12 @@
                                 <p class="card-text">{{$loop->iteration}} . {{$value->locations->name}}
                                     - {{$value->items->name}} - {{$value->details->name}}</p>
                                 <p class="card-text">跟進結果 : {{$value->comment}}</p>
+                                <p class="card-text">維修費用 : ${{$value->fee}}</p>
 
                                 @if($value->status === 99)
                                     <p class="card-text">已完成</p>
-                                @elseif($value->status === 1)
-                                    <p class="card-text text-red">未完成</p>
+                                @elseif($value->status === 11)
+                                    <p class="card-text text-red">需跟進</p>
                                 @endif
 
                             @endforeach

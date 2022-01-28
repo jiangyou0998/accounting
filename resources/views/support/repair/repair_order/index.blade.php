@@ -42,6 +42,7 @@
                             <th scope="col">維修項目</th>
                             <th scope="col">求助事宜</th>
                             <th scope="col">跟進結果</th>
+                            <th scope="col">維修費用</th>
                             <th scope="col">完成進度</th>
 
                         </tr>
@@ -56,7 +57,10 @@
                                 <td width="10%">{{ $value->items->name ?? '' }}</td>
                                 <td width="10%">{{ $value->details->name ?? '' }}</td>
                                 <td width="10%">
-                                    <textarea type="textarea" name="comment" cols="20" row="20"></textarea>
+                                    <textarea type="textarea" name="comment" cols="20" row="20">{{ $value->comment ?? '' }}</textarea>
+                                </td>
+                                <td width="5%">
+                                    <input type="number" style="margin-right: 5px;" name="item_fee" min="0" value="{{ $value->fee ?? '' }}">
                                 </td>
                                 <td width="15%">
                                     <input style="margin-right: 5px;" name="status" type="checkbox" checked>
@@ -129,13 +133,13 @@
                     </div>
                 </div>
 
-                <div class="form-group row">
-                    <label for="inputPassword" class="col-sm-2 col-form-label">維修費用</label>
-                    <div class="col-sm-10">
-                        <input type="number" class="form-control" id="fee" name="fee" autocomplete="off"
-                               placeholder="$" min="0" value="{{ old('fee') }}" required>
-                    </div>
-                </div>
+{{--                <div class="form-group row">--}}
+{{--                    <label for="inputPassword" class="col-sm-2 col-form-label">維修費用</label>--}}
+{{--                    <div class="col-sm-10">--}}
+{{--                        <input type="number" class="form-control" id="fee" name="fee" autocomplete="off"--}}
+{{--                               placeholder="$" min="0" value="{{ old('fee') }}" required>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
 
                 <div class="form-group row">
                     <button type="button" class="btn btn-primary btn-block btn-create-order">提交</button>
@@ -164,7 +168,7 @@
         //完成進度Switch實例化
         $('[name="status"]').bootstrapSwitch({    //初始化按钮
             onText:"已完成",
-            offText:"未完成",
+            offText:"需跟進",
             onColor:"success",
             offColor:"info",
             size:"small",
@@ -191,7 +195,7 @@
                 end_hour: $('#end_hour').val(),
                 end_minute: $('#end_minute').val(),
                 handle_staff: $('#handle_staff').val(),
-                fee: $('#fee').val(),
+                // fee: $('#fee').val(),
             };
 
             // 遍历 <table> 标签内所有带有 data-id 属性的 <tr> 标签，也就是每一個維修項目
@@ -199,12 +203,14 @@
                 // 获取当前行中数量输入框
                 var $comment = $(this).find('textarea[name=comment]');
                 var $status = $(this).find('input[name=status]');
+                var $fee = $(this).find('input[name=item_fee]');
 
                 // 把 SKU id 和数量存入请求参数数组中
                 req.items.push({
                     id: $(this).data('id'),
                     comment: $comment.val(),
                     status: $status.bootstrapSwitch('state'),
+                    fee: $fee.val(),
                 })
             });
 

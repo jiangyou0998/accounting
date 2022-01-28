@@ -18,6 +18,7 @@ class RepairProjectController extends AdminController
     const STATUS = [
             RepairProject::STATUS_UNFINISHED => '未完成',
             RepairProject::STATUS_CANCELED => '已取消',
+            RepairProject::STATUS_NEED_FOLLOWED => '需跟進',
             RepairProject::STATUS_FINISHED => '已完成',
         ];
     /**
@@ -38,9 +39,9 @@ class RepairProjectController extends AdminController
             $grid->model()->with(['users', 'locations', 'items', 'details', 'order']);
             $grid->column('id')->sortable();
 
-            $grid->column('repair_project_no');
+            $grid->column('repair_project_no')->filterByValue();
             $grid->column('created_at', '落單日期');
-            $grid->column('users.txt_name', '分店/用戶');
+            $grid->column('users.txt_name', '分店/用戶')->filterByValue();
             $grid->column('locations.name', '位置');
             $grid->column('items.name', '維修項目');
             $grid->column('details.name', '求助事宜');
@@ -50,6 +51,7 @@ class RepairProjectController extends AdminController
                     [
                         RepairProject::STATUS_UNFINISHED => 'warning',
                         RepairProject::STATUS_CANCELED => 'danger',
+                        RepairProject::STATUS_NEED_FOLLOWED => 'primary',
                         RepairProject::STATUS_FINISHED => 'success',
                     ],
                     'success' // 默认颜色
@@ -62,11 +64,11 @@ class RepairProjectController extends AdminController
                 }
             });
 //            $grid->column('last_update_user');
-            $grid->column('comment');
+            $grid->column('comment')->width('200px');
             $grid->column('contact_person');
             $grid->column('order.complete_date', '完成日期');
-            $grid->column('order.order_no', '維修單號碼');
-            $grid->column('order.fee', '維修費用');
+            $grid->column('order.order_no', '維修單號碼')->filterByValue();
+            $grid->column('fee', '維修費用');
 //            $grid->column('updated_at')->sortable();
 
             $grid->filter(function (Grid\Filter $filter) {
@@ -87,7 +89,7 @@ class RepairProjectController extends AdminController
                 'status' => '狀態',
                 'order.complete_date' => '完成日期',
                 'order.order_no' => '維修單號碼',
-                'order.fee' => '維修費用',
+                'fee' => '維修費用',
             ];
 
             $grid->export($titles)->rows(function (array $rows) use ($titles){

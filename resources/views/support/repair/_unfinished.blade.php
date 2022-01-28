@@ -66,8 +66,8 @@
             </td>
 
             <td align="center" style="padding:5px;">
-                <button type="button" class="open-layui" data-id="{{$unfinished->id}}" style="background-color:#ADFFAD;">補充資料
-                </button>
+{{--                <button type="button" class="open-layui" data-id="{{$unfinished->id}}" style="background-color:#ADFFAD;">補充資料--}}
+{{--                </button>--}}
 
                 <button type="button" class="delete-btn" data-id="{{$unfinished->id}}" data-no="{{$unfinished->repair_project_no}}" style="background-color:#FFADAD;">刪除
                 </button>

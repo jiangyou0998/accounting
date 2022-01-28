@@ -7,7 +7,6 @@ use App\Http\Requests\RepairOrderRequest;
 use App\Models\Repairs\RepairOrder;
 use App\Models\Repairs\RepairProject;
 use App\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +25,7 @@ class RepairOrderController extends Controller
 
             //分店只能開自己分店單
             if($shop_id !== $user->id){
-                dump('無維修權限');
+                abort(403, '無權限修改');
             }
         }
 
@@ -46,12 +45,9 @@ class RepairOrderController extends Controller
 
     public function store(RepairOrderRequest $request)
     {
-
-
         // 开启事务
         DB::transaction(function () use ($request) {
 
-//            dd($request->items);
             $shop_id = $request->shop_id;
             $data['user_id'] = $shop_id;
             $orderNo = RepairOrder::getMaxOrderNo($shop_id);
@@ -69,11 +65,6 @@ class RepairOrderController extends Controller
             $data['finished_start_time'] = $finished_start_time;
             $data['finished_end_time'] = $finished_end_time;
             $data['handle_staff'] = $request->handle_staff;
-            $data['fee'] = $request->fee;
-
-//            $now = Carbon::now();
-//            $data['created_at'] = $now;
-//            $data['updated_at'] = $now;
 
             $repair_order = RepairOrder::create($data);
 
@@ -81,22 +72,28 @@ class RepairOrderController extends Controller
             $items = $request->items;
 
             foreach ($items as &$item){
-                $item['status'] = ($item['status'] === 'true')
-                    ? RepairProject::STATUS_FINISHED
-                    : RepairProject::STATUS_UNFINISHED;
+                //true 已完成, false 未完成(switch插件返回的是字符串)
+                if( $item['status'] === 'true' ){
+                    $item['status'] = RepairProject::STATUS_FINISHED;
+                }elseif ($item['status'] === 'false'){
+                    $item['status'] = RepairProject::STATUS_FINISHED;
+                    //複製一條數據
+                    $newRepairProject = RepairProject::find($item['id'])->replicate();
+                    $newRepairProject->comment = $item['comment'] ?? '';
+                    $newRepairProject->fee = $item['fee'] ?? 0;
+                    $newRepairProject->save();
+                    //複製數據後狀態設置成「需跟進」
+                    $item['status'] = 11;
+                }
                 $item['repair_order_id'] = $repair_order->id;
+                //不填寫費用默認為0
+                $item['fee'] = $item['fee'] ?? 0;
                 RepairProject::where('id', $item['id'])->update($item);
             }
             unset($item);
 
-
-
-//            dump($data);
         });
 
-
-
-//        dump($request->toArray());
         return;
     }
 

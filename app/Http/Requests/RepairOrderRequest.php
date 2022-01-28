@@ -24,6 +24,8 @@ class RepairOrderRequest extends FormRequest
 
                 },
             ],
+            //維修費用
+            'items.*.fee' => ['nullable', 'numeric', 'min:0'],
             //完成日期
             'complete_date' => 'required|date',
             //到店時間（時）
@@ -37,13 +39,16 @@ class RepairOrderRequest extends FormRequest
             //維修員
             'handle_staff' => 'required',
             //維修費用
-            'fee' => 'required|numeric|min:0',
+//            'fee' => 'required|numeric|min:0',
         ];
     }
 
     public function messages()
     {
         return [
+
+            'items.*.fee.min' => '「維修費用」必須大於0。',
+
             'complete_date.required' => '請填寫「完成日期」。',
             'complete_date.date' => '「完成日期」請填寫正確的日期。',
 
@@ -61,9 +66,9 @@ class RepairOrderRequest extends FormRequest
 
             'handle_staff.required' => '請填寫「維修員」。',
 
-            'fee.required' => '請填寫「維修費用」。',
-            'fee.numeric' => '「維修費用」請輸入數字。',
-            'fee.min' => '「維修費用」必須大於0。',
+//            'fee.required' => '請填寫「維修費用」。',
+//            'fee.numeric' => '「維修費用」請輸入數字。',
+//            'fee.min' => '「維修費用」必須大於0。',
         ];
     }
 }

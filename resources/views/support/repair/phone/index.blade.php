@@ -55,9 +55,16 @@
                 return this.value
             }).get().join(',');
 
-            let url = '/repair_order?shop_id=' + shop_id + '&order_ids=' + order_ids;
+            if(order_ids === ''){
+                Swal.fire({
+                    icon: 'error',
+                    title: "請選擇項目",
+                });
+                return ;
+            }
 
-            window.open(url);
+            let url = '/repair_order?shop_id=' + shop_id + '&order_ids=' + order_ids;
+            window.location.href = url;
             // console.log(url);
         });
     </script>
