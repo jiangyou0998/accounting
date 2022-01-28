@@ -4,6 +4,7 @@ namespace App\Http\Controllers\KB;
 
 
 use App\Http\Controllers\Controller;
+use App\Models\KB\KBForbiddenDate;
 use App\Models\KB\KBSpecialDate;
 use App\Models\KB\KBUser;
 use App\Models\KB\KBWorkshopCartItem;
@@ -24,6 +25,7 @@ class KBWorkshopCartItemController extends Controller
 {
     private $productArr;
     private $special_dates;
+    private $forbidden_dates;
 
     public function update(Request $request, $shopid)
     {
@@ -198,6 +200,7 @@ class KBWorkshopCartItemController extends Controller
 
         $this->productArr = KBWorkshopProduct::getProductCatIds();
         $this->special_dates = KBSpecialDate::where('special_date', $deli_date)->get();
+        $this->forbidden_dates = KBForbiddenDate::where('forbidden_date', $deli_date)->get();
 
         foreach ($items as $item) {
             //$item必須有product_id
@@ -268,6 +271,7 @@ class KBWorkshopCartItemController extends Controller
 
         $this->productArr = KBWorkshopProduct::getProductCatIds();
         $this->special_dates = KBSpecialDate::where('special_date', $deli_date)->get();
+        $this->forbidden_dates = KBForbiddenDate::where('forbidden_date', $deli_date)->get();
 //        dump($infos);
         foreach ($products as $product) {
 //            dump($deli_date.$product->cuttime);
@@ -330,7 +334,9 @@ class KBWorkshopCartItemController extends Controller
 
         $productArr = $this->productArr;
         $special_dates = $this->special_dates;
+        $forbidden_dates = $this->forbidden_dates;
 
+        //開放特別下單日子
         foreach ($special_dates as $special_date){
             $catArr = explode(',', $special_date->cat_ids);
             $shopArr = explode(',', $special_date->user_ids);
@@ -340,6 +346,22 @@ class KBWorkshopCartItemController extends Controller
             if (in_array($cat_id, $catArr) && in_array($shopid, $shopArr)){
 
                 $product->not_deli_time = false;
+                break;
+            }
+        }
+
+        // 2022-01-28 特別禁止下單日子
+        //"禁止下單" 優先級高於 "特別下單"
+        foreach ($forbidden_dates as $forbidden_date){
+            $catArr = explode(',', $forbidden_date->cat_ids);
+            $shopArr = explode(',', $forbidden_date->user_ids);
+//            dump($catArr);
+//            dump($shopArr);
+
+            $cat_id = $productArr[$product->product_id] ?? 0 ;
+
+            if (in_array($cat_id, $catArr) && in_array($shopid, $shopArr)){
+                $product->not_deli_time = true;
                 break;
             }
         }
