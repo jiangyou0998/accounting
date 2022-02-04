@@ -203,6 +203,7 @@ class WorkshopCartItemController extends AdminController
             $grid->filter(function (Grid\Filter $filter) {
                 // 更改为 panel 布局
                 $filter->panel();
+                $filter->equal( 'id');
                 $filter->between('insert_date', '插入時間')->datetime();
 
                 $filter->between('order_date', '更新時間')->datetime();
