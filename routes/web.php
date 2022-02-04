@@ -99,6 +99,11 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
     Route::get('order/update_price', 'UpdatePriceController@index')->name('order.update_price');
     Route::post('order/update_price/check','UpdatePriceController@check')->name('order.update_price.check');
     Route::put('order/update_price/modify','UpdatePriceController@modify')->name('order.update_price.modify');
+
+    //2022-01-27 批量刪除已落單內容
+    Route::get('order/batch_delete', 'BatchDeleteController@index')->name('order.batch_delete');
+    Route::post('order/batch_delete/check','BatchDeleteController@check')->name('order.batch_delete.check');
+    Route::delete('order/batch_delete/delete','BatchDeleteController@delete')->name('order.batch_delete.delete');
 });
 
 Route::group(['middleware' => ['auth','permission:shop']], function () {

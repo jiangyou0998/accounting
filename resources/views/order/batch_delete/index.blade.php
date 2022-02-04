@@ -7,7 +7,13 @@
 @section('js')
     {{--    laydate--}}
     <script src="../layui/laydate/laydate.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 @endsection
+
+
+@section('css')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@stop
 
 
 @section('style')
@@ -68,8 +74,25 @@
         </div>
 
         <div class="style5" style="text-align: center;">
-            <span class="style4">批量<span class="style6">更新</span>已落單產品<span class="style6">價錢</span></span>
+            <span class="style4">批量<span class="style6">刪除</span>已落單產品</span>
         </div>
+
+        <hr>
+        <div align="middle">
+            <select class="product" id="product" name="product" style="min-width: 30%">
+                <option value="">-- 請選擇貨品 --</option>
+                @foreach($codeProductArr as $key => $value)
+                    <option value="{{$key}}">{{$value}}</option>
+                @endforeach
+            </select>
+{{--            @if(request()->shop_group_id != 5)--}}
+{{--                <button class="btn btn-primary" onclick="addsample()">新增</button>--}}
+{{--            @endif--}}
+{{--            <button class="btn btn-danger" onclick="addtemp()">臨時加單</button>--}}
+        </div>
+        <hr>
+
+
 
         <div align="left" style="padding-top: 15px;">
             <strong>
@@ -82,6 +105,8 @@
             <input type="radio" name="shop" value="{{ $id }}"><span class="radio">{{ $name }}</span>
         </label>
         @endforeach
+
+        <hr>
 
 
         <div class="row">
@@ -119,8 +144,7 @@
                 <th scope="col">送貨日期</th>
                 <th scope="col">分店</th>
                 <th scope="col">產品名</th>
-                <th scope="col">舊價錢</th>
-                <th scope="col">新價錢</th>
+                <th scope="col">數量</th>
             </tr>
             </thead>
             <tbody class="table-striped" id="search-data" style="background-color: white">
@@ -145,6 +169,11 @@
 
     <script>
 
+        //product下拉選擇框初始化
+        $(document).ready(function() {
+            $('.product').select2();
+        });
+
         // laydate初始化
         laydate.render({
             elem: '#start_date' //指定元素
@@ -154,15 +183,6 @@
             elem: '#end_date' //指定元素
         });
 
-        //鉤選或取消時,修改shopstr(隱藏)的值
-        // $(document).on('change', 'input[type=checkbox]', function () {
-        //     var shopstr = $('input[type=checkbox][class=\'shop\']:checked').map(function () {
-        //         return this.value
-        //     }).get().join(',');
-        //     $('#shopstr').val(shopstr);
-        //     // alert(shopstr);
-        // });
-
         $(document).on('change', 'input[type=radio]', function () {
             $("#btnsubmit").attr('disabled', true);
         });
@@ -171,27 +191,25 @@
             $("#btnsubmit").attr('disabled', true);
         });
 
-        //全選/反選
-        // function checkAll(obj){
-        //     let group = $(obj).data('group');
-        //     if($(obj).prop("checked")){    //判斷check_all是否被選中
-        //         $("input[class='shop'][data-group=" + group +"]").prop("checked",true);//全選
-        //         $("#spanss").html("取消");
-        //     }else{
-        //         $("input[class='shop'][data-group=" + group +"]").prop("checked",false); //反選
-        //         $("#spanss").html("全选");
-        //     }
-        // }
-
         function check() {
 
             //禁止按鈕重複點擊
             $("#btncheck").attr('disabled', true);
 
+            var product = $('#product').val();
             var shopstr = $('input:radio[name="shop"]:checked').val();
             var start_date = $('#start_date').val();
             var end_date = $('#end_date').val();
-            console.log(shopstr);
+            // console.log(shopstr);
+            if (product == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: "請選擇產品！",
+                });
+                $("#btncheck").attr('disabled', false);
+                return false;
+            }
+
             if (shopstr == null) {
                 Swal.fire({
                     icon: 'error',
@@ -219,7 +237,7 @@
                 return false;
             }
 
-            let url = '{{route('order.update_price.check')}}';
+            let url = '{{route('order.batch_delete.check')}}';
             let type = 'POST';
 
             $.ajax({
@@ -229,27 +247,12 @@
                     'start'  : start_date,
                     'end'  : end_date,
                     'shop_group_id': shopstr,
+                    'product_id': product,
                 },
                 dataType:'json',
                 success: function (data) {
                     // console.log(data);
                     if(data.status === 'success'){
-
-                        {{--Swal.fire({--}}
-                        {{--    icon: 'success',--}}
-                        {{--    title: data.count,--}}
-                        {{--    showDenyButton: true,--}}
-                        {{--    confirmButtonColor: '#3085d6',--}}
-                        {{--    confirmButtonText: '確定',--}}
-                        {{--    denyButtonText: '返回',--}}
-                        {{--}).then((result) => {--}}
-                        {{--    if (result.isDenied) {--}}
-                        {{--        --}}{{--window.location.href = '{{route('order.regular.sample',['shop_group_id' => $shop_group_id])}}';--}}
-                        {{--    } else {--}}
-                        {{--        window.location.reload();--}}
-                        {{--    }--}}
-
-                        {{--});--}}
 
                         let title = '';
                         if(data.count > 0){
@@ -269,14 +272,13 @@
 
                         $('#search-data').empty();
 
-                        $.each(data.different_item, function( index, value ) {
+                        $.each(data.search_items, function( index, value ) {
                             table = '<tr>\n' +
                                 '                <th scope="row">' + (index + 1) + '</th>\n' +
                                 '                <td>' + value.deli_date + '</td>\n' +
                                 '                <td>' + value.shop_name + '</td>\n' +
                                 '                <td>' + value.product_name + '</td>\n' +
-                                '                <td>' + value.old_price + '</td>\n' +
-                                '                <td>' + value.new_price + '</td>\n' +
+                                '                <td>' + value.qty + '</td>\n' +
                                 '            </tr>';
                             $('#search-data').append(table);
                             // console.log(value.product_name);
@@ -306,11 +308,13 @@
 
         function sss() {
 
+            let product = $('#product option:selected').text();
             let shopstr = $('input:radio[name="shop"]:checked').next('span').text();
             let start_date = $('#start_date').val();
             let end_date = $('#end_date').val();
 
             let text = '修改分組 : ' + shopstr + '\n'
+                + '刪除產品 : ' + product + '\n'
                 + start_date + ' 到 ' + end_date + '\n\n'
                 + '請輸入「yes」確認';
 
@@ -326,7 +330,7 @@
                 showLoaderOnConfirm: true,
                 preConfirm: (comfirm) => {
                     if ( comfirm === 'yes' ){
-                        update_price();
+                        batch_delete();
                         return true;
                     }else{
                         Swal.showValidationMessage(
@@ -343,15 +347,14 @@
                 }
             })
 
-
-
             // $("#btnsubmit").attr('disabled', false);
         }
 
-        function update_price(){
+        function batch_delete(){
             //禁止按鈕重複點擊
             $("#btnsubmit").attr('disabled', true);
 
+            let product = $('#product').val();
             let shopstr = $('input:radio[name="shop"]:checked').val();
             let start_date = $('#start_date').val();
             let end_date = $('#end_date').val();
@@ -383,8 +386,8 @@
                 return false;
             }
 
-            let url = '{{route('order.update_price.modify')}}';
-            let type = 'PUT';
+            let url = '{{route('order.batch_delete.delete')}}';
+            let type = 'DELETE';
 
             $.ajax({
                 type: type,
@@ -393,6 +396,7 @@
                     'start'  : start_date,
                     'end'  : end_date,
                     'shop_group_id': shopstr,
+                    'product_id': product,
                 },
                 dataType:'json',
                 success: function (data) {
@@ -400,7 +404,7 @@
                     if(data.status === 'success'){
                         Swal.fire({
                             icon: 'success',
-                            title: "價格更新成功!",
+                            title: "批量刪除成功!",
                             showDenyButton: true,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: '確定',

@@ -88,7 +88,7 @@ class UpdatePriceController extends Controller
             //寫入LOG
             $cartItemLogsModel->insert($updatePriceLogsArr);
 
-            dump($count);
+//            dump($count);
 
         });
 
@@ -148,9 +148,9 @@ class UpdatePriceController extends Controller
         }
 
         $data = [
-            'status'                => 'success',
+            'status'                =>  'success',
             'count'                 =>  $count,
-            'msg'                   => '柯打改期成功!',
+            'msg'                   =>  '價格更新成功!',
             'different_item'        =>  $different_items,
         ];
 
