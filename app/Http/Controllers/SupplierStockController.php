@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Auth;
 class SupplierStockController extends Controller
 {
     //可以推遲幾天提交
-    const DELAY_DAY = 7;
+    const DELAY_DAY = 10;
 
     public function __construct()
     {
