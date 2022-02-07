@@ -6,6 +6,20 @@
     <script src="../layui/layui.all.js"></script>
 @endsection
 
+@section('style')
+    <style>
+        input[type="checkbox"]{
+            width: 30px; /*Desired width*/
+            height: 30px; /*Desired height*/
+        }
+
+        .checkbox{
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+    </style>
+@endsection
+
 @section('content')
 
     <div class="alert-message">
@@ -51,16 +65,16 @@
 
                         @foreach($order_items as $value)
                             <tr data-id="{{ $value->id }}">
-                                <td width="10%">{{ $loop->iteration }}</td>
-                                <td scope="row" width="20%">{{ $value->created_at }}</td>
+                                <td width="5%">{{ $loop->iteration }}</td>
+                                <td scope="row" width="15%">{{ $value->created_at }}</td>
                                 <td width="10%">{{ $value->locations->name ?? '' }}</td>
-                                <td width="10%">{{ $value->items->name ?? '' }}</td>
-                                <td width="10%">{{ $value->details->name ?? '' }}</td>
+                                <td width="15%">{{ $value->items->name ?? '' }}</td>
+                                <td width="15%">{{ $value->details->name ?? '' }}</td>
                                 <td width="10%">
-                                    <textarea type="textarea" name="comment" cols="20" row="20">{{ $value->comment ?? '' }}</textarea>
+                                    <textarea type="textarea" name="comment" cols="13" row="20">{{ $value->comment ?? '' }}</textarea>
                                 </td>
-                                <td width="5%">
-                                    <input type="number" style="margin-right: 5px;" name="item_fee" min="0" value="{{ $value->fee ?? '' }}">
+                                <td width="15%">
+                                    <input type="number" style="width: 100%;margin-right: 5px;" name="item_fee" min="0" value="{{ $value->fee ?? '' }}">
                                 </td>
                                 <td width="15%">
                                     <input style="margin-right: 5px;" name="status" type="checkbox" checked>
@@ -84,6 +98,9 @@
                         <input type="text" class="form-control" id="complete_date" name="complete_date"
                                autocomplete="off" placeholder="請選擇日期" value="{{ old('complete_date') }}"
                                style="background-color:white;" readonly required>
+{{--                        <input type="date" class="form-control"--}}
+{{--                               autocomplete="off" placeholder="請選擇日期" value="{{ old('complete_date') }}"--}}
+{{--                               style="background-color:white;" readonly required>--}}
                     </div>
                 </div>
 
@@ -126,10 +143,15 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="inputPassword" class="col-sm-2 col-form-label">維修員</label>
+                    <label for="handleStaff" class="col-sm-2 col-form-label">維修員</label>
                     <div class="col-sm-10">
-                        <input type="text" class="form-control" id="handle_staff" name="handle_staff" autocomplete="off"
-                               placeholder="維修員" value="{{ old('handle_staff') }}" required>
+{{--                        <input type="text" class="form-control" id="handle_staff" name="handle_staff" autocomplete="off"--}}
+{{--                               placeholder="維修員" value="{{ old('handle_staff') }}" required>--}}
+                        @foreach($maintenance_staff as $value)
+                        <label style="padding-right:15px;">
+                            <input type="checkbox" name="handle_staff" value="{{$value->txt_name}}"><span class="checkbox">{{$value->txt_name}}</span>
+                        </label>
+                        @endforeach
                     </div>
                 </div>
 
@@ -185,6 +207,10 @@
         // $(document).on('click', '.btn-create-order', function () {
         $('.btn-create-order').click(function () {
 
+            let handle_staff = $('input[type=checkbox][name=\'handle_staff\']:checked').map(function () {
+                        return this.value
+                    }).get().join(',');
+
             // 构建请求参数，将用户选择的維修項目 ,維修員 和 維修費用 写入请求参数
             var req = {
                 items: [],
@@ -194,7 +220,7 @@
                 start_minute: $('#start_minute').val(),
                 end_hour: $('#end_hour').val(),
                 end_minute: $('#end_minute').val(),
-                handle_staff: $('#handle_staff').val(),
+                handle_staff: handle_staff,
                 // fee: $('#fee').val(),
             };
 

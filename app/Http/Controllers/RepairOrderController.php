@@ -40,7 +40,9 @@ class RepairOrderController extends Controller
 //        dump($order_items->toArray());
         $shop_name = User::find($shop_id)->txt_name ?? '';
 
-        return view('support.repair.repair_order.index', compact('order_items', 'shop_name', 'shop_id'));
+        $maintenance_staff = User::role('maintenance')->get('txt_name');
+
+        return view('support.repair.repair_order.index', compact('order_items', 'shop_name', 'shop_id', 'maintenance_staff'));
     }
 
     public function store(RepairOrderRequest $request)
