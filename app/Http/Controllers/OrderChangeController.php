@@ -23,8 +23,7 @@ class OrderChangeController extends Controller
      */
     public function index()
     {
-//        $shops = User::getShopsByShopGroup(1);
-        $shop_group_ids = ShopGroup::all()->pluck('name','id');
+        $shop_group_ids = ShopGroup::all()->sortBy('sort')->pluck('name','id');
         $checkHtml = '';
         foreach ($shop_group_ids as $shop_group_id => $shop_name){
             $checkHtml .= $this->getCheckboxHtml($shop_group_id, $shop_name);
@@ -114,6 +113,16 @@ class OrderChangeController extends Controller
                 ];
             }
 
+            $data = [
+                'status' => 'success',
+                'msg'   => '柯打改期成功!'
+            ];
+            if(count($modify_items) < 50){
+                $data['status'] = 'error';
+                $data['msg'] = '所選數據數量少於50,修改失敗!';
+                return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            }
+
             $cartItemModel->updateBatch($deleteArr);
             $cartItemModel->updateBatch($modifyArr);
 
@@ -121,13 +130,15 @@ class OrderChangeController extends Controller
             $cartItemLogsModel->insert($deleteLogsArr);
             $cartItemLogsModel->insert($modifyLogsArr);
 
+            return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);;
+
         });
 
 //        dump($shopsArr);
 //        dd($items->toArray());
     }
 
-    //選擇日期checkbox
+    //選擇分店checkbox
     private function getCheckboxHtml($shop_group_id, $shop_name)
     {
         $shops = User::getShopsByShopGroup($shop_group_id);
@@ -142,8 +153,7 @@ class OrderChangeController extends Controller
     <br>
 HTML;
 
-
-        //星期日到星期六多選框
+        //分店多選框
         foreach ($shops as $shop) {
 
             $check = <<<HTML

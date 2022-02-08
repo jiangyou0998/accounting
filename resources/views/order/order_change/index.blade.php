@@ -140,12 +140,12 @@
 
         //全選/反選
         function checkAll(obj){
-            let id = $(obj).data('id');
+            let group = $(obj).data('group');
             if($(obj).prop("checked")){    //判斷check_all是否被選中
-                $("input[class='shop']").prop("checked",true);//全選
+                $("input[class='shop'][data-group=" + group +"]").prop("checked",true);//全選
                 $("#spanss").html("取消");
             }else{
-                $("input[class='shop']").prop("checked",false); //反選
+                $("input[class='shop'][data-group=" + group +"]").prop("checked",false); //反選
                 $("#spanss").html("全选");
             }
         }
@@ -207,22 +207,36 @@
                     'reason' : reason,
                     'shops': shopstr,
                 },
-                success: function (msg) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: "柯打改期成功!",
-                        showDenyButton: true,
-                        confirmButtonColor: '#3085d6',
-                        confirmButtonText: '確定',
-                        denyButtonText: '返回',
-                    }).then((result) => {
-                        if (result.isDenied) {
-                            {{--window.location.href = '{{route('order.regular.sample',['shop_group_id' => $shop_group_id])}}';--}}
-                        } else {
-                            window.location.reload();
-                        }
+                dataType:'json',
+                success: function (data) {
+                    console.log(data);
+                    if(data.status === 'success'){
+                        Swal.fire({
+                            icon: 'success',
+                            title: "柯打改期成功!",
+                            showDenyButton: true,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: '確定',
+                            denyButtonText: '返回',
+                        }).then((result) => {
+                            if (result.isDenied) {
+                                {{--window.location.href = '{{route('order.regular.sample',['shop_group_id' => $shop_group_id])}}';--}}
+                            } else {
+                                window.location.reload();
+                            }
 
-                    });
+                        });
+                    }else if(data.status === 'error'){
+                        Swal.fire({
+                            icon: 'error',
+                            title: data.msg,
+                            showDenyButton: true,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: '確定',
+                            denyButtonText: '返回',
+                        });
+                    }
+
                 }
             });
 
