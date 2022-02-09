@@ -108,6 +108,9 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
 
 Route::group(['middleware' => ['auth','permission:shop']], function () {
     Route::get('sample', 'WorkshopOrderSampleController@index')->name('sample');
+
+    // 銷售數據
+    Route::get('sales_data', 'SalesDataController@index')->name('sales_data');
 });
 
 Route::group(['middleware' => ['auth','permission:operation']], function () {
