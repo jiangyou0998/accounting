@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Models;
+
+
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+
+class SalesCalResult extends Model
+{
+
+    protected $table = 'sales_cal_results';
+
+    public static function getSalesCalResult()
+    {
+        $date = Carbon::now()->toDateString();
+        $shop_id = Auth::user()->id;
+
+        $sales_cal_result = self::query()
+            ->where('date', $date)
+            ->where('shop_id', $shop_id)
+            ->first();
+
+        return $sales_cal_result;
+    }
+
+    public static function getNewDepositNo()
+    {
+        $year_and_month = Carbon::now()->isoFormat('YYMM');
+        $year_and_month = (int)$year_and_month * 10000;
+
+        //從數據庫查出最大的編號
+        $max_deposit_no = self::getMaxDepositNo();
+        if($year_and_month > $max_deposit_no || is_null($max_deposit_no)){
+            $new_deposit_no = $year_and_month + 1;
+        }else{
+            $new_deposit_no = $max_deposit_no + 1;
+        }
+        return $new_deposit_no;
+    }
+
+    public static function getLastBalance()
+    {
+        //從數據庫查出最大的編號
+        $max_deposit_no = self::getMaxDepositNo();
+        if(is_null($max_deposit_no)){
+            $last_balance = 0;
+        }else{
+            $shop_id = Auth::user()->id;
+            $last_balance = self::query()->where('shop_id', $shop_id)
+                ->where('deposit_no', $max_deposit_no)
+                ->first()->balance;
+        }
+        return $last_balance;
+    }
+
+    private static function getMaxDepositNo()
+    {
+        //從數據庫查出最大的編號
+        $date = Carbon::now()->toDateString();
+        $shop_id = Auth::user()->id;
+        //從數據庫查出最大的編號
+        $max_deposit_no = self::query()
+            ->where('shop_id', $shop_id)
+            ->where('date', '!=', $date)
+            ->max('deposit_no');
+
+        return $max_deposit_no;
+    }
+
+
+}

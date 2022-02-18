@@ -48,6 +48,17 @@
 @section('content')
     <div class="container">
 
+{{--        <div class="alert-message">--}}
+{{--            <ul class="error-content">--}}
+
+{{--            </ul>--}}
+{{--        </div>--}}
+
+        <div class="alert-message" style="display: none;">
+            <div class="alert alert-danger error-content" role="alert" style="">
+
+            </div>
+        </div>
 
         <div class="style5" style="text-align: center;">
             <span class="style4">營業數({{now()->toDateString()}})</span>
@@ -62,29 +73,29 @@
                     <h4 class="mb-3">1.收銀機收入</h4>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="firstName">主機No</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+                            <label for="first_pos_no">主機No</label>
+                            <input type="text" class="form-control" id="first_pos_no" placeholder="" value="{{ $sales_cal_result->first_pos_no ?? ''}}" autocomplete="off" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="hostIncome">主機收入</label>
-                            <input type="number" class="form-control pos-income" id="first_pos_income" placeholder="" min="0" required>
+                            <label for="firstPosIncome">主機收入</label>
+                            <input type="text" pattern="[0-9]*" class="form-control pos-income" id="first_pos_income" value="{{ $sales_income_detail['12'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="firstName">副機No</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+                            <label for="second_pos_no">副機No</label>
+                            <input type="text" class="form-control" id="second_pos_no" placeholder="" value="{{ $sales_cal_result->second_pos_no ?? ''}}" autocomplete="off" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="firstName">副機收入</label>
-                            <input type="number" class="form-control pos-income" id="second_pos_income" placeholder="" min="0">
+                            <label for="secondPosIncome">副機收入</label>
+                            <input type="text" pattern="[0-9]*" class="form-control pos-income" id="second_pos_income" value="{{ $sales_income_detail['14'] ?? '' }}" placeholder="" min="0" autocomplete="off">
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
@@ -104,21 +115,21 @@
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label for="morningIncome">早更收入</label>
-                            <input type="number" class="form-control period-income" id="morning_income" placeholder="" min="0" required>
+                            <input type="text" pattern="[0-9]*" class="form-control period-income" id="morning_income" value="{{ $sales_income_detail['21'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="afternoonIncome">午更收入</label>
-                            <input type="number" class="form-control period-income" id="afternoon_income" placeholder="" min="0" required>
+                            <input type="text" pattern="[0-9]*" class="form-control period-income" id="afternoon_income" value="{{ $sales_income_detail['22'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="eveningIncome">晚更收入</label>
-                            <input type="number" class="form-control period-income" id="evening_income" placeholder="" min="0" required>
+                            <input type="text" pattern="[0-9]*" class="form-control period-income" id="evening_income" value="{{ $sales_income_detail['23'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
@@ -137,21 +148,21 @@
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label for="octopusIncome">八達通</label>
-                            <input type="number" class="form-control payment-income" id="octopus_income" placeholder="" min="0" required>
+                            <input type="text" pattern="[0-9]*" class="form-control payment-income" id="octopus_income" value="{{ $sales_income_detail['31'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="alipayIncome">支付寶</label>
-                            <input type="number" class="form-control payment-income" id="alipay_income" placeholder="" min="0" required>
+                            <input type="text" pattern="[0-9]*" class="form-control payment-income" id="alipay_income" value="{{ $sales_income_detail['32'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="wechatpayIncome">微信</label>
-                            <input type="number" class="form-control payment-income" id="wechatpay_income" placeholder="" min="0" required>
+                            <input type="text" pattern="[0-9]*" class="form-control payment-income" id="wechatpay_income" value="{{ $sales_income_detail['33'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
@@ -166,14 +177,14 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="posPaperMoney">紙幣</label>
-                            <input type="number" class="form-control pos-cash" id="pos_paper_money" placeholder="" min="0" required>
+                            <input type="text" pattern="[0-9]*" class="form-control pos-cash" id="pos_paper_money" value="{{ $sales_income_detail['41'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="posCoin">硬幣</label>
-                            <input type="number" class="form-control pos-cash" id="pos_coin" placeholder="" min="0" required>
+                            <input type="text" pattern="[0-9]*" class="form-control pos-cash" id="pos_coin" value="{{ $sales_income_detail['42'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
@@ -188,14 +199,14 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="safePaperMoney">紙幣</label>
-                            <input type="number" class="form-control safe-cash" id="safe_paper_money" placeholder="" min="0" required>
+                            <input type="text" pattern="[0-9]*" class="form-control safe-cash" id="safe_paper_money" value="{{ $sales_income_detail['51'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="safeCoin">硬幣</label>
-                            <input type="number" class="form-control safe-cash" id="safe_coin" placeholder="" min="0" required>
+                            <input type="text" pattern="[0-9]*" class="form-control safe-cash" id="safe_coin" value="{{ $sales_income_detail['52'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
@@ -206,20 +217,22 @@
                     <hr>
                     <h4 class="mb-3">6.承上數</h4>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="lastBalance">承上結存</label>
-                            <input type="number" class="form-control" id="last_balance" placeholder="" value="" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="lastSafeBalance">夾萬承上結存</label>
-                            <input type="number" class="form-control" id="last_safe_balance" placeholder="" value="" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
-                        </div>
+{{--                        <div class="col-md-6 mb-3">--}}
+{{--                            <label for="lastBalance">承上結存</label>--}}
+{{--                            <input type="text" pattern="[0-9]*" class="form-control" id="last_balance" placeholder="" value="" required>--}}
+{{--                            <div class="invalid-feedback">--}}
+{{--                                Valid first name is required.--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-md-6 mb-3">--}}
+{{--                            <label for="lastSafeBalance">夾萬承上結存</label>--}}
+{{--                            <input type="text" pattern="[0-9]*" class="form-control" id="last_safe_balance" placeholder="" value="" required>--}}
+{{--                            <div class="invalid-feedback">--}}
+{{--                                Valid first name is required.--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+
+                        <h3 class="col-lg-12 p-3 text-right">承上結存 : $<span id="last_balance">{{$last_balance}}</span></h3>
 
                     </div>
 
@@ -228,21 +241,29 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="depositInSafe">存入夾萬</label>
-                            <input type="number" class="form-control in-out" id="deposit_in_safe" placeholder="" value="" required>
+                            <input type="text" pattern="[0-9]*" class="form-control in-out" id="deposit_in_safe" value="{{ $sales_income_detail['71'] ?? '' }}" placeholder="" value="" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="depositInBank">存入銀行</label>
-                            <input type="number" class="form-control in-out" id="deposit_in_bank" placeholder="" value="" required>
+                            <div class="form-inline row">
+                                <select class="form-control form-inline col-md-4" name="deposit_bank" id="deposit_bank">
+                                    <option value="">-選擇銀行-</option>
+                                    <option value="東亞" @if($bank === '東亞') selected @endif>東亞</option>
+                                    <option value="HSBC" @if($bank === 'HSBC') selected @endif>HSBC</option>
+                                    <option value="中銀" @if($bank === '中銀') selected @endif>中銀</option>
+                                </select>
+                                <input class="form-control form-inline col-md-8" type="text" pattern="[0-9]*" class="form-control in-out" id="deposit_in_bank" value="{{ $sales_income_detail['72'] ?? '' }}" placeholder="" value="" required>
+                            </div>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="kellyOut">慧霖取銀</label>
-                            <input type="number" class="form-control in-out" id="kelly_out" placeholder="" value="" required>
+                            <input type="text" pattern="[0-9]*" class="form-control in-out" id="kelly_out" value="{{ $sales_income_detail['73'] ?? '' }}" placeholder="" value="" required>
                             <div class="invalid-feedback">
                                 Valid first name is required.
                             </div>
@@ -255,13 +276,13 @@
                         @for($i=1; $i<=10; $i++)
                             <div class="col-md-6 mb-3">
                                 <label for="billPaid">支單({{$i}})</label>
-                                <input type="number" class="form-control bill-paid" placeholder="" value="" required>
+                                <input type="text" pattern="[0-9]*" class="form-control bill-paid" placeholder="" value="{{ $bills[$i] ?? '' }}" required>
                                 <div class="invalid-feedback">
                                     Valid first name is required.
                                 </div>
                             </div>
                         @endfor
-                        <h3 class="col-lg-12 p-3 text-right">支單總計 : $<span id="bill_paid_sum">0.00</span></h3>
+                        <h3 class="col-lg-12 p-3 text-right">支單總計 : $<span id="bill_paid_sum">{{ $sales_cal_result->bill_paid_sum ?? '0.00'}}</span></h3>
                     </div>
 
                     <br>
@@ -270,27 +291,24 @@
                     <hr>
                     <h4 class="mb-3">9.總計</h4>
                     <div class="row">
-                        <h3 class="col-lg-12 p-3 text-right">收入 : $<span id="income_sum">0.00</span></h3>
-                        <h3 class="col-lg-12 p-3 text-right">差額 : $<span id="difference">0.00</span></h3>
+                        <h3 class="col-lg-12 p-3 text-right">收入 : $<span id="income_sum">{{ $sales_cal_result->income_sum ?? '0.00'}}</span></h3>
+                        <h3 class="col-lg-12 p-3 text-right">差額 : $<span id="difference">{{ $sales_cal_result->difference ?? '0.00'}}</span></h3>
+                    </div>
+
+                    <div class="form-group row">
+                        <button type="button" class="btn btn-primary btn-block btn-submit">提交</button>
+
                     </div>
 
                     </form>
             </div>
+@endsection
 
+@section('script')
     <script>
 
-
-        //鉤選或取消時,修改shopstr(隱藏)的值
-        // $(document).on('change', 'input[type=checkbox]', function () {
-        //     var shopstr = $('input[type=checkbox][class=\'shop\']:checked').map(function () {
-        //         return this.value
-        //     }).get().join(',');
-        //     $('#shopstr').val(shopstr);
-        //     // alert(shopstr);
-        // });
-
-        $(document).on('change', 'input[type=radio]', function () {
-            $("#btnsubmit").attr('disabled', true);
+        $(document).ready(function(){
+            $('.form-control').trigger("blur");
         });
 
         //
@@ -470,11 +488,22 @@
         //獲取承上結存
         function getLastBalance(){
             let last_balance = 0;
-            let input_value = $('#last_balance').val();
+            let input_value = $('#last_balance').text();
             if((input_value.length > 0)){
                 last_balance += parseFloat(input_value);
             }
             return last_balance.toFixed(2);
+        }
+
+        //獲取今日結存
+        function getBalance(){
+            let balance = 0;
+            let pos_cash_sum = getPosCashSum();
+            let safe_cash_sum = getSafeCashSum();
+
+            balance = parseFloat(pos_cash_sum) + parseFloat(safe_cash_sum);
+
+            return balance.toFixed(2);
         }
 
         //獲取夾萬承上結存
@@ -559,251 +588,109 @@
             return difference.toFixed(2);
         }
 
-        function check() {
+        $('.btn-submit').click(function () {
 
-            //禁止按鈕重複點擊
-            $("#btncheck").attr('disabled', true);
-
-            var shopstr = $('input:radio[name="shop"]:checked').val();
-            var start_date = $('#start_date').val();
-            var end_date = $('#end_date').val();
-            console.log(shopstr);
-            if (shopstr == null) {
+            //存入銀行填寫後必須選擇銀行
+            if($('#deposit_in_bank').val() && !$('#deposit_bank option:selected').val()){
+                // alert('請選擇銀行');
                 Swal.fire({
-                    icon: 'error',
-                    title: "請選擇分組！",
-                });
-                $("#btncheck").attr('disabled', false);
-                return false;
+                    icon: 'warning',
+                    title: "請選擇銀行!",
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: '確定',
+                })
+                return;
             }
 
-            if (start_date == "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: "請選擇開始時間！",
-                });
-                $("#btncheck").attr('disabled', false);
-                return false;
-            }
+            $('.btn-submit').attr('disabled', true);
 
-            if (end_date == "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: "請選擇結束時間！",
-                });
-                $("#btncheck").attr('disabled', false);
-                return false;
-            }
+            // 构建请求参数，将用户选择的維修項目 ,維修員 和 維修費用 写入请求参数
+            var req = {
+                inputs: [],
+                bills : [],
+                first_pos_no : $('#first_pos_no').val(),
+                second_pos_no : $('#second_pos_no').val(),
+                deposit_bank : $('#deposit_bank option:selected').val(),
+                balance: getBalance(),
+                safe_balance: getSafeCashSum(),
+                bill_paid_sum: getBillPaidSum(),
+                income_sum: getIncomeSum(),
+                difference: getDifference(),
+            };
 
-            let url = '{{route('order.update_price.check')}}';
-            let type = 'POST';
-
-            $.ajax({
-                type: type,
-                url: url,
-                data: {
-                    'start'  : start_date,
-                    'end'  : end_date,
-                    'shop_group_id': shopstr,
-                },
-                dataType:'json',
-                success: function (data) {
-                    // console.log(data);
-                    if(data.status === 'success'){
-
-                        {{--Swal.fire({--}}
-                        {{--    icon: 'success',--}}
-                        {{--    title: data.count,--}}
-                        {{--    showDenyButton: true,--}}
-                        {{--    confirmButtonColor: '#3085d6',--}}
-                        {{--    confirmButtonText: '確定',--}}
-                        {{--    denyButtonText: '返回',--}}
-                        {{--}).then((result) => {--}}
-                        {{--    if (result.isDenied) {--}}
-                        {{--        --}}{{--window.location.href = '{{route('order.regular.sample',['shop_group_id' => $shop_group_id])}}';--}}
-                        {{--    } else {--}}
-                        {{--        window.location.reload();--}}
-                        {{--    }--}}
-
-                        {{--});--}}
-
-                        let title = '';
-                        if(data.count > 0){
-                            title = '共找到' + data.count + '條數據';
-                        }else{
-                            title = '未找到數據';
-                        }
-
-                        Swal.fire({
-                            // icon: 'success',
-                            title: title,
-                            showDenyButton: true,
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: '確定',
-                            denyButtonText: '返回',
-                        });
-
-                        $('#search-data').empty();
-
-                        $.each(data.different_item, function( index, value ) {
-                            table = '<tr>\n' +
-                                '                <th scope="row">' + (index + 1) + '</th>\n' +
-                                '                <td>' + value.deli_date + '</td>\n' +
-                                '                <td>' + value.shop_name + '</td>\n' +
-                                '                <td>' + value.product_name + '</td>\n' +
-                                '                <td>' + value.old_price + '</td>\n' +
-                                '                <td>' + value.new_price + '</td>\n' +
-                                '            </tr>';
-                            $('#search-data').append(table);
-                            // console.log(value.product_name);
-                        });
-                        $("#btncheck").attr('disabled', false);
-                        // 找到data才解鎖「提交」按鈕
-                        if(data.count > 0){
-                            $("#btnsubmit").attr('disabled', false);
-                        }
-                    }else if(data.status === 'error'){
-                        Swal.fire({
-                            icon: 'error',
-                            title: data.msg,
-                            showDenyButton: true,
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: '確定',
-                            denyButtonText: '返回',
-                        });
-                        $("#btncheck").attr('disabled', false);
-                    }
-
-                }
+            req.inputs.push({
+                first_pos_income: $('#first_pos_income').val(),
+                second_pos_income: $('#second_pos_income').val(),
+                morning_income: $('#morning_income').val(),
+                afternoon_income: $('#afternoon_income').val(),
+                evening_income: $('#evening_income').val(),
+                octopus_income: $('#octopus_income').val(),
+                alipay_income: $('#alipay_income').val(),
+                wechatpay_income: $('#wechatpay_income').val(),
+                pos_paper_money: $('#pos_paper_money').val(),
+                pos_coin: $('#pos_coin').val(),
+                safe_paper_money: $('#safe_paper_money').val(),
+                safe_coin: $('#safe_coin').val(),
+                deposit_in_safe: $('#deposit_in_safe').val(),
+                deposit_in_bank: $('#deposit_in_bank').val(),
+                kelly_out: $('#kelly_out').val(),
             });
 
-            // $("#btnsubmit").attr('disabled', false);
-        }
-
-        function sss() {
-
-            let shopstr = $('input:radio[name="shop"]:checked').next('span').text();
-            let start_date = $('#start_date').val();
-            let end_date = $('#end_date').val();
-
-            let text = '修改分組 : ' + shopstr + '\n'
-                + start_date + ' 到 ' + end_date + '\n\n'
-                + '請輸入「yes」確認';
-
-            Swal.fire({
-                title: text,
-                input: 'text',
-                inputAttributes: {
-                    autocapitalize: 'off'
-                },
-                showCancelButton: true,
-                confirmButtonText: '確認',
-                cancelButtonText: '取消',
-                showLoaderOnConfirm: true,
-                preConfirm: (comfirm) => {
-                    if ( comfirm === 'yes' ){
-                        update_price();
-                        return true;
-                    }else{
-                        Swal.showValidationMessage(
-                            '請輸入「yes」確認'
-                        )
-                    }
-                },
-                allowOutsideClick: false
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        title: `提交成功`
+            let $bill_no = 1;
+            $('.bill-paid').each(function (){
+                let bill_paid = $(this).val();
+                if((bill_paid.length > 0)){
+                    req.bills.push({
+                        bill_no: $bill_no,
+                        outlay: bill_paid,
                     })
-                }
-            })
-
-
-
-            // $("#btnsubmit").attr('disabled', false);
-        }
-
-        function update_price(){
-            //禁止按鈕重複點擊
-            $("#btnsubmit").attr('disabled', true);
-
-            let shopstr = $('input:radio[name="shop"]:checked').val();
-            let start_date = $('#start_date').val();
-            let end_date = $('#end_date').val();
-            console.log(shopstr);
-            if (shopstr == null) {
-                Swal.fire({
-                    icon: 'error',
-                    title: "請選擇分組！",
-                });
-                $("#btnsubmit").attr('disabled', false);
-                return false;
-            }
-
-            if (start_date == "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: "請選擇開始時間！",
-                });
-                $("#btnsubmit").attr('disabled', false);
-                return false;
-            }
-
-            if (end_date == "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: "請選擇結束時間！",
-                });
-                $("#btnsubmit").attr('disabled', false);
-                return false;
-            }
-
-            let url = '{{route('order.update_price.modify')}}';
-            let type = 'PUT';
-
-            $.ajax({
-                type: type,
-                url: url,
-                data: {
-                    'start'  : start_date,
-                    'end'  : end_date,
-                    'shop_group_id': shopstr,
-                },
-                dataType:'json',
-                success: function (data) {
-                    console.log(data);
-                    if(data.status === 'success'){
-                        Swal.fire({
-                            icon: 'success',
-                            title: "柯打改期成功!",
-                            showDenyButton: true,
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: '確定',
-                            denyButtonText: '返回',
-                        }).then((result) => {
-                            if (result.isDenied) {
-                                {{--window.location.href = '{{route('order.regular.sample',['shop_group_id' => $shop_group_id])}}';--}}
-                            } else {
-                                window.location.reload();
-                            }
-
-                        });
-                    }else if(data.status === 'error'){
-                        Swal.fire({
-                            icon: 'error',
-                            title: data.msg,
-                            showDenyButton: true,
-                            confirmButtonColor: '#3085d6',
-                            confirmButtonText: '確定',
-                            denyButtonText: '返回',
-                        });
-                    }
-
+                    $bill_no ++ ;
                 }
             });
 
-        }
-    </script>
+            $.ajax({
+                type: "POST",
+                url: "{{route('sales_data.store')}}",
+                data: req,
+                success: function() {
+                    $('.alert-message').hide();
+                    $('.error-content').html('');
+                    $('<div>').appendTo('.error-content').addClass('form_alert alert-success').html('保存成功').show().delay(1000).fadeOut();
+                    Swal.fire({
+                        icon: 'success',
+                        title: "已提交營業數!",
+                        showDenyButton: true,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: '確定',
+                        denyButtonText: '打印預覽',
+                    }).then((result) => {
+                        if (result.isDenied) {
+                            let url = '{{ route('sales_data.print') }}'
+                            // window.location.href = url;
+                            window.open(url);
+                        }
+                    });
+                    $('.btn-submit').attr('disabled', false);
+                },
+                error: function(res) {
+                    errors = res.responseJSON.errors;
+                    var form_errors = '';
+                    $.each(errors, function(i) {
+                        form_errors += '<div>' + errors[i] + '</div>';
+                    });
+                    $('.alert-message').show();
+                    $('.error-content').html('');
+                    $('<div>').appendTo('.error-content').addClass('form_alert alert-danger').html(form_errors).show();
+                    $('body,html').animate({
+                            scrollTop: 0
+                        },
+                        500);
+                    $('.btn-submit').attr('disabled', false);
+                },
+            });
 
+        });
+
+    </script>
 @endsection
+

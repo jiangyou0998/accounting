@@ -111,6 +111,9 @@ Route::group(['middleware' => ['auth','permission:shop']], function () {
 
     // 銷售數據
     Route::get('sales_data', 'SalesDataController@index')->name('sales_data');
+    Route::post('sales_data', 'SalesDataController@store')->name('sales_data.store');
+
+    Route::get('sales_data/print', 'SalesDataController@print')->name('sales_data.print');
 });
 
 Route::group(['middleware' => ['auth','permission:operation']], function () {
