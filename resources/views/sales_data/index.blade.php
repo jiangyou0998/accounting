@@ -74,31 +74,22 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="first_pos_no">主機No</label>
-                            <input type="text" class="form-control" id="first_pos_no" placeholder="" value="{{ $sales_cal_result->first_pos_no ?? ''}}" autocomplete="off" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
+                            <input type="text" pattern="[0-9]*" class="form-control" id="first_pos_no" placeholder="" value="{{ $sales_cal_result->first_pos_no ?? ''}}" autocomplete="off" required>
                         </div>
+
                         <div class="col-md-6 mb-3">
                             <label for="firstPosIncome">主機收入</label>
                             <input type="text" pattern="[0-9]*" class="form-control pos-income" id="first_pos_income" value="{{ $sales_income_detail['12'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
                         </div>
+
                         <div class="col-md-6 mb-3">
-                            <label for="second_pos_no">副機No</label>
-                            <input type="text" class="form-control" id="second_pos_no" placeholder="" value="{{ $sales_cal_result->second_pos_no ?? ''}}" autocomplete="off" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
+                            <label for="second_pos_no" pattern="[0-9]*">副機No</label>
+                            <input type="text" pattern="[0-9]*" class="form-control" id="second_pos_no" placeholder="" value="{{ $sales_cal_result->second_pos_no ?? ''}}" autocomplete="off" required>
                         </div>
+
                         <div class="col-md-6 mb-3">
                             <label for="secondPosIncome">副機收入</label>
                             <input type="text" pattern="[0-9]*" class="form-control pos-income" id="second_pos_income" value="{{ $sales_income_detail['14'] ?? '' }}" placeholder="" min="0" autocomplete="off">
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
                         </div>
                         <div class="d-flex">
 
@@ -116,23 +107,16 @@
                         <div class="col-md-4 mb-3">
                             <label for="morningIncome">早更收入</label>
                             <input type="text" pattern="[0-9]*" class="form-control period-income" id="morning_income" value="{{ $sales_income_detail['21'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
                         </div>
+
                         <div class="col-md-4 mb-3">
                             <label for="afternoonIncome">午更收入</label>
                             <input type="text" pattern="[0-9]*" class="form-control period-income" id="afternoon_income" value="{{ $sales_income_detail['22'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
                         </div>
+
                         <div class="col-md-4 mb-3">
                             <label for="eveningIncome">晚更收入</label>
                             <input type="text" pattern="[0-9]*" class="form-control period-income" id="evening_income" value="{{ $sales_income_detail['23'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
                         </div>
 
                         <h3 class="col-lg-12 p-3 text-right">時段總收入 : $<span id="period_sum">0.00</span></h3>
@@ -149,45 +133,32 @@
                         <div class="col-md-4 mb-3">
                             <label for="octopusIncome">八達通</label>
                             <input type="text" pattern="[0-9]*" class="form-control payment-income" id="octopus_income" value="{{ $sales_income_detail['31'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
                         </div>
+
                         <div class="col-md-4 mb-3">
                             <label for="alipayIncome">支付寶</label>
                             <input type="text" pattern="[0-9]*" class="form-control payment-income" id="alipay_income" value="{{ $sales_income_detail['32'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
                         </div>
+
                         <div class="col-md-4 mb-3">
                             <label for="wechatpayIncome">微信</label>
                             <input type="text" pattern="[0-9]*" class="form-control payment-income" id="wechatpay_income" value="{{ $sales_income_detail['33'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
                         </div>
 
                         <h3 class="col-lg-12 p-3 text-right">支付方式總收入 : $<span id="payment_sum">0.00</span></h3>
                     </div>
 {{--                    payment-支付方式收入--}}
-
                     <hr>
                     <h4 class="mb-3">4.收銀機餘款</h4>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="posPaperMoney">紙幣</label>
                             <input type="text" pattern="[0-9]*" class="form-control pos-cash" id="pos_paper_money" value="{{ $sales_income_detail['41'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
                         </div>
+
                         <div class="col-md-6 mb-3">
                             <label for="posCoin">硬幣</label>
                             <input type="text" pattern="[0-9]*" class="form-control pos-cash" id="pos_coin" value="{{ $sales_income_detail['42'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
                         </div>
 
                     </div>
@@ -200,37 +171,19 @@
                         <div class="col-md-6 mb-3">
                             <label for="safePaperMoney">紙幣</label>
                             <input type="text" pattern="[0-9]*" class="form-control safe-cash" id="safe_paper_money" value="{{ $sales_income_detail['51'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
                         </div>
+
                         <div class="col-md-6 mb-3">
                             <label for="safeCoin">硬幣</label>
                             <input type="text" pattern="[0-9]*" class="form-control safe-cash" id="safe_coin" value="{{ $sales_income_detail['52'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
                         </div>
+
                         <h3 class="col-lg-12 p-3 text-right">夾萬餘款總計 : $<span id="safe_cash_sum">0.00</span></h3>
                     </div>
 
                     <hr>
                     <h4 class="mb-3">6.承上數</h4>
                     <div class="row">
-{{--                        <div class="col-md-6 mb-3">--}}
-{{--                            <label for="lastBalance">承上結存</label>--}}
-{{--                            <input type="text" pattern="[0-9]*" class="form-control" id="last_balance" placeholder="" value="" required>--}}
-{{--                            <div class="invalid-feedback">--}}
-{{--                                Valid first name is required.--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
-{{--                        <div class="col-md-6 mb-3">--}}
-{{--                            <label for="lastSafeBalance">夾萬承上結存</label>--}}
-{{--                            <input type="text" pattern="[0-9]*" class="form-control" id="last_safe_balance" placeholder="" value="" required>--}}
-{{--                            <div class="invalid-feedback">--}}
-{{--                                Valid first name is required.--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
 
                         <h3 class="col-lg-12 p-3 text-right">承上結存 : $<span id="last_balance">{{$last_balance}}</span></h3>
 
@@ -242,10 +195,8 @@
                         <div class="col-md-6 mb-3">
                             <label for="depositInSafe">存入夾萬</label>
                             <input type="text" pattern="[0-9]*" class="form-control in-out" id="deposit_in_safe" value="{{ $sales_income_detail['71'] ?? '' }}" placeholder="" value="" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
                         </div>
+
                         <div class="col-md-6 mb-3">
                             <label for="depositInBank">存入銀行</label>
                             <div class="form-inline row">
@@ -257,16 +208,11 @@
                                 </select>
                                 <input class="form-control form-inline col-md-8" type="text" pattern="[0-9]*" class="form-control in-out" id="deposit_in_bank" value="{{ $sales_income_detail['72'] ?? '' }}" placeholder="" value="" required>
                             </div>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
                         </div>
+
                         <div class="col-md-6 mb-3">
                             <label for="kellyOut">慧霖取銀</label>
                             <input type="text" pattern="[0-9]*" class="form-control in-out" id="kelly_out" value="{{ $sales_income_detail['73'] ?? '' }}" placeholder="" value="" required>
-                            <div class="invalid-feedback">
-                                Valid first name is required.
-                            </div>
                         </div>
                     </div>
 
@@ -277,9 +223,6 @@
                             <div class="col-md-6 mb-3">
                                 <label for="billPaid">支單({{$i}})</label>
                                 <input type="text" pattern="[0-9]*" class="form-control bill-paid" placeholder="" value="{{ $bills[$i] ?? '' }}" required>
-                                <div class="invalid-feedback">
-                                    Valid first name is required.
-                                </div>
                             </div>
                         @endfor
                         <h3 class="col-lg-12 p-3 text-right">支單總計 : $<span id="bill_paid_sum">{{ $sales_cal_result->bill_paid_sum ?? '0.00'}}</span></h3>

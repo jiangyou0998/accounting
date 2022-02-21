@@ -3,6 +3,7 @@
 namespace App\Models;
 
 
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +12,16 @@ class SalesCalResult extends Model
 {
 
     protected $table = 'sales_cal_results';
+
+    public function user()
+    {
+        return $this->belongsTo(User::class,'shop_id','id');
+    }
+
+    public function details()
+    {
+        return $this->hasMany(SalesIncomeDetail::class, 'sales_cal_result_id', 'id');
+    }
 
     public static function getSalesCalResult()
     {

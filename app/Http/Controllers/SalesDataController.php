@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Requests\SalesDataRequest;
+use App\Models\FrontGroup;
+use App\Models\FrontGroupHasUser;
 use App\Models\SalesBill;
 use App\Models\SalesCalResult;
 use App\Models\SalesIncomeDetail;
 use App\Models\SalesIncomeType;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +30,49 @@ class SalesDataController extends Controller
         $bills = SalesBill::getSalesBills()->pluck('outlay', 'bill_no')->toArray();
 //        dump($bills);
         return view('sales_data.index', compact('sales_cal_result', 'last_balance', 'sales_income_detail', 'bank', 'bills'));
+    }
+
+    public function report(Request $request)
+    {
+        $date = $request->date ?? Carbon::now()->toDateString();
+        $front_groups = FrontGroupHasUser::query()
+            ->where('front_group_id', '!=' , 4)
+            ->get()->mapToGroups(function ($item, $key) {
+                //3 === $item['front_group_id'] 為餅店分組
+                //80 !== $item['user_id'] ID80用戶為利東街, 暫時不計入餅店
+                if(3 === $item['front_group_id'] && 80 !== $item['user_id']){
+                    return [ 'bakery' => $item['user_id']];
+                }else{
+                    return [ 'other' => $item['user_id']];
+                }
+            })->toArray();
+        $sale_summary = SalesCalResult::query()->with(['user', 'details'])->where('date', $date)->get();
+        $sale_summary = $sale_summary->mapToGroups(function ($item, $key) use($front_groups){
+//            $item->octopus = $item['detail']->where('type_no', 31)->first()->income ?? '0.00';
+            if(in_array($item['shop_id'], $front_groups['bakery'])){
+                return ['bakery' => $item];
+            }else{
+                return ['other' => $item];
+            }
+        });
+//        dump($front_groups['other']);
+
+//        dump($sale_summary->toArray());
+        return view('sales_data.report', compact('sale_summary', 'date'));
+    }
+
+    public function redirect()
+    {
+        $user = Auth::user();
+        if($user->can('operation') || $user->hasRole('SuperAdmin')){
+            //營運、管理員跳轉report
+            return redirect(route('sales_data.report'));
+        }else if($user->can('shop')){
+            //分店跳轉營業數輸入
+            return redirect(route('sales_data'));
+        }else{
+            abort('403', '你沒有權限查看!');
+        }
     }
 
     public function store(SalesDataRequest $request){

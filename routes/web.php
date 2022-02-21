@@ -59,14 +59,13 @@ Route::group(['middleware' => ['auth','permission:shop|workshop|operation']], fu
     Route::put('order/cart/{shopid}', 'WorkshopCartItemController@update')->name('cart.update');
 });
 
+
+//workshop分組
 Route::group(['middleware' => ['auth','permission:workshop']], function () {
     Route::get('order/deli/list', 'DeliController@list')->name('order.deli.list');
     Route::get('order/deli/edit', 'DeliController@deli_edit')->name('order.deli.edit');
     Route::post('order/deli/update', 'DeliController@deli_update')->name('deli.update');
-});
 
-//workshop分組
-Route::group(['middleware' => ['auth','permission:workshop']], function () {
     Route::get('order/regular', 'Regular\RegularOrderController@index')->name('order.regular');
     Route::post('order/regular', 'Regular\RegularOrderController@store')->name('order.regular.store');
 
@@ -118,6 +117,12 @@ Route::group(['middleware' => ['auth','permission:shop']], function () {
 
 Route::group(['middleware' => ['auth','permission:operation']], function () {
     Route::get('sample/regular', 'WorkshopOrderSampleController@regular')->name('sample.regular');
+});
+
+Route::group(['middleware' => ['auth']], function () {
+    // 銷售數據跳轉頁面
+    Route::get('redirect/sales_data', 'SalesDataController@redirect')->name('sales_data.redirect');
+    Route::get('sales_data/report', 'SalesDataController@report')->name('sales_data.report');
 });
 
 Route::group(['middleware' => ['auth']], function () {

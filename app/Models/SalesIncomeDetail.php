@@ -16,7 +16,6 @@ class SalesIncomeDetail extends Model
                 ->where('sales_cal_result_id', $sales_cal_result_id)
                 ->pluck('income', 'type_no')
                 ->toArray();
-
     }
 
     public static function getBank($sales_cal_result_id)
