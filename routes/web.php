@@ -121,7 +121,7 @@ Route::group(['middleware' => ['auth','permission:operation']], function () {
 
 Route::group(['middleware' => ['auth']], function () {
     // 銷售數據跳轉頁面
-    Route::get('redirect/sales_data', 'SalesDataController@redirect')->name('sales_data.redirect');
+    Route::get('sales_data/redirect', 'SalesDataController@redirect')->name('sales_data.redirect');
     Route::get('sales_data/report', 'SalesDataController@report')->name('sales_data.report');
 });
 
