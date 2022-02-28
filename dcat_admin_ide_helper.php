@@ -158,6 +158,23 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection repair_item_id
      * @property Grid\Column|Collection repair_detail_id
      * @property Grid\Column|Collection repair_order_id
+     * @property Grid\Column|Collection sales_cal_result_id
+     * @property Grid\Column|Collection date
+     * @property Grid\Column|Collection bill_no
+     * @property Grid\Column|Collection outlay
+     * @property Grid\Column|Collection first_pos_no
+     * @property Grid\Column|Collection second_pos_no
+     * @property Grid\Column|Collection deposit_no
+     * @property Grid\Column|Collection balance
+     * @property Grid\Column|Collection safe_balance
+     * @property Grid\Column|Collection last_balance
+     * @property Grid\Column|Collection last_safe_balance
+     * @property Grid\Column|Collection bill_paid_sum
+     * @property Grid\Column|Collection income_sum
+     * @property Grid\Column|Collection difference
+     * @property Grid\Column|Collection type_no
+     * @property Grid\Column|Collection income
+     * @property Grid\Column|Collection remark
      * @property Grid\Column|Collection shop_name
      * @property Grid\Column|Collection tel
      * @property Grid\Column|Collection fax
@@ -372,6 +389,23 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection repair_item_id(string $label = null)
      * @method Grid\Column|Collection repair_detail_id(string $label = null)
      * @method Grid\Column|Collection repair_order_id(string $label = null)
+     * @method Grid\Column|Collection sales_cal_result_id(string $label = null)
+     * @method Grid\Column|Collection date(string $label = null)
+     * @method Grid\Column|Collection bill_no(string $label = null)
+     * @method Grid\Column|Collection outlay(string $label = null)
+     * @method Grid\Column|Collection first_pos_no(string $label = null)
+     * @method Grid\Column|Collection second_pos_no(string $label = null)
+     * @method Grid\Column|Collection deposit_no(string $label = null)
+     * @method Grid\Column|Collection balance(string $label = null)
+     * @method Grid\Column|Collection safe_balance(string $label = null)
+     * @method Grid\Column|Collection last_balance(string $label = null)
+     * @method Grid\Column|Collection last_safe_balance(string $label = null)
+     * @method Grid\Column|Collection bill_paid_sum(string $label = null)
+     * @method Grid\Column|Collection income_sum(string $label = null)
+     * @method Grid\Column|Collection difference(string $label = null)
+     * @method Grid\Column|Collection type_no(string $label = null)
+     * @method Grid\Column|Collection income(string $label = null)
+     * @method Grid\Column|Collection remark(string $label = null)
      * @method Grid\Column|Collection shop_name(string $label = null)
      * @method Grid\Column|Collection tel(string $label = null)
      * @method Grid\Column|Collection fax(string $label = null)
@@ -591,6 +625,23 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection repair_item_id
      * @property Show\Field|Collection repair_detail_id
      * @property Show\Field|Collection repair_order_id
+     * @property Show\Field|Collection sales_cal_result_id
+     * @property Show\Field|Collection date
+     * @property Show\Field|Collection bill_no
+     * @property Show\Field|Collection outlay
+     * @property Show\Field|Collection first_pos_no
+     * @property Show\Field|Collection second_pos_no
+     * @property Show\Field|Collection deposit_no
+     * @property Show\Field|Collection balance
+     * @property Show\Field|Collection safe_balance
+     * @property Show\Field|Collection last_balance
+     * @property Show\Field|Collection last_safe_balance
+     * @property Show\Field|Collection bill_paid_sum
+     * @property Show\Field|Collection income_sum
+     * @property Show\Field|Collection difference
+     * @property Show\Field|Collection type_no
+     * @property Show\Field|Collection income
+     * @property Show\Field|Collection remark
      * @property Show\Field|Collection shop_name
      * @property Show\Field|Collection tel
      * @property Show\Field|Collection fax
@@ -805,6 +856,23 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection repair_item_id(string $label = null)
      * @method Show\Field|Collection repair_detail_id(string $label = null)
      * @method Show\Field|Collection repair_order_id(string $label = null)
+     * @method Show\Field|Collection sales_cal_result_id(string $label = null)
+     * @method Show\Field|Collection date(string $label = null)
+     * @method Show\Field|Collection bill_no(string $label = null)
+     * @method Show\Field|Collection outlay(string $label = null)
+     * @method Show\Field|Collection first_pos_no(string $label = null)
+     * @method Show\Field|Collection second_pos_no(string $label = null)
+     * @method Show\Field|Collection deposit_no(string $label = null)
+     * @method Show\Field|Collection balance(string $label = null)
+     * @method Show\Field|Collection safe_balance(string $label = null)
+     * @method Show\Field|Collection last_balance(string $label = null)
+     * @method Show\Field|Collection last_safe_balance(string $label = null)
+     * @method Show\Field|Collection bill_paid_sum(string $label = null)
+     * @method Show\Field|Collection income_sum(string $label = null)
+     * @method Show\Field|Collection difference(string $label = null)
+     * @method Show\Field|Collection type_no(string $label = null)
+     * @method Show\Field|Collection income(string $label = null)
+     * @method Show\Field|Collection remark(string $label = null)
      * @method Show\Field|Collection shop_name(string $label = null)
      * @method Show\Field|Collection tel(string $label = null)
      * @method Show\Field|Collection fax(string $label = null)

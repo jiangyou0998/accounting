@@ -53,6 +53,11 @@ Route::group([
     //維修報表
     $router->resource('reports/repair_project', 'Reports\RepairProjectController');
 
+    //毛利率報表
+    $router->resource('reports/gross_margin', 'Reports\GrossMarginController');
+
+    $router->get('export/gross_margin/', 'Reports\GrossMarginController@export')->name('export.gross_margin');
+
     //會計相關
     //statement
     $router->get('reports/statement', 'Accountings\StatementController@index');
