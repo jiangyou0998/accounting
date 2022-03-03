@@ -87,53 +87,57 @@
 
 <body>
 
+@foreach($all_sales_table_data as $sales_table_data_by_group)
+    @foreach($sales_table_data_by_group as $sales_table_data)
+        <div class="page">
+            <div width="100%">
 
-<div class="page">
-    <div width="100%">
 
+                <div width="100%">
+                    <div width="50%" align="left">列印時間: {{\Carbon\Carbon::now()->toDateTimeString()}}</div>
+                    <div width="50%" align="right">(存票 NO. {{ $sales_table_data['print_info']->deposit_no ?? '' }})</div>
+                </div>
 
-        <div width="100%">
-            <div width="50%" align="left">列印時間: {{\Carbon\Carbon::now()->toDateTimeString()}}</div>
-            <div width="50%" align="right">(存票 NO. {{ $print_info->deposit_no }})</div>
+                <br/>
+
+                <table class="header-title" border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <th align="left" style="width:33%"><strong></strong></th>
+                    <th align="center" style="width:33%"><strong>分店名稱&nbsp;：&nbsp;{{ $sales_table_data['print_info']->shop_name ?? '' }}</strong></th>
+                    <th align="right" style="width:33%"><strong>{{ $sales_table_data['print_info']->date ?? '' }}</strong></th>
+                </table>
+
+                <hr/>
+
+                <table border="1" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                        <th align="center" style="width:15%; height:30px;"><strong>承上結存</strong></th>
+                        <th align="center" style="width:43%"><strong>摘要</strong></th>
+                        <th align="center" style="width:14%"><strong>收入</strong></th>
+                        <th align="center" style="width:14%"><strong>支出</strong></th>
+                        <th align="center" style="width:14%"><strong>餘額</strong></th>
+
+                    </tr>
+
+                    @foreach($sales_table_data['data'] as $row)
+                        <tr bgcolor="#FFFFFF">
+                            @foreach($row as $value)
+                                <td class="data style6">
+                                    {!! $value !!}
+                                </td>
+                    @endforeach
+                    <tr>
+                    @endforeach
+
+                </table>
+                <table class="footer-sign" border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <th align="left" style="width:33%"><strong>主管簽署:</strong></th>
+                    <th align="left" style="width:33%"><strong>主管簽署:</strong></th>
+                    <th align="left" style="width:33%"><strong>會計:</strong></th>
+                </table>
+            </div>
         </div>
+    @endforeach
+@endforeach
 
-        <br/>
-
-        <table class="header-title" border="0" cellpadding="0" cellspacing="0" width="100%">
-            <th align="left" style="width:33%"><strong></strong></th>
-            <th align="center" style="width:33%"><strong>分店名稱&nbsp;：&nbsp;{{ $print_info->shop_name }}</strong></th>
-            <th align="right" style="width:33%"><strong>{{ $print_info->date }}</strong></th>
-        </table>
-
-        <hr/>
-
-        <table border="1" cellpadding="0" cellspacing="0" width="100%">
-            <tr>
-                <th align="center" style="width:15%; height:30px;"><strong>承上結存</strong></th>
-                <th align="center" style="width:43%"><strong>摘要</strong></th>
-                <th align="center" style="width:14%"><strong>收入</strong></th>
-                <th align="center" style="width:14%"><strong>支出</strong></th>
-                <th align="center" style="width:14%"><strong>餘額</strong></th>
-
-            </tr>
-
-            @foreach($sales_table_data as $row)
-                <tr bgcolor="#FFFFFF">
-                @foreach($row as $value)
-                    <td class="data style6">
-                        {!! $value !!}
-                    </td>
-                @endforeach
-                <tr>
-            @endforeach
-
-        </table>
-        <table class="footer-sign" border="0" cellpadding="0" cellspacing="0" width="100%">
-            <th align="left" style="width:33%"><strong>主管簽署:</strong></th>
-            <th align="left" style="width:33%"><strong>主管簽署:</strong></th>
-            <th align="left" style="width:33%"><strong>會計:</strong></th>
-        </table>
-    </div>
-</div>
 
 </body>

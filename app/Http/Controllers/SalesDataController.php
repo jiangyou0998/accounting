@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Http\Requests\SalesDataRequest;
-use App\Models\FrontGroup;
+use App\Http\Traits\SalesDataTableTraits;
 use App\Models\FrontGroupHasUser;
 use App\Models\SalesBill;
 use App\Models\SalesCalResult;
@@ -12,12 +12,13 @@ use App\Models\SalesIncomeDetail;
 use App\Models\SalesIncomeType;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SalesDataController extends Controller
 {
+    use SalesDataTableTraits;
+
     public function index()
     {
         $sales_cal_result = SalesCalResult::getSalesCalResult();
@@ -61,6 +62,7 @@ class SalesDataController extends Controller
         return view('sales_data.report', compact('sale_summary', 'date'));
     }
 
+    //根據權限跳轉頁面
     public function redirect()
     {
         $user = Auth::user();
@@ -75,6 +77,7 @@ class SalesDataController extends Controller
         }
     }
 
+    //保存每日營業數
     public function store(SalesDataRequest $request){
 
         // 数据库事务处理
@@ -156,122 +159,22 @@ class SalesDataController extends Controller
 
     }
 
+    //打印用表格(分店查看)
+    //分店只能查看當日數據
     public function print(){
 
-        $sales_cal_result = SalesCalResult::getSalesCalResult();
-        $print_info = new Collection();
-        $print_info->deposit_no = $sales_cal_result->deposit_no ?? '';
-        $print_info->date = Carbon::parse($sales_cal_result->date)->isoFormat('YYYY年MM月DD日');
-        $print_info->shop_name = Auth::user()->report_name;
+        $now = Carbon::now()->toDateString();
+        $start_date = $end_date = $now;
+        $id = Auth::user()->id;
+        $ids = array($id);
 
-        $sales_table_data = $this->getSalesTableData();
-        return view('sales_data.print', compact('sales_table_data', 'print_info'));
-    }
+        $all_sales_table_data = $this->getAllSalesTableData($start_date, $end_date, $ids);
 
-    //打印報表表格內容
-    private function getSalesTableData()
-    {
-        $sales_cal_result = SalesCalResult::getSalesCalResult();
-        $sales_cal_result_id = $sales_cal_result->id ?? 0;
-
-        $sales_income_detail = SalesIncomeDetail::getSalesIncomeDetailArray($sales_cal_result_id);
-        $bank = SalesIncomeDetail::getBank($sales_cal_result_id);
-
-        $sales_bills = SalesBill::getSalesBills();
-        $bill_count = $sales_bills->count();
-
-        //計算紙幣總數
-        $paper_money_sum = 0.00;
-        if(isset($sales_income_detail['41'])){
-            $paper_money_sum += (float)($sales_income_detail['41']);
+        if(count($all_sales_table_data) === 0){
+            return '<h1>未找到數據!</h1>';
         }
 
-        if(isset($sales_income_detail['51'])){
-            $paper_money_sum += (float)($sales_income_detail['51']);
-        }
-        $paper_money_sum = sprintf("%.2f", $paper_money_sum);
-
-        //計算硬幣總數
-        $coin_sum = 0.00;
-        if(isset($sales_income_detail['42'])){
-            $coin_sum += (float)($sales_income_detail['42']);
-        }
-
-        if(isset($sales_income_detail['52'])){
-            $coin_sum += (float)($sales_income_detail['52']);
-        }
-        $coin_sum = sprintf("%.2f", $coin_sum);
-
-        //第一個參數為行 第二個參數為列
-        $sales_table_data = [];
-        for ($i=1; $i<=25; $i++){
-            for ($j=1; $j<=5; $j++){
-                $sales_table_data[$i][$j] = '';
-            }
-        }
-        $footer_start_line_num = 17;
-        $bill_start_line_num = 6;
-
-
-        //承上結存列
-        $sales_table_data[1][1] = '<span>$' . ($sales_cal_result->last_balance ?? '') . '</span>';
-        $sales_table_data[5][1] = '<span>支出</span>';
-        $sales_table_data[$footer_start_line_num][1] = '<span>總支出：</span>';
-        $sales_table_data[$footer_start_line_num + 2][1] = '<span>存入銀行</span>';
-        $sales_table_data[$footer_start_line_num + 6][1] = '<span>早:$'. ($sales_income_detail['21'] ?? '') . '</span>';
-        $sales_table_data[$footer_start_line_num + 7][1] = '<span>午:$'. ($sales_income_detail['22'] ?? '') . '</span>';
-        $sales_table_data[$footer_start_line_num + 8][1] = '<span>晚:$'. ($sales_income_detail['23'] ?? '') . '</span>';
-
-        //摘要列
-        $sales_table_data[1][2] = '<span>主機：Z NO.<u>' . ($sales_cal_result->first_pos_no ?? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;') . '</u> $<u>'. ($sales_income_detail['12'] ?? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;') . '</u>(+)</span>';
-        $sales_table_data[2][2] = '<span>副機：Z NO.<u>' . ($sales_cal_result->second_pos_no ?? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;') . '</u> $<u>'. ($sales_income_detail['14'] ?? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;') . '</u>(=)</span>';
-        if(isset($sales_cal_result->difference) && $sales_cal_result->difference > 0){
-            $sales_table_data[3][2] = '<span>差額 +' . ($sales_cal_result->difference ?? '') . '</span>';
-        }else{
-            $sales_table_data[3][2] = '<span>差額 ' . ($sales_cal_result->difference ?? '') . '</span>';
-        }
-
-        $sales_table_data[5][2] = '<span>明細：</span>';
-        $sales_table_data[$footer_start_line_num][2] = '<span>附支出單據共<u>&nbsp;&nbsp;' . ($bill_count) .'&nbsp;&nbsp;</u>張</span>';
-        $sales_table_data[$footer_start_line_num + 1][2] = '<span>往來蛋控：(' . (isset($sales_income_detail['73']) ? '慧霖' : '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;') . ')分店來/取銀</span>';
-        $sales_table_data[$footer_start_line_num + 2][2] = '<span>存入總公司(' . ($bank ?? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;') . ')銀行之金額</span>';
-        $sales_table_data[$footer_start_line_num + 3][2] = '<span style="float:right;padding-right:30px;">八達通存款</span>';
-        $sales_table_data[$footer_start_line_num + 4][2] = '<span style="float:right;padding-right:30px;">支付寶存款</span>';
-        $sales_table_data[$footer_start_line_num + 5][2] = '<span style="float:right;padding-right:30px;">微信存款</span>';
-        $sales_table_data[$footer_start_line_num + 6][2] = '<span>紙幣：</span>';
-        $sales_table_data[$footer_start_line_num + 7][2] = '<span>硬幣：</span>';
-        $sales_table_data[$footer_start_line_num + 8][2] = '<span>總數：</span>';
-
-        //收入列
-        //收入
-        $sales_table_data[2][3] = '<span>$' . ($sales_cal_result->income_sum ?? '') . '</span>';
-
-        //支出列
-        //支單總計
-        $sales_table_data[$footer_start_line_num][4] = '<span>$' . ($sales_cal_result->bill_paid_sum ?? '') . '</span>';
-//存入銀行
-        $sales_table_data[$footer_start_line_num + 1][4] = '<span>$' . ($sales_income_detail['73'] ?? '') . '</span>';
-        //存入銀行
-        $sales_table_data[$footer_start_line_num + 2][4] = '<span>$' . ($sales_income_detail['72'] ?? '') . '</span>';
-        //八達通存款
-        $sales_table_data[$footer_start_line_num + 3][4] = '<span>$' . ($sales_income_detail['31'] ?? '') . '</span>';
-        //支付寶存款
-        $sales_table_data[$footer_start_line_num + 4][4] = '<span>$' . ($sales_income_detail['32'] ?? '') . '</span>';
-        //微信存款
-        $sales_table_data[$footer_start_line_num + 5][4] = '<span>$' . ($sales_income_detail['33'] ?? '') . '</span>';
-
-        $bill_outlay_num = $bill_start_line_num;
-        foreach ($sales_bills as $bill){
-            $sales_table_data[$bill_outlay_num][4] = '<span>$' . ($bill->outlay) . '</span>';
-            $bill_outlay_num ++;
-        }
-
-        //餘額列
-        $sales_table_data[$footer_start_line_num + 6][5] = '<span>$' . ($paper_money_sum) . '</span>';
-        $sales_table_data[$footer_start_line_num + 7][5] = '<span>$' . ($coin_sum) . '</span>';
-        $sales_table_data[$footer_start_line_num + 8][5] = '<span>$' . ($sales_cal_result->balance ?? '') . '</span>';
-
-        return $sales_table_data;
+        return view('sales_data.print', compact('all_sales_table_data'));
     }
 
 }

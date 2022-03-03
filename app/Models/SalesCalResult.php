@@ -23,6 +23,12 @@ class SalesCalResult extends Model
         return $this->hasMany(SalesIncomeDetail::class, 'sales_cal_result_id', 'id');
     }
 
+    public function octopus_income()
+    {
+        return $this->hasOne(SalesIncomeDetail::class, 'sales_cal_result_id', 'id')
+            ->where('type_no', 31);
+    }
+
     public static function getSalesCalResult()
     {
         $date = Carbon::now()->toDateString();
