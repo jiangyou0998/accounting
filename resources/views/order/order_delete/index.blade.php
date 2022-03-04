@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    柯打改期
+    柯打全單刪除
 @stop
 
 @section('js')
@@ -68,7 +68,7 @@
         </div>
 
         <div class="style5" style="text-align: center;">
-            <span class="style4">柯打批量<span class="style6">改期</span></span>
+            <span class="style4">柯打批量<span class="style6">全單刪除</span></span>
         </div>
 
         <div align="left" style="padding-top: 15px;">
@@ -81,27 +81,17 @@
 
         <div class="row">
 
-            <div class="col-md-4 mb-3">
-                <label for="original_date">修改前日期</label>
-
-                <input type="text" class="form-control layui-input d-block w-100" name="original_date" id="original_date" value="" autocomplete="off" required="">
-
-                <div class="invalid-feedback">
-                    請填寫「修改前日期」
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <label for="target_date">修改後日期</label>
+            <div class="col-md-6 mb-3">
+                <label for="target_date">刪除日期</label>
 
                 <input type="text" class="form-control layui-input d-block w-100" name="target_date" id="target_date" value="" autocomplete="off" required="">
 
                 <div class="invalid-feedback">
-                    請填寫「修改後日期」
+                    請填寫「刪除日期」
                 </div>
             </div>
 
-            <div class="col-md-4 mb-3">
+            <div class="col-md-6 mb-3">
                 <label for="reason">原因</label>
                 <input type="text" class="form-control" name="reason" id="reason" value="" autocomplete="off" placeholder="" required="">
                 <div class="invalid-feedback">
@@ -116,7 +106,7 @@
         <br><br>
 
         <div>
-            <button class="btnsubmit btn btn-success btn-lg btn-block" id="btnsubmit" onclick="sss();">柯打批量改期</button>
+            <button class="btnsubmit btn btn-danger btn-lg btn-block" id="btnsubmit" onclick="sss();">批量全單刪除</button>
         </div>
 
         <br>
@@ -134,10 +124,6 @@
         });
 
         // laydate初始化
-        laydate.render({
-            elem: '#original_date' //指定元素
-        });
-
         laydate.render({
             elem: '#target_date' //指定元素
         });
@@ -169,7 +155,6 @@
             $("#btnsubmit").attr('disabled', true);
 
             var shopstr = $('#shopstr').val();
-            var original_date = $('#original_date').val();
             var target_date = $('#target_date').val();
             var reason = $('#reason').val();
             if (shopstr == "") {
@@ -181,28 +166,10 @@
                 return false;
             }
 
-            if (original_date == "") {
-                Swal.fire({
-                    icon: 'error',
-                    title: "請選擇修改前時間！",
-                });
-                $("#btnsubmit").attr('disabled', false);
-                return false;
-            }
-
             if (target_date == "") {
                 Swal.fire({
                     icon: 'error',
-                    title: "請選擇修改後時間！",
-                });
-                $("#btnsubmit").attr('disabled', false);
-                return false;
-            }
-
-            if (original_date == target_date) {
-                Swal.fire({
-                    icon: 'error',
-                    title: "修改前後時間不能相同！",
+                    title: "請選擇刪除時間！",
                 });
                 $("#btnsubmit").attr('disabled', false);
                 return false;
@@ -217,14 +184,13 @@
                 return false;
             }
 
-            let url = '{{route('order.order_change.modify')}}';
-            let type = 'PUT';
+            let url = '{{route('order.order_delete.delete')}}';
+            let type = 'DELETE';
 
             $.ajax({
                 type: type,
                 url: url,
                 data: {
-                    'original_date'  : original_date,
                     'target_date'  : target_date,
                     'reason' : reason,
                     'shops': shopstr,
@@ -234,7 +200,7 @@
                     if(data.status === 'success'){
                         Swal.fire({
                             icon: 'success',
-                            title: "柯打改期成功!",
+                            title: "柯打刪除成功!",
                             showDenyButton: true,
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: '確定',

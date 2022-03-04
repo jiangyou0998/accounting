@@ -41,7 +41,11 @@
             <br/>
             <a href='{{route('order.update_price')}}' class='styleA'>更新價錢</a>
             <br/>
-            <a href='{{route('order.batch_delete')}}' class='styleA'>批量刪除</a>
+            <a href='{{route('order.batch_delete')}}' class='styleA'>批量刪除貨品</a>
+            <br/>
+            <a href='{{route('order.order_change')}}' class='styleA'>柯打改期</a>
+            <br/>
+            <a href='{{route('order.order_delete')}}' class='styleA'>柯打全單刪除</a>
         @endcan
 
         @can('operation')

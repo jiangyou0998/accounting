@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 
-class OrderChangeController extends Controller
+class OrderDeleteController extends Controller
 {
     /**
      * Show the application dashboard.
@@ -28,11 +28,11 @@ class OrderChangeController extends Controller
         foreach ($shop_group_ids as $shop_group_id => $shop_name){
             $checkHtml .= $this->getCheckboxHtml($shop_group_id, $shop_name);
         }
-        return view('order.order_change.index',compact('checkHtml'));
+        return view('order.order_delete.index',compact('checkHtml'));
     }
 
-    //柯打改期
-    public function modify(Request $request)
+    //柯打刪除(按選中分店刪除)
+    public function delete(Request $request)
     {
         return DB::transaction(function () use($request){
 
@@ -42,17 +42,10 @@ class OrderChangeController extends Controller
 
             $shops = $request->shops;
             $shopsArr = explode(',', $shops);
-            //修改前日期
-            $original_date = $request->original_date;
             //修改後日期
             $target_date = $request->target_date;
             //修改原因
             $reason = $request->reason;
-
-//            dump($shops);
-//            dump($original_date);
-//            dump($target_date);
-//            dd($reason);
 
             $cartItemModel = new WorkshopCartItem();
 
@@ -86,55 +79,23 @@ class OrderChangeController extends Controller
                 ];
             }
 
-            //柯打改期item
-            $modify_items = WorkshopCartItem::where('status', '!=' , 4)
-                ->whereIn('user_id', $shopsArr)
-                ->where('deli_date', $original_date)
-                ->get();
-
-            $modifyArr = array();
-            $modifyLogsArr = array();
-
-            foreach ($modify_items as $item){
-                $item->deli_date = $target_date;
-                $modifyArr[] = [
-                    'id' => $item->id,
-                    'deli_date' => $target_date,
-                ];
-
-                //柯打改期Log
-                $modifyLogsArr[] = [
-                    'operate_user_id' => $user->id,
-                    'shop_id' => $item->user_id,
-                    'product_id' => $item->product_id,
-                    'cart_item_id' => $item->id,
-                    'method' => 'OM_CHANGE',
-                    'ip' => $ip,
-                    'input' => '因'.$reason.'原因,該單由'.$original_date.'改到'.$target_date,
-                    'created_at' => $now,
-                    'updated_at' => $now,
-                ];
-            }
-
             $data = [
                 'status' => 'success',
-                'msg'   => '柯打改期成功!'
+                'msg'   => '柯打刪除成功!'
             ];
-            if(count($modify_items) < 5){
+
+            if(count($delete_items) < 5){
                 $data['status'] = 'error';
-                $data['msg'] = '所選數據數量少於5,修改失敗!';
+                $data['msg'] = '所選數據數量少於5,刪除失敗!';
                 return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
             }
 
             //先將目標日期數據刪除(status變為4)
             $cartItemModel->updateBatch($deleteArr);
-            //再將修改前日期數據改到目標日期
-            $cartItemModel->updateBatch($modifyArr);
 
             $cartItemLogsModel = new WorkshopCartItemLog();
             $cartItemLogsModel->insert($deleteLogsArr);
-            $cartItemLogsModel->insert($modifyLogsArr);
 
             return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 

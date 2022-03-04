@@ -91,8 +91,12 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
     Route::get('customer/sample/regular', 'Regular\CustomerRegularController@index')->name('customer.sample.index');
 
     //2021-10-15 柯打改期
-    Route::get('order/order_change','OrderChangeController@index')->name('order.change.index');
-    Route::put('order/order_change/modify','OrderChangeController@order_modify')->name('order.change.modify');
+    Route::get('order/order_change','OrderChangeController@index')->name('order.order_change');
+    Route::put('order/order_change/modify','OrderChangeController@modify')->name('order.order_change.modify');
+
+    //2022-03-04 柯打刪除
+    Route::get('order/order_delete','OrderDeleteController@index')->name('order.order_delete');
+    Route::delete('order/order_delete/delete','OrderDeleteController@delete')->name('order.order_delete.delete');
 
     //2021-12-10 更新新價錢
     Route::get('order/update_price', 'UpdatePriceController@index')->name('order.update_price');

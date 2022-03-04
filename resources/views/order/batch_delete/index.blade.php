@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    更新價錢
+    批量刪除
 @stop
 
 @section('js')
