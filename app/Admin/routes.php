@@ -43,6 +43,9 @@ Route::group([
     //分店銷售查詢
     $router->resource('reports/total_sales_by_search', 'Reports\TotalSalesBySearchReportController');
 
+    //維修報表
+    $router->resource('reports/repair_project', 'Reports\RepairProjectController');
+
     //會計相關
     //statement
     $router->get('reports/statement', 'Accountings\StatementController@index');

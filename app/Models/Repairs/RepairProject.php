@@ -5,6 +5,7 @@ namespace App\Models\Repairs;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -17,8 +18,13 @@ class RepairProject extends Model
 //    protected $with = ['users', 'locations', 'items', 'details'];
 
     const IMPORTANCE = [1 => '高', 2 => '中', 3 => '低', 4 => '定期性'];
+    //未完成
     const STATUS_UNFINISHED = 1;
+    //已取消
     const STATUS_CANCELED = 4;
+    //需跟進
+    const STATUS_NEED_FOLLOWED = 11;
+    //已完成
     const STATUS_FINISHED = 99;
 
     public function users(): HasOne
@@ -39,6 +45,11 @@ class RepairProject extends Model
     public function details(): HasOne
     {
         return $this->hasOne(RepairDetail::class,'id','repair_detail_id');
+    }
+
+    public function order(): belongsTo
+    {
+        return $this->belongsTo(RepairOrder::class,'repair_order_id','id');
     }
 
     public static function getMaxSupportNo()
