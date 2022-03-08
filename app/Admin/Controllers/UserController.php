@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends AdminController
 {
+    protected $login_disabled = [0 => '啟用', 1 => '禁用'];
+
     protected function iFrameGrid()
     {
         $grid = new IFrameGrid(new User());
@@ -48,6 +50,15 @@ class UserController extends AdminController
             $grid->column('company_chinese_name','公司名(中文)')->hide();
             $grid->column('company_english_name','公司名(英文)')->hide();
             $grid->roles()->pluck('name')->label();
+            $grid->column('login_disabled','賬號登錄')
+                ->using($this->login_disabled)
+                ->dot(
+                    [
+                        0 => 'success',
+                        1 => 'danger',
+                    ],
+                    'success' // 默认颜色
+                );
             $grid->email;
 
             $grid->filter(function (Grid\Filter $filter) {
@@ -56,6 +67,7 @@ class UserController extends AdminController
                 $filter->like('name','登錄名');
                 $filter->like('txt_name','名稱');
                 $filter->equal('roles.name','角色')->select($roles);
+                $filter->equal('login_disabled','賬戶登錄')->select($this->login_disabled);
 
             });
         });
@@ -101,6 +113,11 @@ class UserController extends AdminController
             $form->text('company_chinese_name','公司名(中文)');
             $form->text('company_english_name','公司名(英文)');
             $form->text('pocode');
+
+            $form->radio('login_disabled', '賬戶登錄')
+                ->options($this->login_disabled)
+                ->required()
+                ->default(0);
 
             if ($form->isCreating()) {
                 $form->radio('radio','是否分店賬號')
