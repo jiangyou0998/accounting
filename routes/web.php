@@ -97,6 +97,7 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
     //2022-03-04 柯打刪除
     Route::get('order/order_delete','OrderDeleteController@index')->name('order.order_delete');
     Route::delete('order/order_delete/delete','OrderDeleteController@delete')->name('order.order_delete.delete');
+    Route::post('order/order_delete/rollback','OrderDeleteController@rollback')->name('order.order_delete.rollback');
 
     //2021-12-10 更新新價錢
     Route::get('order/update_price', 'UpdatePriceController@index')->name('order.update_price');
@@ -141,6 +142,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('support', 'SupportController@index')->name('support');
 
+    //IT維修報告
     Route::get('itsupport', 'ItSupportController@index')->name('itsupport');
     Route::post('itsupport', 'ItSupportController@store')->name('itsupport.store');
     Route::get('itsupport/{itsupport}/edit', 'ItSupportController@edit')->name('itsupport.edit');
@@ -150,6 +152,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('phone/itsupport', 'ItSupportController@phoneIndex')->name('itsupport.phone');
 
+    //維修報告
     Route::get('repair', 'RepairController@index')->name('repair');
     Route::post('repair', 'RepairController@store')->name('repair.store');
     Route::get('repair/{repair}/edit', 'RepairController@edit')->name('repair.edit');

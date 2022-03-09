@@ -32,7 +32,6 @@ Route::group([
     $router->resource('mypage', 'MypageController');
     $router->resource('special_date', 'SpecialDateController');
     $router->resource('forbidden_date', 'ForbiddenDateController');
-//    $router->resource('report', 'ReportController');
 
     //------------------------------------------------------------------
     //報告

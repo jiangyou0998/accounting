@@ -110,6 +110,11 @@
         </div>
 
         <br>
+        <div>
+            <button class="btnsubmit btn btn-primary btn-lg btn-block" id="btnrollback" onclick="rollback();">批量全單恢復</button>
+        </div>
+
+        <br>
 
     </div>
 
@@ -223,6 +228,99 @@
                             denyButtonText: '返回',
                         });
                         $("#btnsubmit").attr('disabled', false);
+                    }
+
+                },
+                error:function (data) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '出現錯誤，請嘗試刷新頁面！',
+                        showDenyButton: true,
+                        confirmButtonColor: '#3085d6',
+                        confirmButtonText: '確定',
+                        denyButtonText: '返回',
+                    });
+                    $("#btnsubmit").attr('disabled', false);
+                }
+            });
+
+            // $("#btnsubmit").attr('disabled', false);
+        }
+
+        function rollback() {
+
+            //禁止按鈕重複點擊
+            $("#btnrollback").attr('disabled', true);
+
+            var shopstr = $('#shopstr').val();
+            var target_date = $('#target_date').val();
+            var reason = $('#reason').val();
+            if (shopstr == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: "請選擇分店！",
+                });
+                $("#btnrollback").attr('disabled', false);
+                return false;
+            }
+
+            if (target_date == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: "請選擇刪除時間！",
+                });
+                $("#btnrollback").attr('disabled', false);
+                return false;
+            }
+
+            if (reason == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: "請填寫原因！",
+                });
+                $("#btnrollback").attr('disabled', false);
+                return false;
+            }
+
+            let url = '{{route('order.order_delete.rollback')}}';
+            let type = 'POST';
+
+            $.ajax({
+                type: type,
+                url: url,
+                data: {
+                    'target_date'  : target_date,
+                    'reason' : reason,
+                    'shops': shopstr,
+                },
+                dataType:'json',
+                success: function (data) {
+                    if(data.status === 'success'){
+                        Swal.fire({
+                            icon: 'success',
+                            title: "柯打恢復成功!",
+                            showDenyButton: true,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: '確定',
+                            denyButtonText: '返回',
+                        }).then((result) => {
+                            if (result.isDenied) {
+                                {{--window.location.href = '{{route('order.regular.sample',['shop_group_id' => $shop_group_id])}}';--}}
+                            } else {
+                                window.location.reload();
+                            }
+
+                        });
+                    }else if(data.status === 'error'){
+                        Swal.fire({
+                            icon: 'error',
+                            title: data.msg,
+                            showDenyButton: true,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: '確定',
+                            denyButtonText: '返回',
+                        });
+                        $("#btnrollback").attr('disabled', false);
                     }
 
                 },
