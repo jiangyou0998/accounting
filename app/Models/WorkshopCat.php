@@ -54,6 +54,8 @@ class WorkshopCat extends Model
             $cats = $cats->whereIn('cat_name',['麵頭']);
         }else if($dept == 'D'){
             $cats = $cats->whereIn('cat_name',['方包']);
+        }else if($dept == 'E'){
+            $cats = $cats->whereIn('cat_name',['造型包']);
         }
 
         $cats = $cats
@@ -86,6 +88,8 @@ class WorkshopCat extends Model
             $cats = $cats->whereIn('cat_name',['麵頭']);
         }else if($dept == 'D'){
             $cats = $cats->whereIn('cat_name',['方包']);
+        }else if($dept == 'E'){
+            $cats = $cats->whereIn('cat_name',['造型包']);
         }
 
         $cats = $cats

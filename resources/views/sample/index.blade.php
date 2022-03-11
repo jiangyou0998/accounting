@@ -114,6 +114,31 @@
             @endif
         @endforeach
 
+{{--造型包--}}
+        <br>
+
+        <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0">
+            <div class="style5" style="text-align: center;">
+                <span class="style4">造型包</span>
+            </div>
+            <div style="margin-bottom: 10px;">
+                <button class="sizefont"><a class="btn btn-primary" href="{{route('sample.create',['dept'=>'E'])}}">新建造型包範本</a></button>
+            </div>
+            @foreach($samples as $sample)
+                @if($sample->dept == 'E')
+                    <tr style="margin-top: 60px" class="sizefont">
+                        <td align="right" width="4%"><strong>#</strong></td>
+
+                        <td align="left"><a
+                                href="{{route('sample.edit',$sample->id)}}"><strong>{{$sample->sampledate}}</strong></a>
+                        </td>
+                        <td align="middle" width="10%"><strong>
+                                <button onclick="delsample({{$sample->id}});">刪除範本</button>
+                            </strong></td>
+                    </tr>
+                @endif
+            @endforeach
+
 
     </table>
 

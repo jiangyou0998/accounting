@@ -47,6 +47,7 @@
         <input type="radio" name="dept" id="radio" value="A" checked>第一車
         <input type="radio" name="dept" id="radio" value="B">第二車
         <input type="radio" name="dept" id="radio" value="C">麵頭
+        <input type="radio" name="dept" id="radio" value="E">造型包
 
     </div>
     <table class="table table-bordered border-dark" width="100%" border="2" align="center" cellpadding="3" cellspacing="0">
