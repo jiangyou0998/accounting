@@ -22,13 +22,13 @@ class WorkshopGroup extends Model
     }
 
     //查詢所有轉手貨組
-    public static function getResaleGroups(){
-
-        $groups = new WorkshopGroup();
-        $groups = $groups->where('cat_id', 5)
-            ->get(['id','group_name']);
-
-        return $groups;
-    }
+//    public static function getResaleGroups(){
+//
+//        $groups = new WorkshopGroup();
+//        $groups = $groups->where('cat_id', 5)
+//            ->get(['id','group_name']);
+//
+//        return $groups;
+//    }
 
 }

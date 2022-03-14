@@ -105,7 +105,7 @@ class TotalSalesByGroupCombineReportController extends AdminController
         $last_month_end = (new Carbon($start))->subMonth()->endOfMonth()->toDateString();
 
         $cats = WorkshopCat::getCatsExceptResale();
-        $resales = WorkshopGroup::getResaleGroups();
+//        $resales = WorkshopGroup::getResaleGroups();
         $testids = User::getTestUserIDs();
 
         $cartitem = new WorkshopCartItem();
@@ -137,13 +137,13 @@ class TotalSalesByGroupCombineReportController extends AdminController
                 ->addSelect(DB::raw($sql));
         }
 
-        foreach ($resales as $resale) {
-            $sql = "ROUND(sum(case when (workshop_products.group_id = '$resale->id' and
-            workshop_cart_items.deli_date between '$start' and '$end')
-            then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_cart_items.order_price) else 0 end),2) as '$resale->group_name'";
-            $cartitem = $cartitem
-                ->addSelect(DB::raw($sql));
-        }
+//        foreach ($resales as $resale) {
+//            $sql = "ROUND(sum(case when (workshop_products.group_id = '$resale->id' and
+//            workshop_cart_items.deli_date between '$start' and '$end')
+//            then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_cart_items.order_price) else 0 end),2) as '$resale->group_name'";
+//            $cartitem = $cartitem
+//                ->addSelect(DB::raw($sql));
+//        }
 
         $cartitem = $cartitem
             ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
