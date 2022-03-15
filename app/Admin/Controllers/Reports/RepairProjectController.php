@@ -104,19 +104,12 @@ class RepairProjectController extends AdminController
 
             //選擇器
             $grid->selector(function (Grid\Tools\Selector $selector){
+                
+                $rbshop = User::getRyoyuBakeryShops()->toArray();
 
-                $shop = User::getKingBakeryShops()->toArray();
-//                $rbshop = User::getRyoyuBakeryShops()->toArray();
+                $rbshops = array_column($rbshop, 'report_name', 'id');
 
-                $shops = array_column($shop, 'report_name', 'id');
-//                $rbshops = array_column($rbshop, 'report_name', 'id');
-
-
-                $selector->select('user_id', '蛋撻王', $shops);
-//                $selector->select('user_id2', '糧友', $rbshops, function ($query, $value) {
-//
-//                    $query->where('user_id', $value);
-//                });
+                $selector->select('user_id', '糧友', $rbshops);
 
                 $selector->select('status', '狀態', self::STATUS);
                 $selector->select('repair_location_id', '位置', RepairLocation::all()->pluck('name','id'));
