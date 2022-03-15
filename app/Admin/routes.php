@@ -14,20 +14,13 @@ Route::group([
 
     $router->get('/', [\App\Admin\Controllers\HomeController::class , 'index'])->name('home');
 
-    $router->resource('cats', 'WorkshopCatController');
-    $router->resource('menus', 'WorkshopProductController');
-//    $router->post('menus/confirm1', 'TblOrderZMenuController@confirm1');
-    $router->resource('groups', 'WorkshopGroupController');
     $router->resource('notices', 'NoticeController');
     $router->resource('forms', 'FormController');
-    $router->resource('checks', 'WorkshopCheckController');
     $router->get('production_order', 'ProductionOrderController@index');
     $router->get('production_order/print', 'OrderPrintController@print')->name('admin.order_print');
     $router->get('production_order/print_rate', 'OrderPrintController@printByRate')->name('admin.order_print_rate');
     $router->patch('checks/update/{id}','WorkshopCheckController@updateChecks')->name('checkupdate');
     $router->resource('shopgroups', 'ShopGroupController');
-    $router->resource('cart', 'WorkshopCartItemController');
-    $router->resource('cartitem_log', 'WorkshopCartItemLogController');
     $router->resource('mypage', 'MypageController');
 
     //------------------------------------------------------------------
