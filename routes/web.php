@@ -47,17 +47,9 @@ Route::post('password/resetlogin', 'Auth\ResetPasswordLoginedController@reset')-
 //Route::post('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 
 Route::group(['middleware' => ['auth','permission:shop|workshop|operation']], function () {
-    //糧友工場
-    Route::get('/order', 'OrderController@index')->name('order');
-    Route::get('/order/select_day', 'OrderController@select_day')->name('select_day');
-    Route::get('/order/select_old_order', 'OrderController@select_old_order')->name('order.select_old_order');
-    Route::get('order/deli', 'OrderController@order_deli')->name('order.deli');
-    Route::get('order/select_deli', 'OrderController@select_deli')->name('order.select_deli');
 
-    Route::get('order/cart','WorkshopCartItemController@cart')->name('cart');
-    Route::post('order/cart/show_group/{catid}', 'WorkshopCartItemController@showGroup')->name('show_group');
-    Route::post('order/cart/show_product/{groupid}', 'WorkshopCartItemController@showProduct')->name('show_product');
-    Route::put('order/cart/{shopid}', 'WorkshopCartItemController@update')->name('cart.update');
+    //柯打首頁
+    Route::get('/order', 'OrderController@index')->name('order');
 
     //蛋撻王工場
     Route::get('kb/order/select_day', 'KB\KBOrderController@select_day')->name('kb.select_day');
@@ -73,40 +65,12 @@ Route::group(['middleware' => ['auth','permission:shop|workshop|operation']], fu
 
 });
 
-Route::group(['middleware' => ['auth','permission:shop|operation']], function () {
-    Route::get('order/deli/edit', 'DeliController@deli_edit')->name('order.deli.edit');
-    Route::post('order/deli/update', 'DeliController@deli_update')->name('deli.update');
-});
-
-Route::group(['middleware' => ['auth','permission:operation']], function () {
-    Route::get('order/deli/list', 'DeliController@list')->name('order.deli.list');
-
-});
-
-Route::group(['middleware' => ['auth','permission:operation']], function () {
-    Route::get('order/regular', 'RegularOrderController@index')->name('order.regular');
-    Route::post('order/regular', 'RegularOrderController@store')->name('order.regular.store');
-});
-
 Route::group(['middleware' => ['auth','permission:shop']], function () {
-    Route::get('sample', 'WorkshopOrderSampleController@index')->name('sample');
     Route::get('kb/sample', 'KB\KBWorkshopOrderSampleController@index')->name('kb.sample');
 });
 
-Route::group(['middleware' => ['auth','permission:operation']], function () {
-    Route::get('sample/regular', 'WorkshopOrderSampleController@regular')->name('sample.regular');
-});
 
 Route::group(['middleware' => ['auth']], function () {
-    //範本
-    Route::get('sample/create', 'WorkshopOrderSampleController@create')->name('sample.create');
-    Route::get('sample/{sample}/edit', 'WorkshopOrderSampleController@edit')->name('sample.edit');
-    Route::post('sample', 'WorkshopOrderSampleController@store')->name('sample.store');
-    Route::put('sample/{sampleid}', 'WorkshopOrderSampleController@update')->name('sample.update');
-    Route::delete('sample/{sampleid}', 'WorkshopOrderSampleController@destroy')->name('sample.destroy');
-
-    Route::post('sample/show_group/{catid}', 'WorkshopOrderSampleController@showGroup')->name('sample.show_group');
-    Route::post('sample/show_product/{groupid}', 'WorkshopOrderSampleController@showProduct')->name('sample.show_product');
 
     //蛋撻王工場範本
     Route::get('kb/sample/create', 'KB\KBWorkshopOrderSampleController@create')->name('kb.sample.create');
