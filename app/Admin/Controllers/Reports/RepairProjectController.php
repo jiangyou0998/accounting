@@ -104,7 +104,7 @@ class RepairProjectController extends AdminController
 
             //選擇器
             $grid->selector(function (Grid\Tools\Selector $selector){
-                
+
                 $rbshop = User::getRyoyuBakeryShops()->toArray();
 
                 $rbshops = array_column($rbshop, 'report_name', 'id');

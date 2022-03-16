@@ -11,18 +11,18 @@
         {{$row['totalreceivedqty']}}</span>
         {{$row['unit']}}
     </td>
-    <td width="394px" align="center" bgcolor="#FFFFFF">
+    <td width="500px" align="center" bgcolor="#FFFFFF">
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tbody>
             <tr>
-                <td width="24%" align="center">
+                <td width="20%" align="center">
                     <span style="width:50px; text-align:right;" id="total_{{$product_id}}">
 					{{$row['totalreceivedqty']}}</span>
                     {{$row['unit']}}
                 </td>
-                @foreach(array("A", "B", "C" ,"D") as $dept)
+                @foreach(array("A", "B", "C" ,"D", "E") as $dept)
                     @if(isset($row['qty'][$dept]))
-                        <td width="19%" align="center">
+                        <td width="16%" align="center">
                             <input name="item[{{$product_id}}][{{$dept}}]"
                                    data-mysqlid="{{$row['qty'][$dept]['mysqlid']}}"
                                    data-price="{{$row['price']}}"
@@ -34,7 +34,7 @@
                                    style="width:95%; margin:auto;">
                         </td>
                     @else
-                        <td width="19%" align="center">
+                        <td width="16%" align="center">
                             <input name="item[{{$product_id}}][{{$dept}}]"
                                    data-mysqlid=""
                                    data-price="{{$row['price']}}"

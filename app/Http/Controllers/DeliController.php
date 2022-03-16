@@ -67,7 +67,7 @@ class DeliController extends Controller
         $items = WorkshopCartItem::getDeliItem($deli_date,$shop);
 
         $dept_price = array();
-        foreach(array("A", "B", "C" , "D") as $dept){
+        foreach(array("A", "B", "C" , "D", "E") as $dept){
             $dept_price[$dept] = 0;
         }
 
