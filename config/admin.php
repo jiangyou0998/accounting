@@ -11,7 +11,7 @@ return [
     | login page.
     |
     */
-    'name' => 'Ryoyu Bakery Admin',
+    'name' => '2Cafe Admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -23,7 +23,7 @@ return [
     |
     */
 //    'logo' => '<img src="/vendors/dcat-admin/images/logo.png" width="35"> &nbsp;Ryoyu Bakery',
-    'logo' => '&nbsp;Ryoyu Bakery Admin',
+    'logo' => '&nbsp;2Cafe Admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -86,7 +86,7 @@ return [
     | Html title for all pages.
     |
     */
-    'title' => 'RB',
+    'title' => '貳號',
 
     /*
     |--------------------------------------------------------------------------
@@ -317,10 +317,10 @@ return [
     */
     'layout' => [
         // indigo, blue, blue-light, blue-dark, green
-        'color' => 'green',
+        'color' => 'indigo',
 
         // 支持 light、primary、dark
-        'sidebar_style' => 'primary',
+        'sidebar_style' => 'dark',
 
         'body_class' => '',
 
