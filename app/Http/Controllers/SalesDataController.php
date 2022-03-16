@@ -137,15 +137,18 @@ class SalesDataController extends Controller
 
             //支單寫入數據庫
             SalesBill::where('shop_id', $shop_id)->where('date', $date)->delete();
-            foreach($request->bills as $bill){
-                $sales_bill = new SalesBill();
-                $sales_bill->sales_cal_result_id = $sales_cal_result_id;
-                $sales_bill->shop_id = $shop_id;
-                $sales_bill->date = $date;
-                $sales_bill->bill_no = $bill['bill_no'];
-                $sales_bill->outlay = $bill['outlay'];
 
-                $sales_bill->save();
+            if(isset($request->bills)){
+                foreach($request->bills as $bill){
+                    $sales_bill = new SalesBill();
+                    $sales_bill->sales_cal_result_id = $sales_cal_result_id;
+                    $sales_bill->shop_id = $shop_id;
+                    $sales_bill->date = $date;
+                    $sales_bill->bill_no = $bill['bill_no'];
+                    $sales_bill->outlay = $bill['outlay'];
+
+                    $sales_bill->save();
+                }
             }
 
 //

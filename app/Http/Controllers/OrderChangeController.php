@@ -49,6 +49,20 @@ class OrderChangeController extends Controller
             //修改原因
             $reason = $request->reason;
 
+            $data = [
+                'status' => 'success',
+                'msg'   => '柯打改期成功!'
+            ];
+
+            $original_date_carbon = Carbon::parse($original_date);
+            $target_date_carbon = Carbon::parse($target_date);
+
+            if($original_date_carbon->diffInDays($target_date_carbon) > 14){
+                $data['status'] = 'error';
+                $data['msg'] = '所選日期相差大於14日!';
+                return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            }
+
 //            dump($shops);
 //            dump($original_date);
 //            dump($target_date);
@@ -116,15 +130,10 @@ class OrderChangeController extends Controller
                 ];
             }
 
-            $data = [
-                'status' => 'success',
-                'msg'   => '柯打改期成功!'
-            ];
             if(count($modify_items) < 5){
                 $data['status'] = 'error';
                 $data['msg'] = '所選數據數量少於5,修改失敗!';
                 return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
             }
 
             //先將目標日期數據刪除(status變為4)
