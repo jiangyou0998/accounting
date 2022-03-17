@@ -40,19 +40,12 @@ class OrderController extends Controller
 
             $end_date = Carbon::parse($start_date)->addDay($showDayNum - 1)->toDateString();
 
-            $rbitems = WorkshopCartItem::getRegularOrderCount($shopids,$start_date,$end_date,null);
             $kbitems = KBWorkshopCartItem::getRegularOrderCount($shopids,$start_date,$end_date,null);
 
             for ($i = 0; $i < $showDayNum; $i++) {
                 $day = Carbon::parse($start_date)->addDay($i)->toDateString();
                 $countArr['rb'][$day] = '未下單';
                 $countArr['kb'][$day] = '未下單';
-            }
-
-            foreach ($rbitems as $item){
-//                $day = Carbon::parse($item->deli_date)->isoFormat('MM-DD(dd)');
-                $day = $item->deli_date;
-                $countArr['rb'][$day] = $item->count;
             }
 
             foreach ($kbitems as $item){

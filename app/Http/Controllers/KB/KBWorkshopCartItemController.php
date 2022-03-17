@@ -13,6 +13,7 @@ use App\Models\KB\KBWorkshopCat;
 use App\Models\KB\KBWorkshopGroup;
 use App\Models\KB\KBWorkshopOrderSample;
 use App\Models\KB\KBWorkshopProduct;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -33,16 +34,22 @@ class KBWorkshopCartItemController extends Controller
 
         if ($user->can('shop')) {
 //            dump('shop');
-            $shopid = KBUser::where('rb_user_id',$user->id)->first()->id;
-        }
-        if ($user->can('workshop')) {
-//            dump('workshop');
+            $shopid = $user->kb_bakery_id;
+//            //分店無法修改明日之前的訂單
+//            if ($deli_date <= now()) {
+////                return "權限不足";
+//                throw new AccessDeniedHttpException('權限不足');
+//            }
 
         }
-        if ($user->can('operation')) {
-//            dump('operation');
-
-        }
+//        if ($user->can('workshop')) {
+////            dump('workshop');
+//
+//        }
+//        if ($user->can('operation')) {
+////            dump('operation');
+//
+//        }
 
         // 数据库事务处理
         DB::transaction(function () use ($user, $shopid, $request) {
@@ -62,9 +69,9 @@ class KBWorkshopCartItemController extends Controller
 //            $prices = KBWorkshopProduct::all()->pluck('default_price','id');
 
             $prices = KBWorkshopProduct::with('prices')->whereHas('prices', function (Builder $query) {
-                $query->where('shop_group_id', '=', 5);
+                $query->where('shop_group_id', '=', KBWorkshopGroup::CURRENTGROUPID);
             })->get()->mapWithKeys(function ($item) {
-                $price = $item['prices']->where('shop_group_id', 5)->first()->price;
+                $price = $item['prices']->where('shop_group_id', KBWorkshopGroup::CURRENTGROUPID)->first()->price;
                 return [$item['id'] => $price ];
             });
 
@@ -169,7 +176,7 @@ class KBWorkshopCartItemController extends Controller
 
         if ($user->can('shop')) {
 //            dump('shop');
-            $shopid = KBUser::where('rb_user_id',$user->id)->first()->id;
+            $shopid = $user->kb_bakery_id;
             //分店無法修改明日之前的訂單
             if ($deli_date <= now()) {
 //                return "權限不足";
@@ -177,18 +184,18 @@ class KBWorkshopCartItemController extends Controller
             }
 
         }
-        if ($user->can('workshop')) {
-//            dump('workshop');
-            $shopid = KBUser::where('rb_user_id',$request->shop)->first()->id;
-        }
-        if ($user->can('operation')) {
-//            dump('operation');
-            $shopid = KBUser::where('rb_user_id',$request->shop)->first()->id;
-            if ($deli_date <= now()) {
-//                return "權限不足";
-                throw new AccessDeniedHttpException('權限不足');
-            }
-        }
+//        if ($user->can('workshop')) {
+////            dump('workshop');
+//            $shopid = KBUser::where('rb_user_id',$request->shop)->first()->id;
+//        }
+//        if ($user->can('operation')) {
+////            dump('operation');
+//            $shopid = KBUser::where('rb_user_id',$request->shop)->first()->id;
+//            if ($deli_date <= now()) {
+////                return "權限不足";
+//                throw new AccessDeniedHttpException('權限不足');
+//            }
+//        }
 
         $items = KBWorkshopCartItem::getCartItems($shopid, $dept, $deli_date);
         $cats = KBWorkshopCat::getCatsNotExpired($deli_date , $dept);
@@ -217,8 +224,8 @@ class KBWorkshopCartItemController extends Controller
 //        dump($items->toArray());
 //        dump($sampleItems->toArray());
 
-        //糧友在蛋撻王工場下單標識為RB
-        $deptArr= ['RB'=>'蛋撻王工場'];
+        //糧友在蛋撻王工場下單標識為CU
+        $deptArr= ['CU'=>'蛋撻王工場'];
 
         $orderInfos = new Collection();
         $orderInfos->date = $deli_date;
@@ -238,7 +245,7 @@ class KBWorkshopCartItemController extends Controller
     {
         $groups = KBWorkshopGroup::where('cat_id', $catid)->whereHas('products', function (Builder $query) {
             $query->whereHas('prices', function (Builder $query) {
-                $query->where('shop_group_id', '=', 5);
+                $query->where('shop_group_id', '=', KBWorkshopGroup::CURRENTGROUPID);
             });
         })->get();
 
@@ -248,7 +255,7 @@ class KBWorkshopCartItemController extends Controller
     //ajax加載產品
     public function showProduct($groupid, $shopid, Request $request)
     {
-        $shopid = KBUser::where('rb_user_id', $shopid)->first()->id;
+        $shopid = KBUser::where('id', $shopid)->first()->id;
 
         $products = KBWorkshopProduct::with('cats')
             ->with('units')
@@ -256,9 +263,9 @@ class KBWorkshopCartItemController extends Controller
             //2021-02-25 不顯示暫停產品
             ->whereNotIn('status', [2, 4])
             ->whereHas('prices', function (Builder $query) {
-                $query->where('shop_group_id', '=', 5);
+                $query->where('shop_group_id', '=', KBWorkshopGroup::CURRENTGROUPID);
             })
-            //2020-02-25 產品排序
+            //2021-02-25 產品排序
             ->orderBy('product_no')
             ->get();
 //        dump($products);
@@ -275,7 +282,7 @@ class KBWorkshopCartItemController extends Controller
 //        dump($infos);
         foreach ($products as $product) {
 //            dump($deli_date.$product->cuttime);
-            $productDetail = $product->prices->where('shop_group_id', 5)->first();
+            $productDetail = $product->prices->where('shop_group_id', KBWorkshopGroup::CURRENTGROUPID)->first();
 
             $this->checkInvalidOrder($productDetail, $deli_date , $shopid);
 

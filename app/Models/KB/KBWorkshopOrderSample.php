@@ -75,8 +75,8 @@ class KBWorkshopOrderSample extends Model
             ->where('workshop_order_sample.sampledate','like', "%$dateofweek%")
             //20.10.22 判斷範本產品是否已暫停
             ->where('workshop_products.status','!=',2)
-            //2021-01-06 糧友分組為5
-            ->where('prices.shop_group_id','=',5)
+            //2022-03-17 貳號分組為4
+            ->where('prices.shop_group_id', '=' , KBWorkshopGroup::CURRENTGROUPID)
             ->where('workshop_order_sample_item.disabled','=',0)
             ->where('workshop_order_sample.disabled','=',0);
 

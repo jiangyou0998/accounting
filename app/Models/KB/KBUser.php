@@ -5,6 +5,7 @@ namespace App\Models\KB;
 use App\Models\Role;
 use App\Models\ShopAddress;
 use App\Models\ShopGroup;
+use App\User;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -116,6 +117,22 @@ class KBUser extends Authenticatable
         }
 
         return $shop;
+    }
+
+    //根據shop_group的id,獲取分店
+    public static function getShopsByShopGroup($shop_group_id){
+
+        $shops = self::whereHas('shop_groups', function ($query) use($shop_group_id){
+                if(is_array($shop_group_id)){
+                    $query->whereIn('id', $shop_group_id);
+                }else{
+                    $query->where('id', '=', $shop_group_id);
+                }
+            })
+            ->orderBy('name')
+            ->get(['id','report_name']);
+
+        return $shops;
     }
 
 

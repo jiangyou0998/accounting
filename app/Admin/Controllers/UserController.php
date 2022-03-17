@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\KB\KBUser;
 use App\Models\Role;
 use App\User;
 use Dcat\Admin\Form;
@@ -110,6 +111,11 @@ class UserController extends AdminController
 
 
             $form->email('email')->required();
+            $kb_users = KBUser::getShopsByShopGroup(4)->pluck('report_name', 'id');
+            $form->select('kb_bakery_id', '綁定包部賬號')->options($kb_users);
+            $form->select('kb_kitchen_id', '綁定廚房賬號')->options($kb_users);
+            $form->select('kb_waterbar_id', '綁定水吧賬號')->options($kb_users);
+
             $form->text('company_chinese_name','公司名(中文)');
             $form->text('company_english_name','公司名(英文)');
             $form->text('pocode');

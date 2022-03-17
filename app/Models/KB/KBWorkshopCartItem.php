@@ -68,8 +68,8 @@ class KBWorkshopCartItem extends Model
             ->where('workshop_cart_items.user_id','=',$shop)
             ->whereNotIn('workshop_cart_items.status',[4])
             ->where('workshop_cart_items.qty','>=',0)
-            //2020-12-11 糧友分組為5
-            ->where('prices.shop_group_id','=',5)
+            //2021-03-17 貳號分組為4
+            ->where('prices.shop_group_id', '=' , KBWorkshopGroup::CURRENTGROUPID)
             ->where('workshop_cart_items.dept','=',$dept)
             ->where('workshop_cart_items.deli_date','=',$deli_date);
 

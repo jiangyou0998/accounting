@@ -89,7 +89,7 @@ class KBWorkshopCat extends Model
         //2020-12-10 只查詢有糧友商品價格的大類
         $cats = $cats->whereHas('products', function (Builder $query) {
                  $query->whereHas('prices', function (Builder $query) {
-                     $query->where('shop_group_id', '=', 5);
+                     $query->where('shop_group_id', '=', KBWorkshopGroup::CURRENTGROUPID);
                  });
              })
             ->orderby('sort')

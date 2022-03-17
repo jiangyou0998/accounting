@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class KBWorkshopProduct extends Model
 {
-
     protected $connection = 'mysql_kb';
     protected $table = 'workshop_products';
 

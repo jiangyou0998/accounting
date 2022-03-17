@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class KBWorkshopGroup extends Model
 {
+    //2022-03-17 當前網站默認的Group ID
+    const CURRENTGROUPID = 4;
 
     protected $connection = 'mysql_kb';
     protected $table = 'workshop_groups';

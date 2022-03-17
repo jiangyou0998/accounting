@@ -45,7 +45,7 @@
         <br>
 
 
-        <input type="radio" name="dept" id="radio" value="RB" checked>蛋撻王工場
+        <input type="radio" name="dept" id="radio" value="CU" checked>蛋撻王工場
 
 
     </div>
