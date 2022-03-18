@@ -14,6 +14,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Permission\Traits\HasRoles;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class User extends Authenticatable
 {
@@ -155,6 +156,41 @@ class User extends Authenticatable
             ->get();
 
         return $shops;
+    }
+
+    //$type 麵包部-bakery 廚房-kitchen 水吧-waterbar
+    //根據type獲取KB內聯網對應account id
+    public static function getKBUserIDByType($type)
+    {
+        $user = Auth::user();
+        $shopid = -1;
+
+        switch (strtolower($type)){
+            case 'bakery':
+                $shopid = $user->kb_bakery_id;
+                break;
+
+            case 'kitchen':
+                $shopid = $user->kb_kitchen_id;
+                break;
+
+            case 'waterbar':
+                $shopid = $user->kb_waterbar_id;
+                break;
+        }
+
+        //未選擇下單部門
+        if ($shopid === -1) {
+            throw new AccessDeniedHttpException('未選擇下單部門');
+        }
+
+        //找不到蛋撻王內聯網ID
+        if ($shopid === null) {
+            throw new AccessDeniedHttpException('未綁定蛋撻王內聯網賬號，請聯繫管理員！');
+        }
+
+        return $shopid;
+
     }
 
 }

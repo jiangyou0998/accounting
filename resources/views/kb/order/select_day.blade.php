@@ -19,6 +19,16 @@
             color: #FF0000;
         }
 
+        input[type="radio"]{
+            width: 25px; /*Desired width*/
+            height: 25px; /*Desired height*/
+        }
+
+        .radio{
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
     </style>
 
     <div align="left"><a target="_top" href="{{route('order')}}" style="font-size: xx-large;">返回</a></div>
@@ -44,8 +54,16 @@
         <br>
         <br>
 
-
-        <input type="radio" name="dept" id="radio" value="CU" checked>蛋撻王工場
+{{--        選擇下單部門--}}
+        <label style="padding-right:15px;">
+            <input type="radio" name="type" value="bakery" checked><span class="radio">包部</span>
+        </label>
+        <label style="padding-right:15px;">
+            <input type="radio" name="type" value="kitchen"><span class="radio">廚房</span>
+        </label>
+        <label style="padding-right:15px;">
+            <input type="radio" name="type" value="waterbar"><span class="radio">水吧</span>
+        </label>
 
 
     </div>
@@ -76,7 +94,7 @@
     <script>
         function opencart(deli_date) {
             // console.log(deli_date);return;
-            var Obj = document.getElementsByName("dept");
+            var Obj = document.getElementsByName("type");
             var bool = false;
             for (var i = 0; i < Obj.length; i++) {
                 if (Obj[i].checked == true) {
@@ -98,7 +116,7 @@
             @endif
 
             if (bool) {
-                location.href = "{{route('kb.cart')}}"+"?shop=" + shop + "&dept=" + Obj[i].value + "&deli_date=" + deli_date;
+                location.href = "{{route('kb.cart')}}"+"?shop=" + shop + "&dept=CU" + "&deli_date=" + deli_date + "&type=" + Obj[i].value ;
                 //this.close();
             } else {
                 // alert("請先選擇部門");

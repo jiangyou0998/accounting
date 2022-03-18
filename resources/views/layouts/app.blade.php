@@ -42,8 +42,8 @@
                 <div class="row">
                     <div class="col-sm-4 col-4">
                         <ul class="list-social row">
-                            <li><a href="https://www.facebook.com/RyoyuBakery" target="_blank"><i class="fa fa-facebook-official" aria-hidden="true"></i></a></li>
-                            <li><a href="https://www.instagram.com/ryoyubakerystudio/" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+                            <li><a href="https://www.facebook.com/2Cafe.hk" target="_blank"><i class="fa fa-facebook-official" aria-hidden="true"></i></a></li>
+{{--                            <li><a href="https://www.instagram.com/ryoyubakerystudio/" target="_blank"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>--}}
                         </ul>
                     </div>
                     <!-- 頂部中間 -->

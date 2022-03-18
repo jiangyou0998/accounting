@@ -28,16 +28,17 @@ class KBWorkshopCartItemController extends Controller
     private $special_dates;
     private $forbidden_dates;
 
+    //柯打提交
     public function update(Request $request, $shopid)
     {
         $user = Auth::User();
+        $type = $request->type;
 
         if ($user->can('shop')) {
 //            dump('shop');
-            $shopid = $user->kb_bakery_id;
+            $shopid = User::getKBUserIDByType($type);
 //            //分店無法修改明日之前的訂單
 //            if ($deli_date <= now()) {
-////                return "權限不足";
 //                throw new AccessDeniedHttpException('權限不足');
 //            }
 
@@ -99,7 +100,7 @@ class KBWorkshopCartItemController extends Controller
 
                 //寫入LOG
                 $insertLogsArr= [
-                    'operate_user_id' => $user->id,
+                    'operate_user_id' => $shopid,
                     'shop_id' => $shopid,
                     'product_id' => $insertData['itemid'],
                     'cart_item_id' => $cartItemId,
@@ -122,7 +123,7 @@ class KBWorkshopCartItemController extends Controller
                 $cartItemModel::where('id', $updateData['mysqlid'])->update(['qty' => $updateData['qty'] , 'order_date' => $now]);
 //                $productModel = new WorkshopProduct();
                 $updateLogsArr[] = [
-                    'operate_user_id' => $user->id,
+                    'operate_user_id' => $shopid,
                     'shop_id' => $shopid,
                     'product_id' => $cartItemModel::find($updateData['mysqlid'])->product_id,
                     'cart_item_id' => $updateData['mysqlid'],
@@ -143,7 +144,7 @@ class KBWorkshopCartItemController extends Controller
                 $cartItemModel::where('id', $delData['mysqlid'])->update(['status' => 4]);
 //                $productModel = new WorkshopProduct();
                 $delLogsArr[] = [
-                    'operate_user_id' => $user->id,
+                    'operate_user_id' => $shopid,
                     'shop_id' => $shopid,
                     'product_id' => $cartItemModel::find($delData['mysqlid'])->product_id,
                     'cart_item_id' => $delData['mysqlid'],
@@ -163,11 +164,13 @@ class KBWorkshopCartItemController extends Controller
 
     }
 
+    //柯打下單頁面
     public function cart(Request $request)
     {
         $user = Auth::User();
 
         $dept = $request->dept;
+        $type = $request->type;
 
         //送貨日期(格式:2020-09-14)
         $deli_date = $request->deli_date;
@@ -175,11 +178,11 @@ class KBWorkshopCartItemController extends Controller
         $deliW = Carbon::parse($deli_date)->isoFormat('d');
 
         if ($user->can('shop')) {
-//            dump('shop');
-            $shopid = $user->kb_bakery_id;
+
+            $shopid = User::getKBUserIDByType($type);
+
             //分店無法修改明日之前的訂單
             if ($deli_date <= now()) {
-//                return "權限不足";
                 throw new AccessDeniedHttpException('權限不足');
             }
 

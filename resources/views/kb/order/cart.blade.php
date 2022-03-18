@@ -247,6 +247,10 @@
         @can('workshop')
             isworkshop = true;
         @endcan
+
+        //下單分類 麵包部-bakery 廚房-kitchen 水吧-waterbar
+        var order_type = '{{request()->type}}';
+
         //insert
         $(".cart").each(function () {
 
@@ -307,9 +311,9 @@
             delarray.push(item);
 
         });
-        console.log(JSON.stringify(insertarray));
-        console.log(JSON.stringify(updatearray));
-        console.log(JSON.stringify(delarray));
+        // console.log(JSON.stringify(insertarray));
+        // console.log(JSON.stringify(updatearray));
+        // console.log(JSON.stringify(delarray));
 
         {{--shopid = {{$_REQUEST['shop']}};--}}
         $.ajax({
@@ -318,7 +322,8 @@
             data: {
                 'insertData': JSON.stringify(insertarray),
                 'updateData': JSON.stringify(updatearray),
-                'delData': JSON.stringify(delarray)
+                'delData': JSON.stringify(delarray),
+                'type' : order_type,
             },
             success: function (msg) {
                 // alert('已落貨!');
