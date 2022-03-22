@@ -108,18 +108,21 @@ class WorkshopProductController extends AdminController
 
             $grid->column('價格')->display(function () use ($priceArr, $shopGroupArr) {
                 $html = "";
-                foreach ($priceArr[$this->id] as $key => $value){
-                    $html .= $shopGroupArr[$key];
-                    switch ($key){
-                        case 1:
-                            $html .= '<span class="badge" style="background:#586cb1">'.$value->price.'</span><br>';
-                            break;
-                        case 5:
-                            $html .= '<span class="badge" style="background:#ea5455">'.$value->price.'</span><br>';
-                            break;
-                        default:
-                            $html .= '<span class="badge" style="background:#21b978">'.$value->price.'</span><br>';
-                            break;
+                //2022-03-22 防止未設置價格報錯
+                if(isset($priceArr[$this->id])){
+                    foreach ($priceArr[$this->id] as $key => $value){
+                        $html .= $shopGroupArr[$key] ?? '';
+                        switch ($key){
+                            case 1:
+                                $html .= '<span class="badge" style="background:#586cb1">'.$value->price.'</span><br>';
+                                break;
+                            case 5:
+                                $html .= '<span class="badge" style="background:#ea5455">'.$value->price.'</span><br>';
+                                break;
+                            default:
+                                $html .= '<span class="badge" style="background:#21b978">'.$value->price.'</span><br>';
+                                break;
+                        }
                     }
                 }
                 return $html;
