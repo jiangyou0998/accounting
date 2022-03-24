@@ -205,6 +205,7 @@
                                     <option value="東亞" @if($bank === '東亞') selected @endif>東亞</option>
                                     <option value="HSBC" @if($bank === 'HSBC') selected @endif>HSBC</option>
                                     <option value="中銀" @if($bank === '中銀') selected @endif>中銀</option>
+                                    <option value="創興" @if($bank === '創興') selected @endif>創興</option>
                                 </select>
                                 <input class="form-control form-inline col-md-8" type="text" pattern="[0-9]*" class="form-control in-out" id="deposit_in_bank" value="{{ $sales_income_detail['72'] ?? '' }}" placeholder="" value="" required>
                             </div>

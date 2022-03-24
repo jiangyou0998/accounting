@@ -100,14 +100,23 @@ class SalesDataController extends Controller
                 $sales_cal_result->date = $date;
             }
 
+            //主機NO.
             $sales_cal_result->first_pos_no = $request->first_pos_no;
+            //副機NO.
             $sales_cal_result->second_pos_no = $request->second_pos_no;
+            //承上結存
             $sales_cal_result->last_balance = $last_balance;
+            //當日結存(全鋪餘款)
             $sales_cal_result->balance = $request->balance;
+            //夾萬承上結存
             $sales_cal_result->last_safe_balance = $last_safe_balance;
+            //當日夾萬結存(夾萬結餘)
             $sales_cal_result->safe_balance = $request->safe_balance;
+            //支單總額
             $sales_cal_result->bill_paid_sum = $request->bill_paid_sum;
+            //收入
             $sales_cal_result->income_sum = $request->income_sum;
+            //差額
             $sales_cal_result->difference = $request->difference;
 
             if($sales_cal_result->save()){
