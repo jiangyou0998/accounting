@@ -60,8 +60,10 @@ class TotalSalesBySearchReportController extends AdminController
             foreach ($data as $value){
                 $total += $value['總價'];
             }
+            $total = round($total,2);
+            $count = count($data);
 
-            $grid->header(function ($collection) use($total){
+            $grid->header(function ($collection) use($total, $count){
 
                 $start = getStartTimeWithoutDefault();
                 $end = getEndTimeWithoutDefault();
@@ -71,12 +73,16 @@ class TotalSalesBySearchReportController extends AdminController
         <h1>日期:<span style="color: red">{$start} 至 {$end}</span></h1>
         <h1>總計:<span style="color: red">{$total}</span></h1>
 HTML;
+                if($count >= 10000){
+                    $cardInfo .= '<h1><span style="color: red">數據過多，請點擊右上角「匯出」查看！</span></h1>';
+                }
                 $card = Card::make('', $cardInfo);
 
                 return $card;
             });
 
-            if (count($data) > 0) {
+            //2022-03-24 數據過多時不顯示
+            if ($count > 0 && $count < 10000) {
                 $keys = $data->first()->toArray();
                 foreach ($keys as $key => $values) {
 
