@@ -84,11 +84,10 @@ class SalesDataController extends Controller
         DB::transaction(function () use ($request) {
             $user = Auth::user();
             $shop_id = $user->id;
-//        $results['']
 
             $deposit_no = SalesCalResult::getNewDepositNo();
             $last_balance = SalesCalResult::getLastBalance();
-            $last_safe_balance = 0;
+            $last_safe_balance = SalesCalResult::getLastSafeBalance();
             $date = Carbon::now()->toDateString();
 
             $sales_cal_result = SalesCalResult::getSalesCalResult();
@@ -142,7 +141,10 @@ class SalesDataController extends Controller
                 }
             }
 
-            DB::table('sales_income_details')->insert($temp);
+            //2022-03-25 如全部未填寫,則只清空所有details
+            if(isset($temp)){
+                DB::table('sales_income_details')->insert($temp);
+            }
 
             //支單寫入數據庫
             SalesBill::where('shop_id', $shop_id)->where('date', $date)->delete();
@@ -160,7 +162,6 @@ class SalesDataController extends Controller
                 }
             }
 
-//
 //            dump($request->toArray());
 //            dump($request->inputs[0]);
 //            dump($temp);

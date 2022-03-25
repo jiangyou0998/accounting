@@ -57,6 +57,7 @@ class SalesCalResult extends Model
         return $new_deposit_no;
     }
 
+    //獲取承上結餘
     public static function getLastBalance()
     {
         //從數據庫查出最大的編號
@@ -70,6 +71,22 @@ class SalesCalResult extends Model
                 ->first()->balance;
         }
         return $last_balance;
+    }
+
+    //獲取承上夾萬結餘
+    public static function getLastSafeBalance()
+    {
+        //從數據庫查出最大的編號
+        $max_deposit_no = self::getMaxDepositNo();
+        if(is_null($max_deposit_no)){
+            $last_safe_balance = 0;
+        }else{
+            $shop_id = Auth::user()->id;
+            $last_safe_balance = self::query()->where('shop_id', $shop_id)
+                ->where('deposit_no', $max_deposit_no)
+                ->first()->safe_balance;
+        }
+        return $last_safe_balance;
     }
 
     private static function getMaxDepositNo()
