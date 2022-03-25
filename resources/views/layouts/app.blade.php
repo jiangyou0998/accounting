@@ -8,9 +8,9 @@
     <meta name="csrf-token" content="{{csrf_token()}}">
 
 {{--    標題欄： --}}
-    <link rel="icon" href="/images/ryoyu_title_logo.ico" type="image/x-icon" />
+    <link rel="icon" href="/images/2cafe_title_logo.png" type="image/x-icon" />
 {{--    收藏夾：--}}
-    <link rel="shortcut icon" href="/images/ryoyu_title_logo.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/images/2cafe_title_logo.png" type="image/x-icon" />
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="/css/bootstrap-4.1.2.min.css">
