@@ -29,40 +29,25 @@
         -->
     </style>
 
-
-
-
     <div align="left"><a target="_top" href="{{route('order')}}" style="font-size: xx-large;">返回</a></div>
     <div class="style5" style="text-align: center;">
         <span class="style4">創建範本</span>
     </div>
 
-{{--    第一車--}}
-    <table width="100%" border="1" align="center" cellpadding="3" cellspacing="0">
-        <div class="style5" style="text-align: center;">
-            <span class="style4">蛋撻王工場</span>
-        </div>
-        <div style="margin-bottom: 10px;">
-            <button class="sizefont"><a class="btn btn-primary" href="{{route('kb.sample.create',['dept'=>'RB'])}}">新建蛋撻王工場範本</a></button>
-        </div>
-        @foreach($samples as $sample)
-            @if($sample->dept == 'RB')
-                <tr style="margin-top: 60px" class="sizefont">
-                    <td align="right" width="4%"><strong>#</strong></td>
+    <div align="center">
+        <strong>
+            <span style="color: #FF0000; font-size: 144%; ">設定範本後，需到下單頁面點擊「落貨」按鈕，訂單才會正式提交。</span>
+            <span style="color: #FF0000; font-size: 144%; "><br>請注意，如只設定範本而沒有到下單頁面提交訂單，當天分店將不會收到任何貨品。</span>
+        </strong>
+    </div>
 
-                    <td align="left"><a
-                            href="{{route('kb.sample.edit',$sample->id)}}"><strong>{{$sample->sampledate}}</strong></a>
-                    </td>
-                    <td align="middle" width="10%"><strong>
-                            <button onclick="delsample({{$sample->id}});">刪除範本</button>
-                        </strong></td>
-                </tr>
-            @endif
-        @endforeach
-
-    </table>
+{{--    循環加載範本--}}
+    @foreach($all_samples as $samples)
+        @include('kb.sample._sample_list')
+    @endforeach
 
     <script>
+        //「刪除範本」按鈕
         function delsample(id) {
 
             Swal.fire({
@@ -82,11 +67,6 @@
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                         },
                         success: function (msg) {
-                            // console.log(msg);
-                            // Swal.fire({
-                            //     icon: 'success',
-                            //     title: "範本刪除成功!",
-                            // });
 
                             Swal.fire({
                                 title: "範本刪除成功!",
@@ -97,10 +77,9 @@
                                 window.location.reload();
                             })
 
-                            // top.location.href = 'order_sample.php';
                         },
                         error: function (msg) {
-                            // console.log(msg);
+
                             Swal.fire({
                                 icon: 'error',
                                 title: "刪除失敗!",
@@ -112,30 +91,7 @@
                 }
             })
 
-            // var confirmBox = confirm('您確定要刪除該範本嗎?');
-            //
-            // if(confirmBox == true){
-            //     // alert(id);
-            //     $.ajax({
-            //         type: "DELETE",
-            //         url: "/sample/"+id,
-            //         headers: {
-            //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            //         },
-            //         success: function (msg) {
-            //             // console.log(msg);
-            //             alert('範本刪除成功!');
-            //             window.location.reload('order_sample.php');
-            //             // top.location.href = 'order_sample.php';
-            //         }
-            //     });
-            // }
-
         }
     </script>
-
-
-
-
 
 @endsection

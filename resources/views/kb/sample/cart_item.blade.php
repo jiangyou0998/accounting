@@ -36,23 +36,10 @@
     <!-- <form action="order_z_dept_2.php?action=confirm&dept=烘焙" method="post" id="cart" name="cart" target="_top">-->
     <div align="right">
         <strong>
-            <span style="color: #FF0000; font-size: 172%; ">分店：{{$orderInfos->shop_name}} </span>
+            <span style="color: #FF0000; font-size: 172%; ">部門：{{$orderInfos->shop_name}} </span>
         </strong>
     </div>
-    <div align="right">
-        <strong>
-            @if($orderInfos->dept_name == 'A')
-                <span style="color: #FF0000; font-size: 172%; ">第一車</span>
-            @elseif($orderInfos->dept_name == 'B')
-                <span style="color: #FF0000; font-size: 172%; ">第二車</span>
-            @elseif($orderInfos->dept_name == 'C')
-                <span style="color: #FF0000; font-size: 172%; ">麵頭</span>
-            @elseif($orderInfos->dept_name == 'D')
-                <span style="color: #FF0000; font-size: 172%; ">方包</span>
-            @endif
 
-        </strong>
-    </div>
     <div align="left" style="padding-top: 15px;"><strong><span style="color: #FF0000; font-size: 172%; ">選擇星期:
             </span></strong>
 
@@ -94,7 +81,7 @@
 {{--                <input type="image"--}}
 {{--                       src="/images/Return.jpg" border="0"--}}
 {{--                       onclick="{{route('sample')}}">--}}
-                <a class="btn btn-primary btn-lg" href="#" role="button" onClick="sss();">落貨</a>
+                <a class="btn btn-primary btn-lg" href="#" role="button" onClick="sss();">保存範本</a>
                 @can('shop')
                     <a class="btn btn-success btn-lg" href="{{route('kb.sample')}}" role="button">返回</a>
                 @endcan

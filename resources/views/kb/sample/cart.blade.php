@@ -277,10 +277,10 @@
         var type = '';
 
         @if($sample->id)
-            url = '{{route('kb.sample.update',$sample->id)}}';
+            url = '{{route('kb.sample.update',$sample->id,['type'=> Request()->type])}}';
             type = 'PUT';
         @else
-            url = '{!! route('kb.sample.store',['dept'=> Request()->dept , 'shopid'=>request()->input('shopid')]) !!}';
+            url = '{!! route('kb.sample.store',['dept'=> Request()->dept , 'shopid'=>request()->input('shopid'), 'type'=> Request()->type]) !!}';
             type = 'POST';
         @endif
 

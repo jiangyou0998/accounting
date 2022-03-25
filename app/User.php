@@ -181,7 +181,7 @@ class User extends Authenticatable
 
         //未選擇下單部門
         if ($shopid === -1) {
-            throw new AccessDeniedHttpException('未選擇下單部門');
+            throw new AccessDeniedHttpException('未選擇部門');
         }
 
         //找不到蛋撻王內聯網ID

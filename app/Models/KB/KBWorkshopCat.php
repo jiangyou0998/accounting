@@ -49,18 +49,18 @@ class KBWorkshopCat extends Model
         return $cats;
     }
 
-    //获取所有大類
-    public static function getSampleCats($dept)
+    //範本-根據type获取所有大類
+    public static function getSampleCats($type)
     {
         $cats = new KBWorkshopCat();
 
-        //A第一車,B第二車,C麵頭,D方包
-        if($dept == 'A' || $dept == 'B'){
-            $cats = $cats->whereIn('cat_name',['熟細包','熟大包']);
-        }else if($dept == 'C'){
-            $cats = $cats->whereIn('cat_name',['麵頭']);
-        }else if($dept == 'D'){
-            $cats = $cats->whereIn('cat_name',['方包']);
+        //bakery-包部,kitchen-廚房,waterbar-水吧
+        if($type == 'bakery'){
+            $cats = $cats->whereIn('cat_name',['麵包部', '西餅部', '轉手貨']);
+        }else if($type == 'kitchen'){
+            $cats = $cats->whereIn('cat_name',['廚務部', '轉手貨']);
+        }else if($type == 'waterbar'){
+            $cats = $cats->whereIn('cat_name',['廚務部', '轉手貨']);
         }
 
         $cats = $cats
@@ -86,7 +86,7 @@ class KBWorkshopCat extends Model
                     ->whereNull('end_date');
             });
 
-        //2020-12-10 只查詢有糧友商品價格的大類
+        //2022-03-25 只查詢有商品價格的大類
         $cats = $cats->whereHas('products', function (Builder $query) {
                  $query->whereHas('prices', function (Builder $query) {
                      $query->where('shop_group_id', '=', KBWorkshopGroup::CURRENTGROUPID);

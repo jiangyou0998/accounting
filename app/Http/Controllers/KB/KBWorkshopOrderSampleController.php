@@ -30,58 +30,43 @@ class KBWorkshopOrderSampleController extends Controller
     {
         $user = Auth::User();
 
-        //2021-03-01 獲取kb數據庫user表的id
-        $shopid = KBUser::where('rb_user_id',$user->id)->first()->id;
+//        //2021-03-01 獲取kb數據庫user表的id
+//        $shopid = KBUser::where('rb_user_id',$user->id)->first()->id;
+        $kb_bakery_id = $user->kb_bakery_id;
+        $kb_kitchen_id = $user->kb_kitchen_id;
+        $kb_waterbar_id = $user->kb_waterbar_id;
 
-        $sampleModel = new KBWorkshopOrderSample();
-        $samples = $sampleModel
-            ->select('id', 'sampledate','dept')
-            ->where('user_id', $shopid)
-            ->where('disabled', 0)
-            ->get();
+        $bakery_samples = $this->getSampleByType($kb_bakery_id);
+        $kitchen_samples = $this->getSampleByType($kb_kitchen_id);
+        $waterbar_samples = $this->getSampleByType($kb_waterbar_id);
 
-        foreach ($samples as $sample) {
-            $sample->sampledate = $this->transSampleDate($sample->sampledate);
+        $all_samples['bakery']['samples'] = $bakery_samples;
+        $all_samples['bakery']['name'] = '包部';
+        $all_samples['bakery']['type'] = 'bakery';
 
-        }
-//    dump($samples->toArray());
-        return view('kb.sample.index', compact('samples'));
+        $all_samples['kitchen']['samples'] = $kitchen_samples;
+        $all_samples['kitchen']['name'] = '廚房';
+        $all_samples['kitchen']['type'] = 'kitchen';
+
+        $all_samples['waterbar']['samples'] = $waterbar_samples;
+        $all_samples['waterbar']['name'] = '水吧';
+        $all_samples['waterbar']['type'] = 'waterbar';
+
+//        dump($bakery_samples->toArray());
+//        dump($kitchen_samples->toArray());
+//        dump($all_samples);
+//        return 1;
+//        return view('kb.sample.index', compact('bakery_samples', 'kitchen_samples', 'waterbar_samples'));
+        return view('kb.sample.index', compact('all_samples'));
     }
-
-//    public function regular(Request $request)
-//    {
-//        $shopid = $request->shopid;
-//
-//        $shops = User::getRyoyuBakeryShops();
-//
-//        $sampleModel = new KBWorkshopOrderSample();
-//        $samples = $sampleModel
-//            ->select('id', 'sampledate','dept')
-//            ->where('user_id', $shopid)
-//            ->where('disabled', 0)
-//            ->get();
-//
-//        foreach ($samples as $sample) {
-//            $sample->sampledate = $this->transSampleDate($sample->sampledate);
-//
-//        }
-////    dump($samples->toArray());
-//
-//        return view('sample.regular', compact('samples','shops'));
-//    }
-
 
     public function create(KBWorkshopOrderSample $sample ,Request $request)
     {
-        $shopid = $this->getShopidByRoles($request);
-
-        if($shopid === false){
-            //                return "權限不足";
-            throw new AccessDeniedHttpException('權限不足');
-        }
+        $type = $request->type;
+        $shopid = User::getKBUserIDByType($type);
 //        $shopid = $user->id;
 
-        $cats = KBWorkshopCat::getSampleCats($request->dept);
+        $cats = KBWorkshopCat::getSampleCats($request->type);
 
         $orderInfos = new Collection();
 
@@ -95,7 +80,7 @@ class KBWorkshopOrderSampleController extends Controller
 
         $checkHtml = $this->getCheckboxHtml($sampledate);
 
-        $orderInfos->shop_name = User::find($shopid)->txt_name;
+        $orderInfos->shop_name = KBUser::find($shopid)->txt_name;
         $orderInfos->dept_name = $request->dept;
 
 //        dump($request->dept);
@@ -104,22 +89,40 @@ class KBWorkshopOrderSampleController extends Controller
 
     public function edit(KBWorkshopOrderSample $sample)
     {
+//        $user = Auth::User();
+//
+////        //2021-03-01 獲取kb數據庫user表的id
+////        $shopid = KBUser::where('rb_user_id',$user->id)->first()->id;
+//        $kb_bakery_id = $user->kb_bakery_id;
+//        $kb_kitchen_id = $user->kb_kitchen_id;
+//        $kb_waterbar_id = $user->kb_waterbar_id;
+//
+//        dump($kb_bakery_id);
+//        dump($kb_kitchen_id);
+//        dump($kb_waterbar_id);
+//        dump($sample->toArray());
+//        return 1;
+//        dump($sample->toArray());
         $dept = $sample->dept;
 
         //2021-03-01 查詢是否有編輯權限
-        $rb_user_id = $sample->user_id;
+        $kb_user_id = $sample->user_id;
 
-        $hasPermission = $this->checkEditPermission($dept , $rb_user_id);
+        $sample_info = $this->getSampleInfo($dept , $kb_user_id);
 
+        $type = $sample_info['type'];
+        $shopid = $sample_info['shop_id'];
+//        dd($hasPermission);
         //2021-03-01 獲取kb數據庫user表的id
-        $shopid = KBUser::where('rb_user_id',$rb_user_id)->first()->id;
+//        $user = Auth::User();
+//
+//        $shopid = $user->kb_bakery_id;
 
 //        dump($hasPermission);
 //        dump($dept);
-        if($hasPermission === false) throw new AccessDeniedHttpException('權限不足');
+        if($shopid === 0) throw new AccessDeniedHttpException('權限不足');
         //disabled範本不能查看
         if($sample->disabled === 1) throw new AccessDeniedHttpException('範本已刪除');
-
 
         $sampleModel = new KBWorkshopOrderSample();
 
@@ -145,13 +148,13 @@ class KBWorkshopOrderSampleController extends Controller
 
         $checkHtml = $this->getCheckboxHtml($sampledate , $currentdate);
 
-        $cats = KBWorkshopCat::getSampleCats($dept);
+        $cats = KBWorkshopCat::getSampleCats($type);
 
         $sampleItems = KBWorkshopOrderSample::getRegularOrderItems($shopid, $currentdate ,$sample->dept);
 
         $orderInfos = new Collection();
 
-        $orderInfos->shop_name = User::find($shopid)->txt_name;
+        $orderInfos->shop_name = KBUser::find($shopid)->txt_name;
         $orderInfos->dept_name = $sample->dept;
 
 //        dump($sampleItems);
@@ -160,15 +163,10 @@ class KBWorkshopOrderSampleController extends Controller
 
     public function store(Request $request)
     {
-        $user = Auth::User();
-        if($request->dept == 'RB' && $user->can('shop')){
-            //2021-03-01 獲取kb數據庫user表的id
-            $shopid = KBUser::where('rb_user_id',$user->id)->first()->id;
-        }else{
-            throw new AccessDeniedHttpException('權限不足');
-        }
+        $type = $request->type;
+        $shopid = User::getKBUserIDByType($type);
 
-        DB::transaction(function () use($request ,$shopid){
+        DB::transaction(function () use($request, $shopid){
             $insertDatas = json_decode($request->insertData, true);
 
 //            dd($insertDatas);
@@ -247,7 +245,7 @@ class KBWorkshopOrderSampleController extends Controller
     {
         $groups = KBWorkshopGroup::where('cat_id', $catid)->whereHas('products', function (Builder $query) {
             $query->whereHas('prices', function (Builder $query) {
-                $query->where('shop_group_id', '=', 5);
+                $query->where('shop_group_id', '=', KBWorkshopGroup::CURRENTGROUPID);
             });
         })->get();
 
@@ -263,7 +261,7 @@ class KBWorkshopOrderSampleController extends Controller
             //2021-02-25 不顯示暫停產品
             ->whereNotIn('status', [2, 4])
             ->whereHas('prices', function (Builder $query) {
-                $query->where('shop_group_id', '=', 5);
+                $query->where('shop_group_id', '=', KBWorkshopGroup::CURRENTGROUPID);
             })
             //2020-02-25 產品排序
             ->orderBy('product_no')
@@ -276,7 +274,7 @@ class KBWorkshopOrderSampleController extends Controller
 
         foreach ($products as $product) {
 
-            $productDetail = $product->prices->where('shop_group_id', 5)->first();
+            $productDetail = $product->prices->where('shop_group_id', KBWorkshopGroup::CURRENTGROUPID)->first();
 
             $product->order_by_workshop = false;
             $product->cut_order = false;
@@ -378,30 +376,49 @@ class KBWorkshopOrderSampleController extends Controller
         return $sampledate;
     }
 
-    private function getShopidByRoles($request)
+//    private function getShopidByRoles($dept ,$id, $type)
+//    {
+//        $user = Auth::User();
+//
+//        if(isset($type) && $dept == 'CU' && $user->can('shop')){
+//            //2021-03-01 獲取kb數據庫user表的id
+//            $shopid = KBUser::where('rb_user_id',$user->id)->first()->id;
+//        }else{
+//            return false;
+//        }
+//
+//        return $shopid;
+//    }
+
+    //檢查是否有編輯權限, 並返回蛋撻王user ID
+    private function getSampleInfo($dept ,$id)
     {
         $user = Auth::User();
 
-        if($request->dept == 'RB' && $user->can('shop')){
-            //2021-03-01 獲取kb數據庫user表的id
-            $shopid = KBUser::where('rb_user_id',$user->id)->first()->id;
-        }else{
-            return false;
+        //2021-03-01 獲取kb數據庫user表的id
+        $kb_bakery_id = $user->kb_bakery_id;
+        $kb_kitchen_id = $user->kb_kitchen_id;
+        $kb_waterbar_id = $user->kb_waterbar_id;
+
+        $sample_info = [
+            'type' => '',
+            'shop_id' => 0,
+        ];
+
+        if($dept == 'CU' && $user->can('shop')){
+            if($id == $kb_bakery_id){
+                $sample_info['type'] = 'bakery';
+                $sample_info['shop_id'] = $id;
+            }else if($id == $kb_kitchen_id){
+                $sample_info['type'] = 'kitchen';
+                $sample_info['shop_id'] = $id;
+            }else if($id == $kb_waterbar_id){
+                $sample_info['type'] = 'waterbar';
+                $sample_info['shop_id'] = $id;
+            }
         }
 
-        return $shopid;
-    }
-
-    private function checkEditPermission($dept ,$id)
-    {
-        $user = Auth::User();
-
-        if($dept == 'RB' && $user->can('shop') && $id == $user->id){
-            return true;
-        }else{
-            return false;
-        }
-
+        return $sample_info;
     }
 
     //將with數據(prices)拿到外層
@@ -413,6 +430,23 @@ class KBWorkshopOrderSampleController extends Controller
         //2021-01-06 增加base,min
         $product->base = $productDetail->base;
         $product->min = $productDetail->min;
+
+    }
+
+    private function getSampleByType($id)
+    {
+        $sampleModel = new KBWorkshopOrderSample();
+        $samples = $sampleModel
+            ->select('id', 'sampledate','dept')
+            ->where('user_id', $id)
+            ->where('disabled', 0)
+            ->get();
+
+        foreach ($samples as $sample) {
+            $sample->sampledate = $this->transSampleDate($sample->sampledate);
+        }
+
+        return $samples;
 
     }
 }
