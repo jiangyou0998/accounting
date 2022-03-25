@@ -23,6 +23,7 @@ class SalesDataController extends Controller
     {
         $sales_cal_result = SalesCalResult::getSalesCalResult();
         $last_balance = SalesCalResult::getLastBalance();
+        $last_safe_balance = SalesCalResult::getLastSafeBalance();
         $sales_cal_result_id = $sales_cal_result->id ?? 0;
 
         $sales_income_detail = SalesIncomeDetail::getSalesIncomeDetailArray($sales_cal_result_id);
@@ -30,7 +31,7 @@ class SalesDataController extends Controller
         $bank = SalesIncomeDetail::getBank($sales_cal_result_id);
         $bills = SalesBill::getSalesBills()->pluck('outlay', 'bill_no')->toArray();
 //        dump($bills);
-        return view('sales_data.index', compact('sales_cal_result', 'last_balance', 'sales_income_detail', 'bank', 'bills'));
+        return view('sales_data.index', compact('sales_cal_result', 'last_balance', 'last_safe_balance', 'sales_income_detail', 'bank', 'bills'));
     }
 
     public function report(Request $request)

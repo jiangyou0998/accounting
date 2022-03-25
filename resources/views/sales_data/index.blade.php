@@ -186,6 +186,7 @@
                     <div class="row">
 
                         <h3 class="col-lg-12 p-3 text-right">承上結存 : $<span id="last_balance">{{$last_balance}}</span></h3>
+{{--                        <h3 class="col-lg-12 p-3 text-right">夾萬承上結存 : $<span id="last_safe_balance">{{$last_safe_balance}}</span></h3>--}}
 
                     </div>
 
@@ -338,11 +339,6 @@
             let afternoon_income = $('#afternoon_income').val();
             let evening_income = $('#evening_income').val();
             let period_sum = 0;
-            // if((morning_income.length > 0)
-            //     && (afternoon_income.length > 0)
-            //     && (evening_income.length > 0)){
-            //     period_sum = parseFloat(morning_income) + parseFloat(afternoon_income) + parseFloat(evening_income);
-            // }
 
             if((morning_income.length > 0)){
                 period_sum += parseFloat(morning_income);
@@ -414,6 +410,19 @@
 
             return safe_cash_sum.toFixed(2);
         }
+
+        // //獲取夾萬餘款總數(有可能計算公式不對)
+        // function getSafeBalance(){
+        //     let safe_cash_sum = getSafeCashSum();
+        //     let safe_balance = 0;
+        //
+        //     let deposit_in_safe = $('#deposit_in_safe').val();
+        //     let deposit_in_bank = $('#deposit_in_bank').val();
+        //
+        //     safe_balance = safe_cash_sum + deposit_in_safe - deposit_in_bank;
+        //
+        //     return safe_balance.toFixed(2);
+        // }
 
         //獲取支單總數
         function getBillPaidSum(){
