@@ -46,27 +46,31 @@
         <hr class="mb-4">
             <div class="copy">
                 @isset($sale_summary['other'])
-                    <div>{{$date}}</div>
-                    <div>混合型/飯堂營業數</div>
+                    <h4>{{$date}}</h4>
+                    <h5>混合型/飯堂營業數</h5>
                     @foreach($sale_summary['other'] as $value)
                         {{$value->user->report_name}} ${{$value->income_sum}}
-                        八達通${{$value->details->where('type_no', 31)->first()->income ?? '0.00'}}
+                        <span class="octopus-total">
+                            八達通${{$value->details->where('type_no', 31)->first()->income ?? '0.00'}}
+                        </span>
                         <br>
                     @endforeach
-                        合計:${{$sale_summary['other']->sum('income_sum')}}<br>
+                        <h5>合計:${{round($sale_summary['other']->sum('income_sum'), 2)}}</h5>
+                        <br>
                 @endisset
 
                 @isset($sale_summary['bakery'])
                     <br>
-                    <div>餅店營業數</div>
+                    <h5>餅店營業數</h5>
                     @foreach($sale_summary['bakery'] as $value)
                         {{$value->user->report_name}} ${{$value->income_sum}}
-                        <span class="octopus-total" style="display: none;">
-                        八達通${{$value->details->where('type_no', 31)->first()->income ?? '0.00'}}
+                        <span class="octopus-total">
+                            八達通${{$value->details->where('type_no', 31)->first()->income ?? '0.00'}}
                         </span>
-                            <br>
+                        <br>
                     @endforeach
-                        合計:${{$sale_summary['bakery']->sum('income_sum')}}<br>
+                        <h5>合計:${{round($sale_summary['bakery']->sum('income_sum'), 2)}}</h5>
+                        <br>
                 @endisset
             </div>
 

@@ -127,6 +127,11 @@ Route::group(['middleware' => ['auth','permission:operation']], function () {
 Route::group(['middleware' => ['auth']], function () {
     // 銷售數據跳轉頁面
     Route::get('sales_data/redirect', 'SalesDataController@redirect')->name('sales_data.redirect');
+});
+
+//營運、會計共同權限
+Route::group(['middleware' => ['auth','permission:operation|accounting']], function () {
+    //營業數匯總
     Route::get('sales_data/report', 'SalesDataController@report')->name('sales_data.report');
 });
 
