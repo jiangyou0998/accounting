@@ -45,8 +45,8 @@
 
         <hr class="mb-4">
             <div class="copy">
+                <h4>{{$date_and_week}}</h4>
                 @isset($sale_summary['other'])
-                    <h4>{{$date_and_week}}</h4>
                     <h5>混合型/飯堂營業數</h5>
                     @foreach($sale_summary['other'] as $value)
                         {{$value->user->report_name}} ${{$value->income_sum}}
