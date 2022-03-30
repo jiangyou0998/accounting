@@ -37,6 +37,7 @@ class SalesDataController extends Controller
     public function report(Request $request)
     {
         $date = $request->date ?? Carbon::now()->toDateString();
+        $date_and_week = Carbon::parse($date)->isoFormat('YYYY-MM-DD(dd)');
         $front_groups = FrontGroupHasUser::query()
             ->where('front_group_id', '!=' , 4)
             ->get()->mapToGroups(function ($item, $key) {
@@ -59,8 +60,25 @@ class SalesDataController extends Controller
         });
 //        dump($front_groups['other']);
 
-//        dump($sale_summary->toArray());
-        return view('sales_data.report', compact('sale_summary', 'date'));
+        $sale_summary['other_total'] = 0;
+        $sale_summary['bakery_total'] = 0;
+        $sale_summary['total'] = 0;
+
+        //計算 混合型/飯堂 總數
+        if(isset($sale_summary['other'])){
+            $sale_summary['other_total'] = $sale_summary['other']->sum('income_sum');
+        }
+
+        //計算 餅店 總數
+        if(isset($sale_summary['bakery'])){
+            $sale_summary['bakery_total'] = $sale_summary['bakery']->sum('income_sum');
+        }
+
+        //計算所有總數
+        $sale_summary['total'] = $sale_summary['other_total'] + $sale_summary['bakery_total'];
+
+//        dump($sale_summary);
+        return view('sales_data.report', compact('sale_summary', 'date', 'date_and_week'));
     }
 
     //根據權限跳轉頁面

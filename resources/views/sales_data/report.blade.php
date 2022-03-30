@@ -38,7 +38,7 @@
         </div>
 
         <div class="py-5 text-center">
-            <h2>{{$date}}</h2>
+            <h2>{{$date_and_week}}</h2>
             <h2>營業數</h2>
 
         </div>
@@ -46,7 +46,7 @@
         <hr class="mb-4">
             <div class="copy">
                 @isset($sale_summary['other'])
-                    <h4>{{$date}}</h4>
+                    <h4>{{$date_and_week}}</h4>
                     <h5>混合型/飯堂營業數</h5>
                     @foreach($sale_summary['other'] as $value)
                         {{$value->user->report_name}} ${{$value->income_sum}}
@@ -55,7 +55,7 @@
                         </span>
                         <br>
                     @endforeach
-                        <h5>合計:${{round($sale_summary['other']->sum('income_sum'), 2)}}</h5>
+                        <h5>合計:${{sprintf("%.2f", $sale_summary['other_total'])}}</h5>
                         <br>
                 @endisset
 
@@ -69,9 +69,10 @@
                         </span>
                         <br>
                     @endforeach
-                        <h5>合計:${{round($sale_summary['bakery']->sum('income_sum'), 2)}}</h5>
+                        <h5>合計:${{sprintf("%.2f", $sale_summary['bakery_total'])}}</h5>
                         <br>
                 @endisset
+                    <h5>總計:${{sprintf("%.2f", $sale_summary['total'])}}</h5>
             </div>
 
         <hr class="mb-4">
