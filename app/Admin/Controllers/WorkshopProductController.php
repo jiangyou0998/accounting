@@ -12,6 +12,7 @@ use Dcat\Admin\Admin;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
+use Illuminate\Validation\Rule;
 
 
 class WorkshopProductController extends AdminController
@@ -271,11 +272,23 @@ class WorkshopProductController extends AdminController
             $form->text('product_name')->required()->rules('required|regex:/^[^\'\"]+$/', [
                 'regex' => '「名稱」不能包含引號',
             ]);
-            $form->text('product_no')->required()->rules("required|
-                max:7|unique:workshop_products,product_no,{$form->getKey()},id", [
-                'max' => '編號最大長度為7',
-                'unique'   => '編號已存在',
-            ]);
+//            $form->text('product_no')->required()->rules("required|
+//                max:7|unique:workshop_products,product_no,{$form->getKey()},id", [
+//                'max' => '編號最大長度為7',
+//                'unique'   => '編號已存在',
+//            ]);
+
+            $form->text('product_no')->required()->rules([
+                "required",
+                "max:7",
+                Rule::unique('workshop_products')->where(function ($query) {
+                    return $query->where('status', '!=', 4);
+                })->ignore($form->getKey()),
+            ],
+                [
+                    'max' => '編號最大長度為7',
+                    'unique' => '編號已存在',
+                ]);
 
             $form->select('','大類')->options('/api/cat')->load('group_id', '/api/group');
 
