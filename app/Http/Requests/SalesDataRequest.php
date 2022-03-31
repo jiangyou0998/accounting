@@ -12,6 +12,7 @@ class SalesDataRequest extends FormRequest
         return [
             'inputs.0.*' => ['nullable', 'numeric', 'min:0'],
             'first_pos_no' => ['nullable', 'numeric', 'min:0'],
+            'kelly_out' => ['nullable', 'numeric'],
         ];
     }
 
@@ -24,6 +25,7 @@ class SalesDataRequest extends FormRequest
 //            'first_pos_no.required' => '請輸入主機No.',
             'first_pos_no.numeric' => '主機No.請輸入數字',
             'first_pos_no.min' => '主機No.請輸入大於零的數字',
+            'kelly_out.numeric' => '「:attribute」請輸入正確的數字',
         ];
     }
 
@@ -49,7 +51,8 @@ class SalesDataRequest extends FormRequest
 
             'inputs.0.deposit_in_safe' => '存入夾萬',
             'inputs.0.deposit_in_bank' => '存入銀行',
-            'inputs.0.kelly_out' => '慧霖取銀',
+
+            'kelly_out' => '慧霖取銀',
         ];
     }
 }

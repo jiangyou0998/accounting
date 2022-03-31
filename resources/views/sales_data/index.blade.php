@@ -564,6 +564,7 @@
                 first_pos_no : $('#first_pos_no').val(),
                 second_pos_no : $('#second_pos_no').val(),
                 deposit_bank : $('#deposit_bank option:selected').val(),
+                kelly_out: $('#kelly_out').val(),
                 balance: getBalance(),
                 safe_balance: getSafeCashSum(),
                 bill_paid_sum: getBillPaidSum(),
@@ -586,7 +587,6 @@
                 safe_coin: $('#safe_coin').val(),
                 deposit_in_safe: $('#deposit_in_safe').val(),
                 deposit_in_bank: $('#deposit_in_bank').val(),
-                kelly_out: $('#kelly_out').val(),
             });
 
             let $bill_no = 1;

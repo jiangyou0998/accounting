@@ -145,6 +145,15 @@ class SalesDataController extends Controller
 
             //更新前先刪除數據
             SalesIncomeDetail::where('sales_cal_result_id', $sales_cal_result_id)->delete();
+
+            //2022-03-31 慧霖取銀可以輸入負數
+            $temp[] = [
+                'sales_cal_result_id' => $sales_cal_result_id,
+                'type_no' => $types['kelly_out'],
+                'income' => $request->kelly_out,
+                'remark' => null
+            ];
+
             foreach($request->inputs[0] as $name => $income){
                 if(isset($types[$name]) && !is_null($income)){
                     $remark = null;
