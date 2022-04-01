@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Layout\Content;
+use Dcat\Admin\Widgets\Card;
 use Dcat\Admin\Widgets\Modal;
 use Dcat\EasyExcel\Excel;
 use Illuminate\Http\Request;
@@ -43,6 +44,17 @@ class SalesDataReportController extends AdminController
 
             $month = getMonth();
             $data = $this->generate($month);
+
+            $grid->header(function ($collection) use($month){
+                
+                // 标题和内容
+                $cardInfo = <<<HTML
+        <h1>日期:<span style="color: red">{$month}</span></h1>
+HTML;
+                $card = Card::make('', $cardInfo);
+
+                return $card;
+            });
 
             $headings = [
                 'shop_name' => '分店',
@@ -104,7 +116,7 @@ class SalesDataReportController extends AdminController
             });
 
             $filename = '營業數報告 ' . $month;
-            $grid->export()->titles($headings)->csv()->filename($filename);
+            $grid->export()->titles($headings)->xlsx()->filename($filename);
 
         });
 
