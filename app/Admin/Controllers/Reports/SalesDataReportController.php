@@ -4,14 +4,18 @@ namespace App\Admin\Controllers\Reports;
 
 
 use App\Admin\Forms\SalesDataExport;
+use App\Admin\Forms\SalesDataFileExport;
 use App\Admin\Forms\SalesDataTableShow;
+use App\Admin\Renderable\ShopTable;
 use App\Common\Tools\excel\excelclass\ExcelExport;
 use App\Http\Traits\SalesDataTableTraits;
 use App\Models\SalesCalResult;
 use App\Models\SalesIncomeType;
+use App\Models\ShopGroup;
 use App\User;
 use Carbon\Carbon;
 use Dcat\Admin\Controllers\AdminController;
+use Dcat\Admin\Grid;
 use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Modal;
 use Dcat\EasyExcel\Excel;
@@ -29,7 +33,81 @@ class SalesDataReportController extends AdminController
         return $content
             ->header('營業數報告')
             ->description('營業數報告')
-            ->body($this->render());
+            ->body($this->render())
+            ->body($this->grid());
+    }
+
+    protected function grid()
+    {
+        return Grid::make(null, function (Grid $grid) {
+
+            $month = getMonth();
+            $data = $this->generate($month);
+
+            $headings = [
+                'shop_name' => '分店',
+                'date' => '日期',
+                'last_balance' => '承上結餘',
+                'first_pos_no' => '主機編號',
+                'first_pos_income' => '主機收入',
+                'second_pos_no' => '副機編號',
+                'second_pos_income' => '副機收入',
+                'morning_income' => '早更收入',
+                'afternoon_income' => '午更收入',
+                'evening_income' => '晚更收入',
+                'octopus_income' => '八達通',
+                'alipay_income' => '支付寶',
+                'wechatpay_income' => '微信',
+                'pos_paper_money' => '收銀機紙幣',
+                'pos_coin' => '收銀機硬幣',
+                'safe_paper_money' => '夾萬紙幣',
+                'safe_coin' => '夾萬硬幣',
+                'deposit_in_safe' => '存入夾萬',
+                'deposit_in_bank' => '存入銀行',
+                'kelly_out' => '慧霖取銀',
+                'bill_paid_sum' => '支單支出',
+                'income_sum' => '收入',
+                'difference' => '差額',
+            ];
+
+            if($data){
+                foreach ($headings as $name => $label){
+                    $grid->column($name, $label);
+                }
+//                $grid->fixColumns(2, 0);
+            }
+
+            $grid->withBorder();
+
+            //禁用 导出所有 选项
+            $grid->export()->disableExportAll();
+            //禁用 导出选中行 选项
+            $grid->export()->disableExportSelectedRow();
+            // 禁用行选择器
+            $grid->disableRowSelector();
+            $grid->disableCreateButton();
+            $grid->disableActions();
+            $grid->disableBatchDelete();
+            $grid->disablePagination();
+
+            // 设置表格数据
+            $grid->model()->setData($data);
+
+            $grid->filter(function (Grid\Filter $filter) {
+
+                // 更改为 panel 布局
+                $filter->panel();
+
+                $last_month = Carbon::now()->subMonth();
+                $filter->month('month', '報表日期')->default($last_month);
+
+            });
+
+            $filename = '營業數報告 ' . $month;
+            $grid->export()->titles($headings)->csv()->filename($filename);
+
+        });
+
     }
 
 // +-----------------------------------------------------
@@ -158,6 +236,42 @@ class SalesDataReportController extends AdminController
 {$this->batchExport()}
 <br><br>
 HTML;
+    }
+
+    private function generate($month)
+    {
+        $start_date = Carbon::parse($month)->firstOfMonth()->toDateString();
+        $end_date = Carbon::parse($month)->endOfMonth()->toDateString();
+
+        $shop = User::getKingBakeryShops();
+//        $shops = array_column($shop, 'report_name', 'id');
+        $ids = $shop->pluck('id');
+
+        $shop_names = $shop->pluck('report_name', 'id')->toArray();
+
+        //你的数据查询
+        $sales_income_types = SalesIncomeType::all()->pluck('name','type_no');
+
+        $sales_cal_results = SalesCalResult::query()
+            ->with('details')
+            ->whereBetween('date', [$start_date, $end_date])
+            ->whereIn('shop_id', $ids)
+            ->orderBy('shop_id')
+            ->get()
+            ->map(function (SalesCalResult $result) use($sales_income_types, $shop_names){
+
+                $result->shop_name = $shop_names[$result->shop_id] ?? '';
+
+                foreach ($sales_income_types as $type_no => $name){
+                    $result->{$name} = $result->details->where('type_no', $type_no)->first()->income ?? '' ;
+                }
+
+                return $result;
+            });
+
+//        dump($sales_cal_results->toArray());
+
+        return $sales_cal_results;
     }
 
 }
