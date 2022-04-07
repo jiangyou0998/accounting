@@ -58,11 +58,16 @@
                         {{$value->user->report_name}} ${{$value->income_sum}}
                     </span>
                     <span style="width: 180px">
-                        本月合計 ${{$total_income[$value->shop_id] ?? '0.00'}}
+                        本月 ${{$total_income[$value->shop_id] ?? '0.00'}}
                     </span>
                     <br>
                 @endforeach
-                <h5>合計:${{sprintf("%.2f", $sale_summary['other_total'])}}</h5>
+                <h5>
+                    <span>合計:${{sprintf("%.2f", $sale_summary['other_total'])}}</span>
+                </h5>
+{{--                <h5>--}}
+{{--                    <span>本月:${{sprintf("%.2f", $sale_summary['other_month_total'])}}</span>--}}
+{{--                </h5>--}}
                 <br>
             @endisset
 
@@ -73,11 +78,16 @@
                         {{$value->user->report_name}} ${{$value->income_sum}}
                     </span>
                     <span style="width: 180px">
-                        本月合計 ${{$total_income[$value->shop_id] ?? '0.00'}}
+                        本月 ${{$total_income[$value->shop_id] ?? '0.00'}}
                     </span>
                     <br>
                 @endforeach
-                <h5>合計:${{sprintf("%.2f", $sale_summary['bakery_total'])}}</h5>
+                <h5>
+                    <span>合計:${{sprintf("%.2f", $sale_summary['bakery_total'])}}</span>
+                </h5>
+{{--                <h5>--}}
+{{--                    <span>本月:${{sprintf("%.2f", $sale_summary['bakery_month_total'])}}</span>--}}
+{{--                </h5>--}}
                 <br>
             @endisset
             <h5>總計:${{sprintf("%.2f", $sale_summary['total'])}}</h5>
@@ -102,7 +112,7 @@
                             {{$value->user->report_name}} ${{$value->income_sum}}
                         </span>
                         <span style="width: 180px">
-                            本月合計 ${{$total_income[$value->shop_id] ?? '0.00'}}
+                            本月 ${{$total_income[$value->shop_id] ?? '0.00'}}
                         </span>
                         <br>
                         <span>
@@ -110,7 +120,10 @@
                         </span>
                         <br>
                     @endforeach
-                        <h5>合計:${{sprintf("%.2f", $sale_summary['other_total'])}}</h5>
+                        <h5>
+                            <span>合計:${{sprintf("%.2f", $sale_summary['other_total'])}}</span>
+{{--                            <span>總:${{sprintf("%.2f", $sale_summary['other_month_total'])}}</span>--}}
+                        </h5>
                         <br>
                 @endisset
 
@@ -121,7 +134,7 @@
                             {{$value->user->report_name}} ${{$value->income_sum}}
                         </span>
                         <span style="width: 180px">
-                            本月合計 ${{$total_income[$value->shop_id] ?? '0.00'}}
+                            本月 ${{$total_income[$value->shop_id] ?? '0.00'}}
                         </span>
                         <br>
                         <span>
@@ -129,8 +142,12 @@
                         </span>
                         <br>
                     @endforeach
-                        <h5>合計:${{sprintf("%.2f", $sale_summary['bakery_total'])}}</h5>
-                        <br>
+
+                    <h5>
+                        <span>合計:${{sprintf("%.2f", $sale_summary['bakery_total'])}}</span>
+{{--                        <span>總:${{sprintf("%.2f", $sale_summary['bakery_month_total'])}}</span>--}}
+                    </h5>
+                    <br>
                 @endisset
                     <h5>總計:${{sprintf("%.2f", $sale_summary['total'])}}</h5>
             </div>
