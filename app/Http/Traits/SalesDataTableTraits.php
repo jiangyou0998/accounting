@@ -66,7 +66,8 @@ trait SalesDataTableTraits
             if(isset($sales_income_detail['51'])){
                 $paper_money_sum += (float)($sales_income_detail['51']);
             }
-            $paper_money_sum = sprintf("%.2f", $paper_money_sum);
+//            $paper_money_sum = sprintf("%.2f", $paper_money_sum);
+            $paper_money_sum = number_format($paper_money_sum, 2);
 
             //計算硬幣總數
             $coin_sum = 0.00;
@@ -77,7 +78,8 @@ trait SalesDataTableTraits
             if(isset($sales_income_detail['52'])){
                 $coin_sum += (float)($sales_income_detail['52']);
             }
-            $coin_sum = sprintf("%.2f", $coin_sum);
+//            $coin_sum = sprintf("%.2f", $coin_sum);
+            $coin_sum = number_format($coin_sum, 2);
 
             //第一個參數為行 第二個參數為列
             $sales_table_data = [];
@@ -89,9 +91,11 @@ trait SalesDataTableTraits
             $footer_start_line_num = 17;
             $bill_start_line_num = 6;
 
+            //2022-04-07 注意千位加逗號號不能再進行計算
+            $sales_income_detail = array_map(function($n) {return number_format($n, 2);}, $sales_income_detail);
 
             //承上結存列
-            $sales_table_data[1][1] = '<span>$' . ($sales_cal_result->last_balance ?? '') . '</span>';
+            $sales_table_data[1][1] = '<span>$' . (number_format($sales_cal_result->last_balance, 2) ?? '') . '</span>';
             $sales_table_data[5][1] = '<span>支出</span>';
             $sales_table_data[$footer_start_line_num][1] = '<span>總支出：</span>';
             $sales_table_data[$footer_start_line_num + 2][1] = '<span>存入銀行</span>';
@@ -103,9 +107,9 @@ trait SalesDataTableTraits
             $sales_table_data[1][2] = '<span>主機：Z NO.<u>' . ($sales_cal_result->first_pos_no ?? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;') . '</u> $<u>'. ($sales_income_detail['12'] ?? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;') . '</u>(+)</span>';
             $sales_table_data[2][2] = '<span>副機：Z NO.<u>' . ($sales_cal_result->second_pos_no ?? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;') . '</u> $<u>'. ($sales_income_detail['14'] ?? '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;') . '</u>(=)</span>';
             if(isset($sales_cal_result->difference) && $sales_cal_result->difference > 0){
-                $sales_table_data[3][2] = '<span>差額 +' . ($sales_cal_result->difference ?? '') . '</span>';
+                $sales_table_data[3][2] = '<span>差額 +' . (number_format($sales_cal_result->difference, 2) ?? '') . '</span>';
             }else{
-                $sales_table_data[3][2] = '<span>差額 ' . ($sales_cal_result->difference ?? '') . '</span>';
+                $sales_table_data[3][2] = '<span>差額 ' . (number_format($sales_cal_result->difference, 2) ?? '') . '</span>';
             }
 
             $sales_table_data[5][2] = '<span>明細：</span>';
@@ -121,11 +125,11 @@ trait SalesDataTableTraits
 
             //收入列
             //收入
-            $sales_table_data[2][3] = '<span>$' . ($sales_cal_result->income_sum ?? '') . '</span>';
+            $sales_table_data[2][3] = '<span>$' . (number_format($sales_cal_result->income_sum, 2) ?? '') . '</span>';
 
             //支出列
             //支單總計
-            $sales_table_data[$footer_start_line_num][4] = '<span>$' . ($sales_cal_result->bill_paid_sum ?? '') . '</span>';
+            $sales_table_data[$footer_start_line_num][4] = '<span>$' . (number_format($sales_cal_result->bill_paid_sum, 2) ?? '') . '</span>';
             //慧霖取銀
             $sales_table_data[$footer_start_line_num + 1][4] = '<span>$' . ($sales_income_detail['73'] ?? '') . '</span>';
             //存入銀行
@@ -139,14 +143,14 @@ trait SalesDataTableTraits
 
             $bill_outlay_num = $bill_start_line_num;
             foreach ($sales_bills as $bill){
-                $sales_table_data[$bill_outlay_num][4] = '<span>$' . ($bill->outlay) . '</span>';
+                $sales_table_data[$bill_outlay_num][4] = '<span>$' . (number_format($bill->outlay, 2)) . '</span>';
                 $bill_outlay_num ++;
             }
 
             //餘額列
             $sales_table_data[$footer_start_line_num + 6][5] = '<span>$' . ($paper_money_sum) . '</span>';
             $sales_table_data[$footer_start_line_num + 7][5] = '<span>$' . ($coin_sum) . '</span>';
-            $sales_table_data[$footer_start_line_num + 8][5] = '<span>$' . ($sales_cal_result->balance ?? '') . '</span>';
+            $sales_table_data[$footer_start_line_num + 8][5] = '<span>$' . (number_format($sales_cal_result->balance, 2) ?? '') . '</span>';
 
             $all_sales_table_data[$shop_id][$date]['data'] = $sales_table_data;
 

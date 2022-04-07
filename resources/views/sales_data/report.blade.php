@@ -37,7 +37,55 @@
             <input type="date" class="date" value="{{$date}}">
         </div>
 
-{{--        顯示八達通--}}
+{{--        顯示合計數--}}
+        <div class="py-5 text-center">
+            <h2>{{$date_and_week}}</h2>
+            <h2>營業數</h2>
+
+        </div>
+
+        <hr class="mb-4">
+        <div class="copy">
+            <h4>{{$date_and_week}}</h4>
+            @isset($sale_summary['other'])
+                <h5>混合型/飯堂營業數</h5>
+                @foreach($sale_summary['other'] as $value)
+{{--                    {{$value->user->report_name}} ${{$value->income_sum}}--}}
+{{--                    <span class="octopus-total">--}}
+{{--                        本月合計${{$total_income[$value->shop_id] ?? '0.00'}}--}}
+{{--                    </span>--}}
+                    <span style="float:left;width:140px;">
+                        {{$value->user->report_name}} ${{$value->income_sum}}
+                    </span>
+                    <span style="width: 180px">
+                        本月合計 ${{$total_income[$value->shop_id] ?? '0.00'}}
+                    </span>
+                    <br>
+                @endforeach
+                <h5>合計:${{sprintf("%.2f", $sale_summary['other_total'])}}</h5>
+                <br>
+            @endisset
+
+            @isset($sale_summary['bakery'])
+                <h5>餅店營業數</h5>
+                @foreach($sale_summary['bakery'] as $value)
+                    <span style="float:left;width:140px;">
+                        {{$value->user->report_name}} ${{$value->income_sum}}
+                    </span>
+                    <span style="width: 180px">
+                        本月合計 ${{$total_income[$value->shop_id] ?? '0.00'}}
+                    </span>
+                    <br>
+                @endforeach
+                <h5>合計:${{sprintf("%.2f", $sale_summary['bakery_total'])}}</h5>
+                <br>
+            @endisset
+            <h5>總計:${{sprintf("%.2f", $sale_summary['total'])}}</h5>
+        </div>
+
+        <hr class="mb-4">
+
+{{--        顯示八達通+合計數--}}
         <div class="py-5 text-center">
             <h2>{{$date_and_week}}</h2>
             <h2>營業數</h2>
@@ -50,8 +98,14 @@
                 @isset($sale_summary['other'])
                     <h5>混合型/飯堂營業數</h5>
                     @foreach($sale_summary['other'] as $value)
-                        {{$value->user->report_name}} ${{$value->income_sum}}
-                        <span class="octopus-total">
+                        <span style="float:left;width:140px;">
+                            {{$value->user->report_name}} ${{$value->income_sum}}
+                        </span>
+                        <span style="width: 180px">
+                            本月合計 ${{$total_income[$value->shop_id] ?? '0.00'}}
+                        </span>
+                        <br>
+                        <span>
                             八達通${{$value->details->where('type_no', 31)->first()->income ?? '0.00'}}
                         </span>
                         <br>
@@ -63,8 +117,14 @@
                 @isset($sale_summary['bakery'])
                     <h5>餅店營業數</h5>
                     @foreach($sale_summary['bakery'] as $value)
-                        {{$value->user->report_name}} ${{$value->income_sum}}
-                        <span class="octopus-total">
+                        <span style="float:left;width:140px;">
+                            {{$value->user->report_name}} ${{$value->income_sum}}
+                        </span>
+                        <span style="width: 180px">
+                            本月合計 ${{$total_income[$value->shop_id] ?? '0.00'}}
+                        </span>
+                        <br>
+                        <span>
                             八達通${{$value->details->where('type_no', 31)->first()->income ?? '0.00'}}
                         </span>
                         <br>
@@ -90,13 +150,24 @@
             @isset($sale_summary['other'])
                 <h5>混合型/飯堂營業數</h5>
                 @foreach($sale_summary['other'] as $value)
-                    <span class="w-50">
-                        {{$value->user->report_name}} ${{$value->income_sum}}
-                    </span>
+
+                    @if($loop->iteration % 2 === 1)
+                        <span style="float:left;width:140px;">
+                            {{$value->user->report_name}} ${{$value->income_sum}}
+                        </span>
+                    @endif
 
                     @if($loop->iteration % 2 === 0)
+                        <span style="width:180px;">
+                            {{$value->user->report_name}} ${{$value->income_sum}}
+                        </span>
                         <br>
                     @endif
+
+                    @if($loop->iteration % 2 === 1 && $loop->last)
+                        <br>
+                    @endif
+
                 @endforeach
                 <h5>合計:${{sprintf("%.2f", $sale_summary['other_total'])}}</h5>
                 <br>
@@ -105,10 +176,20 @@
             @isset($sale_summary['bakery'])
                 <h5>餅店營業數</h5>
                 @foreach($sale_summary['bakery'] as $value)
-                    <span class="w-50">
-                        {{$value->user->report_name}} ${{$value->income_sum}}
-                    </span>
+                    @if($loop->iteration % 2 === 1)
+                        <span style="float:left;width:140px;">
+                            {{$value->user->report_name}} ${{$value->income_sum}}
+                        </span>
+                    @endif
+
                     @if($loop->iteration % 2 === 0)
+                        <span style="width:180px;">
+                            {{$value->user->report_name}} ${{$value->income_sum}}
+                        </span>
+                        <br>
+                    @endif
+
+                    @if($loop->iteration % 2 === 1 && $loop->last)
                         <br>
                     @endif
                 @endforeach

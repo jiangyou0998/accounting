@@ -7,6 +7,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class SalesCalResult extends Model
 {
@@ -101,6 +102,27 @@ class SalesCalResult extends Model
             ->max('deposit_no');
 
         return $max_deposit_no;
+    }
+
+    //獲取key為shop_id, value為總收入的數組
+    public static function getShopIdAndTotalIncome($date, $type)
+    {
+        switch ($type){
+            case 'month':
+                $start_date = Carbon::parse($date)->startOfMonth()->toDateString();
+                break;
+            case 'week':
+                $start_date = Carbon::parse($date)->startOfWeek()->toDateString();
+        }
+
+        $total_income = SalesCalResult::select(['shop_id', DB::raw("SUM(`income_sum`) as sum")])
+            ->whereBetween('date', [$start_date, $date])
+            ->groupBy('shop_id')
+            ->get()
+            ->pluck('sum', 'shop_id')
+            ->toArray();
+
+        return $total_income;
     }
 
 

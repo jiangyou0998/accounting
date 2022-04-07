@@ -34,10 +34,11 @@ class SalesDataController extends Controller
         return view('sales_data.index', compact('sales_cal_result', 'last_balance', 'last_safe_balance', 'sales_income_detail', 'bank', 'bills'));
     }
 
+    //手機顯示營業數頁面
     public function report(Request $request)
     {
         $date = $request->date ?? Carbon::now()->toDateString();
-        $date_and_week = Carbon::parse($date)->isoFormat('YYYY-MM-DD(dd)');
+        $date_and_week = Carbon::parse($date)->isoFormat('YYYY/MM/DD(dd)');
         $front_groups = FrontGroupHasUser::query()
             ->where('front_group_id', '!=' , 4)
             ->get()->mapToGroups(function ($item, $key) {
@@ -58,7 +59,7 @@ class SalesDataController extends Controller
                 return ['other' => $item];
             }
         });
-//        dump($front_groups['other']);
+//        dump($front_groups);
 
         $sale_summary['other_total'] = 0;
         $sale_summary['bakery_total'] = 0;
@@ -77,8 +78,11 @@ class SalesDataController extends Controller
         //計算所有總數
         $sale_summary['total'] = $sale_summary['other_total'] + $sale_summary['bakery_total'];
 
-//        dump($sale_summary);
-        return view('sales_data.report', compact('sale_summary', 'date', 'date_and_week'));
+        $total_income = SalesCalResult::getShopIdAndTotalIncome($date, 'month');
+
+//        dump($total_income);
+//        dump($sale_summary->toArray());
+        return view('sales_data.report', compact('sale_summary', 'total_income', 'date', 'date_and_week'));
     }
 
     //根據權限跳轉頁面

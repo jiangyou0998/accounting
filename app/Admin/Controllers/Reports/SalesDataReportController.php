@@ -46,7 +46,7 @@ class SalesDataReportController extends AdminController
             $data = $this->generate($month);
 
             $grid->header(function ($collection) use($month){
-                
+
                 // 标题和内容
                 $cardInfo = <<<HTML
         <h1>日期:<span style="color: red">{$month}</span></h1>
@@ -143,6 +143,9 @@ HTML;
             ->whereIn('shop_id', $ids)
             ->get()
             ->map(function (SalesCalResult $result) use($sales_income_types){
+
+                //2022-04-07 修改日期顯示格式
+                $result->date = Carbon::parse($result->date)->isoFormat('YYYY/MM/DD') ?? '';
 
                 foreach ($sales_income_types as $type_no => $name){
                     $result->{$name} = $result->details->where('type_no', $type_no)->first()->income ?? '' ;
@@ -273,6 +276,8 @@ HTML;
             ->map(function (SalesCalResult $result) use($sales_income_types, $shop_names){
 
                 $result->shop_name = $shop_names[$result->shop_id] ?? '';
+                //2022-04-07 修改日期顯示格式
+                $result->date = Carbon::parse($result->date)->isoFormat('YYYY/MM/DD') ?? '';
 
                 foreach ($sales_income_types as $type_no => $name){
                     $result->{$name} = $result->details->where('type_no', $type_no)->first()->income ?? '' ;
