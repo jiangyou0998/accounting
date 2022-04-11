@@ -4,14 +4,11 @@ namespace App\Admin\Controllers\Reports;
 
 
 use App\Admin\Forms\SalesDataExport;
-use App\Admin\Forms\SalesDataFileExport;
 use App\Admin\Forms\SalesDataTableShow;
-use App\Admin\Renderable\ShopTable;
 use App\Common\Tools\excel\excelclass\ExcelExport;
 use App\Http\Traits\SalesDataTableTraits;
 use App\Models\SalesCalResult;
 use App\Models\SalesIncomeType;
-use App\Models\ShopGroup;
 use App\User;
 use Carbon\Carbon;
 use Dcat\Admin\Controllers\AdminController;
@@ -116,7 +113,7 @@ HTML;
             });
 
             $filename = '營業數報告 ' . $month;
-            $grid->export()->titles($headings)->xlsx()->filename($filename);
+            $grid->export()->titles($headings)->csv()->filename($filename);
 
         });
 
@@ -189,7 +186,7 @@ HTML;
         //生成所有Excel文件
         foreach ($sales_cal_results as $shop_id => $result){
             // 保存到当前服务器
-            $filename = ($shop_pocodes[$shop_id] ?? 'NOCODE').'.xlsx';
+            $filename = ($shop_pocodes[$shop_id] ?? 'NOCODE').'.csv';
             $file_path = $folder.'/'.$filename;
             Excel::export($result)->store($file_path);
             // 使用 filesystem
