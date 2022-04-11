@@ -20,10 +20,34 @@
         .container {
             margin-right: auto;
             margin-left: auto;
-            padding-right: 15px;
-            padding-left: 15px;
+            padding-right: 3px;
+            padding-left: 3px;
             width: 100%;
             max-width: 2000px;      // 隨螢幕尺寸而變，當螢幕尺寸 ≥ 1200px 時是 1140px。
+        }
+
+        .left{
+            float:left;
+            width:145px;
+            font-size: small;
+        }
+
+        .right{
+            width: 180px;
+            font-size: small;
+        }
+
+        .total-left{
+            float:left;
+            width:145px;
+        }
+
+        .total-right{
+            width: 180px;
+        }
+
+        .group-div{
+            padding-top: 5px;
         }
 
     </style>
@@ -54,43 +78,44 @@
 {{--                    <span class="octopus-total">--}}
 {{--                        本月合計${{$total_income[$value->shop_id] ?? '0.00'}}--}}
 {{--                    </span>--}}
-                    <span style="float:left;width:140px;">
-                        {{$value->user->report_name}} ${{$value->income_sum}}
+                    <span class="left">
+                        {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}
                     </span>
-                    <span style="width: 180px">
-                        本月 ${{$total_income[$value->shop_id] ?? '0.00'}}
+                    <span class="right">
+                        本月 ${{number_format($total_income[$value->shop_id], 2) ?? '0.00'}}
                     </span>
                     <br>
                 @endforeach
-                <h5>
-                    <span>合計:${{sprintf("%.2f", $sale_summary['other_total'])}}</span>
-                </h5>
-{{--                <h5>--}}
-{{--                    <span>本月:${{sprintf("%.2f", $sale_summary['other_month_total'])}}</span>--}}
-{{--                </h5>--}}
-                <br>
+                <h6>
+                    <span class="total-left">合計:${{number_format($sale_summary['other_total'], 2) ?? '0.00'}}</span>
+                    <span class="total-right">本月:${{number_format($sale_summary['other_month_total'], 2) ?? '0.00'}}</span>
+                </h6>
+
             @endisset
 
             @isset($sale_summary['bakery'])
-                <h5>餅店營業數</h5>
-                @foreach($sale_summary['bakery'] as $value)
-                    <span style="float:left;width:140px;">
-                        {{$value->user->report_name}} ${{$value->income_sum}}
-                    </span>
-                    <span style="width: 180px">
-                        本月 ${{$total_income[$value->shop_id] ?? '0.00'}}
-                    </span>
-                    <br>
-                @endforeach
-                <h5>
-                    <span>合計:${{sprintf("%.2f", $sale_summary['bakery_total'])}}</span>
-                </h5>
-{{--                <h5>--}}
-{{--                    <span>本月:${{sprintf("%.2f", $sale_summary['bakery_month_total'])}}</span>--}}
-{{--                </h5>--}}
-                <br>
+                <div class="group-div">
+                    <h5>餅店營業數</h5>
+                    @foreach($sale_summary['bakery'] as $value)
+                        <span class="left">
+                        {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}
+                        </span>
+                        <span class="right">
+                        本月 ${{number_format($total_income[$value->shop_id], 2) ?? '0.00'}}
+                        </span>
+                        <br>
+                    @endforeach
+                    <h6>
+                        <span class="total-left">合計:${{number_format($sale_summary['bakery_total'], 2) ?? '0.00'}}</span>
+                        <span class="total-right">本月:${{number_format($sale_summary['bakery_month_total'], 2) ?? '0.00'}}</span>
+                    </h6>
+                </div>
+
             @endisset
-            <h5>總計:${{sprintf("%.2f", $sale_summary['total'])}}</h5>
+            <div class="group-div">
+                <h5><span>總計:${{number_format($sale_summary['total'], 2) ?? '0.00'}}</span></h5>
+                <h5>本月總計:${{number_format($sale_summary['month_total'], 2) ?? '0.00'}}</h5>
+            </div>
         </div>
 
         <hr class="mb-4">
@@ -149,7 +174,10 @@
                     </h5>
                     <br>
                 @endisset
-                    <h5>總計:${{sprintf("%.2f", $sale_summary['total'])}}</h5>
+                <div class="group-div">
+                    <h5><span>總計:${{number_format($sale_summary['total'], 2) ?? '0.00'}}</span></h5>
+                    <h5>本月總計:${{number_format($sale_summary['month_total'], 2) ?? '0.00'}}</h5>
+                </div>
             </div>
 
         <hr class="mb-4">
@@ -170,13 +198,13 @@
 
                     @if($loop->iteration % 2 === 1)
                         <span style="float:left;width:140px;">
-                            {{$value->user->report_name}} ${{$value->income_sum}}
+                            {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}
                         </span>
                     @endif
 
                     @if($loop->iteration % 2 === 0)
                         <span style="width:180px;">
-                            {{$value->user->report_name}} ${{$value->income_sum}}
+                            {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}
                         </span>
                         <br>
                     @endif
@@ -195,13 +223,13 @@
                 @foreach($sale_summary['bakery'] as $value)
                     @if($loop->iteration % 2 === 1)
                         <span style="float:left;width:140px;">
-                            {{$value->user->report_name}} ${{$value->income_sum}}
+                            {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}
                         </span>
                     @endif
 
                     @if($loop->iteration % 2 === 0)
                         <span style="width:180px;">
-                            {{$value->user->report_name}} ${{$value->income_sum}}
+                            {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}
                         </span>
                         <br>
                     @endif
@@ -213,7 +241,10 @@
                 <h5>合計:${{sprintf("%.2f", $sale_summary['bakery_total'])}}</h5>
                 <br>
             @endisset
-            <h5>總計:${{sprintf("%.2f", $sale_summary['total'])}}</h5>
+            <div class="group-div">
+                <h5><span>總計:${{number_format($sale_summary['total'], 2) ?? '0.00'}}</span></h5>
+                <h5>本月總計:${{number_format($sale_summary['month_total'], 2) ?? '0.00'}}</h5>
+            </div>
         </div>
 
         <hr class="mb-4">
