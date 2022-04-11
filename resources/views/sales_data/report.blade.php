@@ -74,10 +74,6 @@
             @isset($sale_summary['other'])
                 <h5>混合型/飯堂營業數</h5>
                 @foreach($sale_summary['other'] as $value)
-{{--                    {{$value->user->report_name}} ${{$value->income_sum}}--}}
-{{--                    <span class="octopus-total">--}}
-{{--                        本月合計${{$total_income[$value->shop_id] ?? '0.00'}}--}}
-{{--                    </span>--}}
                     <span class="left">
                         {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}
                     </span>
@@ -134,19 +130,19 @@
                     <h5>混合型/飯堂營業數</h5>
                     @foreach($sale_summary['other'] as $value)
                         <span style="float:left;width:140px;">
-                            {{$value->user->report_name}} ${{$value->income_sum}}
+                            {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}
                         </span>
                         <span style="width: 180px">
-                            本月 ${{$total_income[$value->shop_id] ?? '0.00'}}
+                            本月 ${{number_format($total_income[$value->shop_id], 2) ?? '0.00'}}
                         </span>
                         <br>
                         <span>
-                            八達通${{$value->details->where('type_no', 31)->first()->income ?? '0.00'}}
+                            八達通${{number_format($value->details->where('type_no', 31)->first()->income, 2) ?? '0.00'}}
                         </span>
                         <br>
                     @endforeach
                         <h5>
-                            <span>合計:${{sprintf("%.2f", $sale_summary['other_total'])}}</span>
+                            <span>合計:${{number_format($sale_summary['other_total'], 2) ?? '0.00'}}</span>
 {{--                            <span>總:${{sprintf("%.2f", $sale_summary['other_month_total'])}}</span>--}}
                         </h5>
                         <br>
@@ -156,20 +152,20 @@
                     <h5>餅店營業數</h5>
                     @foreach($sale_summary['bakery'] as $value)
                         <span style="float:left;width:140px;">
-                            {{$value->user->report_name}} ${{$value->income_sum}}
+                            {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}
                         </span>
                         <span style="width: 180px">
-                            本月 ${{$total_income[$value->shop_id] ?? '0.00'}}
+                            本月 ${{number_format($total_income[$value->shop_id], 2) ?? '0.00'}}
                         </span>
                         <br>
                         <span>
-                            八達通${{$value->details->where('type_no', 31)->first()->income ?? '0.00'}}
+                            八達通${{number_format($value->details->where('type_no', 31)->first()->income, 2) ?? '0.00'}}
                         </span>
                         <br>
                     @endforeach
 
                     <h5>
-                        <span>合計:${{sprintf("%.2f", $sale_summary['bakery_total'])}}</span>
+                        <span>合計:${{number_format($sale_summary['bakery_total'], 2) ?? '0.00'}}</span>
 {{--                        <span>總:${{sprintf("%.2f", $sale_summary['bakery_month_total'])}}</span>--}}
                     </h5>
                     <br>
@@ -214,7 +210,9 @@
                     @endif
 
                 @endforeach
-                <h5>合計:${{sprintf("%.2f", $sale_summary['other_total'])}}</h5>
+                <h5>
+                    <span>合計:${{number_format($sale_summary['other_total'], 2) ?? '0.00'}}</span>
+                </h5>
                 <br>
             @endisset
 
@@ -238,7 +236,9 @@
                         <br>
                     @endif
                 @endforeach
-                <h5>合計:${{sprintf("%.2f", $sale_summary['bakery_total'])}}</h5>
+                <h5>
+                    <span>合計:${{number_format($sale_summary['bakery_total'], 2) ?? '0.00'}}</span>
+                </h5>
                 <br>
             @endisset
             <div class="group-div">
