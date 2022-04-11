@@ -136,9 +136,9 @@
                             本月 ${{number_format($total_income[$value->shop_id], 2) ?? '0.00'}}
                         </span>
                         <br>
-{{--                        <span>--}}
-{{--                            八達通${{number_format($value->details->where('type_no', 31)->first()->income, 2) ?? '0.00'}}--}}
-{{--                        </span>--}}
+                        <span>
+                            八達通${{number_format(($value->details->where('type_no', 31)->first()->income ?? 0), 2)}}
+                        </span>
                         <br>
                     @endforeach
                         <h5>
@@ -158,9 +158,9 @@
                             本月 ${{number_format($total_income[$value->shop_id], 2) ?? '0.00'}}
                         </span>
                         <br>
-{{--                        <span>--}}
-{{--                            八達通${{number_format($value->details->where('type_no', 31)->first()->income, 2) ?? '0.00'}}--}}
-{{--                        </span>--}}
+                        <span>
+                            八達通${{number_format(($value->details->where('type_no', 31)->first()->income ?? 0), 2)}}
+                        </span>
                         <br>
                     @endforeach
 
