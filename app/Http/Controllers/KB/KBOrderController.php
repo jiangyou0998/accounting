@@ -37,9 +37,10 @@ class KBOrderController extends Controller
 
         $dayArray = $this->getDayArray();
 
-        $shops = User::getRyoyuBakeryShops();
+//        $shops = User::getRyoyuBakeryShops();
 
-        return view('kb.order.select_day', compact('dayArray', 'isSun','shops'));
+//        return view('kb.order.select_day', compact('dayArray', 'isSun','shops'));
+        return view('kb.order.select_day', compact('dayArray', 'isSun'));
     }
 
 //    public function select_old_order()
@@ -169,8 +170,14 @@ class KBOrderController extends Controller
         //合計數據
         $totals = KBWorkshopCartItem::getDeliTotal($deli_date,$shop);
 
+        $dept_names = User::getKBIdAndDeptName();
+        foreach ($totals as $total){
+            $total->dept_name = $dept_names[$total->user_id] ?? '';
+        }
+
 //        dump($details->toArray());
 //        dump($totals->toArray());
+
 
         //頁面顯示數據
         $infos = new Collection();

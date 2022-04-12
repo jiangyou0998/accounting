@@ -83,6 +83,9 @@ class KBWorkshopCartItem extends Model
     {
         $items = new KBWorkshopCartItem();
 
+        //蛋記ID
+        $kb_ids = User::getKBIds($shop);
+
         //設置select
         $items = $items
             ->addSelect('workshop_products.product_name as itemName')
@@ -94,15 +97,16 @@ class KBWorkshopCartItem extends Model
             ->addSelect(DB::raw('MAX(workshop_cart_items.order_price) as default_price'))
             ->addSelect('workshop_cats.id as cat_id')
             ->addSelect('workshop_cats.cat_name')
-            ->addSelect('workshop_products.id as itemID');
+            ->addSelect('workshop_products.id as itemID')
+            ->addSelect('workshop_cart_items.user_id');
 
-        foreach (['RB'] as $dept) {
+        foreach (['CU'] as $dept) {
             $sql = "ROUND(sum(case when workshop_cart_items.dept = '$dept' then workshop_cart_items.qty else 0 end),2) as '".$dept."_total'";
             $items = $items
                 ->addSelect(DB::raw($sql));
         }
 
-        foreach (['RB'] as $dept) {
+        foreach (['CU'] as $dept) {
             $sql = "ROUND(sum(case when workshop_cart_items.dept = '$dept' then (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty)) else 0 end),2) as '".$dept."_total_received'";
             $items = $items
                 ->addSelect(DB::raw($sql));
@@ -120,13 +124,13 @@ class KBWorkshopCartItem extends Model
 
         //設置查詢條件
         $items = $items
-            ->where('workshop_cart_items.user_id','=',$shop)
+            ->whereIn('workshop_cart_items.user_id', $kb_ids)
             ->whereNotIn('workshop_cart_items.status',[4])
             ->where('workshop_cart_items.qty','>=',0)
-            ->where('workshop_cart_items.deli_date','=',$deli_date);
+            ->where('workshop_cart_items.deli_date','=', $deli_date);
 
         $items = $items
-            ->groupBy('workshop_products.id')
+            ->groupBy('workshop_products.id', 'workshop_cart_items.user_id')
             ->orderBy('workshop_products.product_no')->get();
 
         return $items;
@@ -137,10 +141,14 @@ class KBWorkshopCartItem extends Model
     {
         $items = new KBWorkshopCartItem();
 
+        //蛋記ID
+        $kb_ids = User::getKBIds($shop);
+
         //設置select
         $items = $items
-            ->select('workshop_cats.id as cat_id')
-            ->addSelect('workshop_cats.cat_name')
+//            ->select('workshop_cats.id as cat_id')
+            ->select('workshop_cart_items.user_id')
+//            ->addSelect('workshop_cats.cat_name')
             //計算總數量
             ->addSelect(DB::raw('SUM(if(workshop_cart_items.qty_received is not null , workshop_cart_items.qty_received, workshop_cart_items.qty)) as qty_total'))
             //計算總價
@@ -148,21 +156,21 @@ class KBWorkshopCartItem extends Model
             ->addSelect(DB::raw('SUM(if(workshop_cart_items.qty_received is not null , workshop_cart_items.qty_received, workshop_cart_items.qty) * workshop_cart_items.order_price) as total'));
 
         //設置關聯表
-        $items = $items
-            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
-            ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
-            ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
-            ->leftJoin('workshop_units', 'workshop_products.unit_id', '=', 'workshop_units.id');
+//        $items = $items
+//            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
+//            ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
+//            ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
+//            ->leftJoin('workshop_units', 'workshop_products.unit_id', '=', 'workshop_units.id');
 
         //設置查詢條件
         $items = $items
-            ->where('workshop_cart_items.user_id','=',$shop)
+            ->whereIn('workshop_cart_items.user_id', $kb_ids)
             ->whereNotIn('workshop_cart_items.status',[4])
             ->where('workshop_cart_items.qty','>=',0)
             ->where('workshop_cart_items.deli_date','=',$deli_date);
 
-        $items = $items->groupBy('workshop_cats.id')
-            ->orderBy('workshop_cats.sort')
+        $items = $items->groupBy('workshop_cart_items.user_id')
+//            ->orderBy('workshop_cats.sort')
             ->get();
 
         return $items;

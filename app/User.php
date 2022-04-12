@@ -104,30 +104,6 @@ class User extends Authenticatable
         return Cache::has('user-is-online-' . $this->id);
     }
 
-    public static function getKingBakeryShops(){
-
-        $users = new User();
-        $shops = $users
-            ->where('name','like','kb%')
-            ->orWhere('name','like','ces%')
-            ->orWhere('name','like','b&b%')
-            ->orderBy('name')
-            ->get(['id','report_name']);
-
-        return $shops;
-    }
-
-    public static function getRyoyuBakeryShops(){
-
-        $users = new User();
-        $shops = $users
-            ->where('name','like','rb%')
-            ->orderBy('name')
-            ->get(['id','report_name']);
-
-        return $shops;
-    }
-
     public static function getTestUserIDs(){
 
         $testUserIDs = [1,2,3,4,77,82];
@@ -191,6 +167,51 @@ class User extends Authenticatable
 
         return $shopid;
 
+    }
+
+    //獲取某用戶在蛋撻王內聯網對應的ID
+    public static function getKBIds($shop)
+    {
+        $kb_ids = [];
+        $user = self::query()->find($shop);
+
+        if(isset($user->kb_bakery_id)){
+            $kb_ids[] = $user->kb_bakery_id;
+        }
+
+        if(isset($user->kb_kitchen_id)){
+            $kb_ids[] = $user->kb_kitchen_id   ;
+        }
+
+        if(isset($user->kb_waterbar_id)){
+            $kb_ids[] = $user->kb_waterbar_id;
+        }
+
+        return $kb_ids;
+    }
+
+    //獲取蛋撻王內聯網ID及部門名數組
+    public static function getKBIdAndDeptName($user_id = null){
+        if(is_null($user_id)){
+            $user = Auth::user();
+        }else{
+            $user = self::find($user_id);
+        }
+
+        $result = [];
+        if(isset($user->kb_bakery_id)){
+            $result[$user->kb_bakery_id] = '包部';
+        }
+
+        if(isset($user->kb_kitchen_id)){
+            $result[$user->kb_kitchen_id] = '廚房';
+        }
+
+        if(isset($user->kb_waterbar_id)){
+            $result[$user->kb_waterbar_id] = '水吧';
+        }
+
+        return $result;
     }
 
 }
