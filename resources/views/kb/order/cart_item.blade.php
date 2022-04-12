@@ -5,12 +5,12 @@
     <!-- <form action="order_z_dept_2.php?action=confirm&dept=烘焙" method="post" id="cart" name="cart" target="_top">-->
     <div align="right">
         <strong>
-            <span style="color: #FF0000; font-size: 172%; ">分店：{{$orderInfos->shop_name}} </span>
+            <span style="color: #FF0000; font-size: 172%; ">部門：{{$orderInfos->shop_name}} </span>
         </strong>
     </div>
     <div align="right">
         <strong>
-            <font color="#FF0000" size="+3">部門：{{$orderInfos->dept_name}} <br>送貨日期：{{$orderInfos->deli_date}}({{\Carbon\Carbon::parse($orderInfos->deli_date)->isoFormat('dd')}}) </font>
+            <font color="#FF0000" size="+3">{{$orderInfos->dept_name}} <br>送貨日期：{{$orderInfos->deli_date}}({{\Carbon\Carbon::parse($orderInfos->deli_date)->isoFormat('dd')}}) </font>
         </strong>
     </div>
     <div style="text-align: center">
@@ -54,12 +54,12 @@
                 <a class="btn btn-success btn-lg" href="{{route('kb.select_day')}}" role="button">返回</a>
                 <div align="right">
                     <strong>
-                        <span style="color: #FF0000; font-size: 70%; ">分店：{{$orderInfos->shop_name}}</span>
+                        <span style="color: #FF0000; font-size: 70%; ">部門：{{$orderInfos->shop_name}}</span>
                     </strong>
                 </div>
 
                 <div align="right">
-                    <strong><span style="color: #FF0000; font-size: 70%; ">部門：{{$orderInfos->dept_name}} <br>送貨日期：{{$orderInfos->deli_date}}({{\Carbon\Carbon::parse($orderInfos->deli_date)->isoFormat('dd')}})</span>
+                    <strong><span style="color: #FF0000; font-size: 70%; ">{{$orderInfos->dept_name}} <br>送貨日期：{{$orderInfos->deli_date}}({{\Carbon\Carbon::parse($orderInfos->deli_date)->isoFormat('dd')}})</span>
                     </strong>
                 </div>
             </td>
