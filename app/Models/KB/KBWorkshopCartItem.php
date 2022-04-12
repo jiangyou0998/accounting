@@ -252,41 +252,34 @@ class KBWorkshopCartItem extends Model
 
     }
 
-    public static function getRegularOrderCount($shopids , $start_date ,$end_date ,$dept)
+    public static function getRegularOrderCount($shopids, $start_date, $end_date, $dept)
     {
         $items = new KBWorkshopCartItem();
+
+        //蛋記ID
+        $kb_ids = User::getKBIds($shopids);
 
         //設置select
         $items = $items
             ->addSelect('workshop_cart_items.deli_date')
             ->addSelect('workshop_cart_items.user_id')
-            ->addSelect(DB::raw('count(*) as count'))
-        ;
-
-        //設置關聯表
-//        $items = $items
-//            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
-//            ->leftJoin('workshop_groups', 'workshop_products.group_id', '=', 'workshop_groups.id')
-//            ->leftJoin('workshop_cats', 'workshop_groups.cat_id', '=', 'workshop_cats.id')
-//            ->leftJoin('workshop_units', 'workshop_products.unit_id', '=', 'workshop_units.id');
+            ->addSelect(DB::raw('count(*) as count'));
 
         //設置查詢條件
         $items = $items
-            ->whereIn('workshop_cart_items.user_id',$shopids)
-            ->whereNotIn('workshop_cart_items.status',[4])
-            ->where('workshop_cart_items.qty','>=',0)
-            ->where('workshop_cart_items.deli_date','>=',$start_date)
-            ->where('workshop_cart_items.deli_date','<=',$end_date)
-        ;
+            ->whereIn('workshop_cart_items.user_id', $kb_ids)
+            ->whereNotIn('workshop_cart_items.status', [4])
+            ->where('workshop_cart_items.qty', '>=', 0)
+            ->where('workshop_cart_items.deli_date', '>=', $start_date)
+            ->where('workshop_cart_items.deli_date', '<=', $end_date);
 
-        if($dept){
+        if ($dept) {
             $items = $items->where('workshop_cart_items.dept', $dept);
         }
 
         $items = $items
             ->groupBy('workshop_cart_items.deli_date')
-            ->groupBy('workshop_cart_items.user_id')
-        ;
+            ->groupBy('workshop_cart_items.user_id');
 
         $items = $items
 //            ->orderBy('workshop_products.product_no')
