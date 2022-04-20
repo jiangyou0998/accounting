@@ -40,6 +40,7 @@ class SalesDataController extends Controller
         $date = $request->date ?? Carbon::now()->toDateString();
         $date_and_week = Carbon::parse($date)->isoFormat('YYYY/MM/DD(dd)');
         $front_groups = FrontGroupHasUser::query()
+            //不要後勤分組
             ->where('front_group_id', '!=' , 4)
             ->get()->mapToGroups(function ($item, $key) {
                 //3 === $item['front_group_id'] 為餅店分組
@@ -63,10 +64,13 @@ class SalesDataController extends Controller
 
         $sale_summary['other_total'] = 0;
         $sale_summary['other_month_total'] = 0;
+        $sale_summary['other_last_month_total'] = 0;
         $sale_summary['bakery_total'] = 0;
         $sale_summary['bakery_month_total'] = 0;
+        $sale_summary['bakery_last_month_total'] = 0;
         $sale_summary['total'] = 0;
         $sale_summary['month_total'] = 0;
+        $sale_summary['last_month_total'] = 0;
 
         //計算 混合型/飯堂 總數
         if(isset($sale_summary['other'])){
@@ -82,6 +86,7 @@ class SalesDataController extends Controller
         $sale_summary['total'] = $sale_summary['other_total'] + $sale_summary['bakery_total'];
 
         $total_income = SalesCalResult::getShopIdAndTotalIncome($date, 'month');
+
         foreach ($total_income as $shop_id => $total){
             if(in_array($shop_id, $front_groups['other'])){
                 $sale_summary['other_month_total'] += $total;
@@ -91,9 +96,21 @@ class SalesDataController extends Controller
             $sale_summary['month_total'] += $total;
         }
 
+        //2022-04-19 新增獲取上個月合計
+        $last_month_total_income = SalesCalResult::getShopIdAndLastMonthTotalAtSameDay($date);
+
+        foreach ($last_month_total_income as $shop_id => $total){
+            if(in_array($shop_id, $front_groups['other'])){
+                $sale_summary['other_last_month_total'] += $total;
+            }else if(in_array($shop_id, $front_groups['bakery'])){
+                $sale_summary['bakery_last_month_total'] += $total;
+            }
+            $sale_summary['last_month_total'] += $total;
+        }
+
 //        dump($total_income);
 //        dump($sale_summary->toArray());
-        return view('sales_data.report', compact('sale_summary', 'total_income', 'date', 'date_and_week'));
+        return view('sales_data.report', compact('sale_summary', 'total_income', 'last_month_total_income', 'date', 'date_and_week'));
     }
 
     //根據權限跳轉頁面

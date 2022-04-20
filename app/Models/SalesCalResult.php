@@ -125,5 +125,31 @@ class SalesCalResult extends Model
         return $total_income;
     }
 
+    //2022-04-19 獲取上個月同一個總計
+    public static function getShopIdAndLastMonthTotalAtSameDay($date)
+    {
+        $same_day_of_last_month_carbon = Carbon::parse($date)->subMonthNoOverflow();
+
+        $same_day_of_last_month = $same_day_of_last_month_carbon->toDateString();
+
+        //獲取上個月第一天
+        $first_day_of_last_month = $same_day_of_last_month_carbon->firstOfMonth()->toDateString();
+
+//        dump($first_day_of_last_month);
+//        dump($same_day_of_last_month);
+
+        $last_month_total = self::query()
+            ->select(['shop_id', DB::raw("SUM(`income_sum`) as sum")])
+            ->whereBetween('date', [$first_day_of_last_month, $same_day_of_last_month])
+            ->groupBy('shop_id')
+            ->get()
+            ->pluck('sum', 'shop_id')
+            ->toArray();
+
+//        dump($last_month_total);
+
+        return $last_month_total;
+    }
+
 
 }
