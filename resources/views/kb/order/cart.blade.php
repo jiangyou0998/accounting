@@ -24,7 +24,7 @@
 {{--          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">--}}
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <title>下單-Ryoyu Bakery</title>
+    <title>下單-2Cafe</title>
 </head>
 
 <style type="text/css">
