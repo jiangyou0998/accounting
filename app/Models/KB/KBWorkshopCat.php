@@ -71,7 +71,7 @@ class KBWorkshopCat extends Model
     }
 
     //获取所有大類(生效)
-    public static function getCatsNotExpired($date , $dept)
+    public static function getCatsNotExpired($date , $type)
     {
         $cats = new KBWorkshopCat();
         $cats = $cats
@@ -85,6 +85,16 @@ class KBWorkshopCat extends Model
                 $query->whereNull('start_date')
                     ->whereNull('end_date');
             });
+
+        //2022-04-25 bakery-包部,kitchen-廚房,waterbar-水吧
+        //不顯示跟部門無關分類
+        if($type == 'bakery'){
+            $cats = $cats->whereNotIn('cat_name',['廚務部']);
+        }else if($type == 'kitchen'){
+            $cats = $cats->whereNotIn('cat_name',['麵包部', '西餅部']);
+        }else if($type == 'waterbar'){
+            $cats = $cats->whereNotIn('cat_name',['麵包部', '西餅部']);
+        }
 
         //2022-03-25 只查詢有商品價格的大類
         $cats = $cats->whereHas('products', function (Builder $query) {

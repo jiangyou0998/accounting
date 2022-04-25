@@ -201,7 +201,7 @@ class KBWorkshopCartItemController extends Controller
 //        }
 
         $items = KBWorkshopCartItem::getCartItems($shopid, $dept, $deli_date);
-        $cats = KBWorkshopCat::getCatsNotExpired($deli_date , $dept);
+        $cats = KBWorkshopCat::getCatsNotExpired($deli_date , $type);
 //        dump($deliDate);
         $sampleItems = new Collection();
         if (count($items) == 0) {
