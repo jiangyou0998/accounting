@@ -29,13 +29,13 @@
         .left{
             /*float:left;*/
             display:inline-block;
-            width:100px;
+            width:105px;
             font-size: small;
         }
 
         .right{
             display:inline-block;
-            width:90px;
+            /*width:100px;*/
             font-size: small;
         }
 
@@ -83,17 +83,17 @@
                         {{$value->user->report_name}} ${{number_format($value->income_sum, 0)}}
                     </span>
                     <span class="right">
-                        累積 ${{number_format(($total_income[$value->shop_id] ?? 0), 0)}}
+                        本月累積 ${{number_format(($total_income[$value->shop_id] ?? 0), 0)}}
                     </span>
-                    <span class="right">
-                        上月 ${{number_format(($last_month_total_income[$value->shop_id] ?? 0), 0)}}
-                    </span>
+{{--                    <span class="right">--}}
+{{--                        上月 ${{number_format(($last_month_total_income[$value->shop_id] ?? 0), 0)}}--}}
+{{--                    </span>--}}
                     <br>
                 @endforeach
                 <h6>
                     <span class="total-left">合計${{number_format($sale_summary['other_total'], 0) ?? '0.00'}}</span>
-                    <span class="total-right">累積${{number_format($sale_summary['other_month_total'], 0) ?? '0.00'}}</span>
-                    <span class="total-right">上月${{number_format($sale_summary['other_last_month_total'], 0) ?? '0.00'}}</span>
+                    <span class="total-right">本月累積${{number_format($sale_summary['other_month_total'], 0) ?? '0.00'}}</span>
+{{--                    <span class="total-right">上月${{number_format($sale_summary['other_last_month_total'], 0) ?? '0.00'}}</span>--}}
                 </h6>
 
             @endisset
@@ -106,25 +106,25 @@
                         {{$value->user->report_name}} ${{number_format($value->income_sum, 0)}}
                         </span>
                         <span class="right">
-                            累積 ${{number_format(($total_income[$value->shop_id] ?? 0), 0)}}
+                            本月累積 ${{number_format(($total_income[$value->shop_id] ?? 0), 0)}}
                         </span>
-                        <span class="right">
-                            上月 ${{number_format(($last_month_total_income[$value->shop_id] ?? 0), 0)}}
-                        </span>
+{{--                        <span class="right">--}}
+{{--                            上月 ${{number_format(($last_month_total_income[$value->shop_id] ?? 0), 0)}}--}}
+{{--                        </span>--}}
                         <br>
                     @endforeach
                     <h6>
                         <span class="total-left">合計${{number_format($sale_summary['bakery_total'], 0) ?? '0.00'}}</span>
-                        <span class="total-right">累積${{number_format($sale_summary['bakery_month_total'], 0) ?? '0.00'}}</span>
-                        <span class="total-right">上月${{number_format($sale_summary['bakery_last_month_total'], 0) ?? '0.00'}}</span>
+                        <span class="total-right">本月累積${{number_format($sale_summary['bakery_month_total'], 0) ?? '0.00'}}</span>
+{{--                        <span class="total-right">上月${{number_format($sale_summary['bakery_last_month_total'], 0) ?? '0.00'}}</span>--}}
                     </h6>
                 </div>
 
             @endisset
             <div class="group-div">
                 <h5><span>總計:${{number_format($sale_summary['total'], 2) ?? '0.00'}}</span></h5>
-                <h5>累積:${{number_format($sale_summary['month_total'], 2) ?? '0.00'}}</h5>
-                <h5>上月:${{number_format($sale_summary['last_month_total'], 2) ?? '0.00'}}</h5>
+                <h5>本月累積:${{number_format($sale_summary['month_total'], 2) ?? '0.00'}}</h5>
+{{--                <h5>上月:${{number_format($sale_summary['last_month_total'], 2) ?? '0.00'}}</h5>--}}
             </div>
         </div>
 
