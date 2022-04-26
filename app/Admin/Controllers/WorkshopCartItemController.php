@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Admin\Extensions\Tools\BatchCartItemDelete;
 use App\Admin\Renderable\CartitemLog;
 use App\Admin\Renderable\ProductTable;
 use App\Models\WorkshopCartItem;
@@ -27,6 +28,10 @@ class WorkshopCartItemController extends AdminController
                 ->with('users')
                 ->with('products')
                 ->orderByDesc('id');
+
+            $grid->batchActions([
+                new BatchCartItemDelete('批量刪除', 1)
+            ]);
 
             $grid->showQuickEditButton();
             // 禁用创建按钮

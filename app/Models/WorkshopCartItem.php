@@ -12,6 +12,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 class WorkshopCartItem extends Model
 {
 
+    const STATUS_DELETE = 4;
     protected $table = 'workshop_cart_items';
     const CREATED_AT = 'insert_date';
     const UPDATED_AT = 'order_date';

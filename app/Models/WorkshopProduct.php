@@ -112,6 +112,17 @@ class WorkshopProduct extends Model
         return $catids->toArray();
     }
 
+    public static function getProductGroupIds()
+    {
+        $query = self::query();
+        $query = $query->with('groups')->get();
+
+        $groupids = $query->mapWithKeys(function ($item, $key) {
+            return [$item['id'] => $item['groups']->id];
+        });
+        return $groupids->toArray();
+    }
+
 
 
 }
