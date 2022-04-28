@@ -92,6 +92,9 @@ Route::group([
     //
     $router->resource('supplier_stock_item_list', 'SupplierStockItemListController');
 
+    //貨倉產品
+    $router->resource('warehouse_products', 'WarehouseProductController');
+
     //價格分組
     $router->resource('shopgroup', 'ShopGroupController');
     //分店用戶管理
