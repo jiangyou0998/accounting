@@ -10,9 +10,12 @@ use Carbon\Carbon;
 use Faker\Generator as Faker;
 
 $factory->define(WarehouseProduct::class, function (Faker $faker) {
+
+    $product_name = $faker->word;
+
     return [
-        'product_name' => $faker->word,
-        'product_name_short' => $faker->word,
+        'product_name' => $product_name,
+        'product_name_short' => $product_name,
         'product_no' => $faker->randomNumber(4, true),
         'barcode' => $faker->randomNumber(7, true),
         //注意randomElement不帶複數才是隨機選一個

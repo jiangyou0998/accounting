@@ -14,7 +14,7 @@ class CreateWarehouseProductsTable extends Migration
     public function up()
     {
         Schema::create('warehouse_products', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->increments('id');
             $table->string('product_name')->comment('貨品名');
             $table->string('product_name_short')->comment('簡略名稱');
             $table->string('product_no')->comment('貨品編號');
