@@ -51,7 +51,8 @@ class SalesDataController extends Controller
                     return [ 'other' => $item['user_id']];
                 }
             })->toArray();
-        $sale_summary = SalesCalResult::query()->with(['user', 'details'])->where('date', $date)->get();
+        //2022-05-05 按shop_id排序
+        $sale_summary = SalesCalResult::query()->with(['user', 'details'])->where('date', $date)->get()->sortBy('shop_id');
         $sale_summary = $sale_summary->mapToGroups(function ($item, $key) use($front_groups){
 //            $item->octopus = $item['detail']->where('type_no', 31)->first()->income ?? '0.00';
             if(in_array($item['shop_id'], $front_groups['bakery'])){
