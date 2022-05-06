@@ -49,11 +49,11 @@ class WarehouseStockController extends Controller
 //            $product_ids = explode(',', $product_list->item_list);
         $products = WarehouseProduct::getProducts($product_ids, $group, $supplier, $search, $type, $date);
 
-        $groups = SupplierGroup::whereHas('products', function ($query) use($product_ids){
+        $groups = SupplierGroup::whereHas('warehouse_products', function ($query) use($product_ids){
             $query->whereIn('id', $product_ids);
         })->pluck('name', 'id')->toArray();
 
-        $suppliers = Supplier::whereHas('products', function ($query) use($product_ids){
+        $suppliers = Supplier::whereHas('warehouse_products', function ($query) use($product_ids){
             $query->whereIn('id', $product_ids);
         })->pluck('name', 'id')->toArray();
 
@@ -80,6 +80,7 @@ class WarehouseStockController extends Controller
             ->toArray();
 
 //        dump($date);
+//        dump($products);
 
         return view('warehouse_stock.index', compact('products', 'groups', 'suppliers', 'stockitems', 'stockitem_units'));
     }

@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Models\Supplier\Supplier;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class WarehouseProduct extends Model
 {
@@ -96,19 +97,23 @@ class WarehouseProduct extends Model
     public function scopeOfType($query, $type, $date)
     {
         switch ($type){
+            //已填寫
             case 'filled':
                 return $query->where(function($query) use($type, $date){
                     $query->whereHas('stock_items',function ($query) use($date){
-                        $query->where('date', $date);
+                        $query->where('date', $date)
+                            ->where('user_id', Auth::id());
                     });
                 });
-
+            //未填寫
             case 'empty':
                 return $query->where(function($query) use($type, $date){
                     $query->whereDoesntHave('stock_items',function ($query) use($date){
-                        $query->where('date', $date);
+                        $query->where('date', $date)
+                            ->where('user_id', Auth::id());
                     });
                 });
+
             default :
                 return $query;
         }

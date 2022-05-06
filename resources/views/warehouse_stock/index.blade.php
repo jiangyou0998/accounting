@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <div class="container">
+    <div class="container-fluid">
         {{--        搜索框--}}
         <div class="d-flex justify-content-end input-group">
 
@@ -25,6 +25,7 @@
         <div class="py-5 text-center">
 
             <h1>{{ request()->date }}</h1>
+            <h2>{{ Auth::user()->txt_name ?? '' }}</h2>
             <h2>貨倉入庫</h2>
         </div>
         {{--        頂部按鈕--}}
@@ -91,6 +92,7 @@
                 @endif
             </div>
         </div>
+    </div>
 
 @endsection
 

@@ -44,7 +44,7 @@
 
         <div class="py-4 text-center">
 
-            <input type="date" name="date" id="date" value="{{\Carbon\Carbon::now()->toDateString()}}">
+            <input type="date" name="date" id="date" value="{{\Carbon\Carbon::now()->toDateString()}}" max="{{\Carbon\Carbon::now()->toDateString()}}">
             <button type="submit" class="btn btn-primary" id="sumbit">查詢</button>
         </div>
 {{--        頂部按鈕--}}

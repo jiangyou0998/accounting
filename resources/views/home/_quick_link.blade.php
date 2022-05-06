@@ -98,15 +98,20 @@
         </li>
     @endcan
 
-    {{--                        @foreach($dept_names as $key => $dept_name)--}}
-    {{--                            <li class="list-group-item d-flex justify-content-between lh-condensed">--}}
-    {{--                                <div>--}}
-    {{--                                    <h6 class="my-0">--}}
-    {{--                                        <a href="{{route('notice',['dept' => $key])}}">{{$dept_name}}</a>--}}
-    {{--                                    </h6>--}}
-    {{--                                </div>--}}
+    @can('warehouse')
 
-    {{--                            </li>--}}
-    {{--                        @endforeach--}}
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+                <h6 class="my-0">
+                    <a href="{{route('stock.warehouse.select_day')}}">
+                        貨倉入貨
+                    </a>
+                </h6>
+
+            </div>
+
+        </li>
+
+    @endcan
 
 </ul>

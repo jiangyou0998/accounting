@@ -17,4 +17,9 @@ class SupplierGroup extends Model
         return $this->hasMany(SupplierProduct::class,"group_id","id");
     }
 
+    public function warehouse_products()
+    {
+        return $this->hasMany(WarehouseProduct::class,"group_id","id");
+    }
+
 }
