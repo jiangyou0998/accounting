@@ -212,7 +212,7 @@ Route::delete('stock/warehouse/delete', 'WarehouseStockController@delete')->name
 //Route::get('/import/ryoyuprice', 'ImportController@importRyoyuPrice');
 //Route::get('/import/newryoyuproductandprice', 'ImportController@importNewRyoyuProductAndPrice');
 //Route::get('/import/customer', 'ImportController@importCustomer');
-//Route::get('/import/reset/price', 'ImportController@resetPrice');
+//Route::get('/import/reset/price', 'Import\ResetPriceController@resetPrice');
 //Route::get('/import/customer/price', 'ImportController@importCustomerPrice');
 
 //Supplier 導入
@@ -220,6 +220,9 @@ Route::delete('stock/warehouse/delete', 'WarehouseStockController@delete')->name
 //Route::get('/import/supplier/food', 'Import\SupplierFoodImportController@importSupplierProduct');
 //Route::get('/import/supplier/package', 'Import\SupplierPackageImportController@importSupplierProduct');
 //Route::get('/import/supplier/product', 'Import\SupplierImportController@importSupplierProduct');
+
+//warehouseProduct 導入
+//Route::get('/import/warehouse/product', 'Import\WarehouseProductImportController@importProduct');
 
 //Repair Item 導入
 //Route::get('/import/repair/item', 'Import\RepairItemImportController@importRepairItem');
