@@ -449,40 +449,7 @@ class ImportController extends Controller
         $reader->close();
     }
 
-    public function resetPrice(){
 
-        $reader = ReaderFactory::createFromType(Type::XLSX);
-
-        $reader->open('imports\Price.xlsx');
-
-        foreach ($reader->getSheetIterator() as $sheet) {
-
-            foreach ($sheet->getRowIterator() as $rowKey => $row) {
-                // do stuff with the row
-                if($rowKey == 1) continue;
-                $rowValues = $row->toArray();
-//dump($rowValues);
-                if(!isset($rowValues[5]) || $rowValues[5] == '') continue;
-
-                //產品數組
-                $priceArr[$rowValues[0]] = $rowValues[5];
-
-            }
-        }
-//        dd($priceArr);
-
-        DB::transaction(function() use($priceArr){
-
-//            $priceModel = new Price();
-            foreach ($priceArr as $id => $price){
-                $priceModel = Price::find($id);
-                $priceModel->price = $price;
-                $priceModel->save();
-            }
-        });
-
-        return 'success';
-    }
 
 //    public function importSupplierItems()
 //    {

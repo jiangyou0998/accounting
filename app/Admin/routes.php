@@ -49,6 +49,9 @@ Route::group([
     $router->resource('reports/stock_by_month', 'Reports\StockByMonthReportController');
     $router->resource('reports/stock', 'Reports\StockReportController');
 
+    //貨倉入貨報告
+    $router->resource('reports/warehouse/stock', 'Reports\WarehouseStockReportController');
+
     //維修報表
     $router->resource('reports/repair_project', 'Reports\RepairProjectController');
 

@@ -202,12 +202,15 @@ Route::post('stock/supplier/add', 'SupplierStockController@add')->name('stock.su
 Route::delete('stock/supplier/delete', 'SupplierStockController@delete')->name('stock.supplier.delete');
 
 //2022-04-28 貨倉入庫
-//選擇日期
-Route::get('stock/warehouse/select_day', 'WarehouseStockController@select_day')->name('stock.warehouse.select_day');
-Route::get('stock/warehouse', 'WarehouseStockController@index')->name('stock.warehouse.index');
-Route::post('stock/warehouse', 'WarehouseStockController@index')->name('stock.warehouse.search');
-Route::post('stock/warehouse/add', 'WarehouseStockController@add')->name('stock.warehouse.add');
-Route::delete('stock/warehouse/delete', 'WarehouseStockController@delete')->name('stock.warehouse.delete');
+Route::group(['middleware' => ['auth','permission:warehouse']], function () {
+    //選擇日期
+    Route::get('stock/warehouse/select_day', 'WarehouseStockController@select_day')->name('stock.warehouse.select_day');
+    Route::get('stock/warehouse', 'WarehouseStockController@index')->name('stock.warehouse.index');
+    Route::post('stock/warehouse', 'WarehouseStockController@index')->name('stock.warehouse.search');
+    Route::post('stock/warehouse/add', 'WarehouseStockController@add')->name('stock.warehouse.add');
+    Route::delete('stock/warehouse/delete', 'WarehouseStockController@delete')->name('stock.warehouse.delete');
+});
+
 //Route::get('/import', 'ImportController@import');
 //Route::get('/import/ryoyuprice', 'ImportController@importRyoyuPrice');
 //Route::get('/import/newryoyuproductandprice', 'ImportController@importNewRyoyuProductAndPrice');

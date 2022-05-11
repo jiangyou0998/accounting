@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    貨倉入庫
+    {{ request()->date }} - 貨倉入庫
 @stop
 
 @section('content')
