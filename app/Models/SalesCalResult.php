@@ -113,6 +113,10 @@ class SalesCalResult extends Model
                 break;
             case 'week':
                 $start_date = Carbon::parse($date)->startOfWeek()->toDateString();
+                break;
+            case 'day':
+                $start_date = $date;
+                break;
         }
 
         $total_income = SalesCalResult::select(['shop_id', DB::raw("SUM(`income_sum`) as sum")])
