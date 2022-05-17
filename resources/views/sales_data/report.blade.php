@@ -76,14 +76,14 @@
         <hr class="mb-4">
         <div class="copy">
             <h4>{{$date_and_week}}</h4>
-            @isset($sale_summary['other'])
+            @isset($front_groups['other'])
                 <h5>混合型/飯堂營業數</h5>
-                @foreach($sale_summary['other'] as $value)
+                @foreach($front_groups['other'] as $shop_id)
                     <span class="left">
-                        {{$value->user->report_name}} ${{number_format($value->income_sum, 0)}}
+                        {{$shop_names[$shop_id] ?? 0}} ${{number_format(($day_income[$shop_id] ?? 0), 0)}}
                     </span>
                     <span class="right">
-                        本月累積 ${{number_format(($total_income[$value->shop_id] ?? 0), 0)}}
+                        本月累積 ${{number_format(($total_income[$shop_id] ?? 0), 0)}}
                     </span>
 {{--                    <span class="right">--}}
 {{--                        上月 ${{number_format(($last_month_total_income[$value->shop_id] ?? 0), 0)}}--}}
@@ -98,15 +98,15 @@
 
             @endisset
 
-            @isset($sale_summary['bakery'])
+            @isset($front_groups['bakery'])
                 <div class="group-div">
                     <h5>餅店營業數</h5>
-                    @foreach($sale_summary['bakery'] as $value)
+                    @foreach($front_groups['bakery'] as $shop_id)
                         <span class="left">
-                        {{$value->user->report_name}} ${{number_format($value->income_sum, 0)}}
+                            {{$shop_names[$shop_id] ?? 0}} ${{number_format(($day_income[$shop_id] ?? 0), 0)}}
                         </span>
-                        <span class="right">
-                            本月累積 ${{number_format(($total_income[$value->shop_id] ?? 0), 0)}}
+                            <span class="right">
+                            本月累積 ${{number_format(($total_income[$shop_id] ?? 0), 0)}}
                         </span>
 {{--                        <span class="right">--}}
 {{--                            上月 ${{number_format(($last_month_total_income[$value->shop_id] ?? 0), 0)}}--}}
