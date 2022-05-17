@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    庫存
+    貨倉入庫
 @stop
 
 @section('style')
