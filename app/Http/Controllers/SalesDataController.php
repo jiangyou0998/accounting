@@ -10,6 +10,7 @@ use App\Models\SalesBill;
 use App\Models\SalesCalResult;
 use App\Models\SalesIncomeDetail;
 use App\Models\SalesIncomeType;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
