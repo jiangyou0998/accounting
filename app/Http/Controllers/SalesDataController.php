@@ -122,6 +122,10 @@ class SalesDataController extends Controller
             $sale_summary['last_month_total'] += $total;
         }
 
+        //2022-05-19 新增獲取時節數
+        $seasonal_income = SalesCalResult::getShopIdAndSeasonalIncome($date);
+
+
 //        dump($total_income);
 //        dump($sale_summary->toArray());
 
@@ -129,6 +133,7 @@ class SalesDataController extends Controller
             'sale_summary',
             'total_income',
             'day_income',
+            'seasonal_income',
             'last_month_total_income',
             'date',
             'date_and_week',

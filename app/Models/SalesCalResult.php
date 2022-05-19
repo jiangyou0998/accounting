@@ -170,5 +170,26 @@ class SalesCalResult extends Model
         return $last_month_total;
     }
 
+    //2022-05-19 獲取時節數
+    public static function getShopIdAndSeasonalIncome($date = null)
+    {
+        $date = getRequestDateOrNow($date);
+
+        $ids = self::query()
+            ->whereDate('date', $date)
+            ->get('id');
+
+        $seasonal_income = SalesIncomeDetail::with('sales_cal_result')
+            ->whereIn('sales_cal_result_id', $ids)
+            ->where('type_no', 91)
+            ->get()
+            ->mapWithKeys(function ($item, $key) {
+                return [$item['sales_cal_result']['shop_id'] => $item['income']];
+            })
+            ->toArray();
+
+        return $seasonal_income;
+    }
+
 
 }

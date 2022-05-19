@@ -10,6 +10,11 @@ class SalesIncomeDetail extends Model
 
     protected $table = 'sales_income_details';
 
+    public function sales_cal_result()
+    {
+        return $this->belongsTo(SalesCalResult::class,'sales_cal_result_id','id');
+    }
+
     public static function getSalesIncomeDetailArray($sales_cal_result_id)
     {
         return SalesIncomeDetail::query()

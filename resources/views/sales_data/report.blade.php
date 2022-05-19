@@ -35,7 +35,7 @@
 
         .right{
             display:inline-block;
-            /*width:100px;*/
+            width:105px;
             font-size: small;
         }
 
@@ -83,11 +83,16 @@
                         {{$shop_names[$shop_id] ?? 0}} ${{number_format(($day_income[$shop_id] ?? 0), 0)}}
                     </span>
                     <span class="right">
-                        本月累積 ${{number_format(($total_income[$shop_id] ?? 0), 0)}}
+                        累積 ${{number_format(($total_income[$shop_id] ?? 0), 0)}}
                     </span>
 {{--                    <span class="right">--}}
 {{--                        上月 ${{number_format(($last_month_total_income[$value->shop_id] ?? 0), 0)}}--}}
 {{--                    </span>--}}
+                    @isset($seasonal_income[$shop_id])
+                        <span class="right">
+                            時節 ${{number_format(($seasonal_income[$shop_id] ?? 0), 0)}}
+                        </span>
+                    @endisset
                     <br>
                 @endforeach
                 <h6>
@@ -106,7 +111,7 @@
                             {{$shop_names[$shop_id] ?? 0}} ${{number_format(($day_income[$shop_id] ?? 0), 0)}}
                         </span>
                             <span class="right">
-                            本月累積 ${{number_format(($total_income[$shop_id] ?? 0), 0)}}
+                            累積 ${{number_format(($total_income[$shop_id] ?? 0), 0)}}
                         </span>
 {{--                        <span class="right">--}}
 {{--                            上月 ${{number_format(($last_month_total_income[$value->shop_id] ?? 0), 0)}}--}}
