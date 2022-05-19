@@ -13,9 +13,9 @@ class SalesBill extends Model
     protected $table = 'sales_bills';
     public $timestamps = false;
 
-    public static function getSalesBills()
+    public static function getSalesBills($date = null)
     {
-        $date = Carbon::now()->toDateString();
+        $date = getRequestDateOrNow($date);
         $shop_id = Auth::user()->id;
 
         return self::query()

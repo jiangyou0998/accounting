@@ -16,6 +16,8 @@
 //Auth::routes();
 
 
+use App\Http\Controllers\SalesDataChangeApplicationController;
+use App\Http\Controllers\SalesDataController;
 
 Route::get('/', 'HomeController@index')
 //    ->middleware('permission:visit_home')
@@ -114,10 +116,13 @@ Route::group(['middleware' => ['auth','permission:shop']], function () {
     Route::get('sample', 'WorkshopOrderSampleController@index')->name('sample');
 
     // 銷售數據
-    Route::get('sales_data', 'SalesDataController@index')->name('sales_data');
-    Route::post('sales_data', 'SalesDataController@store')->name('sales_data.store');
+    Route::get('sales_data', [SalesDataController::class, 'index'])->name('sales_data');
+    Route::post('sales_data', [SalesDataController::class, 'store'])->name('sales_data.store');
 
-    Route::get('sales_data/print', 'SalesDataController@print')->name('sales_data.print');
+    Route::get('sales_data_change_application', [SalesDataChangeApplicationController::class, 'index'])->name('sales_data_change_application.index');
+    Route::post('sales_data_change_application', [SalesDataChangeApplicationController::class, 'store'])->name('sales_data_change_application.store');
+
+    Route::get('sales_data/print', [SalesDataController::class, 'print'])->name('sales_data.print');
 });
 
 Route::group(['middleware' => ['auth','permission:operation']], function () {
@@ -218,6 +223,8 @@ Route::group(['middleware' => ['auth','permission:warehouse']], function () {
 //Route::get('/import/customer', 'ImportController@importCustomer');
 //Route::get('/import/reset/price', 'Import\ResetPriceController@resetPrice');
 //Route::get('/import/customer/price', 'ImportController@importCustomerPrice');
+
+//Route::get('/import/customer/new', 'Import\WorkshopProductImportController@import');
 
 //Supplier 導入
 //Route::get('/import/supplier', 'ImportController@importSupplierItems');

@@ -8,6 +8,7 @@ use App\Http\Traits\SalesDataTableTraits;
 use App\Models\FrontGroupHasUser;
 use App\Models\SalesBill;
 use App\Models\SalesCalResult;
+use App\Models\SalesDataChangeApplication;
 use App\Models\SalesIncomeDetail;
 use App\Models\SalesIncomeType;
 use App\User;
@@ -20,19 +21,24 @@ class SalesDataController extends Controller
 {
     use SalesDataTableTraits;
 
-    public function index()
+    public function index(Request $request)
     {
-        $sales_cal_result = SalesCalResult::getSalesCalResult();
-        $last_balance = SalesCalResult::getLastBalance();
-        $last_safe_balance = SalesCalResult::getLastSafeBalance();
+        $date = getRequestDateOrNow($request->date);
+
+//        dump($special_dates->toArray());
+        $this->checkEditable($date);
+
+        $sales_cal_result = SalesCalResult::getSalesCalResult($date);
+        $last_balance = SalesCalResult::getLastBalance($date);
+        $last_safe_balance = SalesCalResult::getLastSafeBalance($date);
         $sales_cal_result_id = $sales_cal_result->id ?? 0;
 
         $sales_income_detail = SalesIncomeDetail::getSalesIncomeDetailArray($sales_cal_result_id);
 
         $bank = SalesIncomeDetail::getBank($sales_cal_result_id);
-        $bills = SalesBill::getSalesBills()->pluck('outlay', 'bill_no')->toArray();
+        $bills = SalesBill::getSalesBills($date)->pluck('outlay', 'bill_no')->toArray();
 //        dump($bills);
-        return view('sales_data.index', compact('sales_cal_result', 'last_balance', 'last_safe_balance', 'sales_income_detail', 'bank', 'bills'));
+        return view('sales_data.index', compact('sales_cal_result', 'last_balance', 'last_safe_balance', 'sales_income_detail', 'bank', 'bills', 'date'));
     }
 
     //手機顯示營業數頁面
@@ -149,23 +155,26 @@ class SalesDataController extends Controller
     //保存每日營業數
     public function store(SalesDataRequest $request){
 
+        $date = $request->date ?? Carbon::now();
+        $this->checkEditable($date);
+
         // 数据库事务处理
-        DB::transaction(function () use ($request) {
+        DB::transaction(function () use ($request, $date) {
+
             $user = Auth::user();
             $shop_id = $user->id;
 
-            $deposit_no = SalesCalResult::getNewDepositNo();
-            $last_balance = SalesCalResult::getLastBalance();
-            $last_safe_balance = SalesCalResult::getLastSafeBalance();
-            $date = Carbon::now()->toDateString();
+            $deposit_no = SalesCalResult::getNewDepositNo($date);
+            $last_balance = SalesCalResult::getLastBalance($date);
+            $last_safe_balance = SalesCalResult::getLastSafeBalance($date);
 
-            $sales_cal_result = SalesCalResult::getSalesCalResult();
+            $sales_cal_result = SalesCalResult::getSalesCalResult($date);
 
             if(is_null($sales_cal_result)){
                 $sales_cal_result = new SalesCalResult();
                 $sales_cal_result->shop_id = $shop_id;
                 $sales_cal_result->deposit_no = $deposit_no;
-                $sales_cal_result->date = $date;
+                $sales_cal_result->date = $date->toDateString();
             }
 
             //主機NO.
@@ -227,14 +236,14 @@ class SalesDataController extends Controller
             }
 
             //支單寫入數據庫
-            SalesBill::where('shop_id', $shop_id)->where('date', $date)->delete();
+            SalesBill::where('shop_id', $shop_id)->whereDate('date', $date)->delete();
 
             if(isset($request->bills)){
                 foreach($request->bills as $bill){
                     $sales_bill = new SalesBill();
                     $sales_bill->sales_cal_result_id = $sales_cal_result_id;
                     $sales_bill->shop_id = $shop_id;
-                    $sales_bill->date = $date;
+                    $sales_bill->date = $date->toDateString();
                     $sales_bill->bill_no = $bill['bill_no'];
                     $sales_bill->outlay = $bill['outlay'];
 
@@ -254,10 +263,10 @@ class SalesDataController extends Controller
 
     //打印用表格(分店查看)
     //分店只能查看當日數據
-    public function print(){
+    public function print(Request $request){
 
-        $now = Carbon::now()->toDateString();
-        $start_date = $end_date = $now;
+        $date = getRequestDateOrNow($request->date);
+        $start_date = $end_date = $date;
         $id = Auth::user()->id;
         $ids = array($id);
 
@@ -268,6 +277,31 @@ class SalesDataController extends Controller
         }
 
         return view('sales_data.print', compact('all_sales_table_data'));
+    }
+
+    //檢查編輯權限
+    private function checkEditable($date)
+    {
+        //判斷權限
+        if (Carbon::parse($date)->gt(Carbon::now())){
+            abort(403,'不允許修改今天後的營業數');
+        }
+
+        //如非當日,必須要先申請修改權限
+        if (! Carbon::parse($date)->isToday()){
+            $special_date = SalesDataChangeApplication::query()
+                ->where('shop_id', Auth::id())
+                ->where('date', $date)
+                ->where('handle_date', Carbon::now()->toDateString())
+                ->where('status', SalesDataChangeApplication::STATUS_APPROVED)
+                ->first();
+
+            if (!isset($special_date)){
+                abort(403,'請先申請修改權限');
+            }
+        }
+
+        return true;
     }
 
 }

@@ -88,3 +88,8 @@ function isTestEnvironment()
     return $is_test;
 
 }
+
+function getRequestDateOrNow($date){
+
+    return $date ? Carbon::parse($date)->toDateString() : Carbon::now()->toDateString();
+}

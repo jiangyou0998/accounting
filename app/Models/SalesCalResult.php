@@ -30,9 +30,18 @@ class SalesCalResult extends Model
             ->where('type_no', 31);
     }
 
-    public static function getSalesCalResult()
+    public function scopeMaxDay($query, $date)
     {
-        $date = Carbon::now()->toDateString();
+        if(is_null($date)){
+            return $query;
+        }
+
+        return $query->whereDate('date', '<', $date);
+    }
+
+    public static function getSalesCalResult($date = null)
+    {
+        $date = getRequestDateOrNow($date);
         $shop_id = Auth::user()->id;
 
         $sales_cal_result = self::query()
@@ -43,13 +52,14 @@ class SalesCalResult extends Model
         return $sales_cal_result;
     }
 
-    public static function getNewDepositNo()
+    public static function getNewDepositNo($date = null)
     {
-        $year_and_month = Carbon::now()->isoFormat('YYMM');
+        $date_carbon = $date ? Carbon::parse($date) : Carbon::now();
+        $year_and_month = $date_carbon->isoFormat('YYMM');
         $year_and_month = (int)$year_and_month * 10000;
 
         //從數據庫查出最大的編號
-        $max_deposit_no = self::getMaxDepositNo();
+        $max_deposit_no = self::getMaxDepositNo($date);
         if($year_and_month > $max_deposit_no || is_null($max_deposit_no)){
             $new_deposit_no = $year_and_month + 1;
         }else{
@@ -59,46 +69,50 @@ class SalesCalResult extends Model
     }
 
     //獲取承上結餘
-    public static function getLastBalance()
+    public static function getLastBalance($date = null)
     {
+        $date = getRequestDateOrNow($date);
         //從數據庫查出最大的編號
-        $max_deposit_no = self::getMaxDepositNo();
+        $max_deposit_no = self::getMaxDepositNo($date);
         if(is_null($max_deposit_no)){
             $last_balance = 0;
         }else{
             $shop_id = Auth::user()->id;
             $last_balance = self::query()->where('shop_id', $shop_id)
                 ->where('deposit_no', $max_deposit_no)
-                ->first()->balance;
+                ->maxDay($date)
+                ->first()->balance ?? 0;
         }
         return $last_balance;
     }
 
     //獲取承上夾萬結餘
-    public static function getLastSafeBalance()
+    public static function getLastSafeBalance($date = null)
     {
+        $date = getRequestDateOrNow($date);
         //從數據庫查出最大的編號
-        $max_deposit_no = self::getMaxDepositNo();
+        $max_deposit_no = self::getMaxDepositNo($date);
         if(is_null($max_deposit_no)){
             $last_safe_balance = 0;
         }else{
             $shop_id = Auth::user()->id;
             $last_safe_balance = self::query()->where('shop_id', $shop_id)
                 ->where('deposit_no', $max_deposit_no)
-                ->first()->safe_balance;
+                ->maxDay($date)
+                ->first()->safe_balance ?? 0;
         }
         return $last_safe_balance;
     }
 
-    private static function getMaxDepositNo()
+    private static function getMaxDepositNo($date = null)
     {
         //從數據庫查出最大的編號
-        $date = Carbon::now()->toDateString();
+        $date = getRequestDateOrNow($date);
         $shop_id = Auth::user()->id;
         //從數據庫查出最大的編號
         $max_deposit_no = self::query()
             ->where('shop_id', $shop_id)
-            ->where('date', '!=', $date)
+            ->maxDay($date)
             ->max('deposit_no');
 
         return $max_deposit_no;
@@ -130,6 +144,7 @@ class SalesCalResult extends Model
     }
 
     //2022-04-19 獲取上個月同一個總計
+    //2022-05-17 暫未使用
     public static function getShopIdAndLastMonthTotalAtSameDay($date)
     {
         $same_day_of_last_month_carbon = Carbon::parse($date)->subMonthNoOverflow();
