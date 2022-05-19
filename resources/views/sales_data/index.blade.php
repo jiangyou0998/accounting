@@ -195,7 +195,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="depositInSafe">存入夾萬</label>
-                            <input type="text" pattern="[0-9]*" class="form-control in-out" id="deposit_in_safe" value="{{ $sales_income_detail['71'] ?? '' }}" placeholder="" value="" required>
+                            <input type="text" pattern="[0-9]*" class="form-control in-out" id="deposit_in_safe" value="{{ $sales_income_detail['71'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                         </div>
 
                         <div class="col-md-6 mb-3">
@@ -208,13 +208,14 @@
                                     <option value="中銀" @if($bank === '中銀') selected @endif>中銀</option>
                                     <option value="創興" @if($bank === '創興') selected @endif>創興</option>
                                 </select>
-                                <input class="form-control form-inline col-md-8" type="text" pattern="[0-9]*" class="form-control in-out" id="deposit_in_bank" value="{{ $sales_income_detail['72'] ?? '' }}" placeholder="" value="" required>
+                                <input class="form-control form-inline col-md-8" type="text" pattern="[0-9]*" class="form-control in-out" id="deposit_in_bank" value="{{ $sales_income_detail['72'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                             </div>
                         </div>
 
+{{--                        慧霖取銀可以輸入負數--}}
                         <div class="col-md-6 mb-3">
                             <label for="kellyOut">慧霖取銀</label>
-                            <input type="text" pattern="[0-9]*" class="form-control in-out" id="kelly_out" value="{{ $sales_income_detail['73'] ?? '' }}" placeholder="" value="" required>
+                            <input type="text" pattern="[0-9]*" class="form-control in-out" id="kelly_out" value="{{ $sales_income_detail['73'] ?? '' }}" placeholder="" required>
                         </div>
                     </div>
 
@@ -230,11 +231,22 @@
                         <h3 class="col-lg-12 p-3 text-right">支單總計 : $<span id="bill_paid_sum">{{ $sales_cal_result->bill_paid_sum ?? '0.00'}}</span></h3>
                     </div>
 
+
+{{--                    2022-05-19 新增時節數--}}
+                    <hr>
+                    <h4 class="mb-3">9.時節數</h4>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="seasonalIncome">時節數</label>
+                            <input type="text" pattern="[0-9]*" class="form-control seasonal-income" id="seasonal_income" value="{{ $sales_income_detail['91'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
+                        </div>
+                    </div>
+
                     <br>
                     <br>
 
                     <hr>
-                    <h4 class="mb-3">9.總計</h4>
+                    <h4 class="mb-3">10.總計</h4>
                     <div class="row">
                         <h3 class="col-lg-12 p-3 text-right">收入 : $<span id="income_sum">{{ $sales_cal_result->income_sum ?? '0.00'}}</span></h3>
                         <h3 class="col-lg-12 p-3 text-right">差額 : $<span id="difference">{{ $sales_cal_result->difference ?? '0.00'}}</span></h3>
@@ -588,6 +600,7 @@
                 safe_coin: $('#safe_coin').val(),
                 deposit_in_safe: $('#deposit_in_safe').val(),
                 deposit_in_bank: $('#deposit_in_bank').val(),
+                seasonal_income: $('#seasonal_income').val(),
             });
 
             let $bill_no = 1;

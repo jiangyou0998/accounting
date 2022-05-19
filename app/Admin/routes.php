@@ -33,8 +33,8 @@ Route::group([
     $router->resource('special_date', 'SpecialDateController');
     $router->resource('forbidden_date', 'ForbiddenDateController');
 
-    //------------------------------------------------------------------
-    //報告
+    //------------------------------ 報告 ------------------------------------
+
     //分店每月銷售數量報告
     $router->resource('reports/total_sales_amount_by_menu', 'Reports\TotalSalesAmountByMenuReportController');
     //分店每月銷售總額報告
@@ -126,6 +126,8 @@ Route::group([
 
     //通知電郵設定
     $router->resource('notification_emails', 'NotificationEmailController');
+
+    $router->resource('sales_income_types', 'SalesIncomeTypeController');
 
     //test
 //    $router->get('data/', 'DataChangeController@index');

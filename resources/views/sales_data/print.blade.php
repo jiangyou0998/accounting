@@ -130,7 +130,7 @@
 
                 </table>
                 <table class="footer-sign" border="0" cellpadding="0" cellspacing="0" width="100%">
-                    <th align="left" style="width:33%"><strong>主管簽署:</strong></th>
+                    <th align="left" style="width:33%"><strong>覆核員簽署:</strong></th>
                     <th align="left" style="width:33%"><strong>主管簽署:</strong></th>
                     <th align="left" style="width:33%"><strong>會計:</strong></th>
                 </table>

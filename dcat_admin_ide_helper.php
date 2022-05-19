@@ -172,6 +172,8 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection bill_paid_sum
      * @property Grid\Column|Collection income_sum
      * @property Grid\Column|Collection difference
+     * @property Grid\Column|Collection handle_user
+     * @property Grid\Column|Collection handle_date
      * @property Grid\Column|Collection type_no
      * @property Grid\Column|Collection income
      * @property Grid\Column|Collection remark
@@ -215,6 +217,7 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection company_chinese_name
      * @property Grid\Column|Collection company_english_name
      * @property Grid\Column|Collection pocode
+     * @property Grid\Column|Collection barcode
      * @property Grid\Column|Collection operate_user_id
      * @property Grid\Column|Collection cart_item_id
      * @property Grid\Column|Collection order_date
@@ -403,6 +406,8 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection bill_paid_sum(string $label = null)
      * @method Grid\Column|Collection income_sum(string $label = null)
      * @method Grid\Column|Collection difference(string $label = null)
+     * @method Grid\Column|Collection handle_user(string $label = null)
+     * @method Grid\Column|Collection handle_date(string $label = null)
      * @method Grid\Column|Collection type_no(string $label = null)
      * @method Grid\Column|Collection income(string $label = null)
      * @method Grid\Column|Collection remark(string $label = null)
@@ -446,6 +451,7 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection company_chinese_name(string $label = null)
      * @method Grid\Column|Collection company_english_name(string $label = null)
      * @method Grid\Column|Collection pocode(string $label = null)
+     * @method Grid\Column|Collection barcode(string $label = null)
      * @method Grid\Column|Collection operate_user_id(string $label = null)
      * @method Grid\Column|Collection cart_item_id(string $label = null)
      * @method Grid\Column|Collection order_date(string $label = null)
@@ -639,6 +645,8 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection bill_paid_sum
      * @property Show\Field|Collection income_sum
      * @property Show\Field|Collection difference
+     * @property Show\Field|Collection handle_user
+     * @property Show\Field|Collection handle_date
      * @property Show\Field|Collection type_no
      * @property Show\Field|Collection income
      * @property Show\Field|Collection remark
@@ -682,6 +690,7 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection company_chinese_name
      * @property Show\Field|Collection company_english_name
      * @property Show\Field|Collection pocode
+     * @property Show\Field|Collection barcode
      * @property Show\Field|Collection operate_user_id
      * @property Show\Field|Collection cart_item_id
      * @property Show\Field|Collection order_date
@@ -870,6 +879,8 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection bill_paid_sum(string $label = null)
      * @method Show\Field|Collection income_sum(string $label = null)
      * @method Show\Field|Collection difference(string $label = null)
+     * @method Show\Field|Collection handle_user(string $label = null)
+     * @method Show\Field|Collection handle_date(string $label = null)
      * @method Show\Field|Collection type_no(string $label = null)
      * @method Show\Field|Collection income(string $label = null)
      * @method Show\Field|Collection remark(string $label = null)
@@ -913,6 +924,7 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection company_chinese_name(string $label = null)
      * @method Show\Field|Collection company_english_name(string $label = null)
      * @method Show\Field|Collection pocode(string $label = null)
+     * @method Show\Field|Collection barcode(string $label = null)
      * @method Show\Field|Collection operate_user_id(string $label = null)
      * @method Show\Field|Collection cart_item_id(string $label = null)
      * @method Show\Field|Collection order_date(string $label = null)
