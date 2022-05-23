@@ -89,9 +89,11 @@
 {{--                        上月 ${{number_format(($last_month_total_income[$value->shop_id] ?? 0), 0)}}--}}
 {{--                    </span>--}}
                     @isset($seasonal_income[$shop_id])
-                        <span class="right">
-                            時節 ${{number_format(($seasonal_income[$shop_id] ?? 0), 0)}}
-                        </span>
+                        @if($seasonal_income[$shop_id] != 0)
+                            <span class="right">
+                                時節 ${{number_format(($seasonal_income[$shop_id] ?? 0), 0)}}
+                            </span>
+                        @endif
                     @endisset
                     <br>
                 @endforeach
@@ -116,6 +118,13 @@
 {{--                        <span class="right">--}}
 {{--                            上月 ${{number_format(($last_month_total_income[$value->shop_id] ?? 0), 0)}}--}}
 {{--                        </span>--}}
+                        @isset($seasonal_income[$shop_id])
+                            @if($seasonal_income[$shop_id] != 0)
+                                <span class="right">
+                                    時節 ${{number_format(($seasonal_income[$shop_id] ?? 0), 0)}}
+                                </span>
+                            @endif
+                        @endisset
                         <br>
                     @endforeach
                     <h6>
