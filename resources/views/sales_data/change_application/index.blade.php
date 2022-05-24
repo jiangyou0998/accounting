@@ -19,7 +19,7 @@
                 <div class="row">
                     <div class="col-md-12 mb-3">
                         <label for="country">申請時間</label>
-                        <input class="custom-select d-block w-100" type="date" max="{{\Carbon\Carbon::now()->toDateString()}}" name="date" id="date" required="">
+                        <input class="custom-select d-block w-100" type="date" max="{{\Carbon\Carbon::now()->subDay()->toDateString()}}" name="date" id="date" required="">
 
                     </div>
 
@@ -117,6 +117,9 @@
                     errors = res.responseJSON.errors;
                     message = res.responseJSON.message;
                     let form_errors = '<div>' + message + '</div>';
+                    if (errors){
+                        form_errors = '';
+                    }
                     $.each(errors, function(i) {
                         form_errors += '<div>' + errors[i] + '</div>';
                     });

@@ -27,9 +27,17 @@ class SalesDataChangeApplication extends Model
         }
 
         $sales_data_change_applications = self::query()
-            ->where('date', $date)
-            ->where('shop_id', $shop_id)
-            ->where('status', self::STATUS_APPLYING)
+            ->where(function ($query) use($date, $shop_id){
+                return $query->where('date', $date)
+                    ->where('shop_id', $shop_id)
+                    ->where('status', self::STATUS_APPLYING);
+            })
+            ->orWhere(function ($query) use($date, $shop_id){
+                return $query->whereDate('date', $date)
+                    ->where('shop_id', $shop_id)
+                    ->whereDate('handle_date', now())
+                    ->where('status', '!=', self::STATUS_APPLYING);
+            })
             ->first();
 
         if ($sales_data_change_applications){

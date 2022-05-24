@@ -41,6 +41,11 @@ class SalesDataController extends Controller
         return view('sales_data.index', compact('sales_cal_result', 'last_balance', 'last_safe_balance', 'sales_income_detail', 'bank', 'bills', 'date'));
     }
 
+    public function operation_index(Request $request)
+    {
+        return view('sales_data.operation_index');
+    }
+
     //手機顯示營業數頁面
     public function report(Request $request)
     {
@@ -148,7 +153,7 @@ class SalesDataController extends Controller
         $user = Auth::user();
         if($user->can('operation') || $user->hasRole('SuperAdmin')){
             //營運、管理員跳轉report
-            return redirect(route('sales_data.report'));
+            return redirect(route('sales_data.operation_index'));
         }else if($user->can('shop')){
             //分店跳轉營業數輸入
             return redirect(route('sales_data'));
@@ -179,7 +184,7 @@ class SalesDataController extends Controller
                 $sales_cal_result = new SalesCalResult();
                 $sales_cal_result->shop_id = $shop_id;
                 $sales_cal_result->deposit_no = $deposit_no;
-                $sales_cal_result->date = $date->toDateString();
+                $sales_cal_result->date = $date;
             }
 
             //主機NO.
@@ -248,7 +253,7 @@ class SalesDataController extends Controller
                     $sales_bill = new SalesBill();
                     $sales_bill->sales_cal_result_id = $sales_cal_result_id;
                     $sales_bill->shop_id = $shop_id;
-                    $sales_bill->date = $date->toDateString();
+                    $sales_bill->date = $date;
                     $sales_bill->bill_no = $bill['bill_no'];
                     $sales_bill->outlay = $bill['outlay'];
 

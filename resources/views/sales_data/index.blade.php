@@ -62,7 +62,7 @@
 
         <div class="style5" style="text-align: center;">
             <span class="style4">營業數({{$date}})</span>
-{{--            <a href="{{route('sales_data_change_application.index')}}"><h3>修改申請</h3></a>--}}
+            <a href="{{route('sales_data_change_application.index')}}"><h3>修改申請</h3></a>
         </div>
 
         <hr>
@@ -254,7 +254,7 @@
 
                     <div class="form-group row">
                         <button type="button" class="btn btn-primary btn-block btn-submit">提交</button>
-                        <a href="{{ route('sales_data.print', ['date' => request()->date]) }}" class="btn btn-danger btn-block" target="_blank">打印預覽</a>
+{{--                        <a href="{{ route('sales_data.print', ['date' => request()->date]) }}" class="btn btn-danger btn-block" target="_blank">打印預覽</a>--}}
 
                     </div>
 
