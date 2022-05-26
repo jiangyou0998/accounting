@@ -11,6 +11,7 @@ use App\Models\SalesCalResult;
 use App\Models\SalesDataChangeApplication;
 use App\Models\SalesIncomeDetail;
 use App\Models\SalesIncomeType;
+use App\Models\ShopGroup;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -36,9 +37,8 @@ class SalesDataController extends Controller
         $sales_income_detail = SalesIncomeDetail::getSalesIncomeDetailArray($sales_cal_result_id);
 
         $bank = SalesIncomeDetail::getBank($sales_cal_result_id);
-        $bills = SalesBill::getSalesBills($date)->pluck('outlay', 'bill_no')->toArray();
-//        dump($bills);
-        return view('sales_data.index', compact('sales_cal_result', 'last_balance', 'last_safe_balance', 'sales_income_detail', 'bank', 'bills', 'date'));
+
+        return view('sales_data.index', compact('sales_cal_result', 'last_balance', 'last_safe_balance', 'sales_income_detail', 'bank', 'date'));
     }
 
     public function operation_index(Request $request)
@@ -76,7 +76,7 @@ class SalesDataController extends Controller
 //        dump($front_groups);
 
         $day_income = SalesCalResult::getShopIdAndTotalIncome($date, 'day');
-        $shop_names = User::getShopsByShopGroup(1)->pluck('report_name', 'id')->toArray();
+        $shop_names = User::getShopsByShopGroup(ShopGroup::CURRENT_SHOP_ID)->pluck('report_name', 'id')->toArray();
 
         // 混合型/飯堂總數
         $sale_summary['other_total'] = 0;
@@ -176,7 +176,6 @@ class SalesDataController extends Controller
 
             $deposit_no = SalesCalResult::getNewDepositNo($date);
             $last_balance = SalesCalResult::getLastBalance($date);
-            $last_safe_balance = SalesCalResult::getLastSafeBalance($date);
 
             $sales_cal_result = SalesCalResult::getSalesCalResult($date);
 
@@ -195,12 +194,6 @@ class SalesDataController extends Controller
             $sales_cal_result->last_balance = $last_balance;
             //當日結存(全鋪餘款)
             $sales_cal_result->balance = $request->balance;
-            //夾萬承上結存
-            $sales_cal_result->last_safe_balance = $last_safe_balance;
-            //當日夾萬結存(夾萬結餘)
-            $sales_cal_result->safe_balance = $request->safe_balance;
-            //支單總額
-            $sales_cal_result->bill_paid_sum = $request->bill_paid_sum;
             //收入
             $sales_cal_result->income_sum = $request->income_sum;
             //差額
@@ -214,16 +207,6 @@ class SalesDataController extends Controller
 
             //更新前先刪除數據
             SalesIncomeDetail::where('sales_cal_result_id', $sales_cal_result_id)->delete();
-
-            //2022-03-31 慧霖取銀可以輸入負數
-            if(isset($request->kelly_out)){
-                $temp[] = [
-                    'sales_cal_result_id' => $sales_cal_result_id,
-                    'type_no' => $types['kelly_out'],
-                    'income' => $request->kelly_out,
-                    'remark' => null
-                ];
-            }
 
             foreach($request->inputs[0] as $name => $income){
                 if(isset($types[$name]) && !is_null($income)){
@@ -243,22 +226,6 @@ class SalesDataController extends Controller
             //2022-03-25 如全部未填寫,則只清空所有details
             if(isset($temp)){
                 DB::table('sales_income_details')->insert($temp);
-            }
-
-            //支單寫入數據庫
-            SalesBill::where('shop_id', $shop_id)->whereDate('date', $date)->delete();
-
-            if(isset($request->bills)){
-                foreach($request->bills as $bill){
-                    $sales_bill = new SalesBill();
-                    $sales_bill->sales_cal_result_id = $sales_cal_result_id;
-                    $sales_bill->shop_id = $shop_id;
-                    $sales_bill->date = $date;
-                    $sales_bill->bill_no = $bill['bill_no'];
-                    $sales_bill->outlay = $bill['outlay'];
-
-                    $sales_bill->save();
-                }
             }
 
 //            dump($request->toArray());

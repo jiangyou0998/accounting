@@ -16,6 +16,8 @@
 //Auth::routes();
 
 
+use App\Http\Controllers\SalesDataChangeApplicationController;
+use App\Http\Controllers\SalesDataController;
 
 Route::get('/', 'HomeController@index')
 //    ->middleware('permission:visit_home')
@@ -91,10 +93,36 @@ Route::group(['middleware' => ['auth','permission:operation']], function () {
 Route::group(['middleware' => ['auth','permission:shop']], function () {
     Route::get('sample', 'WorkshopOrderSampleController@index')->name('sample');
     Route::get('kb/sample', 'KB\KBWorkshopOrderSampleController@index')->name('kb.sample');
+
+    // 銷售數據
+    Route::get('sales_data', [SalesDataController::class, 'index'])->name('sales_data');
+    Route::post('sales_data', [SalesDataController::class, 'store'])->name('sales_data.store');
+
+    Route::get('sales_data_change_application', [SalesDataChangeApplicationController::class, 'index'])->name('sales_data_change_application.index');
+    Route::post('sales_data_change_application', [SalesDataChangeApplicationController::class, 'store'])->name('sales_data_change_application.store');
+
+    Route::get('sales_data/print', [SalesDataController::class, 'print'])->name('sales_data.print');
 });
 
 Route::group(['middleware' => ['auth','permission:operation']], function () {
     Route::get('sample/regular', 'WorkshopOrderSampleController@regular')->name('sample.regular');
+});
+
+Route::group(['middleware' => ['auth','role:SuperAdmin|Operation']], function () {
+    Route::get('sales_data/operation_index', [SalesDataController::class, 'operation_index'])->name('sales_data.operation_index');
+    Route::get('sales_data_change_application/apply_index', [SalesDataChangeApplicationController::class, 'apply_index'])->name('sales_data_change_application.apply_index');
+    Route::post('sales_data_change_application/apply', [SalesDataChangeApplicationController::class, 'apply'])->name('sales_data_change_application.apply');
+});
+
+Route::group(['middleware' => ['auth']], function () {
+    // 銷售數據跳轉頁面
+    Route::get('sales_data/redirect', [SalesDataController::class, 'redirect'])->name('sales_data.redirect');
+});
+
+//營運、會計共同權限
+Route::group(['middleware' => ['auth','permission:operation|accounting']], function () {
+    //營業數匯總
+    Route::get('sales_data/report', 'SalesDataController@report')->name('sales_data.report');
 });
 
 Route::group(['middleware' => ['auth']], function () {

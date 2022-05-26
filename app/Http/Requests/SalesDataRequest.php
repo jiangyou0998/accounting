@@ -12,7 +12,6 @@ class SalesDataRequest extends FormRequest
         return [
             'inputs.0.*' => ['nullable', 'numeric', 'min:0'],
             'first_pos_no' => ['nullable', 'numeric', 'min:0'],
-            'kelly_out' => ['nullable', 'numeric'],
         ];
     }
 
@@ -25,7 +24,6 @@ class SalesDataRequest extends FormRequest
 //            'first_pos_no.required' => '請輸入主機No.',
             'first_pos_no.numeric' => '主機No.請輸入數字',
             'first_pos_no.min' => '主機No.請輸入大於零的數字',
-            'kelly_out.numeric' => '「:attribute」請輸入正確的數字',
         ];
     }
 
@@ -42,17 +40,19 @@ class SalesDataRequest extends FormRequest
             'inputs.0.octopus_income' => '八達通',
             'inputs.0.alipay_income' => '支付寶',
             'inputs.0.wechatpay_income' => '微信',
+            'inputs.0.coupon_income' => '現金券',
+            'inputs.0.credit_card_income' => '信用卡',
 
-            'inputs.0.pos_paper_money' => '收銀機紙幣',
-            'inputs.0.pos_coin' => '收銀機硬幣',
+            'inputs.0.pos_money_1000' => '$1000紙幣',
+            'inputs.0.pos_money_500' => '$500紙幣',
+            'inputs.0.pos_money_100' => '$100紙幣',
+            'inputs.0.pos_money_50' => '$50紙幣',
+            'inputs.0.pos_money_20' => '$20紙幣',
+            'inputs.0.pos_money_10' => '$00紙幣',
+            'inputs.0.pos_coin' => '輔幣總額',
 
-            'inputs.0.safe_paper_money' => '夾萬紙幣',
-            'inputs.0.safe_coin' => '夾萬硬幣',
-
-            'inputs.0.deposit_in_safe' => '存入夾萬',
             'inputs.0.deposit_in_bank' => '存入銀行',
 
-            'kelly_out' => '慧霖取銀',
         ];
     }
 }

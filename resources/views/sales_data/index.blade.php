@@ -145,41 +145,67 @@
                             <input type="text" pattern="[0-9]*" class="form-control payment-income" id="wechatpay_income" value="{{ $sales_income_detail['33'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                         </div>
 
+                        <div class="col-md-4 mb-3">
+                            <label for="couponIncome">現金券</label>
+                            <input type="text" pattern="[0-9]*" class="form-control payment-income" id="coupon_income" value="{{ $sales_income_detail['34'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="creditCardIncome">信用卡</label>
+                            <input type="text" pattern="[0-9]*" class="form-control payment-income" id="credit_card_income" value="{{ $sales_income_detail['35'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
+                        </div>
+
                         <h3 class="col-lg-12 p-3 text-right">支付方式總收入 : $<span id="payment_sum">0.00</span></h3>
                     </div>
 {{--                    payment-支付方式收入--}}
                     <hr>
                     <h4 class="mb-3">4.收銀機餘款</h4>
+                    <div class="alert alert-danger pos-cash-alert" role="alert" style="display: none;"></div>
                     <div class="row">
+{{--                        <div class="col-md-6 mb-3">--}}
+{{--                            <label for="posPaperMoney">紙幣</label>--}}
+{{--                            <input type="text" pattern="[0-9]*" class="form-control pos-cash" id="pos_paper_money" value="{{ $sales_income_detail['41'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>--}}
+{{--                        </div>--}}
+
+
                         <div class="col-md-6 mb-3">
-                            <label for="posPaperMoney">紙幣</label>
-                            <input type="text" pattern="[0-9]*" class="form-control pos-cash" id="pos_paper_money" value="{{ $sales_income_detail['41'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
+                            <label for="posPaperMoney">$1000紙幣</label>
+                            <input type="text" pattern="[0-9]*" class="form-control pos-cash" id="pos_money_1000" value="{{ $sales_income_detail['43'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <label for="posCoin">硬幣</label>
+                            <label for="posPaperMoney">$500紙幣</label>
+                            <input type="text" pattern="[0-9]*" class="form-control pos-cash" id="pos_money_500" value="{{ $sales_income_detail['44'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="posPaperMoney">$100紙幣</label>
+                            <input type="text" pattern="[0-9]*" class="form-control pos-cash" id="pos_money_100" value="{{ $sales_income_detail['45'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="posPaperMoney">$50紙幣</label>
+                            <input type="text" pattern="[0-9]*" class="form-control pos-cash" id="pos_money_50" value="{{ $sales_income_detail['46'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="posPaperMoney">$20紙幣</label>
+                            <input type="text" pattern="[0-9]*" class="form-control pos-cash" id="pos_money_20" value="{{ $sales_income_detail['47'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="posPaperMoney">$10紙幣</label>
+                            <input type="text" pattern="[0-9]*" class="form-control pos-cash" id="pos_money_10" value="{{ $sales_income_detail['48'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="posCoin">輔幣總額</label>
                             <input type="text" pattern="[0-9]*" class="form-control pos-cash" id="pos_coin" value="{{ $sales_income_detail['42'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                         </div>
 
                     </div>
 
                     <h3 class="col-lg-12 p-3 text-right">收銀機餘款總計 : $<span id="pos_cash_sum">0.00</span></h3>
-
-                    <hr>
-                    <h4 class="mb-3">5.夾萬餘款</h4>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="safePaperMoney">紙幣</label>
-                            <input type="text" pattern="[0-9]*" class="form-control safe-cash" id="safe_paper_money" value="{{ $sales_income_detail['51'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label for="safeCoin">硬幣</label>
-                            <input type="text" pattern="[0-9]*" class="form-control safe-cash" id="safe_coin" value="{{ $sales_income_detail['52'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
-                        </div>
-
-                        <h3 class="col-lg-12 p-3 text-right">夾萬餘款總計 : $<span id="safe_cash_sum">0.00</span></h3>
-                    </div>
 
                     <hr>
                     <h4 class="mb-3">6.承上數</h4>
@@ -193,57 +219,25 @@
                     <hr>
                     <h4 class="mb-3">7.存入取出數</h4>
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="depositInSafe">存入夾萬</label>
-                            <input type="text" pattern="[0-9]*" class="form-control in-out" id="deposit_in_safe" value="{{ $sales_income_detail['71'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
-                        </div>
+{{--                        <div class="col-md-6 mb-3">--}}
+{{--                            <label for="depositInSafe">存入夾萬</label>--}}
+{{--                            <input type="text" pattern="[0-9]*" class="form-control in-out" id="deposit_in_safe" value="{{ $sales_income_detail['71'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>--}}
+{{--                        </div>--}}
 
                         <div class="col-md-6 mb-3">
                             <label for="depositInBank">存入銀行</label>
                             <div class="form-inline row">
                                 <select class="form-control form-inline col-md-4" name="deposit_bank" id="deposit_bank">
                                     <option value="">-選擇銀行-</option>
-                                    <option value="東亞" @if($bank === '東亞') selected @endif>東亞</option>
-                                    <option value="HSBC" @if($bank === 'HSBC') selected @endif>HSBC</option>
-                                    <option value="中銀" @if($bank === '中銀') selected @endif>中銀</option>
-                                    <option value="創興" @if($bank === '創興') selected @endif>創興</option>
+                                    <option value="匯豐" @if($bank === '匯豐') selected @endif>匯豐</option>
+                                    <option value="建行" @if($bank === '建行') selected @endif>建行</option>
+                                    <option value="一田" @if($bank === '一田') selected @endif>一田</option>
                                 </select>
                                 <input class="form-control form-inline col-md-8" type="text" pattern="[0-9]*" class="form-control in-out" id="deposit_in_bank" value="{{ $sales_income_detail['72'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                             </div>
                         </div>
 
-{{--                        慧霖取銀可以輸入負數--}}
-                        <div class="col-md-6 mb-3">
-                            <label for="kellyOut">慧霖取銀</label>
-                            <input type="text" pattern="[0-9]*" class="form-control in-out" id="kelly_out" value="{{ $sales_income_detail['73'] ?? '' }}" placeholder="" required>
-                        </div>
                     </div>
-
-                    <hr>
-                    <h4 class="mb-3">8.支單</h4>
-                    <div class="row">
-                        @for($i=1; $i<=10; $i++)
-                            <div class="col-md-6 mb-3">
-                                <label for="billPaid">支單({{$i}})</label>
-                                <input type="text" pattern="[0-9]*" class="form-control bill-paid" placeholder="" value="{{ $bills[$i] ?? '' }}" required>
-                            </div>
-                        @endfor
-                        <h3 class="col-lg-12 p-3 text-right">支單總計 : $<span id="bill_paid_sum">{{ $sales_cal_result->bill_paid_sum ?? '0.00'}}</span></h3>
-                    </div>
-
-
-{{--                    2022-05-19 新增時節數--}}
-                    <hr>
-                    <h4 class="mb-3">9.時節數</h4>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="seasonalIncome">時節數</label>
-                            <input type="text" pattern="[0-9]*" class="form-control seasonal-income" id="seasonal_income" value="{{ $sales_income_detail['91'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
-                        </div>
-                    </div>
-
-                    <br>
-                    <br>
 
                     <hr>
                     <h4 class="mb-3">10.總計</h4>
@@ -307,18 +301,51 @@
         $(document).on('blur', '.pos-cash', function () {
             let pos_cash_sum = getPosCashSum();
             $('#pos_cash_sum').html(pos_cash_sum);
-        });
 
-        //
-        $(document).on('blur', '.safe-cash', function () {
-            let safe_cash_sum = getSafeCashSum();
-            $('#safe_cash_sum').html(safe_cash_sum);
-        });
+            let pos_money_1000 = $('#pos_money_1000').val();
+            let pos_money_500 = $('#pos_money_500').val();
+            let pos_money_100 = $('#pos_money_100').val();
+            let pos_money_50 = $('#pos_money_50').val();
+            let pos_money_20 = $('#pos_money_20').val();
+            let pos_money_10 = $('#pos_money_10').val();
+            let html = '';
+            let alert_show = false;
+            if(pos_money_1000 % 1000 !== 0){
+                html += '<div>$1000紙幣數值輸入有誤，請檢查!</div>';
+                alert_show = true;
+            }
 
-        //
-        $(document).on('blur', '.bill-paid', function () {
-            let bill_paid_sum = getBillPaidSum();
-            $('#bill_paid_sum').html(bill_paid_sum);
+            if(pos_money_500 % 500 !== 0){
+                html += '<div>$500紙幣數值輸入有誤，請檢查!</div>';
+                alert_show = true;
+            }
+
+            if(pos_money_100 % 100 !== 0){
+                html += '<div>$100紙幣數值輸入有誤，請檢查!</div>';
+                alert_show = true;
+            }
+
+            if(pos_money_50 % 50 !== 0){
+                html += '<div>$50紙幣數值輸入有誤，請檢查!</div>';
+                alert_show = true;
+            }
+
+            if(pos_money_20 % 20 !== 0){
+                html += '<div>$20紙幣數值輸入有誤，請檢查!</div>';
+                alert_show = true;
+            }
+
+            if(pos_money_10 % 10 !== 0){
+                html += '<div>$10紙幣數值輸入有誤，請檢查!</div>';
+                alert_show = true;
+            }
+
+            if (alert_show){
+                $('.pos-cash-alert').show();
+                $('.pos-cash-alert').html(html);
+            }else{
+                $('.pos-cash-alert').hide();
+            }
         });
 
         //計算收入,差額
@@ -373,6 +400,8 @@
             let octopus_income = $('#octopus_income').val();
             let alipay_income = $('#alipay_income').val();
             let wechatpay_income = $('#wechatpay_income').val();
+            let coupon_income = $('#coupon_income').val();
+            let credit_card_income = $('#credit_card_income').val();
             let payment_sum = 0;
 
             if((octopus_income.length > 0)){
@@ -387,17 +416,50 @@
                 payment_sum += parseFloat(wechatpay_income);
             }
 
+            if((coupon_income.length > 0)){
+                payment_sum += parseFloat(coupon_income);
+            }
+
+            if((credit_card_income.length > 0)){
+                payment_sum += parseFloat(credit_card_income);
+            }
+
             return payment_sum.toFixed(2);
         }
 
         //獲取收銀機餘款總數
         function getPosCashSum(){
-            let pos_paper_money = $('#pos_paper_money').val();
+            let pos_money_1000 = $('#pos_money_1000').val();
+            let pos_money_500 = $('#pos_money_500').val();
+            let pos_money_100 = $('#pos_money_100').val();
+            let pos_money_50 = $('#pos_money_50').val();
+            let pos_money_20 = $('#pos_money_20').val();
+            let pos_money_10 = $('#pos_money_10').val();
             let pos_coin = $('#pos_coin').val();
             let pos_cash_sum = 0;
 
-            if((pos_paper_money.length > 0)){
-                pos_cash_sum += parseFloat(pos_paper_money);
+            if((pos_money_1000.length > 0)){
+                pos_cash_sum += parseFloat(pos_money_1000);
+            }
+
+            if((pos_money_500.length > 0)){
+                pos_cash_sum += parseFloat(pos_money_500);
+            }
+
+            if((pos_money_100.length > 0)){
+                pos_cash_sum += parseFloat(pos_money_100);
+            }
+
+            if((pos_money_50.length > 0)){
+                pos_cash_sum += parseFloat(pos_money_50);
+            }
+
+            if((pos_money_20.length > 0)){
+                pos_cash_sum += parseFloat(pos_money_20);
+            }
+
+            if((pos_money_10.length > 0)){
+                pos_cash_sum += parseFloat(pos_money_10);
             }
 
             if((pos_coin.length > 0)){
@@ -407,22 +469,6 @@
             return pos_cash_sum.toFixed(2);
         }
 
-        //獲取夾萬餘款總數
-        function getSafeCashSum(){
-            let safe_paper_money = $('#safe_paper_money').val();
-            let safe_coin = $('#safe_coin').val();
-            let safe_cash_sum = 0;
-
-            if((safe_paper_money.length > 0)){
-                safe_cash_sum += parseFloat(safe_paper_money);
-            }
-
-            if((safe_coin.length > 0)){
-                safe_cash_sum += parseFloat(safe_coin);
-            }
-
-            return safe_cash_sum.toFixed(2);
-        }
 
         // //獲取夾萬餘款總數(有可能計算公式不對)
         // function getSafeBalance(){
@@ -436,20 +482,6 @@
         //
         //     return safe_balance.toFixed(2);
         // }
-
-        //獲取支單總數
-        function getBillPaidSum(){
-            let bill_paid_sum = 0;
-
-            $('.bill-paid').each(function (){
-                let bill_paid = $(this).val();
-                if((bill_paid.length > 0)){
-                    bill_paid_sum += parseFloat(bill_paid);
-                }
-            });
-
-            return bill_paid_sum.toFixed(2);
-        }
 
         //獲取承上結存
         function getLastBalance(){
@@ -465,9 +497,8 @@
         function getBalance(){
             let balance = 0;
             let pos_cash_sum = getPosCashSum();
-            let safe_cash_sum = getSafeCashSum();
 
-            balance = parseFloat(pos_cash_sum) + parseFloat(safe_cash_sum);
+            balance = parseFloat(pos_cash_sum);
 
             return balance.toFixed(2);
         }
@@ -483,14 +514,14 @@
         }
 
         //獲取存入夾萬數
-        function getDepositInSafe(){
-            let deposit_in_safe = 0;
-            let input_value = $('#deposit_in_safe').val();
-            if((input_value.length > 0)){
-                deposit_in_safe += parseFloat(input_value);
-            }
-            return deposit_in_safe.toFixed(2);
-        }
+        // function getDepositInSafe(){
+        //     let deposit_in_safe = 0;
+        //     let input_value = $('#deposit_in_safe').val();
+        //     if((input_value.length > 0)){
+        //         deposit_in_safe += parseFloat(input_value);
+        //     }
+        //     return deposit_in_safe.toFixed(2);
+        // }
 
         //獲取存入銀行數
         function getDepositInBank(){
@@ -502,41 +533,22 @@
             return deposit_in_bank.toFixed(2);
         }
 
-        //獲取慧霖取銀數
-        function getKellyOut(){
-            let kelly_out = 0;
-            let input_value = $('#kelly_out').val();
-            if((input_value.length > 0)){
-                kelly_out += parseFloat(input_value);
-            }
-            return kelly_out.toFixed(2);
-        }
-
         //獲取收入
         function getIncomeSum(){
             //收銀機餘款總計
             let pos_cash_sum = getPosCashSum();
-            //夾萬餘款總計
-            let safe_cash_sum = getSafeCashSum();
             //支付方式收入總計
             let payment_sum = getPaymentIncomeSum();
-            //支單總計
-            let bill_paid_sum = getBillPaidSum();
             //存入銀行
             let deposit_in_bank = getDepositInBank();
             //承上結存
             let last_balance = getLastBalance();
-            //慧霖取銀
-            let kelly_out = getKellyOut();
 
             let income_sum = 0;
             income_sum += parseFloat(pos_cash_sum);
-            income_sum += parseFloat(safe_cash_sum);
             income_sum += parseFloat(payment_sum);
-            income_sum += parseFloat(bill_paid_sum);
             income_sum += parseFloat(deposit_in_bank);
             income_sum -= parseFloat(last_balance);
-            income_sum -= parseFloat(kelly_out);
             return income_sum.toFixed(2);
         }
 
@@ -573,14 +585,10 @@
             // 构建请求参数，将用户选择的維修項目 ,維修員 和 維修費用 写入请求参数
             var req = {
                 inputs: [],
-                bills : [],
                 first_pos_no : $('#first_pos_no').val(),
                 second_pos_no : $('#second_pos_no').val(),
                 deposit_bank : $('#deposit_bank option:selected').val(),
-                kelly_out: $('#kelly_out').val(),
                 balance: getBalance(),
-                safe_balance: getSafeCashSum(),
-                bill_paid_sum: getBillPaidSum(),
                 income_sum: getIncomeSum(),
                 difference: getDifference(),
             };
@@ -594,25 +602,17 @@
                 octopus_income: $('#octopus_income').val(),
                 alipay_income: $('#alipay_income').val(),
                 wechatpay_income: $('#wechatpay_income').val(),
-                pos_paper_money: $('#pos_paper_money').val(),
+                coupon_income: $('#coupon_income').val(),
+                credit_card_income: $('#credit_card_income').val(),
+                pos_money_1000: $('#pos_money_1000').val(),
+                pos_money_500: $('#pos_money_500').val(),
+                pos_money_100: $('#pos_money_100').val(),
+                pos_money_50: $('#pos_money_50').val(),
+                pos_money_20: $('#pos_money_20').val(),
+                pos_money_10: $('#pos_money_10').val(),
                 pos_coin: $('#pos_coin').val(),
-                safe_paper_money: $('#safe_paper_money').val(),
-                safe_coin: $('#safe_coin').val(),
-                deposit_in_safe: $('#deposit_in_safe').val(),
+                // deposit_in_safe: $('#deposit_in_safe').val(),
                 deposit_in_bank: $('#deposit_in_bank').val(),
-                seasonal_income: $('#seasonal_income').val(),
-            });
-
-            let $bill_no = 1;
-            $('.bill-paid').each(function (){
-                let bill_paid = $(this).val();
-                if((bill_paid.length > 0)){
-                    req.bills.push({
-                        bill_no: $bill_no,
-                        outlay: bill_paid,
-                    })
-                    $bill_no ++ ;
-                }
             });
 
             $.ajax({
