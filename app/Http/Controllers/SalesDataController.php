@@ -11,6 +11,7 @@ use App\Models\SalesCalResult;
 use App\Models\SalesDataChangeApplication;
 use App\Models\SalesIncomeDetail;
 use App\Models\SalesIncomeType;
+use App\Models\ShopGroup;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -76,7 +77,7 @@ class SalesDataController extends Controller
 //        dump($front_groups);
 
         $day_income = SalesCalResult::getShopIdAndTotalIncome($date, 'day');
-        $shop_names = User::getShopsByShopGroup(1)->pluck('report_name', 'id')->toArray();
+        $shop_names = User::getShopsByShopGroup(ShopGroup::CURRENT_SHOP_ID)->pluck('report_name', 'id')->toArray();
 
         // 混合型/飯堂總數
         $sale_summary['other_total'] = 0;

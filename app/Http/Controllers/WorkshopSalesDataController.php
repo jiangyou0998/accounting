@@ -50,11 +50,24 @@ class WorkshopSalesDataController extends Controller
         $customer_total_today = $customer_total_today->toArray();
         $customer_total_this_month = $customer_total_this_month->toArray();
 
+        $jichang_ids = [127,128,129,130];
+        $jichang_today = WorkshopCartItem::getCustomerTotalByIDs($date, $date, $jichang_ids);
+        $jichang_this_month = WorkshopCartItem::getCustomerTotalByIDs($start_of_month, $date, $jichang_ids);
+
+        $hongkan_ids = [169,170];
+        $hongkan_today = WorkshopCartItem::getCustomerTotalByIDs($date, $date, $hongkan_ids);
+        $hongkan_this_month = WorkshopCartItem::getCustomerTotalByIDs($start_of_month, $date, $hongkan_ids);
+
+
         return view('workshop_sales_data.report', compact(
             'sale_summary',
             'shop_groups',
             'customer_total_today',
             'customer_total_this_month',
+            'jichang_today',
+            'jichang_this_month',
+            'hongkan_today',
+            'hongkan_this_month',
             'date',
             'date_and_week')
         );

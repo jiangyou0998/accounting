@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\SalesDataChangeApplicationRequest;
 use App\Models\SalesDataChangeApplication;
+use App\Models\ShopGroup;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -62,7 +63,7 @@ class SalesDataChangeApplicationController extends Controller
 
 //        dump($today_handled_datas->toArray());
 
-        $shop_names = User::getShopsByShopGroup(1)->pluck('report_name', 'id')->toArray();
+        $shop_names = User::getShopsByShopGroup(ShopGroup::CURRENT_SHOP_ID)->pluck('report_name', 'id')->toArray();
 
         return view('sales_data.change_application.apply', compact(
             'applying_datas',

@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class ShopGroup extends Model
 {
+    //當前內聯網所屬商店分組ID
+    const CURRENT_SHOP_ID = 1;
+    const LAGARDERE_SHOP_ID = 8;
 
     protected $table = 'shop_groups';
 

@@ -476,19 +476,42 @@ class WorkshopCartItem extends Model
             ->addSelect(DB::raw($sql));
 
         $cartitem = $cartitem
-//            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
             ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
             ->leftJoin('shop_group_has_users', 'users.id', '=', 'shop_group_has_users.user_id');
 
         $cartitem = $cartitem
             ->whereBetween('workshop_cart_items.deli_date', [$start, $end])
             ->where('workshop_cart_items.status', '<>', 4)
-            ->where('shop_group_has_users.shop_group_id', '<>', 1)
+            ->where('shop_group_has_users.shop_group_id', '<>', ShopGroup::CURRENT_SHOP_ID)
             ->groupBy('shop_group_has_users.shop_group_id');
 
         $cartitem = $cartitem->pluck('Total', 'shop_group_id');
 
         return $cartitem;
+    }
+
+    public static function getCustomerTotalByIDs($start, $end, $ids)
+    {
+        $cartitem = new WorkshopCartItem();
+
+        //查詢Total
+        $sql = "ROUND(sum(
+            (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_cart_items.order_price)),2)
+            as Total";
+        $cartitem = $cartitem
+            ->addSelect(DB::raw($sql));
+
+        $cartitem = $cartitem
+            ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id');
+
+        $cartitem = $cartitem
+            ->whereBetween('workshop_cart_items.deli_date', [$start, $end])
+            ->where('workshop_cart_items.status', '<>', 4)
+            ->whereIn('users.id', $ids);
+
+        $total = $cartitem->get('Total')->first();
+
+        return $total;
     }
 
 }
