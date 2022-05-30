@@ -8,6 +8,7 @@
 
 <div class="container">
     <div class="py-5 text-center">
+        <div align="left"><a target="_top" href="{{route('sales_data')}}" style="font-size: xx-large;">返回今天營業數錄入</a></div>
 
         <h2>營業數修改申請</h2>
 {{--        <p class="lead">Below is an example forms built entirely with Bootstrap's forms controls. Each required forms group has a validation state that can be triggered by attempting to submit the forms without completing it.</p>--}}

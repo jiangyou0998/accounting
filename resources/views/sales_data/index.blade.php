@@ -208,7 +208,7 @@
                     <h3 class="col-lg-12 p-3 text-right">收銀機餘款總計 : $<span id="pos_cash_sum">0.00</span></h3>
 
                     <hr>
-                    <h4 class="mb-3">6.承上數</h4>
+                    <h4 class="mb-3">5.承上數</h4>
                     <div class="row">
 
                         <h3 class="col-lg-12 p-3 text-right">承上結存 : $<span id="last_balance">{{$last_balance}}</span></h3>
@@ -217,7 +217,7 @@
                     </div>
 
                     <hr>
-                    <h4 class="mb-3">7.存入取出數</h4>
+                    <h4 class="mb-3">6.存入取出數</h4>
                     <div class="row">
 {{--                        <div class="col-md-6 mb-3">--}}
 {{--                            <label for="depositInSafe">存入夾萬</label>--}}
@@ -225,10 +225,10 @@
 {{--                        </div>--}}
 
                         <div class="col-md-6 mb-3">
-                            <label for="depositInBank">存入銀行</label>
+                            <label for="depositInBank">存入數</label>
                             <div class="form-inline row">
                                 <select class="form-control form-inline col-md-4" name="deposit_bank" id="deposit_bank">
-                                    <option value="">-選擇銀行-</option>
+                                    <option value="">-請選擇-</option>
                                     <option value="匯豐" @if($bank === '匯豐') selected @endif>匯豐</option>
                                     <option value="建行" @if($bank === '建行') selected @endif>建行</option>
                                     <option value="一田" @if($bank === '一田') selected @endif>一田</option>
@@ -240,7 +240,7 @@
                     </div>
 
                     <hr>
-                    <h4 class="mb-3">10.總計</h4>
+                    <h4 class="mb-3">7.總計</h4>
                     <div class="row">
                         <h3 class="col-lg-12 p-3 text-right">收入 : $<span id="income_sum">{{ $sales_cal_result->income_sum ?? '0.00'}}</span></h3>
                         <h3 class="col-lg-12 p-3 text-right">差額 : $<span id="difference">{{ $sales_cal_result->difference ?? '0.00'}}</span></h3>
@@ -573,7 +573,7 @@
                 // alert('請選擇銀行');
                 Swal.fire({
                     icon: 'warning',
-                    title: "請選擇銀行!",
+                    title: "請選擇存入地點!",
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: '確定',
                 })
