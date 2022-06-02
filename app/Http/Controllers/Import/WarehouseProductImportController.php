@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Import;
 use App\Http\Controllers\Controller;
 use App\Models\Supplier\Supplier;
 use App\Models\SupplierGroup;
+use App\Models\WarehouseGroup;
 use App\Models\WarehouseProduct;
 use App\Models\WorkshopUnit;
 use Box\Spout\Common\Type;
@@ -25,6 +26,7 @@ class WarehouseProductImportController extends Controller
         $supplierArr = [];
         $unitArr = [];
         $groupArr = [];
+        $warehouseGroupArr = [];
 
         $changeUnitArr = [
             'bag' => '袋',
@@ -68,6 +70,9 @@ class WarehouseProductImportController extends Controller
 
                 $group = trim($rowValues[10]);
                 $groupArr[] = $group;
+
+                $warehouse_group = trim($rowValues[12]);
+                $warehouseGroupArr[] = $warehouse_group;
 
                 //true為不合法名稱
                 $product_inavail = ($rowValues[2] == '非折扣項目總計'
@@ -121,6 +126,7 @@ class WarehouseProductImportController extends Controller
         $this->importUnits($unitArr);
         $this->importSuppliers($supplierArr);
         $this->importGroups($groupArr);
+        $this->importWarehouseGroups($warehouseGroupArr);
         $this->importSupplierProductItems($productArr);
 
         $reader->close();
@@ -152,6 +158,14 @@ class WarehouseProductImportController extends Controller
         });
     }
 
+    public function importWarehouseGroups($groupArr){
+        DB::transaction(function() use($groupArr){
+            foreach ($groupArr as $group){
+                WarehouseGroup::firstOrCreate(array('name' => $group));
+            }
+        });
+    }
+
     public function importSupplierProductItems($productArr){
         // 数据库事务处理
         DB::transaction(function() use($productArr){
@@ -159,6 +173,7 @@ class WarehouseProductImportController extends Controller
             $unitArr = WorkshopUnit::all()->pluck('id', 'unit_name')->toArray();
             $supplierArr = Supplier::all()->pluck('id', 'name')->toArray();
             $groupArr = SupplierGroup::all()->pluck('id', 'name')->toArray();
+            $warehGroupArr = WarehouseGroup::all()->pluck('id', 'name')->toArray();
 
             foreach ($productArr as $key => $value){
                 $warehouseProductModel = new WarehouseProduct();
@@ -174,6 +189,7 @@ class WarehouseProductImportController extends Controller
                 $warehouseProductModel->status = 0;
                 $warehouseProductModel->weight = ($value[7] != '') ? $value[7] : null;
                 $warehouseProductModel->weight_unit = ($value[8] != '') ? $value[8] : null;
+                $warehouseProductModel->warehouse_group_id = $warehGroupArr[$value[12]];
                 $warehouseProductModel->save();
             }
 

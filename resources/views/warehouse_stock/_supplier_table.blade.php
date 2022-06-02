@@ -1,7 +1,7 @@
  @foreach($suppliers as $supplier_id => $supplier)
-    @foreach($groups as $group_id => $group)
-        @isset($products[$supplier_id][$group_id])
-            <h1>{{ $supplier . '-' . $group }}</h1>
+    @foreach($warehouse_groups as $warehouse_group_id => $warehouse_group)
+        @isset($products[$supplier_id][$warehouse_group_id])
+            <h1>{{ $supplier . '-' . $warehouse_group }}</h1>
             <table class="table">
 
                 <thead class="thead-dark">
@@ -15,10 +15,10 @@
                 </thead>
 
                 <tbody class="table-striped" style="background-color: white">
-                @foreach($products[$supplier_id][$group_id] as $product)
+                @foreach($products[$supplier_id][$warehouse_group_id] as $product)
                     <tr @if($product->unit->unit_name === '箱') class="table-danger @endif">
                         <td>{{$product->product_no}}</td>
-                        <td>{{$product->product_name}}</td>
+                        <td>{{$product->product_name_short}}</td>
 {{--                            數值輸入--}}
                         <td>
                             <input class="qty" type="number"

@@ -38,22 +38,22 @@ class WarehouseProduct extends Model
         return $this->hasMany(WarehouseStockItem::class,"product_id","id");
     }
 
-    public static function getProducts($ids = null, $group = null, $supplier = null, $search = null, $type = null, $date = null){
+    public static function getProducts($ids = null, $warehouse_group = null, $supplier = null, $search = null, $type = null, $date = null){
         $date = Carbon::parse($date)->isoFormat('YMMDD');
         $products = self::with(['unit', 'base_unit'])
             ->ofIds($ids)
-            ->OfGroup($group)
+            ->OfWarehouseGroup($warehouse_group)
             ->OfSupplier($supplier)
             ->OfSearch($search)
             ->OfType($type, $date)
             ->where('status', 0)
             ->orderBy('supplier_id')
-            ->orderBy('group_id')
+            ->orderBy('warehouse_group_id')
             ->get()
             ->groupBy('supplier_id');
 
         $products->transform(function ($item, $key) {
-            return $item->groupBy('group_id');
+            return $item->groupBy('warehouse_group_id');
         });
 
         return $products;
@@ -73,6 +73,13 @@ class WarehouseProduct extends Model
     {
         if ($group) {
             return $query->where('group_id', $group);
+        }
+    }
+
+    public function scopeOfWarehouseGroup($query, $warehouse_group)
+    {
+        if ($warehouse_group) {
+            return $query->where('warehouse_group_id', $warehouse_group);
         }
     }
 

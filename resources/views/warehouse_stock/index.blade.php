@@ -36,20 +36,31 @@
         </div>
         <hr>
         <div class="row">
-            {{--            左邊供應商欄--}}
+            {{--            左邊部門欄--}}
             <div class="col-3 col-md-4 mb-4">
                 <h4 class="d-flex justify-content-between align-items-center mb-3">
                     <span class="text-muted">部門</span>
                 </h4>
                 <ul class="list-group mb-3">
+{{--                    全部--}}
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <div>
+                            <h6 class="my-0">
+                                <a href="{{ route('stock.warehouse.index', ['supplier' => request()->supplier,  'date' => request()->date]) }}">
+                                    全部
+                                </a>
+                            </h6>
+                        </div>
 
-                    @foreach($groups as $key => $value)
+                    </li>
+{{--                    其他部門--}}
+                    @foreach($warehouse_groups as $key => $value)
                         <li class="list-group-item
-                            @if(request()->group == $key) list-group-item-secondary @endif
+                            @if(request()->warehouse_group == $key) list-group-item-secondary @endif
                             d-flex justify-content-between lh-condensed">
                             <div>
                                 <h6 class="my-0">
-                                    <a href="{{ route('stock.warehouse.index', ['group' => $key, 'supplier' => request()->supplier,  'date' => request()->date]) }}">
+                                    <a href="{{ route('stock.warehouse.index', ['warehouse_group' => $key, 'supplier' => request()->supplier,  'date' => request()->date]) }}">
                                         {{ $value }}
                                     </a>
                                 </h6>
@@ -64,13 +75,25 @@
                     <span class="text-muted">供應商</span>
                 </h4>
                 <ul class="list-group mb-3">
+                    {{--                    全部--}}
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <div>
+                            <h6 class="my-0">
+                                <a href="{{ route('stock.warehouse.index', ['warehouse_group' => request()->warehouse_group,  'date' => request()->date]) }}">
+                                    全部
+                                </a>
+                            </h6>
+                        </div>
+
+                    </li>
+                    {{--                    其他供應商--}}
                     @foreach($suppliers as $key => $value)
                         <li class="list-group-item
                                 @if(request()->supplier == $key) list-group-item-secondary @endif
                             d-flex justify-content-between lh-condensed">
                             <div>
                                 <h6 class="my-0">
-                                    <a href="{{ route('stock.warehouse.index', ['group' => request()->group, 'supplier' => $key, 'date' => request()->date]) }}">
+                                    <a href="{{ route('stock.warehouse.index', ['warehouse_group' => request()->warehouse_group, 'supplier' => $key, 'date' => request()->date]) }}">
                                         {{$value}}
                                     </a>
                                 </h6>
