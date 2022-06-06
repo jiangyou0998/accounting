@@ -76,34 +76,6 @@
         <hr class="mb-4">
         <div class="copy">
             <h4>{{$date_and_week}}</h4>
-            @isset($front_groups['other'])
-                <h5>混合型/飯堂營業數</h5>
-                @foreach($front_groups['other'] as $shop_id)
-                    <span class="left">
-                        {{$shop_names[$shop_id] ?? 0}} ${{number_format(($day_income[$shop_id] ?? 0), 0)}}
-                    </span>
-                    <span class="right">
-                        累積 ${{number_format(($total_income[$shop_id] ?? 0), 0)}}
-                    </span>
-{{--                    <span class="right">--}}
-{{--                        上月 ${{number_format(($last_month_total_income[$value->shop_id] ?? 0), 0)}}--}}
-{{--                    </span>--}}
-                    @isset($seasonal_income[$shop_id])
-                        @if($seasonal_income[$shop_id] != 0)
-                            <span class="right">
-                                時節 ${{number_format(($seasonal_income[$shop_id] ?? 0), 0)}}
-                            </span>
-                        @endif
-                    @endisset
-                    <br>
-                @endforeach
-                <h6>
-                    <span class="total-left">合計${{number_format($sale_summary['other_total'], 0) ?? '0.00'}}</span>
-                    <span class="total-right">本月累積${{number_format($sale_summary['other_month_total'], 0) ?? '0.00'}}</span>
-{{--                    <span class="total-right">上月${{number_format($sale_summary['other_last_month_total'], 0) ?? '0.00'}}</span>--}}
-                </h6>
-
-            @endisset
 
             @isset($front_groups['bakery'])
                 <div class="group-div">
@@ -154,27 +126,6 @@
         <hr class="mb-4">
             <div class="copy">
                 <h4>{{$date_and_week}}</h4>
-                @isset($sale_summary['other'])
-                    <h5>混合型/飯堂營業數</h5>
-                    @foreach($sale_summary['other'] as $value)
-                        <span style="float:left;width:140px;">
-                            {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}
-                        </span>
-                        <span style="width: 180px">
-                            本月 ${{number_format($total_income[$value->shop_id], 2) ?? '0.00'}}
-                        </span>
-                        <br>
-                        <span>
-                            八達通${{number_format(($value->details->where('type_no', 31)->first()->income ?? 0), 2)}}
-                        </span>
-                        <br>
-                    @endforeach
-                        <h5>
-                            <span>合計:${{number_format($sale_summary['other_total'], 2) ?? '0.00'}}</span>
-{{--                            <span>總:${{sprintf("%.2f", $sale_summary['other_month_total'])}}</span>--}}
-                        </h5>
-                        <br>
-                @endisset
 
                 @isset($sale_summary['bakery'])
                     <h5>餅店營業數</h5>
@@ -216,33 +167,6 @@
         <hr class="mb-4">
         <div class="copy">
             <h4>{{$date_and_week}}</h4>
-            @isset($sale_summary['other'])
-                <h5>混合型/飯堂營業數</h5>
-                @foreach($sale_summary['other'] as $value)
-
-                    @if($loop->iteration % 2 === 1)
-                        <span style="float:left;width:140px;">
-                            {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}
-                        </span>
-                    @endif
-
-                    @if($loop->iteration % 2 === 0)
-                        <span style="width:180px;">
-                            {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}
-                        </span>
-                        <br>
-                    @endif
-
-                    @if($loop->iteration % 2 === 1 && $loop->last)
-                        <br>
-                    @endif
-
-                @endforeach
-                <h5>
-                    <span>合計:${{number_format($sale_summary['other_total'], 2) ?? '0.00'}}</span>
-                </h5>
-                <br>
-            @endisset
 
             @isset($sale_summary['bakery'])
                 <h5>餅店營業數</h5>

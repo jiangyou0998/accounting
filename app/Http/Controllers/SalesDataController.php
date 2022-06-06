@@ -53,35 +53,30 @@ class SalesDataController extends Controller
         $date_and_week = Carbon::parse($date)->isoFormat('YYYY/MM/DD(dd)');
         $front_groups = FrontGroupHasUser::query()
             //不要後勤分組
-            ->where('front_group_id', '!=' , 4)
+            ->where('front_group_id', '!=' , 2)
             ->get()->mapToGroups(function ($item, $key) {
-                //3 === $item['front_group_id'] 為餅店分組
-                //80 !== $item['user_id'] ID80用戶為利東街, 暫時不計入餅店
-                if(3 === $item['front_group_id'] && 80 !== $item['user_id']){
+                //1 === $item['front_group_id'] 為餅店分組
+                //42 !== $item['user_id'] ID80用戶為黃埔, 不計入餅店
+                //93 !== $item['user_id'] ID80用戶為糧廠, 不計入餅店
+                if(1 === $item['front_group_id'] && 42 !== $item['user_id'] && 93 !== $item['user_id']){
                     return [ 'bakery' => $item['user_id']];
                 }else{
                     return [ 'other' => $item['user_id']];
                 }
             })->toArray();
+
         //2022-05-05 按shop_id排序
         $sale_summary = SalesCalResult::query()->with(['user', 'details'])->where('date', $date)->get()->sortBy('shop_id');
         $sale_summary = $sale_summary->mapToGroups(function ($item, $key) use($front_groups){
 //            $item->octopus = $item['detail']->where('type_no', 31)->first()->income ?? '0.00';
             if(in_array($item['shop_id'], $front_groups['bakery'])){
                 return ['bakery' => $item];
-            }else{
-                return ['other' => $item];
             }
         });
-//        dump($front_groups);
 
         $day_income = SalesCalResult::getShopIdAndTotalIncome($date, 'day');
         $shop_names = User::getShopsByShopGroup(ShopGroup::CURRENT_SHOP_ID)->pluck('report_name', 'id')->toArray();
 
-        // 混合型/飯堂總數
-        $sale_summary['other_total'] = 0;
-        $sale_summary['other_month_total'] = 0;
-        $sale_summary['other_last_month_total'] = 0;
         // 餅店總數
         $sale_summary['bakery_total'] = 0;
         $sale_summary['bakery_month_total'] = 0;
@@ -91,25 +86,18 @@ class SalesDataController extends Controller
         $sale_summary['month_total'] = 0;
         $sale_summary['last_month_total'] = 0;
 
-        // 計算 混合型/飯堂 總數
-        if(isset($sale_summary['other'])){
-            $sale_summary['other_total'] = $sale_summary['other']->sum('income_sum');
-        }
-
         // 計算 餅店 總數
         if(isset($sale_summary['bakery'])){
             $sale_summary['bakery_total'] = $sale_summary['bakery']->sum('income_sum');
         }
 
         // 計算所有總數
-        $sale_summary['total'] = $sale_summary['other_total'] + $sale_summary['bakery_total'];
+        $sale_summary['total'] = $sale_summary['bakery_total'];
 
         $total_income = SalesCalResult::getShopIdAndTotalIncome($date, 'month');
 
         foreach ($total_income as $shop_id => $total){
-            if(in_array($shop_id, $front_groups['other'])){
-                $sale_summary['other_month_total'] += $total;
-            }else if(in_array($shop_id, $front_groups['bakery'])){
+            if(in_array($shop_id, $front_groups['bakery'])){
                 $sale_summary['bakery_month_total'] += $total;
             }
             $sale_summary['month_total'] += $total;
@@ -119,9 +107,7 @@ class SalesDataController extends Controller
         $last_month_total_income = SalesCalResult::getShopIdAndLastMonthTotalAtSameDay($date);
 
         foreach ($last_month_total_income as $shop_id => $total){
-            if(in_array($shop_id, $front_groups['other'])){
-                $sale_summary['other_last_month_total'] += $total;
-            }else if(in_array($shop_id, $front_groups['bakery'])){
+            if(in_array($shop_id, $front_groups['bakery'])){
                 $sale_summary['bakery_last_month_total'] += $total;
             }
             $sale_summary['last_month_total'] += $total;
@@ -129,7 +115,6 @@ class SalesDataController extends Controller
 
         //2022-05-19 新增獲取時節數
         $seasonal_income = SalesCalResult::getShopIdAndSeasonalIncome($date);
-
 
 //        dump($total_income);
 //        dump($sale_summary->toArray());
