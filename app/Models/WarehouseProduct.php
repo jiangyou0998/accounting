@@ -38,7 +38,7 @@ class WarehouseProduct extends Model
         return $this->hasMany(WarehouseStockItem::class,"product_id","id");
     }
 
-    public static function getProducts($ids = null, $warehouse_group = null, $supplier = null, $search = null, $type = null, $date = null){
+    public static function getProducts($ids = null, $warehouse_group = null, $supplier = null, $search = null, $type = null, $date = null, $times = null){
         $date = Carbon::parse($date)->isoFormat('YMMDD');
         $products = self::with(['unit', 'base_unit'])
             ->ofIds($ids)
@@ -46,6 +46,7 @@ class WarehouseProduct extends Model
             ->OfSupplier($supplier)
             ->OfSearch($search)
             ->OfType($type, $date)
+            ->ofTimes($times, $date)
             ->where('status', 0)
             ->orderBy('supplier_id')
             ->orderBy('warehouse_group_id')
@@ -127,4 +128,28 @@ class WarehouseProduct extends Model
 
     }
 
+    public function scopeOfTimes($query, $times = null, $date = null)
+    {
+        if ($times === null) {
+            return $query;
+        }
+
+        if($times > 0){
+            return $query->where(function ($query) use ($times, $date) {
+                $query->whereHas('stock_items', function ($query) use ($times, $date) {
+                    $query->where('times', $times)
+                        ->where('user_id', Auth::id())
+                        ->where('date', $date);
+                });
+            });
+        }else{
+            return $query->where(function ($query) use ($date) {
+                $query->whereHas('stock_items', function ($query) use ($date) {
+                    $query->whereNull('times')
+                        ->where('user_id', Auth::id())
+                        ->where('date', $date);
+                });
+            });
+        }
+    }
 }
