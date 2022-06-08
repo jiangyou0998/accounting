@@ -1,7 +1,7 @@
  @foreach($suppliers as $supplier_id => $supplier)
     @foreach($warehouse_groups as $warehouse_group_id => $warehouse_group)
         @isset($products[$supplier_id][$warehouse_group_id])
-            <h1>{{ $supplier . '-' . $warehouse_group }}</h1>
+            <h1><a href="{{ route('stock.warehouse.index', ['supplier' => $supplier_id, 'date' => request()->date]) }}">{{ $supplier }}</a>{{ '-' . $warehouse_group }}</h1>
             <table class="table">
 
                 <thead class="thead-dark">

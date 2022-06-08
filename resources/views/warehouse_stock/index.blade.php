@@ -43,8 +43,6 @@
         </div>
         {{--        頂部按鈕--}}
 
-
-
         <div class="d-flex justify-content-end input-group">
             <a href="{{ route('stock.warehouse.index', ['date' => request()->date]) }}" class="btn btn-danger" style="margin-right: 5px;">全部</a>
             <a href="{{ route('stock.warehouse.index', ['type' => 'empty', 'date' => request()->date]) }}" class="btn btn-success">未填寫</a>

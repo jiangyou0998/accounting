@@ -61,9 +61,10 @@ class WarehouseStockController extends Controller
             $query->whereIn('id', $product_ids);
         })->pluck('name', 'id')->toArray();
 
+        //供應商(按添加次數排序)
         $suppliers = Supplier::whereHas('warehouse_products', function ($query) use($product_ids){
             $query->whereIn('id', $product_ids);
-        })->pluck('name', 'id')->toArray();
+        })->orderBy('warehouse_used_count', 'desc')->pluck('name', 'id')->toArray();
 
 //        dump($warehouse_groups);
 
