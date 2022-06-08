@@ -53,17 +53,15 @@
             <ul class="nav nav-tabs">
                 <li class="nav-item">
                     <a class="nav-link @if(request()->has('times') && request()->times == 0) active @endif"
-                       href="{{ route('stock.warehouse.index', ['type' => 'filled', 'date' => request()->date, 'times' => 0]) }}">#未保存
+                       href="{{ route('stock.warehouse.index', ['date' => request()->date]) }}">#全部
                     </a>
                 </li>
-            @foreach($times as $time)
-                @if(! is_null($time))
+            @foreach($saved_supplier_ids as $saved_supplier_id)
                 <li class="nav-item">
-                    <a class="nav-link @if(request()->times == $time) active @endif"
-                       href="{{ route('stock.warehouse.index', ['type' => 'filled', 'date' => request()->date, 'times' => ($time ?? 0)]) }}">#{{$time ?? ''}}
+                    <a class="nav-link @if(request()->supplier == $saved_supplier_id && request()->type == 'filled') active @endif"
+                       href="{{ route('stock.warehouse.index', ['type' => 'filled', 'date' => request()->date, 'supplier' => $saved_supplier_id]) }}">#{{$suppliers[$saved_supplier_id] ?? ''}}
                     </a>
                 </li>
-                @endif
             @endforeach
             </ul>
 

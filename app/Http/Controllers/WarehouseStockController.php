@@ -77,35 +77,37 @@ class WarehouseStockController extends Controller
         $currentdate = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMMDD');
         $date = Carbon::parse($request->input('date'))->isoFormat('YMMDD') ?? $currentdate;
 
-        $warehouseModel = WarehouseStockItem::query()
+        $warehouseStockItemModel = WarehouseStockItem::query()
             ->where('user_id', Auth::id())
             ->where('date', $date);
 
-        $stockitems = WarehouseStockItem::query()
-            ->where('user_id', Auth::id())
-            ->where('date', $date)
+        $stockitems = (clone $warehouseStockItemModel)
 //            ->ofTimes($times, $date)
             ->pluck('qty','product_id')
             ->toArray();
 
-        $stockitem_units = WarehouseStockItem::query()
-            ->where('user_id', Auth::id())
-            ->where('date', $date)
+        $stockitem_units = (clone $warehouseStockItemModel)
 //            ->ofTimes($times, $date)
             ->pluck('unit_id','product_id')
             ->toArray();
 
-        $times = WarehouseStockItem::query()
-            ->where('user_id', Auth::id())
-            ->where('date', $date)
+        //2022-06-08 已保存的product_id數組;
+        $saved_product_ids = (clone $warehouseStockItemModel)
+            ->pluck('product_id');
+
+        //2022-06-08 已保存的supplier_id數組;
+        $saved_supplier_ids = WarehouseProduct::query()
+            ->whereIn('id', $saved_product_ids)
+            ->distinct('supplier_id')
+            ->pluck('supplier_id');
+
+        $times = (clone $warehouseStockItemModel)
             ->distinct('times')
             ->orderBy('times')
             ->pluck('times');
 
 //        dump($times->toArray());
 //        dump($stockitems);
-
-//        dump($date);
 //        dump($products->toArray());
 
         return view('warehouse_stock.index', compact('products',
@@ -113,6 +115,7 @@ class WarehouseStockController extends Controller
             'warehouse_groups',
             'suppliers',
             'times',
+            'saved_supplier_ids',
             'stockitems',
             'stockitem_units'));
     }
