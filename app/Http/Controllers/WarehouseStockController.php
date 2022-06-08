@@ -37,21 +37,11 @@ class WarehouseStockController extends Controller
         $search = $request->search ?? '';
         $type = $request->type ?? '';
         $date = $request->date ?? '';
-        $times = $request->times ?? null;
-
-//        $front_group_id = Auth::user()->front_groups->first()->id;
-//        $product_list = SupplierStockItemList::where('front_group_id', $front_group_id)
-//            ->first();
-//        dump($product_list->toArray());
+//        $times = $request->times ?? null;
 
         $product_ids = WarehouseProduct::where('status', 0)->get()->pluck('id');
 
-//        $products = [];
-//        $groups = [];
-//        $suppliers = [];
-//        if(isset($product_list->item_list)){
-//            $product_ids = explode(',', $product_list->item_list);
-        $products = WarehouseProduct::getProducts($product_ids, $warehouse_group, $supplier, $search, $type, $date, $times);
+        $products = WarehouseProduct::getProducts($product_ids, $warehouse_group, $supplier, $search, $type, $date);
 
         $groups = SupplierGroup::whereHas('warehouse_products', function ($query) use($product_ids){
             $query->whereIn('id', $product_ids);
@@ -66,13 +56,6 @@ class WarehouseStockController extends Controller
             $query->whereIn('id', $product_ids);
         })->orderBy('warehouse_used_count', 'desc')->pluck('name', 'id')->toArray();
 
-//        dump($warehouse_groups);
-
-//        dump($groups);
-//        dump($suppliers);
-//            dump($products->toArray());
-//        }
-
         //格式:20220429
         $currentdate = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMMDD');
         $date = Carbon::parse($request->input('date'))->isoFormat('YMMDD') ?? $currentdate;
@@ -82,12 +65,10 @@ class WarehouseStockController extends Controller
             ->where('date', $date);
 
         $stockitems = (clone $warehouseStockItemModel)
-//            ->ofTimes($times, $date)
             ->pluck('qty','product_id')
             ->toArray();
 
         $stockitem_units = (clone $warehouseStockItemModel)
-//            ->ofTimes($times, $date)
             ->pluck('unit_id','product_id')
             ->toArray();
 
@@ -101,20 +82,16 @@ class WarehouseStockController extends Controller
             ->distinct('supplier_id')
             ->pluck('supplier_id');
 
-        $times = (clone $warehouseStockItemModel)
-            ->distinct('times')
-            ->orderBy('times')
-            ->pluck('times');
-
-//        dump($times->toArray());
-//        dump($stockitems);
-//        dump($products->toArray());
+//        $times = (clone $warehouseStockItemModel)
+//            ->distinct('times')
+//            ->orderBy('times')
+//            ->pluck('times');
 
         return view('warehouse_stock.index', compact('products',
             'groups',
             'warehouse_groups',
             'suppliers',
-            'times',
+//            'times',
             'saved_supplier_ids',
             'stockitems',
             'stockitem_units'));
@@ -178,25 +155,25 @@ class WarehouseStockController extends Controller
     }
 
     //保存批次
-    public function saveTimes(Request $request)
-    {
-
-        $shop_id = Auth::id();
-        $date = $request->date ?? '';
-        $times = $request->times ?? '';
-
-        if ($date){
-            //格式:20220429
-            $date = Carbon::parse($request->input('date'))->isoFormat('YMMDD');
-//            $times = WarehouseStockItem::getMaxTimes($shop_id, $date) + 1;
-
-            DB::table('warehouse_stock_items')
-                ->where('user_id', $shop_id)
-                ->where('date', $date)
-                ->whereNull('times')
-                ->update(['times' => $times]);
-        }
-
-        return [];
-    }
+//    public function saveTimes(Request $request)
+//    {
+//
+//        $shop_id = Auth::id();
+//        $date = $request->date ?? '';
+//        $times = $request->times ?? '';
+//
+//        if ($date){
+//            //格式:20220429
+//            $date = Carbon::parse($request->input('date'))->isoFormat('YMMDD');
+////            $times = WarehouseStockItem::getMaxTimes($shop_id, $date) + 1;
+//
+//            DB::table('warehouse_stock_items')
+//                ->where('user_id', $shop_id)
+//                ->where('date', $date)
+//                ->whereNull('times')
+//                ->update(['times' => $times]);
+//        }
+//
+//        return [];
+//    }
 }

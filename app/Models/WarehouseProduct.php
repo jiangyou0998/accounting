@@ -38,7 +38,7 @@ class WarehouseProduct extends Model
         return $this->hasMany(WarehouseStockItem::class,"product_id","id");
     }
 
-    public static function getProducts($ids = null, $warehouse_group = null, $supplier = null, $search = null, $type = null, $date = null, $times = null){
+    public static function getProducts($ids = null, $warehouse_group = null, $supplier = null, $search = null, $type = null, $date = null){
         $date = Carbon::parse($date)->isoFormat('YMMDD');
         $products = self::with(['unit', 'base_unit'])
             ->ofIds($ids)
@@ -46,7 +46,7 @@ class WarehouseProduct extends Model
             ->OfSupplier($supplier)
             ->OfSearch($search)
             ->OfType($type, $date)
-            ->ofTimes($times, $date)
+//            ->ofTimes($times, $date)
             ->where('status', 0)
             ->orderBy('supplier_id')
             ->orderBy('warehouse_group_id')

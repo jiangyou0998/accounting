@@ -28,17 +28,17 @@
             <h2>{{ Auth::user()->txt_name ?? '' }}</h2>
             <h2>貨倉入庫</h2>
 
-
-            <div class="d-flex justify-content-end input-group">
-                <div class="card p-1">
-                    <div class="input-group">
-                        <input type="text" name="po" id="po" class="po form-control" style="padding-right: 2px;" placeholder="請填寫訂單編號" autocomplete="off">
-                        <div class="input-group-append">
-                            <button class="btn btn-danger" style="margin-right: 5px;" onclick="save_times()">保存訂單</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+{{--            保存訂單--}}
+{{--            <div class="d-flex justify-content-end input-group">--}}
+{{--                <div class="card p-1">--}}
+{{--                    <div class="input-group">--}}
+{{--                        <input type="text" name="po" id="po" class="po form-control" style="padding-right: 2px;" placeholder="請填寫訂單編號" autocomplete="off">--}}
+{{--                        <div class="input-group-append">--}}
+{{--                            <button class="btn btn-danger" style="margin-right: 5px;" onclick="save_times()">保存訂單</button>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
 
         </div>
         {{--        頂部按鈕--}}
@@ -261,59 +261,59 @@
         });
 
         //提交批次
-        function save_times(){
+        {{--function save_times(){--}}
 
-            let po = $('#po').val();
+        {{--    let po = $('#po').val();--}}
 
-            if (po === null || po === '') {
-                Swal.fire({
-                    icon: 'error',
-                    title: "請填寫訂單編號！",
-                });
-                return ;
-            }
+        {{--    if (po === null || po === '') {--}}
+        {{--        Swal.fire({--}}
+        {{--            icon: 'error',--}}
+        {{--            title: "請填寫訂單編號！",--}}
+        {{--        });--}}
+        {{--        return ;--}}
+        {{--    }--}}
 
-            Swal.fire({
-                icon: 'warning',
-                title: "確定將所有未保存項目添加到批次?",
-                showDenyButton: true,
-                confirmButtonColor: '#3085d6',
-                confirmButtonText: '確定',
-                denyButtonText: '取消',
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    $.ajax({
-                        type: "POST",
-                        url: "{{ route('stock.warehouse.save_times', ['date' => request()->date] ) }}",
-                        data: {
-                            'times' : po,
-                        },
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        },
-                        success: function (msg) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: "已成功保存到批次",
-                            }).then((result) => {
-                                window.location.reload();
-                            });
+        {{--    Swal.fire({--}}
+        {{--        icon: 'warning',--}}
+        {{--        title: "確定將所有未保存項目添加到批次?",--}}
+        {{--        showDenyButton: true,--}}
+        {{--        confirmButtonColor: '#3085d6',--}}
+        {{--        confirmButtonText: '確定',--}}
+        {{--        denyButtonText: '取消',--}}
+        {{--    }).then((result) => {--}}
+        {{--        if (result.isConfirmed) {--}}
+        {{--            $.ajax({--}}
+        {{--                type: "POST",--}}
+        {{--                url: "{{ route('stock.warehouse.save_times', ['date' => request()->date] ) }}",--}}
+        {{--                data: {--}}
+        {{--                    'times' : po,--}}
+        {{--                },--}}
+        {{--                headers: {--}}
+        {{--                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')--}}
+        {{--                },--}}
+        {{--                success: function (msg) {--}}
+        {{--                    Swal.fire({--}}
+        {{--                        icon: 'success',--}}
+        {{--                        title: "已成功保存到批次",--}}
+        {{--                    }).then((result) => {--}}
+        {{--                        window.location.reload();--}}
+        {{--                    });--}}
 
-                        },
-                        error:function () {
-                            Swal.fire({
-                                icon: 'error',
-                                title: "發生错误，請嘗試關閉頁面後重新進入",
-                            });
-                        }
-                    });
-                }
-            });
-
-
+        {{--                },--}}
+        {{--                error:function () {--}}
+        {{--                    Swal.fire({--}}
+        {{--                        icon: 'error',--}}
+        {{--                        title: "發生错误，請嘗試關閉頁面後重新進入",--}}
+        {{--                    });--}}
+        {{--                }--}}
+        {{--            });--}}
+        {{--        }--}}
+        {{--    });--}}
 
 
-        }
+
+
+        {{--}--}}
 
     </script>
 @endsection
