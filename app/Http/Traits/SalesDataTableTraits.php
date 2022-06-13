@@ -68,6 +68,10 @@ trait SalesDataTableTraits
                 $pos_paper_money -= (float)($sales_income_detail['42']);
             }
 
+            if(isset($sales_income_detail['49'])){
+                $pos_paper_money -= (float)($sales_income_detail['49']);
+            }
+
             //2022-04-07 注意千位加逗號號不能再進行計算
             $sales_income_detail = array_map(function($n) {return number_format($n, 2);}, $sales_income_detail);
 
@@ -85,6 +89,7 @@ trait SalesDataTableTraits
 
             $sales_table_data['pos_paper_money'] = number_format($pos_paper_money, 2);
             $sales_table_data['pos_coin'] = $sales_income_detail['42'] ?? '';
+            $sales_table_data['pos_cash_not_deposited'] = $sales_income_detail['49'] ?? '';
 
             $sales_table_data['pos_money_1000'] = $sales_income_detail['43'] ?? '';
             $sales_table_data['pos_money_500'] = $sales_income_detail['44'] ?? '';

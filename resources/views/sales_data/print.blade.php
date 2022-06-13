@@ -220,7 +220,7 @@
                         </div>
 
                         <div class="col-md-6 mb-3">
-                            <table class="table table-bordered customize-border-all style="margin: 10px;">
+                            <table class="table table-bordered customize-border-all" style="margin: 10px;">
 
                                 <tbody>
                                 <tr>
@@ -230,6 +230,10 @@
                                 <tr>
                                     <td class="w-50">(二)輔幣總額</td>
                                     <td class="w-50">${{$sales_table_data['data']['pos_coin']}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="w-50">(三)未存入現金</td>
+                                    <td class="w-50">${{$sales_table_data['data']['pos_cash_not_deposited']}}</td>
                                 </tr>
 
                                 </tbody>
@@ -253,7 +257,7 @@
 
                         <div class="col-md-6 mb-3">
                             <table class="col-md-12 mb-3 customize-border align-left">
-                                <td class="col-md-6">(一)+(二)=現金總額:</td>
+                                <td class="col-md-6">(一)+(二)+(三)=現金總額:</td>
                                 <td class="col-md-6">${{$sales_table_data['data']['balance']}}</td>
                             </table>
 

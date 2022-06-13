@@ -50,6 +50,7 @@ class SalesDataRequest extends FormRequest
             'inputs.0.pos_money_20' => '$20紙幣',
             'inputs.0.pos_money_10' => '$00紙幣',
             'inputs.0.pos_coin' => '輔幣總額',
+            'inputs.0.pos_cash_not_deposited' => '未存入現金',
 
             'inputs.0.deposit_in_bank' => '存入銀行',
 

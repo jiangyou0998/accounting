@@ -203,6 +203,11 @@
                             <input type="text" pattern="[0-9]*" class="form-control pos-cash" id="pos_coin" value="{{ $sales_income_detail['42'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
                         </div>
 
+                        <div class="col-md-6 mb-3">
+                            <label for="cashNotDeposited">未存入現金</label>
+                            <input type="text" pattern="[0-9]*" class="form-control pos-cash" id="pos_cash_not_deposited" value="{{ $sales_income_detail['49'] ?? '' }}" placeholder="" min="0" autocomplete="off" required>
+                        </div>
+
                     </div>
 
                     <h3 class="col-lg-12 p-3 text-right">收銀機餘款總計 : $<span id="pos_cash_sum">0.00</span></h3>
@@ -436,6 +441,7 @@
             let pos_money_20 = $('#pos_money_20').val();
             let pos_money_10 = $('#pos_money_10').val();
             let pos_coin = $('#pos_coin').val();
+            let pos_cash_not_deposited = $('#pos_cash_not_deposited').val();
             let pos_cash_sum = 0;
 
             if((pos_money_1000.length > 0)){
@@ -464,6 +470,10 @@
 
             if((pos_coin.length > 0)){
                 pos_cash_sum += parseFloat(pos_coin);
+            }
+
+            if((pos_cash_not_deposited.length > 0)){
+                pos_cash_sum += parseFloat(pos_cash_not_deposited);
             }
 
             return pos_cash_sum.toFixed(2);
@@ -611,6 +621,7 @@
                 pos_money_20: $('#pos_money_20').val(),
                 pos_money_10: $('#pos_money_10').val(),
                 pos_coin: $('#pos_coin').val(),
+                pos_cash_not_deposited: $('#pos_cash_not_deposited').val(),
                 // deposit_in_safe: $('#deposit_in_safe').val(),
                 deposit_in_bank: $('#deposit_in_bank').val(),
             });
