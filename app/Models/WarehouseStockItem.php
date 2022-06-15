@@ -37,14 +37,13 @@ class WarehouseStockItem extends Model
 //            return $query->whereNull('times');
 //        }
 //    }
-//
+
 //    //獲取最大的Times
-//    public static function getMaxTimes($shop_id, $date)
-//    {
-//        return self::query()
-//            ->where('user_id', $shop_id)
-//            ->where('date', $date)
-//            ->max('times');
-//    }
+    public static function getMaxTimes($shop_id)
+    {
+        return self::query()
+            ->where('user_id', $shop_id)
+            ->max('times');
+    }
 
 }

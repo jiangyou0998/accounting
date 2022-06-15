@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 
 use App\Models\Supplier\Supplier;
-use App\Models\Supplier\SupplierStockItemList;
 use App\Models\SupplierGroup;
 use App\Models\WarehouseGroup;
 use App\Models\WarehouseProduct;
@@ -87,10 +86,27 @@ class WarehouseStockController extends Controller
 //            ->orderBy('times')
 //            ->pluck('times');
 
+        $warehouse_stock_items = WarehouseStockItem::query()
+            ->with('product')
+            ->whereBetween(DB::raw("date(`date`)"), [Carbon::now()->subDay(15), Carbon::now()])
+            ->whereNotNull('times')
+            ->orderBy('date')
+            ->get()
+            ;
+
+        $tabs = array();
+        foreach ($warehouse_stock_items as $item){
+            $date_string = Carbon::parse((string)$item->date)->toDateString();
+            $tabs[$item->product->supplier_id][$date_string] = $item->invoice_no;
+        }
+
+//        dump($tabs);
+
         return view('warehouse_stock.index', compact('products',
             'groups',
             'warehouse_groups',
             'suppliers',
+            'tabs',
 //            'times',
             'saved_supplier_ids',
             'stockitems',
@@ -155,25 +171,31 @@ class WarehouseStockController extends Controller
     }
 
     //保存批次
-//    public function saveTimes(Request $request)
-//    {
-//
-//        $shop_id = Auth::id();
-//        $date = $request->date ?? '';
-//        $times = $request->times ?? '';
-//
-//        if ($date){
-//            //格式:20220429
-//            $date = Carbon::parse($request->input('date'))->isoFormat('YMMDD');
-////            $times = WarehouseStockItem::getMaxTimes($shop_id, $date) + 1;
-//
-//            DB::table('warehouse_stock_items')
-//                ->where('user_id', $shop_id)
+    public function saveInvoice(Request $request)
+    {
+
+        $shop_id = Auth::id();
+        $date = $request->date ?? '';
+        $invoice_no = $request->invoice_no ?? '';
+
+        if ($date){
+            //格式:20220429
+            $date = Carbon::parse($request->input('date'))->isoFormat('YMMDD');
+            $times = WarehouseStockItem::getMaxTimes($shop_id) + 1;
+
+            DB::table('warehouse_stock_items')
+                ->where('user_id', $shop_id)
 //                ->where('date', $date)
-//                ->whereNull('times')
-//                ->update(['times' => $times]);
-//        }
-//
-//        return [];
-//    }
+                ->whereNull('invoice_no')
+                ->update(
+                    [
+                        'invoice_no' => $invoice_no,
+                        'times' => $times,
+                        'date' => $date
+                    ]
+                );
+        }
+
+        return [];
+    }
 }

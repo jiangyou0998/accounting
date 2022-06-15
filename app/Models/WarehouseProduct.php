@@ -23,6 +23,11 @@ class WarehouseProduct extends Model
         return $this->belongsTo(SupplierGroup::class,"group_id","id");
     }
 
+    public function warehouse_group()
+    {
+        return $this->belongsTo(WarehouseGroup::class,"warehouse_group_id","id");
+    }
+
     public function unit()
     {
         return $this->belongsTo(WorkshopUnit::class,"unit_id","id");

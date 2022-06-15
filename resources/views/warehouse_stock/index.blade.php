@@ -29,16 +29,17 @@
             <h2>貨倉入庫</h2>
 
 {{--            保存訂單--}}
-{{--            <div class="d-flex justify-content-end input-group">--}}
-{{--                <div class="card p-1">--}}
-{{--                    <div class="input-group">--}}
-{{--                        <input type="text" name="po" id="po" class="po form-control" style="padding-right: 2px;" placeholder="請填寫訂單編號" autocomplete="off">--}}
-{{--                        <div class="input-group-append">--}}
-{{--                            <button class="btn btn-danger" style="margin-right: 5px;" onclick="save_times()">保存訂單</button>--}}
-{{--                        </div>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
+            <div class="d-flex justify-content-end input-group">
+                <div class="card p-1">
+                    <div class="input-group">
+                        <input type="date" name="invoice_date" id="invoice_date" class="form-control" style="padding-right: 2px;" autocomplete="off">
+                        <input type="text" name="invoice_no" id="invoice_no" class="form-control" style="padding-right: 2px;" placeholder="請填寫訂單編號" autocomplete="off">
+                        <div class="input-group-append">
+                            <button class="btn btn-danger save-invoice" style="margin-right: 5px;">保存訂單</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
         {{--        頂部按鈕--}}
@@ -64,6 +65,37 @@
                 </li>
             @endforeach
             </ul>
+
+
+
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    @foreach($tabs as $supplier_id => $tab)
+                        <a class="nav-item nav-link" id="nav-{{$supplier_id}}-tab" data-toggle="tab" href="#nav-{{$supplier_id}}" role="tab" aria-controls="nav-profile" aria-selected="false">{{$suppliers[$supplier_id]}}</a>
+                    @endforeach
+                </div>
+            </nav>
+            <div class="tab-content" id="nav-tabContent">
+                @foreach($tabs as $supplier_id => $tab)
+                    <div class="tab-pane fade" id="nav-{{$supplier_id}}" role="tabpanel" aria-labelledby="nav-profile-tab">
+                        @foreach($tab as $date => $invoice_no)
+                            <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                <div>
+                                    <h6 class="my-0">
+                                        {{$date}}
+                                        <a href="http://kbhdev.test/stock/warehouse?supplier=9&amp;date=2022-06-13"
+                                           style="padding-right: 10px;">
+                                            #{{$invoice_no}}
+                                        </a>
+                                    </h6>
+                                </div>
+                            </li>
+                        @endforeach
+                    </div>
+
+                @endforeach
+{{--                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">...</div>--}}
+                </div>
 
         </div>
         <hr>
@@ -261,54 +293,65 @@
         });
 
         //提交批次
-        {{--function save_times(){--}}
+        $(document).on('click', '.save-invoice', function () {
 
-        {{--    let po = $('#po').val();--}}
+            let invoice_date = $('#invoice_date').val();
+            let invoice_no = $('#invoice_no').val();
 
-        {{--    if (po === null || po === '') {--}}
-        {{--        Swal.fire({--}}
-        {{--            icon: 'error',--}}
-        {{--            title: "請填寫訂單編號！",--}}
-        {{--        });--}}
-        {{--        return ;--}}
-        {{--    }--}}
+            if (invoice_date === null || invoice_date === '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: "請填寫訂單日期！",
+                });
+                return;
+            }
 
-        {{--    Swal.fire({--}}
-        {{--        icon: 'warning',--}}
-        {{--        title: "確定將所有未保存項目添加到批次?",--}}
-        {{--        showDenyButton: true,--}}
-        {{--        confirmButtonColor: '#3085d6',--}}
-        {{--        confirmButtonText: '確定',--}}
-        {{--        denyButtonText: '取消',--}}
-        {{--    }).then((result) => {--}}
-        {{--        if (result.isConfirmed) {--}}
-        {{--            $.ajax({--}}
-        {{--                type: "POST",--}}
-        {{--                url: "{{ route('stock.warehouse.save_times', ['date' => request()->date] ) }}",--}}
-        {{--                data: {--}}
-        {{--                    'times' : po,--}}
-        {{--                },--}}
-        {{--                headers: {--}}
-        {{--                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')--}}
-        {{--                },--}}
-        {{--                success: function (msg) {--}}
-        {{--                    Swal.fire({--}}
-        {{--                        icon: 'success',--}}
-        {{--                        title: "已成功保存到批次",--}}
-        {{--                    }).then((result) => {--}}
-        {{--                        window.location.reload();--}}
-        {{--                    });--}}
+            if (invoice_no === null || invoice_no === '') {
+                Swal.fire({
+                    icon: 'error',
+                    title: "請填寫訂單編號！",
+                });
+                return;
+            }
 
-        {{--                },--}}
-        {{--                error:function () {--}}
-        {{--                    Swal.fire({--}}
-        {{--                        icon: 'error',--}}
-        {{--                        title: "發生错误，請嘗試關閉頁面後重新進入",--}}
-        {{--                    });--}}
-        {{--                }--}}
-        {{--            });--}}
-        {{--        }--}}
-        {{--    });--}}
+            Swal.fire({
+                icon: 'warning',
+                title: "確定將所有未保存項目添加到批次?",
+                showDenyButton: true,
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: '確定',
+                denyButtonText: '取消',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('stock.warehouse.save_invoice') }}",
+                        data: {
+                            'invoice_no': invoice_no,
+                            'date': invoice_date,
+                        },
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function (msg) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: "已成功保存到批次",
+                            }).then((result) => {
+                                window.location.reload();
+                            });
+
+                        },
+                        error: function () {
+                            Swal.fire({
+                                icon: 'error',
+                                title: "發生错误，請嘗試關閉頁面後重新進入",
+                            });
+                        }
+                    });
+                }
+            });
+        });
 
 
 
