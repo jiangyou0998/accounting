@@ -219,9 +219,11 @@ Route::group(['middleware' => ['auth','permission:warehouse']], function () {
     Route::get('stock/warehouse/select_day', 'WarehouseStockController@select_day')->name('stock.warehouse.select_day');
     Route::get('stock/warehouse', 'WarehouseStockController@index')->name('stock.warehouse.index');
     Route::post('stock/warehouse', 'WarehouseStockController@index')->name('stock.warehouse.search');
+    Route::get('stock/warehouse/{times}/edit', 'WarehouseStockController@edit')->name('stock.warehouse.edit');
     Route::post('stock/warehouse/add', 'WarehouseStockController@add')->name('stock.warehouse.add');
     Route::delete('stock/warehouse/delete', 'WarehouseStockController@delete')->name('stock.warehouse.delete');
     Route::post('stock/warehouse/save_invoice', 'WarehouseStockController@saveInvoice')->name('stock.warehouse.save_invoice');
+    Route::post('stock/warehouse/edit_invoice', 'WarehouseStockController@editInvoice')->name('stock.warehouse.edit_invoice');
 });
 
 //Route::get('/import', 'ImportController@import');

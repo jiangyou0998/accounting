@@ -43,15 +43,15 @@ class WarehouseProduct extends Model
         return $this->hasMany(WarehouseStockItem::class,"product_id","id");
     }
 
-    public static function getProducts($ids = null, $warehouse_group = null, $supplier = null, $search = null, $type = null, $date = null){
-        $date = Carbon::parse($date)->isoFormat('YMMDD');
+    public static function getProducts($ids = null, $warehouse_group = null, $supplier = null, $search = null, $type = null, $times = null){
+
         $products = self::with(['unit', 'base_unit'])
             ->ofIds($ids)
             ->OfWarehouseGroup($warehouse_group)
             ->OfSupplier($supplier)
             ->OfSearch($search)
-            ->OfType($type, $date)
-//            ->ofTimes($times, $date)
+            ->OfType($type)
+            ->ofTimes($times)
             ->where('status', 0)
             ->orderBy('supplier_id')
             ->orderBy('warehouse_group_id')
@@ -79,6 +79,8 @@ class WarehouseProduct extends Model
     {
         if ($group) {
             return $query->where('group_id', $group);
+        }else{
+            return $query;
         }
     }
 
@@ -86,6 +88,8 @@ class WarehouseProduct extends Model
     {
         if ($warehouse_group) {
             return $query->where('warehouse_group_id', $warehouse_group);
+        }else{
+            return $query;
         }
     }
 
@@ -93,6 +97,8 @@ class WarehouseProduct extends Model
     {
         if ($supplier) {
             return $query->where('supplier_id', $supplier);
+        }else{
+            return $query;
         }
     }
 
@@ -104,26 +110,26 @@ class WarehouseProduct extends Model
                     ->orWhere('product_name_short', 'like', "%$search%")
                     ->orWhere('product_no', 'like', "%$search%");
             });
+        }else{
+            return $query;
         }
     }
 
-    public function scopeOfType($query, $type, $date)
+    public function scopeOfType($query, $type)
     {
         switch ($type){
             //已填寫
             case 'filled':
-                return $query->where(function($query) use($type, $date){
-                    $query->whereHas('stock_items',function ($query) use($date){
-                        $query->where('date', $date)
-                            ->where('user_id', Auth::id());
+                return $query->where(function($query) use($type){
+                    $query->whereHas('stock_items',function ($query){
+                        $query->where('user_id', Auth::id());
                     });
                 });
             //未填寫
             case 'empty':
-                return $query->where(function($query) use($type, $date){
-                    $query->whereDoesntHave('stock_items',function ($query) use($date){
-                        $query->where('date', $date)
-                            ->where('user_id', Auth::id());
+                return $query->where(function($query) use($type){
+                    $query->whereDoesntHave('stock_items',function ($query){
+                        $query->where('user_id', Auth::id());
                     });
                 });
 
@@ -133,28 +139,46 @@ class WarehouseProduct extends Model
 
     }
 
-    public function scopeOfTimes($query, $times = null, $date = null)
+//    public function scopeOfTimes($query, $times = null)
+//    {
+//        if ($times === null) {
+//            return $query;
+//        }
+//
+//        if($times > 0){
+//            return $query->where(function ($query) use ($times) {
+//                $query->whereHas('stock_items', function ($query) use ($times) {
+//                    $query->where('times', $times)
+//                        ->where('user_id', Auth::id());
+//                });
+//            });
+//        }else{
+//            return $query->where(function ($query){
+//                $query->whereHas('stock_items', function ($query){
+//                    $query->whereNull('times')
+//                        ->where('user_id', Auth::id());
+//                });
+//            });
+//        }
+//    }
+
+    public function scopeOfTimes($query, $times = null)
     {
         if ($times === null) {
             return $query;
         }
 
         if($times > 0){
-            return $query->where(function ($query) use ($times, $date) {
-                $query->whereHas('stock_items', function ($query) use ($times, $date) {
-                    $query->where('times', $times)
-                        ->where('user_id', Auth::id())
-                        ->where('date', $date);
-                });
-            });
-        }else{
-            return $query->where(function ($query) use ($date) {
-                $query->whereHas('stock_items', function ($query) use ($date) {
-                    $query->whereNull('times')
-                        ->where('user_id', Auth::id())
-                        ->where('date', $date);
-                });
-            });
+
+            $product_id = WarehouseStockItem::query()
+                ->where('user_id', Auth::id())
+                ->where('times',$times)
+                ->first()->product_id;
+
+            $supplier_id = WarehouseProduct::find($product_id)->supplier_id;
+
+            return $query->where('supplier_id', $supplier_id);
+
         }
     }
 }

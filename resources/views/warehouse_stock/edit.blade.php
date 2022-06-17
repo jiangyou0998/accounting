@@ -7,20 +7,7 @@
 @section('content')
 
     <div class="container-fluid">
-        {{--        搜索框--}}
-        <div class="d-flex justify-content-end input-group">
 
-            <form class="card p-1" method="POST" action="{{ route('stock.warehouse.search', ['date' => request()->date]) }}">
-                <div class="input-group">
-                    @csrf
-                    <input id="search" name="search" type="text" class="form-control" placeholder=""
-                           value="{{ request()->search ?? '' }}">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">查詢</button>
-                    </div>
-                </div>
-            </form>
-        </div>
         {{--        標題--}}
         <div class="py-5 text-center">
 
@@ -28,45 +15,37 @@
             <h2>{{ Auth::user()->txt_name ?? '' }}</h2>
             <h2>貨倉入庫</h2>
 
-{{--            保存訂單--}}
+{{--            修改訂單--}}
             <div class="d-flex justify-content-end input-group">
                 <div class="card p-1">
                     <div class="input-group">
-                        <input type="date" name="invoice_date" id="invoice_date" class="form-control" style="padding-right: 2px;" autocomplete="off">
-                        <input type="text" name="invoice_no" id="invoice_no" class="form-control" style="padding-right: 2px;" placeholder="請填寫訂單編號" autocomplete="off">
+                        <input type="date" name="invoice_date" id="invoice_date" class="form-control" style="padding-right: 2px;" autocomplete="off" value="{{$invoice_info['date']}}">
+                        <input type="text" name="invoice_no" id="invoice_no" class="form-control" style="padding-right: 2px;" placeholder="請填寫訂單編號" autocomplete="off" value="{{$invoice_info['invoice_no']}}">
                         <div class="input-group-append">
-                            <button class="btn btn-danger save-invoice" style="margin-right: 5px;">保存訂單</button>
+                            <button class="btn btn-danger save-invoice" style="margin-right: 5px;">修改訂單</button>
                         </div>
                     </div>
                 </div>
             </div>
 
         </div>
-        {{--        頂部按鈕--}}
 
-        <div class="d-flex justify-content-end input-group">
-            <a href="{{ route('stock.warehouse.index', ['date' => request()->date]) }}" class="btn btn-danger" style="margin-right: 5px;">全部</a>
-            <a href="{{ route('stock.warehouse.index', ['type' => 'empty', 'date' => request()->date]) }}" class="btn btn-success">未填寫</a>
-            <a href="{{ route('stock.warehouse.index', ['type' => 'filled', 'date' => request()->date]) }}" class="btn btn-primary">已填寫</a>
-        </div>
         <hr>
         <div>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link @if(request()->has('times') && request()->times == 0) active @endif"
-                       href="{{ route('stock.warehouse.index', ['date' => request()->date]) }}">#全部
-                    </a>
-                </li>
-            @foreach($saved_supplier_ids as $saved_supplier_id)
-                <li class="nav-item">
-                    <a class="nav-link @if(request()->supplier == $saved_supplier_id && request()->type == 'filled') active @endif"
-                       href="{{ route('stock.warehouse.index', ['type' => 'filled', 'date' => request()->date, 'supplier' => $saved_supplier_id]) }}">#{{$suppliers[$saved_supplier_id] ?? ''}}
-                    </a>
-                </li>
-            @endforeach
-            </ul>
-
-
+{{--            <ul class="nav nav-tabs">--}}
+{{--                <li class="nav-item">--}}
+{{--                    <a class="nav-link @if(request()->has('times') && request()->times == 0) active @endif"--}}
+{{--                       href="{{ route('stock.warehouse.index', ['date' => request()->date]) }}">#全部--}}
+{{--                    </a>--}}
+{{--                </li>--}}
+{{--            @foreach($saved_supplier_ids as $saved_supplier_id)--}}
+{{--                <li class="nav-item">--}}
+{{--                    <a class="nav-link @if(request()->supplier == $saved_supplier_id && request()->type == 'filled') active @endif"--}}
+{{--                       href="{{ route('stock.warehouse.index', ['type' => 'filled', 'date' => request()->date, 'supplier' => $saved_supplier_id]) }}">#{{$suppliers[$saved_supplier_id] ?? ''}}--}}
+{{--                    </a>--}}
+{{--                </li>--}}
+{{--            @endforeach--}}
+{{--            </ul>--}}
 
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -78,14 +57,14 @@
             <div class="tab-content" id="nav-tabContent">
                 @foreach($tabs as $supplier_id => $tab)
                     <div class="tab-pane fade" id="nav-{{$supplier_id}}" role="tabpanel" aria-labelledby="nav-profile-tab">
-                        @foreach($tab as $date => $invoice_no)
+                        @foreach($tab as $date => $value)
                             <li class="list-group-item d-flex justify-content-between lh-condensed">
                                 <div>
                                     <h6 class="my-0">
                                         {{$date}}
-                                        <a href="http://kbhdev.test/stock/warehouse?supplier=9&amp;date=2022-06-13"
+                                        <a href="{{route('stock.warehouse.edit', ['times' => $value['times']])}}"
                                            style="padding-right: 10px;">
-                                            #{{$invoice_no}}
+                                            #{{$value['invoice_no']}}
                                         </a>
                                     </h6>
                                 </div>
@@ -100,80 +79,9 @@
         </div>
         <hr>
         <div class="row">
-            @if($filled_count === 0)
-            {{--            左邊部門欄--}}
-            <div class="col-3 col-md-4 mb-4">
-                <h4 class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="text-muted">部門</span>
-                </h4>
-                <ul class="list-group mb-3">
-{{--                    全部--}}
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-                        <div>
-                            <h6 class="my-0">
-                                <a href="{{ route('stock.warehouse.index', ['supplier' => request()->supplier,  'date' => request()->date]) }}">
-                                    全部
-                                </a>
-                            </h6>
-                        </div>
 
-                    </li>
-{{--                    其他部門--}}
-                    @foreach($warehouse_groups as $key => $value)
-                        <li class="list-group-item
-                            @if(request()->warehouse_group == $key) list-group-item-secondary @endif
-                            d-flex justify-content-between lh-condensed">
-                            <div>
-                                <h6 class="my-0">
-                                    <a href="{{ route('stock.warehouse.index', ['warehouse_group' => $key, 'supplier' => request()->supplier,  'date' => request()->date]) }}">
-                                        {{ $value }}
-                                    </a>
-                                </h6>
-                            </div>
-
-                        </li>
-                    @endforeach
-
-                </ul>
-
-                <h4 class="d-flex justify-content-between align-items-center mb-3">
-                    <span class="text-muted">供應商</span>
-                </h4>
-                <ul class="list-group mb-3">
-                    {{--                    全部--}}
-                    <li class="list-group-item d-flex justify-content-between lh-condensed">
-                        <div>
-                            <h6 class="my-0">
-                                <a href="{{ route('stock.warehouse.index', ['warehouse_group' => request()->warehouse_group,  'date' => request()->date]) }}">
-                                    全部
-                                </a>
-                            </h6>
-                        </div>
-
-                    </li>
-                    {{--                    其他供應商--}}
-                    @foreach($suppliers as $key => $value)
-                        <li class="list-group-item
-                                @if(request()->supplier == $key) list-group-item-secondary @endif
-                            d-flex justify-content-between lh-condensed">
-                            <div>
-                                <h6 class="my-0">
-                                    <a href="{{ route('stock.warehouse.index', ['warehouse_group' => request()->warehouse_group, 'supplier' => $key, 'date' => request()->date]) }}">
-                                        {{$value}}
-                                    </a>
-                                </h6>
-
-                            </div>
-
-                        </li>
-                    @endforeach
-
-                </ul>
-
-            </div>
-            @endif
-
-            <div class=" @if($filled_count === 0) col-md-8 @else col-md-12 @endif mb-8 right-div">
+            <div class="col-md-12 mb-8 right-div">
+                <h1 class="text-center">{{$invoice_info['date'] . '   #' . $invoice_info['invoice_no']}}</h1>
                 @if(count($products))
                     @include('warehouse_stock._supplier_table')
                 @else
@@ -267,7 +175,7 @@
             let product_id = $(this).data('id');
             let qty_input = $(".qty[data-id=" + product_id + "]");
             // let qty = qty_input.val();
-            //
+
             // if (qty == null || qty == undefined || qty == "") {
             //     return ;
             // }
@@ -327,7 +235,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: "POST",
-                        url: "{{ route('stock.warehouse.save_invoice') }}",
+                        url: "{{ route('stock.warehouse.edit_invoice', ['times' => request()->times]) }}",
                         data: {
                             'invoice_no': invoice_no,
                             'date': invoice_date,

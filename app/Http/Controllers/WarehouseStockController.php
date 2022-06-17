@@ -35,12 +35,12 @@ class WarehouseStockController extends Controller
         $supplier = $request->supplier ?? '';
         $search = $request->search ?? '';
         $type = $request->type ?? '';
-        $date = $request->date ?? '';
+//        $date = $request->date ?? '';
 //        $times = $request->times ?? null;
 
         $product_ids = WarehouseProduct::where('status', 0)->get()->pluck('id');
 
-        $products = WarehouseProduct::getProducts($product_ids, $warehouse_group, $supplier, $search, $type, $date);
+        $products = WarehouseProduct::getProducts($product_ids, $warehouse_group, $supplier, $search, $type, null);
 
         $groups = SupplierGroup::whereHas('warehouse_products', function ($query) use($product_ids){
             $query->whereIn('id', $product_ids);
@@ -56,12 +56,15 @@ class WarehouseStockController extends Controller
         })->orderBy('warehouse_used_count', 'desc')->pluck('name', 'id')->toArray();
 
         //格式:20220429
-        $currentdate = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMMDD');
-        $date = Carbon::parse($request->input('date'))->isoFormat('YMMDD') ?? $currentdate;
+//        $currentdate = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMMDD');
+//        $date = Carbon::parse($request->input('date'))->isoFormat('YMMDD') ?? $currentdate;
 
         $warehouseStockItemModel = WarehouseStockItem::query()
             ->where('user_id', Auth::id())
-            ->where('date', $date);
+            ->whereNull('date')
+            ->whereNull('invoice_no')
+//            ->where('date', $date)
+        ;
 
         $stockitems = (clone $warehouseStockItemModel)
             ->pluck('qty','product_id')
@@ -80,6 +83,12 @@ class WarehouseStockController extends Controller
             ->whereIn('id', $saved_product_ids)
             ->distinct('supplier_id')
             ->pluck('supplier_id');
+
+        //已填寫項目數量
+        $filled_count = (clone $warehouseStockItemModel)
+            ->count();
+
+//        dump($filled_count);
 
 //        $times = (clone $warehouseStockItemModel)
 //            ->distinct('times')
@@ -108,6 +117,118 @@ class WarehouseStockController extends Controller
             'suppliers',
             'tabs',
 //            'times',
+            'filled_count',
+            'saved_supplier_ids',
+            'stockitems',
+            'stockitem_units'));
+    }
+
+    public function edit(Request $request){
+
+        $warehouse_group = null;
+        $supplier = $request->supplier ?? '';
+        $search = null;
+        $type = null;
+//        $date = $request->date ?? '';
+        $times = $request->times ?? null;
+
+        $product_ids = WarehouseProduct::where('status', 0)->get()->pluck('id');
+
+        $products = WarehouseProduct::getProducts($product_ids, $warehouse_group, $supplier, $search, $type, $times);
+//        dump($products->toArray());
+
+        $warehouse_groups = WarehouseGroup::whereHas('warehouse_products', function ($query) use($product_ids){
+            $query->whereIn('id', $product_ids);
+        })->pluck('name', 'id')->toArray();
+
+        //供應商(按添加次數排序)
+        $suppliers = Supplier::whereHas('warehouse_products', function ($query) use($product_ids){
+            $query->whereIn('id', $product_ids);
+        })->orderBy('warehouse_used_count', 'desc')->pluck('name', 'id')->toArray();
+
+        //格式:20220429
+//        $currentdate = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMMDD');
+//        $date = Carbon::parse($request->input('date'))->isoFormat('YMMDD') ?? $currentdate;
+
+        $warehouseStockItemModel = WarehouseStockItem::query()
+            ->where('user_id', Auth::id())
+            ->where('times', $times)
+//            ->where('date', $date)
+        ;
+
+//        $stockitems = (clone $warehouseStockItemModel)
+////            ->pluck('qty','product_id')
+//                ->get()
+//            ->mapToGroups(function ($item, $key) {
+//                return [$item['product_id'] => $item['unit_id']];
+//            })
+//            ->toArray();
+//
+//        dump($stockitems);
+
+        $allstockitems = (clone $warehouseStockItemModel)->get();
+        $stockitems = array();
+        foreach ($allstockitems as $v){
+            $stockitems[$v->product_id][$v->unit_id] = $v->qty;
+        }
+//        dump($stockitems);
+
+        $stockitem_units = (clone $warehouseStockItemModel)
+            ->pluck('unit_id','product_id')
+            ->toArray();
+
+        //2022-06-08 已保存的product_id數組;
+        $saved_product_ids = (clone $warehouseStockItemModel)
+            ->pluck('product_id');
+
+        //2022-06-08 已保存的supplier_id數組;
+        $saved_supplier_ids = WarehouseProduct::query()
+            ->whereIn('id', $saved_product_ids)
+            ->distinct('supplier_id')
+            ->pluck('supplier_id');
+
+        //已填寫項目數量
+        $filled_count = (clone $warehouseStockItemModel)
+            ->count();
+
+//        dump($filled_count);
+
+//        $times = (clone $warehouseStockItemModel)
+//            ->distinct('times')
+//            ->orderBy('times')
+//            ->pluck('times');
+
+        $warehouse_stock_items = WarehouseStockItem::query()
+            ->with('product')
+            ->whereBetween(DB::raw("date(`date`)"), [Carbon::now()->subDay(15), Carbon::now()])
+            ->whereNotNull('times')
+            ->orderBy('date')
+            ->get()
+        ;
+
+        $tabs = array();
+        foreach ($warehouse_stock_items as $item){
+            $date_string = Carbon::parse((string)$item->date)->toDateString();
+            $tabs[$item->product->supplier_id][$date_string] = ['times' => $item->times, 'invoice_no' => $item->invoice_no];
+        }
+
+        $invoice = WarehouseStockItem::query()
+            ->where('times', $times)
+            ->first();
+
+        $invoice_info = array();
+        $invoice_info['date'] = $invoice->date ? Carbon::parse((string)$invoice->date)->toDateString() : '';
+        $invoice_info['invoice_no'] = $invoice->invoice_no ?? '';
+
+        dump($invoice_info);
+
+        return view('warehouse_stock.edit', compact('products',
+            'warehouse_groups',
+            'suppliers',
+            'tabs',
+//            'times',
+            'invoice_info',
+            'filled_count',
             'saved_supplier_ids',
             'stockitems',
             'stockitem_units'));
@@ -118,6 +239,7 @@ class WarehouseStockController extends Controller
 
         $user = $request->user();
         $product_id = $request->input('product_id');
+        $times = $request->input('times');
 
         //格式:20220429
         $currentdate = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMMDD');
@@ -130,7 +252,9 @@ class WarehouseStockController extends Controller
         if ($stock = WarehouseStockItem::query()
             ->where('product_id', $product_id)
             ->where('user_id', $user->id)
-            ->where('date', $date)
+            ->where('unit_id', $unit_id)
+            ->ofTimes($times)
+//            ->where('date', $date)
             ->first()) {
 
             // 如果存在则直接叠加商品数量
@@ -144,7 +268,21 @@ class WarehouseStockController extends Controller
             $stock = new WarehouseStockItem(['qty' => $qty, 'unit_id' => $unit_id]);
             $stock->product_id = $product_id;
             $stock->user_id = $user->id;
-            $stock->date = $date;
+//
+
+            if($times){
+                $item = WarehouseStockItem::query()
+                    ->where('user_id', $user->id)
+                    ->where('times', $times)
+                    ->first();
+
+                $stock->date = $item->date;
+                $stock->times = $times;
+                $stock->invoice_no = $item->invoice_no;
+
+            }
+
+
             $stock->save();
         }
 
@@ -157,14 +295,14 @@ class WarehouseStockController extends Controller
         $product_id = $request->input('product_id');
 
         //格式:20220429
-        $currentdate = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMMDD');
-        $date = Carbon::parse($request->input('date'))->isoFormat('YMMDD') ?? $currentdate;
+//        $currentdate = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMMDD');
+//        $date = Carbon::parse($request->input('date'))->isoFormat('YMMDD') ?? $currentdate;
 
         // 刪除數據
         WarehouseStockItem::query()
             ->where('product_id', $product_id)
             ->where('user_id', $user->id)
-            ->where('date', $date)
+//            ->where('date', $date)
             ->delete();
 
         return [];
@@ -187,6 +325,35 @@ class WarehouseStockController extends Controller
                 ->where('user_id', $shop_id)
 //                ->where('date', $date)
                 ->whereNull('invoice_no')
+                ->update(
+                    [
+                        'invoice_no' => $invoice_no,
+                        'times' => $times,
+                        'date' => $date
+                    ]
+                );
+        }
+
+        return [];
+    }
+
+    //編輯Invoice
+    public function editInvoice(Request $request)
+    {
+
+        $shop_id = Auth::id();
+        $date = $request->date ?? '';
+        $invoice_no = $request->invoice_no ?? '';
+        $times = $request->times ?? '';
+
+        if ($date){
+            //格式:20220429
+            $date = Carbon::parse($request->input('date'))->isoFormat('YMMDD');
+
+            DB::table('warehouse_stock_items')
+                ->where('user_id', $shop_id)
+//                ->where('date', $date)
+                ->where('times', $times )
                 ->update(
                     [
                         'invoice_no' => $invoice_no,

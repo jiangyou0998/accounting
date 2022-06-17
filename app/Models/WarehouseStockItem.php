@@ -29,14 +29,14 @@ class WarehouseStockItem extends Model
         return $this->belongsTo(WorkshopUnit::class,'unit_id','id');
     }
 
-//    public function scopeOfTimes($query, $times)
-//    {
-//        if ($times) {
-//            return $query->where('times', $times);
-//        }else{
-//            return $query->whereNull('times');
-//        }
-//    }
+    public function scopeOfTimes($query, $times)
+    {
+        if ($times) {
+            return $query->where('times', $times);
+        }else{
+            return $query->whereNull('times');
+        }
+    }
 
 //    //獲取最大的Times
     public static function getMaxTimes($shop_id)
