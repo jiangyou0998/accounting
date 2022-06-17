@@ -8,19 +8,21 @@
 
     <div class="container-fluid">
         {{--        搜索框--}}
-        <div class="d-flex justify-content-end input-group">
+        @if($filled_count === 0)
+            <div class="d-flex justify-content-end input-group">
 
-            <form class="card p-1" method="POST" action="{{ route('stock.warehouse.search', ['date' => request()->date]) }}">
-                <div class="input-group">
-                    @csrf
-                    <input id="search" name="search" type="text" class="form-control" placeholder=""
-                           value="{{ request()->search ?? '' }}">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">查詢</button>
+                <form class="card p-1" method="POST" action="{{ route('stock.warehouse.search', ['date' => request()->date]) }}">
+                    <div class="input-group">
+                        @csrf
+                        <input id="search" name="search" type="text" class="form-control" placeholder=""
+                               value="{{ request()->search ?? '' }}">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">查詢</button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        @endif
         {{--        標題--}}
         <div class="py-5 text-center">
 
@@ -29,76 +31,42 @@
             <h2>貨倉入庫</h2>
 
 {{--            保存訂單--}}
-            <div class="d-flex justify-content-end input-group">
-                <div class="card p-1">
-                    <div class="input-group">
-                        <input type="date" name="invoice_date" id="invoice_date" class="form-control" style="padding-right: 2px;" autocomplete="off">
-                        <input type="text" name="invoice_no" id="invoice_no" class="form-control" style="padding-right: 2px;" placeholder="請填寫訂單編號" autocomplete="off">
-                        <div class="input-group-append">
-                            <button class="btn btn-danger save-invoice" style="margin-right: 5px;">保存訂單</button>
+            @if($filled_count !== 0)
+                <div class="d-flex justify-content-end input-group">
+                    <div class="card p-1">
+                        <div class="input-group">
+                            <input type="date" name="invoice_date" id="invoice_date" class="form-control" style="padding-right: 2px;" autocomplete="off" max="{{\Carbon\Carbon::now()->toDateString()}}">
+                            <input type="text" name="invoice_no" id="invoice_no" class="form-control" style="padding-right: 2px;" placeholder="請填寫訂單編號" autocomplete="off">
+                            <div class="input-group-append">
+                                <button class="btn btn-danger save-invoice" style="margin-right: 5px;">保存訂單</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
 
         </div>
+
         {{--        頂部按鈕--}}
-
         <div class="d-flex justify-content-end input-group">
-            <a href="{{ route('stock.warehouse.index', ['date' => request()->date]) }}" class="btn btn-danger" style="margin-right: 5px;">全部</a>
-            <a href="{{ route('stock.warehouse.index', ['type' => 'empty', 'date' => request()->date]) }}" class="btn btn-success">未填寫</a>
-            <a href="{{ route('stock.warehouse.index', ['type' => 'filled', 'date' => request()->date]) }}" class="btn btn-primary">已填寫</a>
+            <a href="{{ route('stock.warehouse.index') }}" class="btn btn-danger" style="margin-right: 5px;">全部</a>
+{{--            <a href="{{ route('stock.warehouse.index', ['type' => 'empty', 'date' => request()->date]) }}" class="btn btn-success">未填寫</a>--}}
+{{--            <a href="{{ route('stock.warehouse.index', ['type' => 'filled', 'date' => request()->date]) }}" class="btn btn-primary">已填寫</a>--}}
         </div>
         <hr>
+
+        {{--            已保存invoice tab--}}
         <div>
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link @if(request()->has('times') && request()->times == 0) active @endif"
-                       href="{{ route('stock.warehouse.index', ['date' => request()->date]) }}">#全部
-                    </a>
-                </li>
-            @foreach($saved_supplier_ids as $saved_supplier_id)
-                <li class="nav-item">
-                    <a class="nav-link @if(request()->supplier == $saved_supplier_id && request()->type == 'filled') active @endif"
-                       href="{{ route('stock.warehouse.index', ['type' => 'filled', 'date' => request()->date, 'supplier' => $saved_supplier_id]) }}">#{{$suppliers[$saved_supplier_id] ?? ''}}
-                    </a>
-                </li>
-            @endforeach
-            </ul>
-
-
-
-            <nav>
-                <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    @foreach($tabs as $supplier_id => $tab)
-                        <a class="nav-item nav-link" id="nav-{{$supplier_id}}-tab" data-toggle="tab" href="#nav-{{$supplier_id}}" role="tab" aria-controls="nav-profile" aria-selected="false">{{$suppliers[$supplier_id]}}</a>
-                    @endforeach
-                </div>
-            </nav>
-            <div class="tab-content" id="nav-tabContent">
-                @foreach($tabs as $supplier_id => $tab)
-                    <div class="tab-pane fade" id="nav-{{$supplier_id}}" role="tabpanel" aria-labelledby="nav-profile-tab">
-                        @foreach($tab as $date => $invoice_no)
-                            <li class="list-group-item d-flex justify-content-between lh-condensed">
-                                <div>
-                                    <h6 class="my-0">
-                                        {{$date}}
-                                        <a href="http://kbhdev.test/stock/warehouse?supplier=9&amp;date=2022-06-13"
-                                           style="padding-right: 10px;">
-                                            #{{$invoice_no}}
-                                        </a>
-                                    </h6>
-                                </div>
-                            </li>
-                        @endforeach
-                    </div>
-
-                @endforeach
-{{--                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">...</div>--}}
-                </div>
-
+            @include('warehouse_stock._tab')
         </div>
+        {{--            已保存invoice tab END--}}
+
         <hr>
+
+        @if($filled_count !== 0)
+            <h1 class="text-center">未保存INVOICE</h1>
+        @endif
+
         <div class="row">
             @if($filled_count === 0)
             {{--            左邊部門欄--}}
@@ -172,6 +140,7 @@
 
             </div>
             @endif
+
 
             <div class=" @if($filled_count === 0) col-md-8 @else col-md-12 @endif mb-8 right-div">
                 @if(count($products))
@@ -248,8 +217,10 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                success: function (msg) {
-                    // window.location.reload();
+                success: function (data) {
+                    if(data.msg === 'new'){
+                        window.location.href = "{{route('stock.warehouse.index')}}";
+                    }
                 },
                 error:function () {
                     Swal.fire({
@@ -344,10 +315,15 @@
                             });
 
                         },
-                        error: function () {
+                        error: function(res) {
+                            errors = res.responseJSON.errors;
+                            let form_errors = '';
+                            $.each(errors, function(i) {
+                                form_errors += '<div>' + errors[i] + '</div>';
+                            });
                             Swal.fire({
                                 icon: 'error',
-                                title: "發生错误，請嘗試關閉頁面後重新進入",
+                                title: form_errors,
                             });
                         }
                     });

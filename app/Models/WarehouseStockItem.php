@@ -4,7 +4,9 @@ namespace App\Models;
 
 
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class WarehouseStockItem extends Model
 {
@@ -38,12 +40,31 @@ class WarehouseStockItem extends Model
         }
     }
 
-//    //獲取最大的Times
+    //獲取最大的Times
     public static function getMaxTimes($shop_id)
     {
         return self::query()
             ->where('user_id', $shop_id)
             ->max('times');
+    }
+
+    //獲取頂部最近Invoice Tab
+    public static function getInvoiceTab(){
+        $warehouse_stock_items = WarehouseStockItem::query()
+            ->with('product')
+            ->whereBetween(DB::raw("date(`date`)"), [Carbon::now()->subDay(5), Carbon::now()])
+            ->whereNotNull('times')
+            ->orderBy('date')
+            ->get();
+
+        $tabs = array();
+        foreach ($warehouse_stock_items as $item){
+            $date_string = Carbon::parse((string)$item->date)->toDateString();
+            $tabs[$item->product->supplier_id][$date_string][$item->times] = ['times' => $item->times, 'invoice_no' => $item->invoice_no];
+        }
+
+        return $tabs;
+
     }
 
 }

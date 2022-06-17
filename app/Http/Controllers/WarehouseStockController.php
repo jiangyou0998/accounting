@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Requests\WaraHouseInvoiceRequest;
 use App\Models\Supplier\Supplier;
 use App\Models\SupplierGroup;
 use App\Models\WarehouseGroup;
@@ -66,23 +67,25 @@ class WarehouseStockController extends Controller
 //            ->where('date', $date)
         ;
 
-        $stockitems = (clone $warehouseStockItemModel)
-            ->pluck('qty','product_id')
-            ->toArray();
+        $allstockitems = (clone $warehouseStockItemModel)->get();
+        $stockitems = array();
+        foreach ($allstockitems as $v){
+            $stockitems[$v->product_id][$v->unit_id] = $v->qty;
+        }
 
         $stockitem_units = (clone $warehouseStockItemModel)
             ->pluck('unit_id','product_id')
             ->toArray();
 
         //2022-06-08 已保存的product_id數組;
-        $saved_product_ids = (clone $warehouseStockItemModel)
-            ->pluck('product_id');
-
-        //2022-06-08 已保存的supplier_id數組;
-        $saved_supplier_ids = WarehouseProduct::query()
-            ->whereIn('id', $saved_product_ids)
-            ->distinct('supplier_id')
-            ->pluck('supplier_id');
+//        $saved_product_ids = (clone $warehouseStockItemModel)
+//            ->pluck('product_id');
+//
+//        //2022-06-08 已保存的supplier_id數組;
+//        $saved_supplier_ids = WarehouseProduct::query()
+//            ->whereIn('id', $saved_product_ids)
+//            ->distinct('supplier_id')
+//            ->pluck('supplier_id');
 
         //已填寫項目數量
         $filled_count = (clone $warehouseStockItemModel)
@@ -95,21 +98,9 @@ class WarehouseStockController extends Controller
 //            ->orderBy('times')
 //            ->pluck('times');
 
-        $warehouse_stock_items = WarehouseStockItem::query()
-            ->with('product')
-            ->whereBetween(DB::raw("date(`date`)"), [Carbon::now()->subDay(15), Carbon::now()])
-            ->whereNotNull('times')
-            ->orderBy('date')
-            ->get()
-            ;
+        $tabs = WarehouseStockItem::getInvoiceTab();
 
-        $tabs = array();
-        foreach ($warehouse_stock_items as $item){
-            $date_string = Carbon::parse((string)$item->date)->toDateString();
-            $tabs[$item->product->supplier_id][$date_string] = $item->invoice_no;
-        }
-
-//        dump($tabs);
+//        dump($stockitems);
 
         return view('warehouse_stock.index', compact('products',
             'groups',
@@ -118,7 +109,7 @@ class WarehouseStockController extends Controller
             'tabs',
 //            'times',
             'filled_count',
-            'saved_supplier_ids',
+//            'saved_supplier_ids',
             'stockitems',
             'stockitem_units'));
     }
@@ -178,14 +169,14 @@ class WarehouseStockController extends Controller
             ->toArray();
 
         //2022-06-08 已保存的product_id數組;
-        $saved_product_ids = (clone $warehouseStockItemModel)
-            ->pluck('product_id');
-
-        //2022-06-08 已保存的supplier_id數組;
-        $saved_supplier_ids = WarehouseProduct::query()
-            ->whereIn('id', $saved_product_ids)
-            ->distinct('supplier_id')
-            ->pluck('supplier_id');
+//        $saved_product_ids = (clone $warehouseStockItemModel)
+//            ->pluck('product_id');
+//
+//        //2022-06-08 已保存的supplier_id數組;
+//        $saved_supplier_ids = WarehouseProduct::query()
+//            ->whereIn('id', $saved_product_ids)
+//            ->distinct('supplier_id')
+//            ->pluck('supplier_id');
 
         //已填寫項目數量
         $filled_count = (clone $warehouseStockItemModel)
@@ -198,29 +189,22 @@ class WarehouseStockController extends Controller
 //            ->orderBy('times')
 //            ->pluck('times');
 
-        $warehouse_stock_items = WarehouseStockItem::query()
-            ->with('product')
-            ->whereBetween(DB::raw("date(`date`)"), [Carbon::now()->subDay(15), Carbon::now()])
-            ->whereNotNull('times')
-            ->orderBy('date')
-            ->get()
-        ;
-
-        $tabs = array();
-        foreach ($warehouse_stock_items as $item){
-            $date_string = Carbon::parse((string)$item->date)->toDateString();
-            $tabs[$item->product->supplier_id][$date_string] = ['times' => $item->times, 'invoice_no' => $item->invoice_no];
-        }
+        $tabs = WarehouseStockItem::getInvoiceTab();
 
         $invoice = WarehouseStockItem::query()
             ->where('times', $times)
             ->first();
 
+        //其中一個product_id, 用於查找當前supplier_id
+        $one_of_the_product_id = (clone $warehouseStockItemModel)->first()->product_id ?? '';
+        $one_of_the_product = WarehouseProduct::find($one_of_the_product_id);
+
         $invoice_info = array();
         $invoice_info['date'] = $invoice->date ? Carbon::parse((string)$invoice->date)->toDateString() : '';
         $invoice_info['invoice_no'] = $invoice->invoice_no ?? '';
+        $invoice_info['supplier_id'] = $one_of_the_product->supplier_id ?? '';
 
-        dump($invoice_info);
+//        dump($invoice_info);
 
         return view('warehouse_stock.edit', compact('products',
             'warehouse_groups',
@@ -229,17 +213,21 @@ class WarehouseStockController extends Controller
 //            'times',
             'invoice_info',
             'filled_count',
-            'saved_supplier_ids',
+//            'saved_supplier_ids',
             'stockitems',
             'stockitem_units'));
     }
 
     public function add(Request $request)
     {
-
         $user = $request->user();
         $product_id = $request->input('product_id');
         $times = $request->input('times');
+
+        $filled_count = WarehouseStockItem::query()
+            ->where('user_id', Auth::id())
+            ->where('times', $times)
+            ->count();
 
         //格式:20220429
         $currentdate = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMMDD');
@@ -286,6 +274,13 @@ class WarehouseStockController extends Controller
             $stock->save();
         }
 
+        if ($filled_count === 0){
+            return response()->json(array(
+                'code' => 200,
+                'msg' => 'new',
+            ));
+        }
+
         return [];
     }
 
@@ -309,9 +304,8 @@ class WarehouseStockController extends Controller
     }
 
     //保存批次
-    public function saveInvoice(Request $request)
+    public function saveInvoice(WaraHouseInvoiceRequest $request)
     {
-
         $shop_id = Auth::id();
         $date = $request->date ?? '';
         $invoice_no = $request->invoice_no ?? '';
@@ -338,7 +332,7 @@ class WarehouseStockController extends Controller
     }
 
     //編輯Invoice
-    public function editInvoice(Request $request)
+    public function editInvoice(WaraHouseInvoiceRequest $request)
     {
 
         $shop_id = Auth::id();

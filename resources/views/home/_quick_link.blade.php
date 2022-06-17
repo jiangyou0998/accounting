@@ -103,7 +103,7 @@
         <li class="list-group-item d-flex justify-content-between lh-condensed">
             <div>
                 <h6 class="my-0">
-                    <a href="{{route('stock.warehouse.select_day')}}">
+                    <a href="{{route('stock.warehouse.index')}}">
                         貨倉入貨
                     </a>
                 </h6>

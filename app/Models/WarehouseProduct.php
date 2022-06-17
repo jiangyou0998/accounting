@@ -165,7 +165,20 @@ class WarehouseProduct extends Model
     public function scopeOfTimes($query, $times = null)
     {
         if ($times === null) {
-            return $query;
+
+            $product_id = WarehouseStockItem::query()
+                ->where('user_id', Auth::id())
+                ->whereNull('times')
+                ->first()->product_id ?? '';
+
+            //如一個都無填, 獲取所有產品
+            if($product_id === ''){
+                return $query;
+            }
+
+            $supplier_id = WarehouseProduct::find($product_id)->supplier_id;
+
+            return $query->where('supplier_id', $supplier_id);
         }
 
         if($times > 0){
