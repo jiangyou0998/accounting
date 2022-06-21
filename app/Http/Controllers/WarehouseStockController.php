@@ -200,7 +200,7 @@ class WarehouseStockController extends Controller
         $one_of_the_product = WarehouseProduct::find($one_of_the_product_id);
 
         $invoice_info = array();
-        $invoice_info['date'] = $invoice->date ? Carbon::parse((string)$invoice->date)->toDateString() : '';
+        $invoice_info['date'] = isset($invoice->date) ? Carbon::parse((string)$invoice->date)->toDateString() : '';
         $invoice_info['invoice_no'] = $invoice->invoice_no ?? '';
         $invoice_info['supplier_id'] = $one_of_the_product->supplier_id ?? '';
 

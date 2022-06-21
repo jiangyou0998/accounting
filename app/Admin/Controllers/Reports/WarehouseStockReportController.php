@@ -56,6 +56,8 @@ class WarehouseStockReportController extends AdminController
                 'product_no' => '編號',
                 'product_name' => '名稱',
                 'date' => '時間',
+                //2022-06-21 新增invoice_no
+                'invoice_no' => 'Invoice No',
                 'group_name' => '分類',
                 'unit_name' => '單位',
                 'unit_qty' => '數量',
@@ -125,6 +127,8 @@ class WarehouseStockReportController extends AdminController
             DB::raw('2 as type'),
             DB::raw('warehouse_stock_items.product_id as product_id'),
             DB::raw('warehouse_stock_items.date'),
+            //2022-06-21 新增invoice_no
+            DB::raw('warehouse_stock_items.invoice_no'),
             DB::raw('suppliers.name as supplier_name'),
             DB::raw('warehouse_products.product_no as product_no'),
             DB::raw('warehouse_products.product_name as product_name'),

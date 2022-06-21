@@ -186,7 +186,12 @@ class WarehouseProduct extends Model
             $product_id = WarehouseStockItem::query()
                 ->where('user_id', Auth::id())
                 ->where('times',$times)
-                ->first()->product_id;
+                ->first()->product_id ?? '';
+
+            //如一個都無填, 獲取所有產品
+            if($product_id === ''){
+                return $query;
+            }
 
             $supplier_id = WarehouseProduct::find($product_id)->supplier_id;
 
