@@ -24,6 +24,8 @@
     <div class="col-sm-4 square-btn">
         <a href="{{route('sales_data_change_application.apply_index')}}"><span class="btn" style="font-size: 30px;line-height: 50px;">營業數<br/>修改申請</span></a>
         <br/>
+        <br/>
+        <a href='{{route('sales_data.sales_cal_results.create')}}' class='styleA'>新增營業數記錄</a>
     </div>
 
 </div>
