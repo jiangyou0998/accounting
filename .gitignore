@@ -10,6 +10,7 @@
 /storage/tmp
 /vendor
 .env
+.env.copy
 .env.backup
 .phpunit.result.cache
 Homestead.json
