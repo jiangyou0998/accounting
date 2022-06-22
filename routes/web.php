@@ -16,6 +16,7 @@
 //Auth::routes();
 
 
+use App\Http\Controllers\SalesCalResultController;
 use App\Http\Controllers\SalesDataChangeApplicationController;
 use App\Http\Controllers\SalesDataController;
 
@@ -133,6 +134,11 @@ Route::group(['middleware' => ['auth','role:SuperAdmin|Operation']], function ()
     Route::get('sales_data/operation_index', [SalesDataController::class, 'operation_index'])->name('sales_data.operation_index');
     Route::get('sales_data_change_application/apply_index', [SalesDataChangeApplicationController::class, 'apply_index'])->name('sales_data_change_application.apply_index');
     Route::post('sales_data_change_application/apply', [SalesDataChangeApplicationController::class, 'apply'])->name('sales_data_change_application.apply');
+
+    //    新增營業數記錄
+    Route::get('sales_data/sales_cal_results/create', [SalesCalResultController::class, 'create'])->name('sales_data.sales_cal_results.create');
+    Route::post('sales_data/sales_cal_results/check', [SalesCalResultController::class, 'check'])->name('sales_data.sales_cal_results.check');
+    Route::post('sales_data/sales_cal_results', [SalesCalResultController::class, 'store'])->name('sales_data.sales_cal_results.store');
 });
 
 Route::group(['middleware' => ['auth']], function () {

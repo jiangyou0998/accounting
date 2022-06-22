@@ -52,14 +52,14 @@ class SalesCalResult extends Model
         return $sales_cal_result;
     }
 
-    public static function getNewDepositNo($date = null)
+    public static function getNewDepositNo($date = null, $shop_id = null)
     {
         $date_carbon = $date ? Carbon::parse($date) : Carbon::now();
         $year_and_month = $date_carbon->isoFormat('YYMM');
         $year_and_month = (int)$year_and_month * 10000;
 
         //從數據庫查出最大的編號
-        $max_deposit_no = self::getMaxDepositNo($date);
+        $max_deposit_no = self::getMaxDepositNo($date, $shop_id);
         if($year_and_month > $max_deposit_no || is_null($max_deposit_no)){
             $new_deposit_no = $year_and_month + 1;
         }else{
@@ -104,11 +104,11 @@ class SalesCalResult extends Model
         return $last_safe_balance;
     }
 
-    private static function getMaxDepositNo($date = null)
+    private static function getMaxDepositNo($date = null, $shop_id = null)
     {
         //從數據庫查出最大的編號
         $date = getRequestDateOrNow($date);
-        $shop_id = Auth::user()->id;
+        $shop_id = $shop_id ?? Auth::user()->id;
         //從數據庫查出最大的編號
         $max_deposit_no = self::query()
             ->where('shop_id', $shop_id)

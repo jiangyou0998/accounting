@@ -62,7 +62,7 @@
 
         <div class="style5" style="text-align: center;">
             <span class="style4">營業數({{$date}})</span>
-{{--            <a href="{{route('sales_data_change_application.index')}}"><h3>修改申請</h3></a>--}}
+            <a href="{{route('sales_data_change_application.index')}}"><h3>修改申請</h3></a>
         </div>
 
         <hr>
