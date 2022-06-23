@@ -62,6 +62,9 @@ Route::group([
     //營業數報告查看
     $router->get('reports/print/sales_data_report', 'Reports\SalesDataReportController@print')->name('admin.sales_data.print');
 
+    //分店三更數報告
+    $router->resource('reports/sales_data_by_shop', 'Reports\SalesDataByShopReportController')->only(['index']);
+
     //毛利率報表
     $router->resource('reports/gross_margin', 'Reports\GrossMarginController');
 
