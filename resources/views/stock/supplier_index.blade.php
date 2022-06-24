@@ -30,14 +30,30 @@
         <div class="d-flex justify-content-end input-group">
             <a href="{{ route('stock.supplier.index') }}" class="btn btn-danger" style="margin-right: 5px;">全部</a>
             <a href="{{ route('stock.supplier.index', ['type' => 'empty']) }}" class="btn btn-success">未填寫</a>
+            <a href="{{ route('stock.supplier.index', ['type' => 'filled']) }}" class="btn btn-primary">已填寫</a>
+        </div>
+        <div class="d-flex justify-content-end input-group">
+            <a href="{{ route('stock.supplier.index', ['type' => 'filled', 'mode' => 'print']) }}" target="_blank" class="btn btn-danger" style="margin-right: 5px;">查看已填寫</a>
         </div>
         <hr>
         <div class="row">
-            {{--            左邊供應商欄--}}
+            {{--            左邊部門欄--}}
             <div class="col-md-4 mb-4">
                 <h4 class="d-flex justify-content-between align-items-center mb-3">
                     <span class="text-muted">部門</span>
                 </h4>
+{{--                    全部--}}
+                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                        <h6 class="my-0">
+                            <a href="{{ route('stock.supplier.index', ['supplier' => request()->supplier]) }}">
+                                全部
+                            </a>
+                        </h6>
+                    </div>
+
+                </li>
+{{--                    其他部門--}}
                 <ul class="list-group mb-3">
 
                     @foreach($groups as $key => $value)
@@ -46,7 +62,43 @@
                             d-flex justify-content-between lh-condensed">
                             <div>
                                 <h6 class="my-0">
-                                    <a href="{{ route('stock.supplier.index', ['group' => $key]) }}">
+                                    <a href="{{ route('stock.supplier.index', ['group' => $key, 'supplier' => request()->supplier]) }}">
+                                        {{ $value }}
+                                    </a>
+                                </h6>
+                            </div>
+
+                        </li>
+                    @endforeach
+
+                </ul>
+
+                {{--            左邊供應商欄--}}
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-muted">供應商</span>
+                </h4>
+                <ul class="list-group mb-3">
+
+{{--                    全部--}}
+                    <li class="list-group-item d-flex justify-content-between lh-condensed">
+                        <div>
+                            <h6 class="my-0">
+                                <a href="{{ route('stock.supplier.index', ['group' => request()->group]) }}">
+                                    全部
+                                </a>
+                            </h6>
+                        </div>
+
+                    </li>
+
+{{--                    其他供應商--}}
+                    @foreach($suppliers as $key => $value)
+                        <li class="list-group-item
+                            @if(request()->supplier == $key) list-group-item-secondary @endif
+                            d-flex justify-content-between lh-condensed">
+                            <div>
+                                <h6 class="my-0">
+                                    <a href="{{ route('stock.supplier.index', ['group' => request()->group, 'supplier' => $key]) }}">
                                         {{ $value }}
                                     </a>
                                 </h6>
@@ -149,11 +201,11 @@
 
             let product_id = $(this).data('id');
             let qty_input = $(".qty[data-id=" + product_id + "]");
-            let qty = qty_input.val();
-
-            if (qty == null || qty == undefined || qty == "") {
-                return ;
-            }
+            // let qty = qty_input.val();
+            //
+            // if (qty == null || qty == undefined || qty == "") {
+            //     return ;
+            // }
 
             $.ajax({
                 type: "DELETE",

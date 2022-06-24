@@ -25,7 +25,13 @@ class SupplierStockController extends Controller
     public function index(Request $request){
 
         $group = $request->group ?? '';
+        $supplier = $request->supplier ?? '';
         $search = $request->search ?? '';
+        $type = $request->type ?? '';
+
+        //格式:202104
+        $currentmonth = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMM');
+        $month = $request->input('month') ?? $currentmonth;
 
         $front_group_id = Auth::user()->front_groups->first()->id;
         $product_list = SupplierStockItemList::where('front_group_id', $front_group_id)
@@ -37,7 +43,7 @@ class SupplierStockController extends Controller
         $suppliers = [];
         if(isset($product_list->item_list)){
             $product_ids = explode(',', $product_list->item_list);
-            $products = SupplierProduct::getProducts($product_ids, $group, $search);
+            $products = SupplierProduct::getProducts($product_ids, $group, $supplier, $search, $type, $month);
 
             $groups = SupplierGroup::whereHas('products', function ($query) use($product_ids){
                 $query->whereIn('id', $product_ids);
@@ -47,32 +53,62 @@ class SupplierStockController extends Controller
                 $query->whereIn('id', $product_ids);
             })->pluck('name', 'id')->toArray();
 
-            //        dump($product_ids);
+//                    dump($product_ids);
 
 //        dump($groups);
 //        dump($suppliers);
 //            dump($products->toArray());
         }
 
-        //格式:202104
-        $currentmonth = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMM');
-        $month = $request->input('month') ?? $currentmonth;
-        $stockitems = SupplierStockItem::all()
+        $stockItemModel = SupplierStockItem::query()
             ->where('user_id', Auth::id())
             ->where('month', $month)
-            ->pluck('qty','product_id')
-            ->toArray();
+//            ->where('date', $date)
+        ;
 
-        $stockitem_units = SupplierStockItem::all()
-            ->where('user_id', Auth::id())
-            ->where('month', $month)
+        $allstockitems = (clone $stockItemModel)->get();
+        $stockitems = array();
+        foreach ($allstockitems as $v){
+            $stockitems[$v->product_id][$v->unit_id] = $v->qty;
+        }
+
+//        dump($stockitems);
+
+//        $stockitems = SupplierStockItem::all()
+//            ->where('user_id', Auth::id())
+//            ->where('month', $month)
+//            ->pluck('qty','product_id')
+//            ->toArray();
+
+        $stockitem_units = (clone $stockItemModel)
             ->pluck('unit_id','product_id')
             ->toArray();
 
         $monthname = Carbon::now()->subDays(self::DELAY_DAY)->monthName;
 //        dump($stockitem_units);
 
-        return view('stock.supplier_index', compact('products', 'groups', 'suppliers', 'stockitems', 'stockitem_units', 'monthname'));
+        //打印模式
+        $mode = $request->mode ?? '';
+
+        if($mode === 'print'){
+            return view('stock.supplier_print', compact('products',
+                    'groups',
+                    'suppliers',
+                    'stockitems',
+                    'stockitem_units',
+                    'monthname')
+            );
+        }else{
+            return view('stock.supplier_index', compact('products',
+                    'groups',
+                    'suppliers',
+                    'stockitems',
+                    'stockitem_units',
+                    'monthname')
+            );
+        }
+
+
     }
 
     public function add(Request $request)
@@ -90,6 +126,7 @@ class SupplierStockController extends Controller
             ->where('product_id', $product_id)
             ->where('user_id', $user->id)
             ->where('month', $month)
+            ->where('unit_id', $unit_id)
             ->first()) {
 
             // 如果存在则直接叠加商品数量
