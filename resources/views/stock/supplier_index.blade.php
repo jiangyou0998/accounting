@@ -32,7 +32,7 @@
             <a href="{{ route('stock.supplier.index', ['type' => 'empty']) }}" class="btn btn-success">未填寫</a>
             <a href="{{ route('stock.supplier.index', ['type' => 'filled']) }}" class="btn btn-primary">已填寫</a>
         </div>
-        <div class="d-flex justify-content-end input-group">
+        <div class="d-flex justify-content-start input-group">
             <a href="{{ route('stock.supplier.index', ['type' => 'filled', 'mode' => 'print']) }}" target="_blank" class="btn btn-danger" style="margin-right: 5px;">查看已填寫</a>
         </div>
         <hr>
@@ -126,19 +126,19 @@
     <script>
 
         //更改單位時寫入數據
-        $(document).on('change', '.select_unit', function () {
-            let unit_id = $(this).val();
-            let product_id = $(this).data('id');
-            let qty_input = $(".qty[data-id=" + product_id + "]");
-            let qty = qty_input.val();
-
-            if (qty == null || qty == undefined || qty == "") {
-                return ;
-            }
-            qty_input.attr('data-unit', unit_id);
-
-            submit(qty, product_id, unit_id);
-        });
+        // $(document).on('change', '.select_unit', function () {
+        //     let unit_id = $(this).val();
+        //     let product_id = $(this).data('id');
+        //     let qty_input = $(".qty[data-id=" + product_id + "]");
+        //     let qty = qty_input.val();
+        //
+        //     if (qty == null || qty == undefined || qty == "") {
+        //         return ;
+        //     }
+        //     qty_input.attr('data-unit', unit_id);
+        //
+        //     submit(qty, product_id, unit_id);
+        // });
 
         // $('.qty').blur(function () {
         $(document).on('blur', '.qty', function () {
@@ -201,11 +201,22 @@
 
             let product_id = $(this).data('id');
             let qty_input = $(".qty[data-id=" + product_id + "]");
-            // let qty = qty_input.val();
-            //
-            // if (qty == null || qty == undefined || qty == "") {
-            //     return ;
-            // }
+            let qty_is_empty = true;
+
+            qty_input.each(function () {
+
+                let input = $(this).val();
+
+                if (input !== null && input !== undefined && input !== "") {
+                    qty_is_empty = false;
+                    return false;
+                }
+
+            });
+
+            if (qty_is_empty === true) {
+                return ;
+            }
 
             $.ajax({
                 type: "DELETE",

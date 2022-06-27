@@ -158,21 +158,21 @@
     <script>
 
         //更改單位時寫入數據
-        $(document).on('change', '.select_unit', function () {
-            let unit_id = $(this).val();
-            let product_id = $(this).data('id');
-            let qty_input = $(".qty[data-id=" + product_id + "]");
-            let qty = qty_input.val();
-
-            //2022-04-29 應該先更改data-unit的值 再判斷是否需要保存
-            qty_input.attr('data-unit', unit_id);
-
-            if (qty == null || qty == undefined || qty == "") {
-                return ;
-            }
-
-            submit(qty, product_id, unit_id);
-        });
+        // $(document).on('change', '.select_unit', function () {
+        //     let unit_id = $(this).val();
+        //     let product_id = $(this).data('id');
+        //     let qty_input = $(".qty[data-id=" + product_id + "]");
+        //     let qty = qty_input.val();
+        //
+        //     //2022-04-29 應該先更改data-unit的值 再判斷是否需要保存
+        //     qty_input.attr('data-unit', unit_id);
+        //
+        //     if (qty == null || qty == undefined || qty == "") {
+        //         return ;
+        //     }
+        //
+        //     submit(qty, product_id, unit_id);
+        // });
 
         // $('.qty').blur(function () {
         $(document).on('blur', '.qty', function () {
@@ -237,11 +237,22 @@
 
             let product_id = $(this).data('id');
             let qty_input = $(".qty[data-id=" + product_id + "]");
-            // let qty = qty_input.val();
-            //
-            // if (qty == null || qty == undefined || qty == "") {
-            //     return ;
-            // }
+            let qty_is_empty = true;
+
+            qty_input.each(function () {
+
+                let input = $(this).val();
+
+                if (input !== null && input !== undefined && input !== "") {
+                    qty_is_empty = false;
+                    return false;
+                }
+
+            });
+
+            if (qty_is_empty === true) {
+                return ;
+            }
 
             $.ajax({
                 type: "DELETE",
