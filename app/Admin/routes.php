@@ -54,6 +54,13 @@ Route::group([
     $router->get('reports/invoice', 'Accountings\InvoiceController@index');
     $router->get('reports/invoice/view', 'Accountings\InvoiceController@invoice')->name('admin.invoice.view');
 
+    //營業數報告
+    $router->resource('reports/sales_data_report', 'Reports\SalesDataReportController')->only(['index']);
+    //營業數報告導出Excel
+    $router->get('reports/export/sales_data_report', 'Reports\SalesDataReportController@export')->name('admin.export.sales_data_report');
+    //營業數報告查看
+    $router->get('reports/print/sales_data_report', 'Reports\SalesDataReportController@print')->name('admin.sales_data.print');
+
     //前台
     $router->resource('users', 'UserController');
     $router->resource('front/menu', 'MenuController');
