@@ -69,8 +69,8 @@ HTML;
                 'wechatpay_income' => '微信',
                 'coupon_income' => '現金券',
                 'credit_card_income' => '信用卡',
-                'pos_paper_money' => '收銀機紙幣',
-                'pos_coin' => '收銀機硬幣',
+                'pos_paper_money' => '紙幣總額',
+                'pos_coin' => '輔幣總額',
                 'pos_cash_not_deposited' => '未存入現金',
                 'deposit_in_bank' => '存入銀行',
                 'income_sum' => '收入',
@@ -166,14 +166,10 @@ HTML;
             'wechatpay_income' => '微信',
             'coupon_income' => '現金券',
             'credit_card_income' => '信用卡',
-            'pos_paper_money' => '收銀機紙幣',
-            'pos_coin' => '收銀機硬幣',
-            'safe_paper_money' => '夾萬紙幣',
-            'safe_coin' => '夾萬硬幣',
-            'deposit_in_safe' => '存入夾萬',
+            'pos_paper_money' => '紙幣總額',
+            'pos_coin' => '輔幣總額',
+            'pos_cash_not_deposited' => '未存入現金',
             'deposit_in_bank' => '存入銀行',
-            'kelly_out' => '慧霖取銀',
-            'bill_paid_sum' => '支單支出',
             'income_sum' => '收入',
             'difference' => '差額',
         ];
@@ -269,6 +265,7 @@ HTML;
             ->whereBetween('date', [$start_date, $end_date])
             ->whereIn('shop_id', $ids)
             ->orderBy('shop_id')
+            ->orderBy('date')
             ->get()
             ->map(function (SalesCalResult $result) use($sales_income_types, $shop_names){
 
@@ -283,6 +280,13 @@ HTML;
                 return $result;
             });
 
+        foreach ($sales_cal_results as $result) {
+            $balance = $result->balance ?? 0;
+            $pos_coin = $result->pos_coin ?? 0;
+            $pos_cash_not_deposited = $result->pos_cash_not_deposited ?? 0;
+            $result->pos_paper_money = (float)$balance - (float)$pos_coin - (float)$pos_cash_not_deposited;
+
+        }
 //        dump($sales_cal_results->toArray());
 
         return $sales_cal_results;

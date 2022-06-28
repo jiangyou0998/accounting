@@ -37,7 +37,7 @@ class SalesDataExport extends Form
     {
         $this->month('month','月份')->format('YYYY-MM')->required();
         $shopGroupIds = ShopGroup::has('users')
-            ->whereIn('id',[1])
+            ->whereIn('id',[ShopGroup::CURRENT_SHOP_ID])
             ->pluck('name','id')
             ->toArray();
         foreach ($shopGroupIds as $shopGroupId => $shopGroupName){
