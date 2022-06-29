@@ -24,6 +24,8 @@ class WarehouseProductController extends AdminController
         return Grid::make(new WarehouseProduct(), function (Grid $grid) {
             $grid->model()->with(['supplier', 'supplier_group' , 'warehouse_group', 'unit', 'base_unit']);
 
+            $grid->quickSearch(['product_no', 'product_name', 'product_name_short']);
+
             $grid->column('id')->sortable();
             $grid->column('product_no');
             $grid->column('product_name')->limit(20);
@@ -83,12 +85,20 @@ class WarehouseProductController extends AdminController
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
-                $filter->equal('id');
                 $filter->like('product_name');
+
                 $unitArr = WorkshopUnit::all()->pluck('unit_name', 'id');
                 $filter->equal('unit_id', '單位')->select($unitArr);
+
                 $supplierArr = Supplier::all()->pluck('name', 'id');
                 $filter->equal('supplier_id', '供應商')->select($supplierArr);
+
+                $warehouseGroupArr = WarehouseGroup::all()->pluck('name', 'id');
+                $filter->equal('warehouse_group.id', '貨倉分組')->select($warehouseGroupArr);
+
+                $groupArr = SupplierGroup::all()->pluck('name', 'id');
+                $filter->equal('supplier_group.id', '分類')->select($groupArr);
+
                 $filter->equal('status','狀態')->select([0 => '啟用', 1 => '禁用']);
                 $filter->equal('base_qty', '包裝數量');
                 $filter->equal('weight');
