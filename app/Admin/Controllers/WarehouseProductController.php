@@ -106,22 +106,23 @@ class WarehouseProductController extends AdminController
     protected function form()
     {
         return Form::make(new WarehouseProduct(), function (Form $form) {
+
             $form->model()->with(['supplier', 'unit', 'base_unit']);
             $form->display('id');
-            $form->text('product_no');
-            $form->text('product_name');
-            $form->text('product_name_short');
-            $form->select('supplier_id','供應商')->options(Supplier::all()->pluck('name','id'));
-            $form->select('warehouse_group_id', '貨倉用途分組')->options(WarehouseGroup::all()->pluck('name','id'));
-            $form->select('group_id')->options(SupplierGroup::all()->pluck('name','id'));
-            $form->select('unit_id', '單位')->options(WorkshopUnit::all()->pluck('unit_name','id'));
-            $form->select('base_unit_id', '包裝單位')->options(WorkshopUnit::all()->pluck('unit_name','id'));
-            $form->text('base_qty', '包裝數量');
+            $form->text('product_no')->required();
+            $form->text('product_name')->required();
+            $form->text('product_name_short')->required();
+            $form->select('supplier_id','供應商')->options(Supplier::all()->pluck('name','id'))->required();
+            $form->select('warehouse_group_id', '貨倉用途分組')->options(WarehouseGroup::all()->pluck('name','id'))->required();
+            $form->select('group_id')->options(SupplierGroup::all()->pluck('name','id'))->required();
+            $form->select('unit_id', '單位')->options(WorkshopUnit::all()->pluck('unit_name','id'))->required();
+            $form->select('base_unit_id', '包裝單位')->options(WorkshopUnit::all()->pluck('unit_name','id'))->required();
+            $form->text('base_qty', '包裝數量')->required();
             $form->text('default_price');
 //            $form->text('base_price');
             $form->text('weight');
             $form->text('weight_unit');
-            $form->select('status', '狀態')->options([0 => '啟用', 1 => '禁用']);
+            $form->radio('status', '狀態')->options([0 => '啟用', 1 => '禁用'])->default(0)->required();
 
             $form->display('created_at');
             $form->display('updated_at');

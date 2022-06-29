@@ -2,10 +2,10 @@
 
 namespace App\Admin\Controllers;
 
-use App\Models\Supplier;
+use App\Admin\Actions\Grid\DeleteSupplier;
+use App\Models\Supplier\Supplier;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
-use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
 
 class SupplierController extends AdminController
@@ -18,32 +18,18 @@ class SupplierController extends AdminController
     protected function grid()
     {
         return Grid::make(new Supplier(), function (Grid $grid) {
+
+            //禁用自帶刪除
+            $grid->disableDeleteButton();
+            $grid->actions([new DeleteSupplier()]);
+
+            $grid->quickSearch('name');
             $grid->column('id')->sortable();
             $grid->column('name');
+            $grid->column('warehouse_used_count')->sortable();
             $grid->column('created_at');
             $grid->column('updated_at')->sortable();
-        
-            $grid->filter(function (Grid\Filter $filter) {
-                $filter->equal('id');
-        
-            });
-        });
-    }
 
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     *
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        return Show::make($id, new Supplier(), function (Show $show) {
-            $show->field('id');
-            $show->field('name');
-            $show->field('created_at');
-            $show->field('updated_at');
         });
     }
 
@@ -56,8 +42,10 @@ class SupplierController extends AdminController
     {
         return Form::make(new Supplier(), function (Form $form) {
             $form->display('id');
-            $form->text('name');
-        
+            $form->text('name')->required()->rules("required|
+                unique:suppliers,name,{$form->getKey()},id", [
+                'unique'   => '供應商已存在',
+            ]);
             $form->display('created_at');
             $form->display('updated_at');
         });

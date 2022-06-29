@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class WarehouseStockItem extends Model
 {
+    const TAB_SHOW_DATE = 30;
 
     protected $table = 'warehouse_stock_items';
     public $timestamps = false;
@@ -52,7 +53,7 @@ class WarehouseStockItem extends Model
     public static function getInvoiceTab(){
         $warehouse_stock_items = WarehouseStockItem::query()
             ->with('product')
-            ->whereBetween(DB::raw("date(`date`)"), [Carbon::now()->subDay(5), Carbon::now()])
+            ->whereBetween(DB::raw("date(`date`)"), [Carbon::now()->subDay(self::TAB_SHOW_DATE), Carbon::now()])
             ->whereNotNull('times')
             ->orderBy('date')
             ->get();
