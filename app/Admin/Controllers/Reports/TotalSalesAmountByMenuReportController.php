@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers\Reports;
 
+use App\Admin\Renderable\ProductTable;
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopProduct;
 use App\User;
@@ -45,7 +46,10 @@ class TotalSalesAmountByMenuReportController extends AdminController
             $shop_group = request()->group ?? 0;
 //            dump(request()->_selector['group']);
 
-            $data = $this->generate($start, $end, $shop_group);
+            //當前產品id
+            $product_id = isset($_REQUEST['product_id']) ? $_REQUEST['product_id'] : "";
+
+            $data = $this->generate($start, $end, $shop_group, $product_id);
 
             if(count($data) > 0){
                 $keys = $data->first()->toArray();
@@ -75,6 +79,13 @@ class TotalSalesAmountByMenuReportController extends AdminController
                 // 更改为 panel 布局
                 $filter->panel();
                 $filter->between('between', '報表日期')->date();
+
+                $filter->equal('product_id', '產品')
+                    ->multipleSelectTable(ProductTable::make()) // 设置渲染类实例，并传递自定义参数
+                    ->title('弹窗标题')
+                    ->dialogWidth('50%') // 弹窗宽度，默认 800px
+                    ->model(WorkshopProduct::class, 'id', 'product_name'); // 设置编辑数据显示
+
                 $filter->equal('group', '分組')->select(getReportShop());
             });
 
@@ -91,11 +102,13 @@ class TotalSalesAmountByMenuReportController extends AdminController
      *
      * @return array
      */
-    public function generate($start, $end, $shop_group)
+    public function generate($start, $end, $shop_group, $product_id = null)
     {
         //上月開始,結束日期
         $last_month_start = (new Carbon($start))->subMonth()->firstOfMonth()->toDateString();
         $last_month_end = (new Carbon($start))->subMonth()->endOfMonth()->toDateString();
+
+        $product_ids = explode(',', $product_id);
 
         if($shop_group === 0){
             $shops = User::getAllShopsAndCustomerShops();
@@ -144,6 +157,10 @@ class TotalSalesAmountByMenuReportController extends AdminController
             ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
 //            ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
             ->leftJoin('workshop_units', 'workshop_units.id', '=', 'workshop_products.unit_id');
+
+        if ($product_id) {
+            $cartitem = $cartitem->whereIn('workshop_products.id', $product_ids);
+        }
 
         $cartitem = $cartitem
             ->whereBetween('workshop_cart_items.deli_date', [$last_month_start, $end])
