@@ -49,7 +49,8 @@
                                 </td>
 {{--                            單位2--}}
                                 <td>
-                                    <span>{{ $product->base_qty ?? '' }}/{{ $product->base_unit->unit_name ?? '' }}</span>
+{{--                                    <span>{{ $product->base_qty ?? '' }}/{{ $product->base_unit->unit_name ?? '' }}</span>--}}
+                                    <span>{{ $product->base_unit->unit_name ?? '' }}</span>
                                 </td>
                             @endif
 
