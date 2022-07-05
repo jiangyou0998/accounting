@@ -11,6 +11,9 @@ class ShopGroup extends Model
 {
     //當前內聯網所屬商店分組ID
     const CURRENT_SHOP_ID = 1;
+    const KB_SHOP_ID = 1;
+    const TWOCAFE_SHOP_ID = 4;
+    const RB_SHOP_ID = 5;
     const LAGARDERE_SHOP_ID = 8;
 
     protected $table = 'shop_groups';

@@ -67,7 +67,7 @@ class ForbiddenDateController extends AdminController
             $form->checkbox('cat_ids')->options(WorkshopCat::all()->pluck('cat_name','id'))->required();
 //            $form->checkbox('user_ids')->options(User::getAllShopsByShopGroup()->pluck('txt_name', 'id'))->required();
             $shopGroupIds = ShopGroup::has('users')
-                ->whereIn('id',[1,5])
+                ->whereIn('id',[ShopGroup::KB_SHOP_ID, ShopGroup::TWOCAFE_SHOP_ID, ShopGroup::RB_SHOP_ID])
                 ->pluck('name','id')
                 ->toArray();
             foreach ($shopGroupIds as $shopGroupId => $shopGroupName){
