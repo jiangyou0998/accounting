@@ -60,7 +60,7 @@ class KBWorkshopCat extends Model
         }else if($type == 'kitchen'){
             $cats = $cats->whereIn('cat_name',['廚務部', '轉手貨']);
         }else if($type == 'waterbar'){
-            $cats = $cats->whereIn('cat_name',['廚務部', '轉手貨']);
+            $cats = $cats->whereIn('cat_name',['麵包部', '廚務部', '轉手貨']);
         }
 
         $cats = $cats
@@ -93,7 +93,7 @@ class KBWorkshopCat extends Model
         }else if($type == 'kitchen'){
             $cats = $cats->whereNotIn('cat_name',['麵包部', '西餅部']);
         }else if($type == 'waterbar'){
-            $cats = $cats->whereNotIn('cat_name',['麵包部', '西餅部']);
+            $cats = $cats->whereNotIn('cat_name',['西餅部']);
         }
 
         //2022-03-25 只查詢有商品價格的大類

@@ -227,7 +227,7 @@ class KBWorkshopCartItemController extends Controller
 //        dump($items->toArray());
 //        dump($sampleItems->toArray());
 
-        //糧友在蛋撻王工場下單標識為CU
+        //在蛋撻王工場下單標識為CU
         $deptArr= ['CU'=>'蛋撻王工場'];
 
         $orderInfos = new Collection();
@@ -328,9 +328,9 @@ class KBWorkshopCartItemController extends Controller
             $cuttime = $deli_date . " " . $product->cuttime . "00";
             $finalOrderTime = Carbon::parse($cuttime)->subDay($phase);
             //2021-03-26 最後下單時間是星期日時 要推前一日下單
-            if ($finalOrderTime->isSunday()){
-                $finalOrderTime = $finalOrderTime->subDay(1);
-            }
+//            if ($finalOrderTime->isSunday()){
+//                $finalOrderTime = $finalOrderTime->subDay(1);
+//            }
 //            dump($finalOrderTime->toDateTimeString());
             $now = Carbon::now();
             $product->cut_order = $finalOrderTime->lt($now);
