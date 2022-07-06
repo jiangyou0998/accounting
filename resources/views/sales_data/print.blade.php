@@ -84,6 +84,11 @@
         padding: 5px;
     }
 
+    .footer {
+        page-break-after:always;
+        bottom : 0;
+    }
+
 </style>
 
 <body>
@@ -212,6 +217,10 @@
 
                     </div>
                 </div>
+
+{{--                分頁用--}}
+                <footer class="footer"></footer>
+
             </div>
         </div>
     @endforeach
