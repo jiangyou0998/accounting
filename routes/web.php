@@ -95,6 +95,18 @@ Route::group(['middleware' => ['auth','role:SuperAdmin|Operation']], function ()
 });
 
 Route::group(['middleware' => ['auth']], function () {
+    // 銷售數據跳轉頁面
+    Route::get('sales_data/redirect', [SalesDataController::class, 'redirect'])->name('sales_data.redirect');
+});
+
+//營運、會計共同權限
+Route::group(['middleware' => ['auth','permission:operation|accounting']], function () {
+    //營業數匯總
+    Route::get('sales_data/report', 'SalesDataController@report')->name('sales_data.report');
+    Route::get('workshop_sales_data/report', 'WorkshopSalesDataController@report')->name('workshop_sales_data.report');
+});
+
+Route::group(['middleware' => ['auth']], function () {
 
     //蛋撻王工場範本
     Route::get('kb/sample/create', 'KB\KBWorkshopOrderSampleController@create')->name('kb.sample.create');

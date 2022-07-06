@@ -214,4 +214,22 @@ class User extends Authenticatable
         return $result;
     }
 
+    //根據shop_group的id,獲取分店
+    public static function getShopsByShopGroup($shop_group_id){
+
+        $users = new User();
+        $shops = $users
+            ->whereHas('shop_groups', function ($query) use($shop_group_id){
+                if(is_array($shop_group_id)){
+                    $query->whereIn('id', $shop_group_id);
+                }else{
+                    $query->where('id', '=', $shop_group_id);
+                }
+            })
+            ->orderBy('name')
+            ->get(['id','report_name']);
+
+        return $shops;
+    }
+
 }

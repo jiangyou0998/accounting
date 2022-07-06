@@ -92,8 +92,8 @@
                         <th scope="col">日期</th>
                         <th scope="col">分店名稱</th>
                         <th scope="col">存票 NO.</th>
-                        <th scope="col">承上結存</th>
-                        <th scope="col">結存</th>
+                        <th scope="col">上日餘款</th>
+                        <th scope="col">餘款</th>
                     </tr>
                     </thead>
                     <tbody class="table-striped" id="search-data" style="background-color: white">

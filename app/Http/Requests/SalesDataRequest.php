@@ -33,27 +33,21 @@ class SalesDataRequest extends FormRequest
             'inputs.0.first_pos_income' => '主機收入',
             'inputs.0.second_pos_income' => '副機收入',
 
-            'inputs.0.morning_income' => '早更收入',
-            'inputs.0.afternoon_income' => '午更收入',
-            'inputs.0.evening_income' => '晚更收入',
+            'inputs.0.morning_income' => '早市收入',
+            'inputs.0.noon_income' => '午市收入',
+            'inputs.0.afternoon_tea_income' => '下午茶收入',
+            'inputs.0.evening_income' => '晚市收入',
+            'inputs.0.night_snack_income' => '宵夜收入',
 
             'inputs.0.octopus_income' => '八達通',
             'inputs.0.alipay_income' => '支付寶',
             'inputs.0.wechatpay_income' => '微信',
-            'inputs.0.coupon_income' => '現金券',
-            'inputs.0.credit_card_income' => '信用卡',
+            'inputs.0.foodpanda_income' => 'Foodpanda',
 
-            'inputs.0.pos_money_1000' => '$1000紙幣',
-            'inputs.0.pos_money_500' => '$500紙幣',
-            'inputs.0.pos_money_100' => '$100紙幣',
-            'inputs.0.pos_money_50' => '$50紙幣',
-            'inputs.0.pos_money_20' => '$20紙幣',
-            'inputs.0.pos_money_10' => '$00紙幣',
-            'inputs.0.pos_coin' => '輔幣總額',
-            'inputs.0.pos_cash_not_deposited' => '未存入現金',
+            'inputs.0.cash' => '餘數',
+            'inputs.0.escort_cash' => '押運公司',
 
-            'inputs.0.deposit_in_bank' => '存入銀行',
-
+            'inputs.0.bread_income' => '麵包營業額',
         ];
     }
 }

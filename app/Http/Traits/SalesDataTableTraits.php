@@ -78,38 +78,26 @@ trait SalesDataTableTraits
             $sales_table_data['pos_income'] = number_format($pos_income_sum, 2);
 
             $sales_table_data['morning_income'] = $sales_income_detail['21'] ?? '';
-            $sales_table_data['afternoon_income'] = $sales_income_detail['22'] ?? '';
-            $sales_table_data['evening_income'] = $sales_income_detail['23'] ?? '';
+            $sales_table_data['noon_income'] = $sales_income_detail['22'] ?? '';
+            $sales_table_data['afternoon_tea_income'] = $sales_income_detail['23'] ?? '';
+            $sales_table_data['evening_income'] = $sales_income_detail['24'] ?? '';
+            $sales_table_data['night_snack_income'] = $sales_income_detail['25'] ?? '';
 
             $sales_table_data['octopus_income'] = $sales_income_detail['31'] ?? '';
             $sales_table_data['alipay_income'] = $sales_income_detail['32'] ?? '';
             $sales_table_data['wechatpay_income'] = $sales_income_detail['33'] ?? '';
-            $sales_table_data['coupon_income'] = $sales_income_detail['34'] ?? '';
-            $sales_table_data['credit_card_income'] = $sales_income_detail['35'] ?? '';
+            $sales_table_data['foodpanda_income'] = $sales_income_detail['34'] ?? '';
+
+            $sales_table_data['escort_cash'] = $sales_income_detail['42'] ?? '';
+
+            $sales_table_data['bread_income'] = $sales_income_detail['61'] ?? '';
 
             $sales_table_data['pos_paper_money'] = number_format($pos_paper_money, 2);
             $sales_table_data['pos_coin'] = $sales_income_detail['42'] ?? '';
             $sales_table_data['pos_cash_not_deposited'] = $sales_income_detail['49'] ?? '';
 
-            $sales_table_data['pos_money_1000'] = $sales_income_detail['43'] ?? '';
-            $sales_table_data['pos_money_500'] = $sales_income_detail['44'] ?? '';
-            $sales_table_data['pos_money_100'] = $sales_income_detail['45'] ?? '';
-            $sales_table_data['pos_money_50'] = $sales_income_detail['46'] ?? '';
-            $sales_table_data['pos_money_20'] = $sales_income_detail['47'] ?? '';
-            $sales_table_data['pos_money_10'] = $sales_income_detail['48'] ?? '';
-
-            if(isset($sales_cal_result->difference) && $sales_cal_result->difference > 0){
-                $sales_table_data['difference'] = '+$'.(number_format($sales_cal_result->difference, 2) ?? '');
-            }else{
-                $sales_table_data['difference'] = '-$'.(number_format($sales_cal_result->difference, 2) ?? '');
-            }
-
             //收入
             $sales_table_data['income_sum'] = number_format($sales_cal_result->income_sum, 2) ?? '';
-
-            //存入銀行
-            $sales_table_data['bank'] = $bank;
-            $sales_table_data['deposit_in_bank'] = $sales_income_detail['72'] ?? '';
 
             $sales_table_data['last_balance'] = number_format($sales_cal_result->last_balance, 2) ?? '';
             $sales_table_data['balance'] = number_format($sales_cal_result->balance, 2) ?? '';
