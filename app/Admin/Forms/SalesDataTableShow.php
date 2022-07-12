@@ -38,7 +38,7 @@ class SalesDataTableShow extends Form
         $this->date('start_date','開始日期')->required();
         $this->date('end_date','結束日期')->required();
         $shopGroupIds = ShopGroup::has('users')
-            ->whereIn('id',[1])
+            ->whereIn('id',[ShopGroup::CURRENT_SHOP_ID])
             ->pluck('name','id')
             ->toArray();
         foreach ($shopGroupIds as $shopGroupId => $shopGroupName){
