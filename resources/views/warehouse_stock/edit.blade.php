@@ -63,52 +63,38 @@
 @section('script')
     <script>
 
-        //更改單位時寫入數據
-        $(document).on('change', '.select_unit', function () {
-            let unit_id = $(this).val();
-            let product_id = $(this).data('id');
-            let qty_input = $(".qty[data-id=" + product_id + "]");
-            let qty = qty_input.val();
-
-            //2022-04-29 應該先更改data-unit的值 再判斷是否需要保存
-            qty_input.attr('data-unit', unit_id);
-
-            if (qty == null || qty == undefined || qty == "") {
-                return ;
-            }
-
-            submit(qty, product_id, unit_id);
-        });
-
         // $('.qty').blur(function () {
-        $(document).on('blur', '.qty', function () {
+        $(document).on('blur', '.qty, .base_qty', function () {
 
-            let qty = $(this).val();
-            let unit_id = $(this).attr('data-unit');
             let product_id = $(this).data('id');
 
-            // console.log(qty);
-            // console.log(unit_id);
-            submit(qty, product_id, unit_id);
+            let qty =  $(".qty[data-id=" + product_id + "]").val();
+            let base_qty =  $(".base_qty[data-id=" + product_id + "]").val();
+
+            submit(qty, base_qty, product_id);
 
         });
 
         //提交每一行數據
-        function submit(qty, product_id, unit_id){
+        function submit(qty, base_qty, product_id){
 
-            if(isNaN(qty)){
-                return ;
-            }
-
-            if (qty == null || qty == undefined || qty == "") {
-                return ;
-            }
-
-            if(qty <= 0){
+            if(qty <= 0 && qty !== null && qty !== undefined && qty !== "" ){
                 Swal.fire({
                     icon: 'error',
                     title: "請輸入大於0的數字",
                 });
+                // 輸入錯誤清空數據
+                $(".qty[data-id=" + product_id + "]").val('');
+                return ;
+            }
+
+            if(base_qty <= 0 && base_qty !== null && base_qty !== undefined && base_qty !== "" ){
+                Swal.fire({
+                    icon: 'error',
+                    title: "請輸入大於0的數字",
+                });
+                // 輸入錯誤清空數據
+                $(".base_qty[data-id=" + product_id + "]").val('');
                 return ;
             }
 
@@ -118,7 +104,7 @@
                 data: {
                     'product_id': product_id,
                     'qty': qty,
-                    'unit_id': unit_id,
+                    'base_qty': base_qty,
                 },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -141,6 +127,7 @@
 
             let product_id = $(this).data('id');
             let qty_input = $(".qty[data-id=" + product_id + "]");
+            let base_qty_input = $(".base_qty[data-id=" + product_id + "]");
             // let qty = qty_input.val();
 
             // if (qty == null || qty == undefined || qty == "") {
@@ -158,6 +145,7 @@
                 },
                 success: function (msg) {
                     qty_input.val('');
+                    base_qty_input.val('');
                 },
                 error:function () {
                     Swal.fire({
@@ -235,10 +223,6 @@
             });
         });
 
-
-
-
-        {{--}--}}
 
     </script>
 @endsection

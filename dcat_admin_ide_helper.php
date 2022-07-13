@@ -196,6 +196,15 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection weight
      * @property Grid\Column|Collection weight_unit
      * @property Grid\Column|Collection item_list
+     * @property Grid\Column|Collection warehouse_used_count
+     * @property Grid\Column|Collection sequence
+     * @property Grid\Column|Collection uuid
+     * @property Grid\Column|Collection batch_id
+     * @property Grid\Column|Collection family_hash
+     * @property Grid\Column|Collection should_display_on_index
+     * @property Grid\Column|Collection content
+     * @property Grid\Column|Collection entry_uuid
+     * @property Grid\Column|Collection tag
      * @property Grid\Column|Collection int_dept
      * @property Grid\Column|Collection address_id
      * @property Grid\Column|Collection chr_mobile
@@ -218,6 +227,9 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection company_english_name
      * @property Grid\Column|Collection pocode
      * @property Grid\Column|Collection barcode
+     * @property Grid\Column|Collection warehouse_group_id
+     * @property Grid\Column|Collection times
+     * @property Grid\Column|Collection invoice_no
      * @property Grid\Column|Collection operate_user_id
      * @property Grid\Column|Collection cart_item_id
      * @property Grid\Column|Collection order_date
@@ -430,6 +442,15 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection weight(string $label = null)
      * @method Grid\Column|Collection weight_unit(string $label = null)
      * @method Grid\Column|Collection item_list(string $label = null)
+     * @method Grid\Column|Collection warehouse_used_count(string $label = null)
+     * @method Grid\Column|Collection sequence(string $label = null)
+     * @method Grid\Column|Collection uuid(string $label = null)
+     * @method Grid\Column|Collection batch_id(string $label = null)
+     * @method Grid\Column|Collection family_hash(string $label = null)
+     * @method Grid\Column|Collection should_display_on_index(string $label = null)
+     * @method Grid\Column|Collection content(string $label = null)
+     * @method Grid\Column|Collection entry_uuid(string $label = null)
+     * @method Grid\Column|Collection tag(string $label = null)
      * @method Grid\Column|Collection int_dept(string $label = null)
      * @method Grid\Column|Collection address_id(string $label = null)
      * @method Grid\Column|Collection chr_mobile(string $label = null)
@@ -452,6 +473,9 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection company_english_name(string $label = null)
      * @method Grid\Column|Collection pocode(string $label = null)
      * @method Grid\Column|Collection barcode(string $label = null)
+     * @method Grid\Column|Collection warehouse_group_id(string $label = null)
+     * @method Grid\Column|Collection times(string $label = null)
+     * @method Grid\Column|Collection invoice_no(string $label = null)
      * @method Grid\Column|Collection operate_user_id(string $label = null)
      * @method Grid\Column|Collection cart_item_id(string $label = null)
      * @method Grid\Column|Collection order_date(string $label = null)
@@ -669,6 +693,15 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection weight
      * @property Show\Field|Collection weight_unit
      * @property Show\Field|Collection item_list
+     * @property Show\Field|Collection warehouse_used_count
+     * @property Show\Field|Collection sequence
+     * @property Show\Field|Collection uuid
+     * @property Show\Field|Collection batch_id
+     * @property Show\Field|Collection family_hash
+     * @property Show\Field|Collection should_display_on_index
+     * @property Show\Field|Collection content
+     * @property Show\Field|Collection entry_uuid
+     * @property Show\Field|Collection tag
      * @property Show\Field|Collection int_dept
      * @property Show\Field|Collection address_id
      * @property Show\Field|Collection chr_mobile
@@ -691,6 +724,9 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection company_english_name
      * @property Show\Field|Collection pocode
      * @property Show\Field|Collection barcode
+     * @property Show\Field|Collection warehouse_group_id
+     * @property Show\Field|Collection times
+     * @property Show\Field|Collection invoice_no
      * @property Show\Field|Collection operate_user_id
      * @property Show\Field|Collection cart_item_id
      * @property Show\Field|Collection order_date
@@ -903,6 +939,15 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection weight(string $label = null)
      * @method Show\Field|Collection weight_unit(string $label = null)
      * @method Show\Field|Collection item_list(string $label = null)
+     * @method Show\Field|Collection warehouse_used_count(string $label = null)
+     * @method Show\Field|Collection sequence(string $label = null)
+     * @method Show\Field|Collection uuid(string $label = null)
+     * @method Show\Field|Collection batch_id(string $label = null)
+     * @method Show\Field|Collection family_hash(string $label = null)
+     * @method Show\Field|Collection should_display_on_index(string $label = null)
+     * @method Show\Field|Collection content(string $label = null)
+     * @method Show\Field|Collection entry_uuid(string $label = null)
+     * @method Show\Field|Collection tag(string $label = null)
      * @method Show\Field|Collection int_dept(string $label = null)
      * @method Show\Field|Collection address_id(string $label = null)
      * @method Show\Field|Collection chr_mobile(string $label = null)
@@ -925,6 +970,9 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection company_english_name(string $label = null)
      * @method Show\Field|Collection pocode(string $label = null)
      * @method Show\Field|Collection barcode(string $label = null)
+     * @method Show\Field|Collection warehouse_group_id(string $label = null)
+     * @method Show\Field|Collection times(string $label = null)
+     * @method Show\Field|Collection invoice_no(string $label = null)
      * @method Show\Field|Collection operate_user_id(string $label = null)
      * @method Show\Field|Collection cart_item_id(string $label = null)
      * @method Show\Field|Collection order_date(string $label = null)

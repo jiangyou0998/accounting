@@ -23,7 +23,7 @@
 
                 <tbody class="table-striped" style="background-color: white">
                 @foreach($products[$supplier_id][$warehouse_group_id] as $product)
-                    <tr @if($product->unit->unit_name === '箱') class="table-danger @endif">
+                    <tr>
                         <td>{{$product->product_no}}</td>
                         <td>{{$product->product_name_short}}</td>
 {{--                            數值輸入1--}}
@@ -32,7 +32,7 @@
                                    data-id="{{$product->id}}"
                                    data-unit="{{ $product->unit->id ?? 0 }}"
                                    style="width:100%"
-                                   value="{{ $stockitems[$product->id][$product->unit->id] ?? ''}}">
+                                   value="{{ $stockitems[$product->id]['qty'] ?? ''}}">
                         </td>
 {{--                            單位1--}}
                         <td>
@@ -45,11 +45,11 @@
                         @else
 {{--                            數值輸入2--}}
                         <td>
-                            <input class="qty" type="number"
+                            <input class="base_qty" type="number"
                                    data-id="{{$product->id}}"
                                    data-unit="{{ $product->base_unit->id ?? 0 }}"
                                    style="width:100%"
-                                   value="{{ $stockitems[$product->id][$product->base_unit->id] ?? ''}}">
+                                   value="{{ $stockitems[$product->id]['base_qty'] ?? ''}}">
                         </td>
 {{--                            單位2--}}
                         <td>

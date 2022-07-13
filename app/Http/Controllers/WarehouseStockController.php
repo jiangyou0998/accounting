@@ -70,12 +70,9 @@ class WarehouseStockController extends Controller
         $allstockitems = (clone $warehouseStockItemModel)->get();
         $stockitems = array();
         foreach ($allstockitems as $v){
-            $stockitems[$v->product_id][$v->unit_id] = $v->qty;
+            $stockitems[$v->product_id]['qty'] = $v->qty;
+            $stockitems[$v->product_id]['base_qty'] = $v->base_qty;
         }
-
-        $stockitem_units = (clone $warehouseStockItemModel)
-            ->pluck('unit_id','product_id')
-            ->toArray();
 
         //2022-06-08 已保存的product_id數組;
 //        $saved_product_ids = (clone $warehouseStockItemModel)
@@ -110,8 +107,7 @@ class WarehouseStockController extends Controller
 //            'times',
             'filled_count',
 //            'saved_supplier_ids',
-            'stockitems',
-            'stockitem_units'));
+            'stockitems'));
     }
 
     public function edit(Request $request){
@@ -160,13 +156,11 @@ class WarehouseStockController extends Controller
         $allstockitems = (clone $warehouseStockItemModel)->get();
         $stockitems = array();
         foreach ($allstockitems as $v){
-            $stockitems[$v->product_id][$v->unit_id] = $v->qty;
+            $stockitems[$v->product_id]['qty'] = $v->qty;
+            $stockitems[$v->product_id]['base_qty'] = $v->base_qty;
         }
 //        dump($stockitems);
 
-        $stockitem_units = (clone $warehouseStockItemModel)
-            ->pluck('unit_id','product_id')
-            ->toArray();
 
         //2022-06-08 已保存的product_id數組;
 //        $saved_product_ids = (clone $warehouseStockItemModel)
@@ -214,8 +208,7 @@ class WarehouseStockController extends Controller
             'invoice_info',
             'filled_count',
 //            'saved_supplier_ids',
-            'stockitems',
-            'stockitem_units'));
+            'stockitems'));
     }
 
     public function add(Request $request)
@@ -234,13 +227,15 @@ class WarehouseStockController extends Controller
         $date = Carbon::parse($request->input('date'))->isoFormat('YMMDD') ?? $currentdate;
 
         $qty = $request->input('qty');
-        $unit_id = $request->input('unit_id');
+        $base_qty = $request->input('base_qty');
+
+        dump($qty);
+        dump($base_qty);
 
         // 从数据库中查询该商品是否已经在购物车中
         if ($stock = WarehouseStockItem::query()
             ->where('product_id', $product_id)
             ->where('user_id', $user->id)
-            ->where('unit_id', $unit_id)
             ->ofTimes($times)
 //            ->where('date', $date)
             ->first()) {
@@ -248,12 +243,12 @@ class WarehouseStockController extends Controller
             // 如果存在则直接叠加商品数量
             $stock->update([
                 'qty' => $qty,
-                'unit_id' => $unit_id,
+                'base_qty' => $base_qty,
             ]);
         } else {
 
             // 否则创建一个新的购物车记录
-            $stock = new WarehouseStockItem(['qty' => $qty, 'unit_id' => $unit_id]);
+            $stock = new WarehouseStockItem(['qty' => $qty, 'base_qty' => $base_qty]);
             $stock->product_id = $product_id;
             $stock->user_id = $user->id;
 //

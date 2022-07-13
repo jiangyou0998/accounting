@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Auth;
 
 class WarehouseProduct extends Model
 {
+    const STATUS_NOT_DISABLED = 0;
+    const STATUS_DISABLED = 1;
 
     protected $table = 'warehouse_products';
 
@@ -137,6 +139,11 @@ class WarehouseProduct extends Model
                 return $query;
         }
 
+    }
+
+    public function scopeNotDisabled($query)
+    {
+        return $query->where('status', self::STATUS_NOT_DISABLED);
     }
 
 //    public function scopeOfTimes($query, $times = null)
