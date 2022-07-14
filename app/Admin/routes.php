@@ -100,6 +100,8 @@ Route::group([
 
     //貨倉產品
     $router->resource('warehouse_products', 'WarehouseProductController');
+//貨倉產品價格
+    $router->resource('warehouse/product/price', 'WarehouseProductPriceController');
 
     //價格分組
     $router->resource('shopgroup', 'ShopGroupController');
