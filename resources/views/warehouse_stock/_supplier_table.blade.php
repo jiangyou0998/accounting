@@ -11,12 +11,13 @@
 
                 <thead class="thead-dark">
                 <tr>
-                    <th scope="col" width="15%">編號</th>
+                    <th scope="col" width="10%">編號</th>
                     <th scope="col" width="20%">貨名</th>
-                    <th scope="col" width="20%">結存</th>
+                    <th scope="col" width="20%">入貨數</th>
                     <th scope="col" width="10%">包裝</th>
-                    <th scope="col" width="20%">結存</th>
+                    <th scope="col" width="20%">入貨數</th>
                     <th scope="col" width="10%">包裝</th>
+                    <th scope="col" width="10%">小計</th>
                     <th scope="col" width="10%"></th>
                 </tr>
                 </thead>
@@ -36,6 +37,7 @@
                         </td>
 {{--                            單位1--}}
                         <td>
+                            <span class="price" data-id="{{$product->id}}"></span>
                             <span>{{ $product->unit->unit_name ?? '' }}</span>
                         </td>
 
@@ -53,9 +55,16 @@
                         </td>
 {{--                            單位2--}}
                         <td>
-                            <span>{{ $product->base_qty ?? '' }}/{{ $product->base_unit->unit_name ?? '' }}</span>
+                            <span class="base_price" data-id="{{$product->id}}"></span>
+                            <span>{{ $product->base_unit->unit_name ?? '' }}</span>
                         </td>
                         @endif
+
+{{--                        小計--}}
+                        <td>
+                            <span class="subtotal_price" data-id="{{$product->id}}"></span>
+                        </td>
+
 {{--                            刪除按鈕--}}
                         <td>
                             <a href="javascript:void(0);" class="delstock"

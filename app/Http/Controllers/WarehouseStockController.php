@@ -8,6 +8,7 @@ use App\Models\Supplier\Supplier;
 use App\Models\SupplierGroup;
 use App\Models\WarehouseGroup;
 use App\Models\WarehouseProduct;
+use App\Models\WarehouseProductPrice;
 use App\Models\WarehouseStockItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -222,15 +223,14 @@ class WarehouseStockController extends Controller
             ->where('times', $times)
             ->count();
 
+//        dump($filled_count);
+
         //格式:20220429
         $currentdate = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMMDD');
         $date = Carbon::parse($request->input('date'))->isoFormat('YMMDD') ?? $currentdate;
 
         $qty = $request->input('qty');
         $base_qty = $request->input('base_qty');
-
-        dump($qty);
-        dump($base_qty);
 
         // 从数据库中查询该商品是否已经在购物车中
         if ($stock = WarehouseStockItem::query()
@@ -353,5 +353,22 @@ class WarehouseStockController extends Controller
         }
 
         return [];
+    }
+
+    //查詢價格
+    public function price_check(Request $request)
+    {
+        $date = $request->input('date');
+
+        $prices = WarehouseProductPrice::query()
+            ->whereDate('start_date','<=', $date)
+            ->whereDate('end_date','>=', $date)
+            ->get(['product_id', 'price', 'base_price']);
+
+
+        return response()->json(array(
+            'code' => 200,
+            'prices' => $prices,
+        ));
     }
 }

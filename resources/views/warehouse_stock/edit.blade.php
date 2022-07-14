@@ -1,8 +1,21 @@
 @extends('layouts.app')
 
 @section('title')
-    {{ request()->date }} - 貨倉入庫
+    貨倉入庫
 @stop
+
+@section('style')
+    <style>
+        .container {
+            margin-right: auto;
+            margin-left: auto;
+            padding-right: 15px;
+            padding-left: 15px;
+            width: 100%;
+            max-width: 2000px;      // 隨螢幕尺寸而變
+        }
+    </style>
+@endsection
 
 @section('content')
 
@@ -45,6 +58,11 @@
         {{--            已保存invoice tab END--}}
 
         <hr>
+
+{{--        總計--}}
+        <div><h2>總計 : $<span class="total_price" id="total_price">0</span></h2></div>
+        <hr>
+
         <div class="row">
 
             <div class="col-md-12 mb-8 right-div">
@@ -63,7 +81,84 @@
 @section('script')
     <script>
 
-        // $('.qty').blur(function () {
+        var search_prices;
+
+        $( document ).ready(function() {
+            $( "#invoice_date" ).trigger( "change" );
+        });
+
+        //計算總價
+        function cal_price(prices) {
+            let total_price = 0;
+
+            $(".price, .base_price, .subtotal_price").html('');
+            $.each(prices, function(key, value) {
+                let subtotal_price = 0;
+                let price = value.price;
+                let base_price = value.base_price;
+
+                let qty =  $(".qty[data-id=" + value.product_id + "]").val();
+                let base_qty =  $(".base_qty[data-id=" + value.product_id + "]").val();
+
+                if( qty === null || qty === undefined || qty === ''){
+                    qty = 0;
+                }
+
+                if( base_qty === null || base_qty === undefined || base_qty === '' ){
+                    base_qty = 0;
+                }
+
+                subtotal_price += parseFloat(qty) * parseFloat(value.price) + parseFloat(base_qty) * parseFloat(value.base_price);
+                if (! isNaN(subtotal_price)){
+                    total_price += parseFloat(subtotal_price);
+                }
+
+
+                $(".price[data-id=" + value.product_id + "]").html('$'+ price + '/');
+                $(".base_price[data-id=" + value.product_id + "]").html('$'+ base_price + '/');
+                $(".subtotal_price[data-id=" + value.product_id + "]").html('$'+ subtotal_price + '');
+
+                // console.log('qty:' + qty + ',base_qty:' + base_qty
+                //     + ',price:' + value.price + ',base_price:' + value.base_price
+                //     + ',item_price:' + item_price + ',total_price:' + total_price);
+
+            });
+
+            //總數千分位加逗號
+            var num = total_price.toFixed(2)+"";//保留两位小数
+            var total_price_sum = num.replace(/(\d{1,3})(?=(\d{3})+(?:$|\.))/g,'$1,');
+
+            $('#total_price').html(total_price_sum);
+        }
+
+        //更改日期時
+        $(document).on('change', '#invoice_date', function () {
+            let date = $(this).val();
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('stock.warehouse.price_check') }}",
+                data: {
+                    'date': date,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (data) {
+                    search_prices = data.prices;
+                    cal_price(data.prices);
+                },
+                error:function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: "發生错误，請嘗試關閉頁面後重新進入",
+                    });
+                }
+            });
+
+
+        });
+
         $(document).on('blur', '.qty, .base_qty', function () {
 
             let product_id = $(this).data('id');
@@ -72,6 +167,8 @@
             let base_qty =  $(".base_qty[data-id=" + product_id + "]").val();
 
             submit(qty, base_qty, product_id);
+
+            cal_price(search_prices);
 
         });
 
@@ -128,11 +225,35 @@
             let product_id = $(this).data('id');
             let qty_input = $(".qty[data-id=" + product_id + "]");
             let base_qty_input = $(".base_qty[data-id=" + product_id + "]");
-            // let qty = qty_input.val();
 
-            // if (qty == null || qty == undefined || qty == "") {
-            //     return ;
-            // }
+            let qty_is_empty = true;
+            let base_qty_is_empty = true;
+
+            qty_input.each(function () {
+
+                let input = $(this).val();
+
+                if (input !== null && input !== undefined && input !== "") {
+                    qty_is_empty = false;
+                    return false;
+                }
+
+            });
+
+            base_qty_input.each(function () {
+
+                let input = $(this).val();
+
+                if (input !== null && input !== undefined && input !== "") {
+                    base_qty_is_empty = false;
+                    return false;
+                }
+
+            });
+
+            if (qty_is_empty === true && base_qty_is_empty === true) {
+                return ;
+            }
 
             $.ajax({
                 type: "DELETE",
@@ -146,6 +267,7 @@
                 success: function (msg) {
                     qty_input.val('');
                     base_qty_input.val('');
+                    cal_price(search_prices);
                 },
                 error:function () {
                     Swal.fire({

@@ -1,8 +1,14 @@
 @extends('layouts.app')
 
 @section('title')
-    {{ request()->date }} - 貨倉入庫
+    貨倉入庫
 @stop
+
+@section('style')
+    <style>
+
+    </style>
+@endsection
 
 @section('content')
 
@@ -63,7 +69,8 @@
 
         <hr>
 
-        <div><h2>總計:<span class="total" id="total">0</span></h2></div>
+{{--        總計--}}
+        <div><h2>總計 : $<span class="total_price" id="total_price">0</span></h2></div>
         <hr>
 
         @if($filled_count !== 0)
@@ -160,22 +167,79 @@
 @section('script')
     <script>
 
-        //更改單位時寫入數據
-        // $(document).on('change', '.select_unit', function () {
-        //     let unit_id = $(this).val();
-        //     let product_id = $(this).data('id');
-        //     let qty_input = $(".qty[data-id=" + product_id + "]");
-        //     let qty = qty_input.val();
-        //
-        //     //2022-04-29 應該先更改data-unit的值 再判斷是否需要保存
-        //     qty_input.attr('data-unit', unit_id);
-        //
-        //     if (qty == null || qty == undefined || qty == "") {
-        //         return ;
-        //     }
-        //
-        //     submit(qty, product_id, unit_id);
-        // });
+        var search_prices;
+
+        //計算總價
+        function cal_price(prices) {
+            let total_price = 0;
+
+            $(".price, .base_price, .subtotal_price").html('');
+            $.each(prices, function(key, value) {
+                let subtotal_price = 0;
+                let price = value.price;
+                let base_price = value.base_price;
+
+                let qty =  $(".qty[data-id=" + value.product_id + "]").val();
+                let base_qty =  $(".base_qty[data-id=" + value.product_id + "]").val();
+
+                if( qty === null || qty === undefined || qty === ''){
+                    qty = 0;
+                }
+
+                if( base_qty === null || base_qty === undefined || base_qty === '' ){
+                    base_qty = 0;
+                }
+
+                subtotal_price += parseFloat(qty) * parseFloat(value.price) + parseFloat(base_qty) * parseFloat(value.base_price);
+                if (! isNaN(subtotal_price)){
+                    total_price += parseFloat(subtotal_price);
+                }
+
+
+                $(".price[data-id=" + value.product_id + "]").html('$'+ price + '/');
+                $(".base_price[data-id=" + value.product_id + "]").html('$'+ base_price + '/');
+                $(".subtotal_price[data-id=" + value.product_id + "]").html('$'+ subtotal_price + '');
+
+                // console.log('qty:' + qty + ',base_qty:' + base_qty
+                //     + ',price:' + value.price + ',base_price:' + value.base_price
+                //     + ',item_price:' + item_price + ',total_price:' + total_price);
+
+            });
+
+            //總數千分位加逗號
+            var num = total_price.toFixed(2)+"";//保留两位小数
+            var total_price_sum = num.replace(/(\d{1,3})(?=(\d{3})+(?:$|\.))/g,'$1,');
+
+            $('#total_price').html(total_price_sum);
+        }
+
+        //更改日期時
+        $(document).on('change', '#invoice_date', function () {
+            let date = $(this).val();
+
+            $.ajax({
+                type: "GET",
+                url: "{{ route('stock.warehouse.price_check') }}",
+                data: {
+                    'date': date,
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function (data) {
+                    search_prices = data.prices;
+                    cal_price(data.prices);
+                },
+                error:function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: "發生错误，請嘗試關閉頁面後重新進入",
+                    });
+                }
+            });
+
+
+        });
 
         // $('.qty').blur(function () {
         $(document).on('blur', '.qty, .base_qty', function () {
@@ -187,6 +251,8 @@
 
             submit(qty, base_qty, product_id);
 
+            cal_price(search_prices);
+
         });
 
         // $(document).on('keydown', '.qty, .base_qty', function(e) {
@@ -197,6 +263,8 @@
         //         let base_qty = $(".base_qty[data-id=" + product_id + "]").val();
         //
         //         submit(qty, base_qty, product_id);
+        //
+        //         cal_price(search_prices);
         //     }
         // });
 
@@ -236,6 +304,8 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 success: function (data) {
+                    console.log(data);
+                    console.log(data.msg);
                     if(data.msg === 'new'){
                         window.location.href = "{{route('stock.warehouse.index')}}";
                     }
@@ -258,6 +328,7 @@
             let base_qty_input = $(".base_qty[data-id=" + product_id + "]");
 
             let qty_is_empty = true;
+            let base_qty_is_empty = true;
 
             qty_input.each(function () {
 
@@ -270,7 +341,18 @@
 
             });
 
-            if (qty_is_empty === true) {
+            base_qty_input.each(function () {
+
+                let input = $(this).val();
+
+                if (input !== null && input !== undefined && input !== "") {
+                    base_qty_is_empty = false;
+                    return false;
+                }
+
+            });
+
+            if (qty_is_empty === true && base_qty_is_empty === true) {
                 return ;
             }
 
@@ -286,6 +368,7 @@
                 success: function (msg) {
                     qty_input.val('');
                     base_qty_input.val('');
+                    cal_price(search_prices);
                 },
                 error:function () {
                     Swal.fire({
