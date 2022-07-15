@@ -20,9 +20,15 @@ class RepairOrder extends Model
 
     public static function getMaxOrderNo($shop_id)
     {
-        $cutword = User::find($shop_id)->pocode;
-        $maxSupportNo = RepairOrder::where('user_id', $shop_id)->max('order_no');
+        $cutword = User::find($shop_id)->pocode ?? 'OF';
+
         $nowYear = Carbon::now()->isoFormat('YY');
+
+        if($cutword === 'OF'){
+            $maxSupportNo = RepairOrder::where('order_no', 'like', $nowYear.$cutword.'%')->max('order_no');
+        }else{
+            $maxSupportNo = RepairOrder::where('user_id', $shop_id)->max('order_no');
+        }
         $maxYear = Str::before($maxSupportNo, $cutword);
         $number = Str::after($maxSupportNo, $cutword);
         if($nowYear > $maxYear){
