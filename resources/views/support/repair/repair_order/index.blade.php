@@ -93,7 +93,7 @@
                 <input type="text" class="form-control" id="shop_id" name="shop_id" value="{{ $shop_id }}" hidden>
 
                 <div class="form-group row">
-                    <label for="inputPassword" class="col-sm-2 col-form-label">完成日期</label>
+                    <label for="finishDate" class="col-sm-2 col-form-label">完成日期</label>
                     <div class="col-sm-10">
                         <input type="text" class="form-control" id="complete_date" name="complete_date"
                                autocomplete="off" placeholder="請選擇日期" value="{{ old('complete_date') }}"
@@ -106,7 +106,7 @@
 
 
                 <div class="form-group row">
-                    <label for="inputPassword" class="col-sm-2 col-form-label">到店時間(24小時制)</label>
+                    <label for="arriveTime" class="col-sm-2 col-form-label">到店時間(24小時制)</label>
                     <div class="col">
 
                         <input type="number" class="form-control"
@@ -125,7 +125,7 @@
                 </div>
 
                 <div class="form-group row">
-                    <label for="inputPassword" class="col-sm-2 col-form-label">離開時間(24小時制)</label>
+                    <label for="leaveTime" class="col-sm-2 col-form-label">離開時間(24小時制)</label>
                     <div class="col">
                         <input type="number" class="form-control"
                                id="end_hour" name="end_hour"
@@ -153,6 +153,14 @@
                         </label>
                         @endforeach
                     </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="handleStaffOther" class="col-sm-2 col-form-label">外判(如有)</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="handle_staff_other" name="handle_staff_other"
+                               autocomplete="off" style="background-color:white;">
+                   </div>
                 </div>
 
 {{--                <div class="form-group row">--}}
@@ -204,12 +212,20 @@
         });
 
         // 监听创建订单按钮的点击事件
-        // $(document).on('click', '.btn-create-order', function () {
         $('.btn-create-order').click(function () {
 
+            //2022-07-15 允許自行填寫外判
+            let handle_staff_other = $('#handle_staff_other').val();
+
             let handle_staff = $('input[type=checkbox][name=\'handle_staff\']:checked').map(function () {
-                        return this.value
-                    }).get().join(',');
+                        return this.value;
+                    }).get();
+
+            if( handle_staff_other !== null && handle_staff_other !== undefined && handle_staff_other !== '' ){
+                handle_staff = handle_staff.concat(handle_staff_other).join(',');
+            }else{
+                handle_staff = handle_staff.join(',');
+            }
 
             // 构建请求参数，将用户选择的維修項目 ,維修員 和 維修費用 写入请求参数
             var req = {

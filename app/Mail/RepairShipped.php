@@ -84,7 +84,7 @@ END:VCALENDAR";
         $user = Auth::user();
         $ical = $this->ical();
 
-        $mail = $this->from($user->email,$user->txt_name)
+        $mail = $this->from(env('MAIL_USERNAME'),$user->txt_name)
             ->view('emails.repair.shipped')
             ->attachData($ical,'ical.ics')
             ->subject($user->txt_name.$this->repair->repair_project_no);
