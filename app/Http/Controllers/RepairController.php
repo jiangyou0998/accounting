@@ -97,7 +97,7 @@ class RepairController extends Controller
     public function show($id)
     {
         $repair = RepairProject::with('users')
-            ->with(['locations', 'items', 'details'])
+            ->with(['locations', 'items', 'details', 'order'])
             ->find($id);
 
         $importanceArr = RepairProject::IMPORTANCE;

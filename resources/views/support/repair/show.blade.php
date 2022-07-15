@@ -65,26 +65,26 @@
     <label class="layui-form-label-col">{{$repair->comment}}</label>
 </div>
 
-{{--<div class="layui-form-item">--}}
-{{--    <label class="layui-form-label">完成時間</label>--}}
-{{--    <label class="layui-form-label-col">{{$repair->complete_date}}</label>--}}
-{{--</div>--}}
+<div class="layui-form-item">
+    <label class="layui-form-label">完成時間</label>
+    <label class="layui-form-label-col">{{$repair->order->complete_date}}</label>
+</div>
 
-{{--<div class="layui-form-item">--}}
-{{--    <label class="layui-form-label">到店時間</label>--}}
-{{--    <label class="layui-form-label-col">{{$repair->finished_start_time}}</label>--}}
-{{--</div>--}}
+<div class="layui-form-item">
+    <label class="layui-form-label">到店時間</label>
+    <label class="layui-form-label-col">{{$repair->order->finished_start_time}}</label>
+</div>
 
-{{--<div class="layui-form-item">--}}
-{{--    <label class="layui-form-label">離開時間</label>--}}
-{{--    <label class="layui-form-label-col">{{$repair->finished_end_time}}</label>--}}
-{{--</div>--}}
+<div class="layui-form-item">
+    <label class="layui-form-label">離開時間</label>
+    <label class="layui-form-label-col">{{$repair->order->finished_end_time}}</label>
+</div>
 
 
-{{--<div class="layui-form-item">--}}
-{{--    <label class="layui-form-label">維修員</label>--}}
-{{--    <label class="layui-form-label-col">{{$repair->handle_staff}}</label>--}}
-{{--</div>--}}
+<div class="layui-form-item">
+    <label class="layui-form-label">維修員</label>
+    <label class="layui-form-label-col">{{$repair->order->handle_staff}}</label>
+</div>
 
 <div class="layui-form-item">
     <label class="layui-form-label">維修費用</label>
