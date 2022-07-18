@@ -20,7 +20,7 @@ class PermissionController extends AdminController
         return Grid::make(new Permission(), function (Grid $grid) {
             $grid->model()->with('roles');
             // 禁用创建按钮
-            $grid->disableCreateButton();
+//            $grid->disableCreateButton();
             // 禁用行操作按钮
             $grid->disableActions();
             // 禁用行选择器
@@ -36,4 +36,17 @@ class PermissionController extends AdminController
         });
     }
 
+    /**
+     * Make a forms builder.
+     *
+     * @return Form
+     */
+    protected function form()
+    {
+        return Form::make(new Permission(), function (Form $form) {
+            $form->display('id');
+            $form->text('name')->required();
+            $form->text('guard_name')->required()->default('web');
+        });
+    }
 }
