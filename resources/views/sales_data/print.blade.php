@@ -45,10 +45,6 @@
         /*font-weight: bold;*/
     }
 
-
-
-
-
     .box {
         width: 100%;
         /* 因为 content 会另起一行，影响样式的话，height 设置为具体的值可以避免高度变高的情况 */
@@ -86,6 +82,11 @@
 
     .page{
         padding: 5px;
+    }
+
+    .footer {
+        page-break-after:always;
+        bottom : 0;
     }
 
 </style>
@@ -340,7 +341,8 @@
                         </div>
                     </div>
 
-
+                    {{--                分頁用--}}
+                    <footer class="footer"></footer>
 
                 </div>
             </div>
