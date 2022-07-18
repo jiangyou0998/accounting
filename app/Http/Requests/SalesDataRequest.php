@@ -12,6 +12,7 @@ class SalesDataRequest extends FormRequest
         return [
             'inputs.0.*' => ['nullable', 'numeric', 'min:0'],
             'first_pos_no' => ['nullable', 'numeric', 'min:0'],
+            'difference' => ['nullable', 'numeric', 'min:0'],
         ];
     }
 

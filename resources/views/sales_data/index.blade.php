@@ -452,6 +452,17 @@
 
             $('.btn-submit').attr('disabled', true);
 
+            let difference = getDifference();
+
+            if(difference != 0){
+                Swal.fire({
+                    icon: 'error',
+                    title: "「差額」不為0，請檢查是否輸入錯誤",
+                });
+                $('.btn-submit').attr('disabled', false);
+                return false;
+            }
+
             // 构建请求参数，将用户选择的維修項目 ,維修員 和 維修費用 写入请求参数
             var req = {
                 inputs: [],

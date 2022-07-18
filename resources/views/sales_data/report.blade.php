@@ -79,7 +79,7 @@
 
             @isset($front_groups['bakery'])
                 <div class="group-div">
-                    <h5>餅店營業數</h5>
+                    <h5>營業數</h5>
                     @foreach($front_groups['bakery'] as $shop_id)
                         <span class="left">
                             {{$shop_names[$shop_id] ?? 0}} ${{number_format(($day_income[$shop_id] ?? 0), 0)}}
@@ -128,7 +128,7 @@
                 <h4>{{$date_and_week}}</h4>
 
                 @isset($sale_summary['bakery'])
-                    <h5>餅店營業數</h5>
+                    <h5>營業數</h5>
                     @foreach($sale_summary['bakery'] as $value)
                         <span style="float:left;width:140px;">
                             {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}
@@ -169,7 +169,7 @@
             <h4>{{$date_and_week}}</h4>
 
             @isset($sale_summary['bakery'])
-                <h5>餅店營業數</h5>
+                <h5>營業數</h5>
                 @foreach($sale_summary['bakery'] as $value)
                     @if($loop->iteration % 2 === 1)
                         <span style="float:left;width:140px;">
