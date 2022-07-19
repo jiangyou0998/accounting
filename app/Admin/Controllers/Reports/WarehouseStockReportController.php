@@ -8,6 +8,7 @@ use App\Models\StockItem;
 use App\Models\Supplier\SupplierProduct;
 use App\Models\SupplierStockItem;
 use App\Models\WarehouseProduct;
+use App\Models\WarehouseProductPrice;
 use App\Models\WarehouseStockItem;
 use App\Models\WorkshopUnit;
 use Carbon\Carbon;
@@ -60,23 +61,17 @@ class WarehouseStockReportController extends AdminController
                 'invoice_no' => 'Invoice No',
                 'group_name' => '分類',
                 'unit_name' => '單位',
-                'unit_qty' => '數量',
+                'qty' => '數量',
                 'unit_price' => '來貨價',
                 'base_unit_name' => '重量單位',
                 'base_qty' => '數量',
                 'base_price' => '單價',
+                'total_sum' => '總額',
                 'shop_name' => '部門',
             ];
 
             foreach ($titles as $key => $value){
-                if($key === 'date'){
-                    $grid->column($key,$value)->display(function ($date){
-                        $date = (string)$date;
-                        return Carbon::parse($date)->toDateString();
-                    });
-                }else{
-                    $grid->column($key,$value);
-                }
+                $grid->column($key,$value);
             }
 
             $grid->withBorder();
@@ -115,12 +110,12 @@ class WarehouseStockReportController extends AdminController
      *
      * @return array
      */
-    public function generate($start, $end)
+    public function generate($start_date, $end_date)
     {
         //月份格式202106
 //        $month = Carbon::parse($month)->isoFormat('YMM');
-        $start = Carbon::parse($start)->isoFormat('YMMDD');
-        $end = Carbon::parse($end)->isoFormat('YMMDD');
+        $start = Carbon::parse($start_date)->isoFormat('YMMDD');
+        $end = Carbon::parse($end_date)->isoFormat('YMMDD');
 
         $supplier_items = WarehouseStockItem::query()->select([
             //供應商貨品type設定為2
@@ -138,19 +133,17 @@ class WarehouseStockReportController extends AdminController
             //包裝單位ID
             DB::raw('warehouse_products.base_unit_id as base_unit_id'),
             //收貨ID
-            DB::raw('warehouse_stock_items.unit_id as stock_unit_id'),
+//            DB::raw('warehouse_stock_items.unit_id as stock_unit_id'),
             DB::raw('warehouse_stock_items.qty as qty'),
+            DB::raw('warehouse_stock_items.base_qty as base_qty'),
             DB::raw('users.txt_name as shop_name'),
         ])
             ->leftJoin('warehouse_products', 'warehouse_products.id', '=', 'warehouse_stock_items.product_id')
             ->leftJoin('users', 'users.id', '=', 'warehouse_stock_items.user_id')
             ->leftJoin('suppliers', 'suppliers.id', '=', 'warehouse_products.supplier_id')
             ->leftJoin('supplier_groups', 'supplier_groups.id', '=', 'warehouse_products.group_id')
-            ->leftJoin('workshop_units', 'workshop_units.id', '=', 'warehouse_stock_items.unit_id')
             ->whereBetween('date', [$start, $end]);
 
-//        dd($items->toArray());
-//        $classId = ['蛋撻王工場'];
         $items = $supplier_items
             ->orderBy('date')
             ->orderBy('shop_name')
@@ -160,31 +153,45 @@ class WarehouseStockReportController extends AdminController
             ->orderBy('supplier_name')
             ->get();
 
-        $supplier_unit_prices = WarehouseProduct::all()->pluck('default_price', 'id')->toArray();
-        $supplier_base_prices = WarehouseProduct::all()->pluck('base_price', 'id')->toArray();
         $units = WorkshopUnit::all()->pluck('unit_name', 'id')->toArray();
 
-        foreach ($items as $value){
+        $prices = WarehouseProductPrice::query()
+            ->where('start_date', '<=', $start_date)
+            ->orWhere('end_date', '>=', $end_date)
+            ->get();
 
-            //供應商貨品
-            if( $value->type === 2 ){
-                $value->unit_name = $units[$value->unit_id] ?? '';
-                $value->unit_qty = '';
-                $value->unit_price = $supplier_unit_prices[$value->product_id] ?? 0;
+        //按「日期」和「產品id」分組的價錢數組
+        $price_group_by_date_and_product_id = array();
+        foreach ($prices as $price){
+            $loop_start_date = Carbon::parse($start_date);
+            $loop_end_date = Carbon::parse($end_date);
 
-                $value->base_unit_name = $units[$value->base_unit_id] ?? '';
-                $value->base_qty = '';
-                $value->base_price = $supplier_base_prices[$value->product_id] ?? 0;
-
-                if( $value->stock_unit_id === $value->unit_id ){
-                    $value->unit_qty = $value->qty;
-                }elseif( $value->stock_unit_id === $value->base_unit_id){
-                    $value->base_qty = $value->qty;
-                }
+            while ($loop_start_date < $loop_end_date) {
+                $price_group_by_date_and_product_id[$loop_start_date->isoFormat('YMMDD')][$price->product_id]['price'] = $price->price;
+                $price_group_by_date_and_product_id[$loop_start_date->isoFormat('YMMDD')][$price->product_id]['base_price'] = $price->base_price;
+                $loop_start_date->addDay();
             }
         }
 
-//        dd($items);
+        foreach ($items as &$item){
+
+            //供應商貨品
+            if( $item->type === 2 ){
+                $item->unit_name = $units[$item->unit_id] ?? '';
+                $item->unit_price = $price_group_by_date_and_product_id[$item->date][$item->product_id]['price'] ?? 0;
+
+                $item->base_unit_name = $units[$item->base_unit_id] ?? '';
+                $item->base_price = $price_group_by_date_and_product_id[$item->date][$item->product_id]['base_price'] ?? 0;
+
+                $item->total_sum =
+                    ($item->qty * $item->unit_price)
+                    + ($item->base_qty * $item->base_price);
+
+                //時間格式轉換
+                $date = (string)$item->date;
+                $item->date = Carbon::parse($date)->toDateString();
+            }
+        }
 
         return $items;
 
