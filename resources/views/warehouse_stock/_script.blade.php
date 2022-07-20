@@ -10,6 +10,21 @@
         let qty =  $(".qty[data-id=" + product_id + "]").val();
         let base_qty =  $(".base_qty[data-id=" + product_id + "]").val();
 
+        //2022-07-19 檢查兩個輸入框, 都沒有輸入時不進行提交
+        let input_empty = true;
+
+        if (qty !== null && qty !== undefined && qty !== "") {
+            input_empty = false;
+        }
+
+        if (base_qty !== null && base_qty !== undefined && base_qty !== "") {
+            input_empty = false;
+        }
+
+        if (input_empty === true){
+            return false;
+        }
+
         submit(qty, base_qty, product_id);
 
         cal_price(search_prices);
