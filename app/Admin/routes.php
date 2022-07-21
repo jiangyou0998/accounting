@@ -97,10 +97,12 @@ Route::group([
     $router->resource('supplier_stock_items', 'SupplierStockItemController');
     //
     $router->resource('supplier_stock_item_list', 'SupplierStockItemListController');
+    $router->resource('warehouse_stock_item_forbidden', 'WarehouseStockItemForbiddenController');
+
 
     //貨倉產品
     $router->resource('warehouse_products', 'WarehouseProductController');
-//貨倉產品價格
+    //貨倉產品價格
     $router->resource('warehouse/product/price', 'WarehouseProductPriceController');
 
     //價格分組

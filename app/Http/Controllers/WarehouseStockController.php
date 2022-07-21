@@ -10,6 +10,7 @@ use App\Models\WarehouseGroup;
 use App\Models\WarehouseProduct;
 use App\Models\WarehouseProductPrice;
 use App\Models\WarehouseStockItem;
+use App\Models\WarehouseStockItemForbidden;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -98,6 +99,7 @@ class WarehouseStockController extends Controller
 
         $tabs = WarehouseStockItem::getInvoiceTab();
 
+        $forbidden = 0;
 //        dump($stockitems);
 
         return view('warehouse_stock.index', compact('products',
@@ -108,7 +110,8 @@ class WarehouseStockController extends Controller
 //            'times',
             'filled_count',
 //            'saved_supplier_ids',
-            'stockitems'));
+            'stockitems',
+            'forbidden'));
     }
 
     public function edit(Request $request){
@@ -190,6 +193,8 @@ class WarehouseStockController extends Controller
             ->where('times', $times)
             ->first();
 
+        $forbidden = WarehouseStockItemForbidden::checkModifyPermission($invoice->date);
+
         //其中一個product_id, 用於查找當前supplier_id
         $one_of_the_product_id = (clone $warehouseStockItemModel)->first()->product_id ?? '';
         $one_of_the_product = WarehouseProduct::find($one_of_the_product_id);
@@ -209,7 +214,8 @@ class WarehouseStockController extends Controller
             'invoice_info',
             'filled_count',
 //            'saved_supplier_ids',
-            'stockitems'));
+            'stockitems',
+            'forbidden'));
     }
 
     public function add(Request $request)
@@ -223,12 +229,6 @@ class WarehouseStockController extends Controller
             ->where('times', $times)
             ->count();
 
-//        dump($filled_count);
-
-        //格式:20220429
-        $currentdate = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMMDD');
-        $date = Carbon::parse($request->input('date'))->isoFormat('YMMDD') ?? $currentdate;
-
         $qty = $request->input('qty');
         $base_qty = $request->input('base_qty');
 
@@ -239,6 +239,16 @@ class WarehouseStockController extends Controller
             ->ofTimes($times)
 //            ->where('date', $date)
             ->first()) {
+
+            $date = $stock->date;
+            $forbidden = WarehouseStockItemForbidden::checkModifyPermission($date);
+
+            if($forbidden > 0){
+                return response()->json(array(
+                    'code' => 403,
+                    'error' => '該日期已禁止修改!',
+                ));
+            }
 
             // 如果存在则直接叠加商品数量
             $stock->update([
@@ -251,7 +261,6 @@ class WarehouseStockController extends Controller
             $stock = new WarehouseStockItem(['qty' => $qty, 'base_qty' => $base_qty]);
             $stock->product_id = $product_id;
             $stock->user_id = $user->id;
-//
 
             if($times){
                 $item = WarehouseStockItem::query()
@@ -259,12 +268,21 @@ class WarehouseStockController extends Controller
                     ->where('times', $times)
                     ->first();
 
+                $date = $item->date;
+                $forbidden = WarehouseStockItemForbidden::checkModifyPermission($date);
+
+                if($forbidden > 0){
+                    return response()->json(array(
+                        'code' => 403,
+                        'error' => '該日期已禁止修改!',
+                    ));
+                }
+
                 $stock->date = $item->date;
                 $stock->times = $times;
                 $stock->invoice_no = $item->invoice_no;
 
             }
-
 
             $stock->save();
         }
@@ -305,6 +323,15 @@ class WarehouseStockController extends Controller
         $date = $request->date ?? '';
         $invoice_no = $request->invoice_no ?? '';
 
+        $forbidden = WarehouseStockItemForbidden::checkModifyPermission($date);
+
+        if($forbidden > 0){
+            return response()->json(array(
+                'code' => 403,
+                'error' => '該日期已禁止修改!',
+            ));
+        }
+
         if ($date){
             //格式:20220429
             $date = Carbon::parse($request->input('date'))->isoFormat('YMMDD');
@@ -334,6 +361,15 @@ class WarehouseStockController extends Controller
         $date = $request->date ?? '';
         $invoice_no = $request->invoice_no ?? '';
         $times = $request->times ?? '';
+
+        $forbidden = WarehouseStockItemForbidden::checkModifyPermission($date);
+
+        if($forbidden > 0){
+            return response()->json(array(
+                'code' => 403,
+                'error' => '該日期已禁止修改!',
+            ));
+        }
 
         if ($date){
             //格式:20220429

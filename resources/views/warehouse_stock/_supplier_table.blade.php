@@ -33,7 +33,8 @@
                                    data-id="{{$product->id}}"
                                    data-unit="{{ $product->unit->id ?? 0 }}"
                                    style="width:100%"
-                                   value="{{ $stockitems[$product->id]['qty'] ?? ''}}">
+                                   value="{{ $stockitems[$product->id]['qty'] ?? ''}}"
+                                   @if($forbidden > 0) disabled @endif>
                         </td>
 {{--                            單位1--}}
                         <td>
@@ -51,7 +52,8 @@
                                    data-id="{{$product->id}}"
                                    data-unit="{{ $product->base_unit->id ?? 0 }}"
                                    style="width:100%"
-                                   value="{{ $stockitems[$product->id]['base_qty'] ?? ''}}">
+                                   value="{{ $stockitems[$product->id]['base_qty'] ?? ''}}"
+                                   @if($forbidden > 0) disabled @endif>
                         </td>
 {{--                            單位2--}}
                         <td>
@@ -67,10 +69,12 @@
 
 {{--                            刪除按鈕--}}
                         <td>
-                            <a href="javascript:void(0);" class="delstock"
-                               data-id="{{$product->id}}">
-                                <span style="color: #FF6600; ">X</span>
-                            </a>
+                            @if($forbidden === 0)
+                                <a href="javascript:void(0);" class="delstock"
+                                   data-id="{{$product->id}}">
+                                    <span style="color: #FF6600; ">X</span>
+                                </a>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

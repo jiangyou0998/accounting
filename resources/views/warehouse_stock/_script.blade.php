@@ -110,6 +110,62 @@
         return num.replace(/(\d{1,3})(?=(\d{3})+(?:$|\.))/g,'$1,');
     }
 
+    //提交每一行數據
+    function submit(qty, base_qty, product_id){
+
+        if(qty <= 0 && qty !== null && qty !== undefined && qty !== "" ){
+            Swal.fire({
+                icon: 'error',
+                title: "請輸入大於0的數字",
+            });
+            // 輸入錯誤清空數據
+            $(".qty[data-id=" + product_id + "]").val('');
+            return ;
+        }
+
+        if(base_qty <= 0 && base_qty !== null && base_qty !== undefined && base_qty !== "" ){
+            Swal.fire({
+                icon: 'error',
+                title: "請輸入大於0的數字",
+            });
+            // 輸入錯誤清空數據
+            $(".base_qty[data-id=" + product_id + "]").val('');
+            return ;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('stock.warehouse.add', ['date' => request()->date, 'times' => request()->times] ) }}",
+            data: {
+                'product_id': product_id,
+                'qty': qty,
+                'base_qty': base_qty,
+
+            },
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function (data) {
+                if(data.msg === 'new'){
+                    window.location.href = "{{route('stock.warehouse.index')}}";
+                }
+                if(data.code === 403){
+                    Swal.fire({
+                        icon: 'error',
+                        title: data.error,
+                    });
+                }
+            },
+            error:function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: "發生错误，請嘗試關閉頁面後重新進入",
+                });
+            }
+        });
+
+    }
+
     //計算總價
     function cal_price(prices) {
         let total_price = 0;
@@ -228,11 +284,21 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     success: function (msg) {
+                        let icon = 'success';
+                        let title = '已成功保存到批次';
+
+                        if(msg.code === 403){
+                            icon = 'error';
+                            title = msg.error;
+                        }
+
                         Swal.fire({
-                            icon: 'success',
-                            title: "已成功保存到批次",
+                            icon: icon,
+                            title: title,
                         }).then((result) => {
-                            window.location.reload();
+                            if(icon === 'success'){
+                                window.location.reload();
+                            }
                         });
 
                     },

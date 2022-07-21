@@ -75,53 +75,6 @@
             $( "#invoice_date" ).trigger( "change" );
         });
 
-        //提交每一行數據
-        function submit(qty, base_qty, product_id){
-
-            if(qty <= 0 && qty !== null && qty !== undefined && qty !== "" ){
-                Swal.fire({
-                    icon: 'error',
-                    title: "請輸入大於0的數字",
-                });
-                // 輸入錯誤清空數據
-                $(".qty[data-id=" + product_id + "]").val('');
-                return ;
-            }
-
-            if(base_qty <= 0 && base_qty !== null && base_qty !== undefined && base_qty !== "" ){
-                Swal.fire({
-                    icon: 'error',
-                    title: "請輸入大於0的數字",
-                });
-                // 輸入錯誤清空數據
-                $(".base_qty[data-id=" + product_id + "]").val('');
-                return ;
-            }
-
-            $.ajax({
-                type: "POST",
-                url: "{{ route('stock.warehouse.add', ['date' => request()->date, 'times' => request()->times] ) }}",
-                data: {
-                    'product_id': product_id,
-                    'qty': qty,
-                    'base_qty': base_qty,
-                },
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (msg) {
-                    // window.location.reload();
-                },
-                error:function () {
-                    Swal.fire({
-                        icon: 'error',
-                        title: "發生错误，請嘗試關閉頁面後重新進入",
-                    });
-                }
-            });
-
-        }
-
         //提交批次
         $(document).on('click', '.save-invoice', function () {
 
