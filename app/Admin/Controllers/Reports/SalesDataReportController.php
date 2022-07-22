@@ -5,10 +5,12 @@ namespace App\Admin\Controllers\Reports;
 
 use App\Admin\Forms\SalesDataExport;
 use App\Admin\Forms\SalesDataTableShow;
+use App\Admin\Renderable\KBShopTable;
 use App\Common\Tools\excel\excelclass\ExcelExport;
 use App\Http\Traits\SalesDataTableTraits;
 use App\Models\SalesCalResult;
 use App\Models\SalesIncomeType;
+use App\Models\ShopGroup;
 use App\User;
 use Carbon\Carbon;
 use Dcat\Admin\Controllers\AdminController;
@@ -39,14 +41,18 @@ class SalesDataReportController extends AdminController
     {
         return Grid::make(null, function (Grid $grid) {
 
-            $month = getMonth();
-            $data = $this->generate($month);
+            $start = getStartTime();
+            $end = getEndTime();
+            //選中的商店id
+            $shop_id = isset($_REQUEST['shop_id']) ? $_REQUEST['shop_id'] : null;
 
-            $grid->header(function ($collection) use($month){
+            $data = $this->generate($start, $end, $shop_id);
+
+            $grid->header(function ($collection) use($start, $end){
 
                 // 标题和内容
                 $cardInfo = <<<HTML
-        <h1>日期:<span style="color: red">{$month}</span></h1>
+        <h1>日期:<span style="color: red">{$start} 至 {$end}</span></h1>
 HTML;
                 $card = Card::make('', $cardInfo);
 
@@ -107,12 +113,17 @@ HTML;
                 // 更改为 panel 布局
                 $filter->panel();
 
-                $last_month = Carbon::now()->subMonth();
-                $filter->month('month', '報表日期')->default($last_month);
+                $filter->between('between', '報表日期')->date();
+
+                $filter->equal('shop_id', '分店')
+                    ->multipleSelectTable(KBShopTable::make()) // 设置渲染类实例，并传递自定义参数
+                    ->title('弹窗标题')
+                    ->dialogWidth('50%') // 弹窗宽度，默认 800px
+                    ->model(User::class, 'id', 'txt_name'); // 设置编辑数据显示
 
             });
 
-            $filename = '營業數報告 ' . $month;
+            $filename = '營業數報告 ' . $start . '至' . $end;
             $grid->export()->titles($headings)->csv()->filename($filename);
 
         });
@@ -250,14 +261,18 @@ HTML;
 HTML;
     }
 
-    private function generate($month)
+    private function generate($start, $end, $shop_id = null)
     {
-        $start_date = Carbon::parse($month)->firstOfMonth()->toDateString();
-        $end_date = Carbon::parse($month)->endOfMonth()->toDateString();
+        $start_date = Carbon::parse($start)->toDateString();
+        $end_date = Carbon::parse($end)->toDateString();
 
-        $shop = User::getKingBakeryShops();
-//        $shops = array_column($shop, 'report_name', 'id');
-        $ids = $shop->pluck('id');
+        if(is_null($shop_id) || $shop_id === ''){
+            $shop = User::getShopsByShopGroup(ShopGroup::CURRENT_SHOP_ID);
+            $ids = $shop->pluck('id');
+        }else{
+            $ids = explode(',', $shop_id);
+            $shop = User::query()->whereIn('id', $ids)->get(['id','report_name']);
+        }
 
         $shop_names = $shop->pluck('report_name', 'id')->toArray();
 
