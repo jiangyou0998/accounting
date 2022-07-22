@@ -5,7 +5,7 @@ namespace App\Admin\Controllers\Reports;
 
 use App\Admin\Forms\SalesDataExport;
 use App\Admin\Forms\SalesDataTableShow;
-use App\Admin\Renderable\ShopTable;
+use App\Admin\Renderable\ThisShopTable;
 use App\Common\Tools\excel\excelclass\ExcelExport;
 use App\Http\Traits\SalesDataTableTraits;
 use App\Models\SalesCalResult;
@@ -111,7 +111,7 @@ HTML;
                 $filter->between('between', '報表日期')->date();
 
                 $filter->equal('shop_id', '分店')
-                    ->multipleSelectTable(ShopTable::make()) // 设置渲染类实例，并传递自定义参数
+                    ->multipleSelectTable(ThisShopTable::make()) // 设置渲染类实例，并传递自定义参数
                     ->title('弹窗标题')
                     ->dialogWidth('50%') // 弹窗宽度，默认 800px
                     ->model(User::class, 'id', 'txt_name'); // 设置编辑数据显示

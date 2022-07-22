@@ -2,11 +2,12 @@
 
 namespace App\Admin\Renderable;
 
+use App\Models\ShopGroup;
 use App\User;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Grid\LazyRenderable;
 
-class RBShopTable extends LazyRenderable
+class ThisShopTable extends LazyRenderable
 {
     public function grid(): Grid
     {
@@ -15,8 +16,9 @@ class RBShopTable extends LazyRenderable
 
         return Grid::make(new User(), function (Grid $grid) {
             $grid->model()
-                ->where(function($query) {
-                    $query->where('name','like','rb%');
+                ->whereHas('shop_groups', function ($query){
+                    $shop_group_id = ShopGroup::CURRENT_SHOP_ID;
+                    $query->whereIn('id', [$shop_group_id]);
                 })
                 ->orderBy('name');
 
