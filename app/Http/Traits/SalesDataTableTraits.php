@@ -75,6 +75,7 @@ trait SalesDataTableTraits
             //2022-04-07 注意千位加逗號號不能再進行計算
             $sales_income_detail = array_map(function($n) {return number_format($n, 2);}, $sales_income_detail);
 
+            $sales_table_data['first_pos_no'] = $sales_cal_result->first_pos_no;
             $sales_table_data['pos_income'] = number_format($pos_income_sum, 2);
 
             $sales_table_data['morning_income'] = $sales_income_detail['21'] ?? '';

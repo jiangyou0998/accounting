@@ -126,7 +126,9 @@
 
                         <tr>
                             <td>營業機數</td>
-                            <td colspan="3">${{$sales_table_data['data']['income_sum']}}</td>
+                            <td>${{$sales_table_data['data']['income_sum']}}</td>
+                            <td>主機No</td>
+                            <td>{{$sales_table_data['data']['first_pos_no']}}</td>
                         </tr>
                         <tr>
                             <td>八達通</td>
