@@ -274,6 +274,7 @@ HTML;
             ->whereBetween('date', [$start_date, $end_date])
             ->whereIn('shop_id', $ids)
             ->orderBy('shop_id')
+            ->orderBy('date')
             ->get()
             ->map(function (SalesCalResult $result) use($sales_income_types, $shop_names){
 
