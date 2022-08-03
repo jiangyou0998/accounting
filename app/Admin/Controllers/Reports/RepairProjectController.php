@@ -73,20 +73,22 @@ class RepairProjectController extends AdminController
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
-//                $filter->equal('status')->select(self::STATUS);
-//                $filter->equal('repair_location_id', '位置')->select(RepairLocation::all()->pluck('name','id'));
-//                $filter->equal('repair_item_id', '維修項目')->select(RepairItem::all()->pluck('name','id'));
-//                $filter->equal('repair_detail_id', '求助事宜')->select(RepairDetail::all()->pluck('name','id'));
                 $filter->like('order.order_no', '維修單號碼');
+                $maintenance_staff = User::role('maintenance')->pluck('txt_name', 'txt_name')->toArray();
+
+                $filter->like('order.handle_staff', '維修員')->select($maintenance_staff);
+                $filter->between('created_at', '落單日期')->date();
 
             });
 
             $titles = [
                 'users.txt_name' => '分店/用戶',
+                'created_at' => '落單日期',
                 'locations.name' => '位置',
                 'items.name' => '維修項目',
                 'details.name' => '求助事宜',
                 'status' => '狀態',
+                'other' => '其他資料',
                 'order.complete_date' => '完成日期',
                 'order.order_no' => '維修單號碼',
                 'fee' => '維修費用',
@@ -106,17 +108,9 @@ class RepairProjectController extends AdminController
             $grid->selector(function (Grid\Tools\Selector $selector){
 
                 $shop = User::getKingBakeryShops()->toArray();
-//                $rbshop = User::getRyoyuBakeryShops()->toArray();
 
                 $shops = array_column($shop, 'report_name', 'id');
-//                $rbshops = array_column($rbshop, 'report_name', 'id');
-
-
                 $selector->select('user_id', '蛋撻王', $shops);
-//                $selector->select('user_id2', '糧友', $rbshops, function ($query, $value) {
-//
-//                    $query->where('user_id', $value);
-//                });
 
                 $selector->select('status', '狀態', self::STATUS);
                 $selector->select('repair_location_id', '位置', RepairLocation::all()->pluck('name','id'));
