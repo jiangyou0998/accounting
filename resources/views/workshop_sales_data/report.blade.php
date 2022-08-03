@@ -108,6 +108,15 @@
                 </span>
             <br>
 
+{{--            金鐘(臨時)--}}
+            <span class="left">
+                    金鐘 ${{number_format(($jinzhong_today['Total'] ?? 0), 0) }}
+                </span>
+            <span class="right">
+                    本月累積 ${{number_format($jinzhong_this_month['Total'], 0)}}
+                </span>
+            <br>
+
             <div class="group-div">
                 <h5><span>總計:${{number_format($sale_summary['total'], 2) ?? '0.00'}}</span></h5>
                 <h5>本月累積:${{number_format($sale_summary['month_total'], 2) ?? '0.00'}}</h5>
