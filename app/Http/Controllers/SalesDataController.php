@@ -83,14 +83,20 @@ class SalesDataController extends Controller
         $sale_summary['other_total'] = 0;
         $sale_summary['other_month_total'] = 0;
         $sale_summary['other_last_month_total'] = 0;
+        $sale_summary['other_seasonal_total'] = 0;
+        $sale_summary['other_seasonal_month_total'] = 0;
         // 餅店總數
         $sale_summary['bakery_total'] = 0;
         $sale_summary['bakery_month_total'] = 0;
         $sale_summary['bakery_last_month_total'] = 0;
+        $sale_summary['bakery_seasonal_total'] = 0;
+        $sale_summary['bakery_seasonal_month_total'] = 0;
         // 全部總數
         $sale_summary['total'] = 0;
         $sale_summary['month_total'] = 0;
         $sale_summary['last_month_total'] = 0;
+        $sale_summary['seasonal_total'] = 0;
+        $sale_summary['seasonal_month_total'] = 0;
 
         // 計算 混合型/飯堂 總數
         if(isset($sale_summary['other'])){
@@ -131,7 +137,27 @@ class SalesDataController extends Controller
         //2022-05-19 新增獲取時節數
         $seasonal_income = SalesCalResult::getShopIdAndSeasonalIncome($date);
 
+        foreach ($seasonal_income as $shop_id => $total){
+            if(in_array($shop_id, $front_groups['other'])){
+                $sale_summary['other_seasonal_total'] += $total;
+            }else if(in_array($shop_id, $front_groups['bakery'])){
+                $sale_summary['bakery_seasonal_total'] += $total;
+            }
+            $sale_summary['seasonal_total'] += $total;
+        }
 
+        $seasonal_total_income = SalesCalResult::getShopIdAndSeasonalTotalIncome($date, 'month');
+
+        foreach ($seasonal_total_income as $shop_id => $total){
+            if(in_array($shop_id, $front_groups['other'])){
+                $sale_summary['other_seasonal_month_total'] += $total;
+            }else if(in_array($shop_id, $front_groups['bakery'])){
+                $sale_summary['bakery_seasonal_month_total'] += $total;
+            }
+            $sale_summary['seasonal_month_total'] += $total;
+        }
+
+//        dump($seasonal_total_income);
 //        dump($total_income);
 //        dump($sale_summary->toArray());
 

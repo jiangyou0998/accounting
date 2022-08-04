@@ -191,5 +191,46 @@ class SalesCalResult extends Model
         return $seasonal_income;
     }
 
+    //2022-08-04 獲取key為shop_id, value為時節總收入的數組
+    public static function getShopIdAndSeasonalTotalIncome($date, $type)
+    {
+        switch ($type){
+            case 'month':
+                $start_date = Carbon::parse($date)->startOfMonth()->toDateString();
+                break;
+            case 'week':
+                $start_date = Carbon::parse($date)->startOfWeek()->toDateString();
+                break;
+            case 'day':
+                $start_date = $date;
+                break;
+        }
+
+        $ids = self::query()
+            ->whereBetween('date', [$start_date, $date])
+            ->get('id');
+
+        $seasonal_income_details = SalesIncomeDetail::with('sales_cal_result')
+            ->whereIn('sales_cal_result_id', $ids)
+            ->where('type_no', 91)
+            ->get()
+//            ->mapWithKeys(function ($item, $key) {
+//                return [$item['sales_cal_result']['shop_id'] => $item['income']];
+//            })
+            ->toArray();
+
+        $seasonal_total_income = array();
+        foreach ($seasonal_income_details as $detail){
+            $shop_id = $detail['sales_cal_result']['shop_id'];
+
+            if(! isset($seasonal_total_income[$shop_id])){
+                $seasonal_total_income[$shop_id] = 0;
+            }
+            $seasonal_total_income[$shop_id] += $detail['income'];
+        }
+
+        return $seasonal_total_income;
+    }
+
 
 }
