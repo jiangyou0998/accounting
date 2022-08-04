@@ -159,7 +159,7 @@
 {{--                <h5>上月:${{number_format($sale_summary['last_month_total'], 2) ?? '0.00'}}</h5>--}}
                 @if($sale_summary['seasonal_total'] != 0)
                     <h5>時節:${{number_format($sale_summary['seasonal_total'], 2) ?? '0.00'}}</h5>
-                    <h5>本月總計:${{number_format($sale_summary['seasonal_month_total'], 2) ?? '0.00'}}</h5>
+                    <h5>本月時節:${{number_format($sale_summary['seasonal_month_total'], 2) ?? '0.00'}}</h5>
                 @endif
             </div>
         </div>
