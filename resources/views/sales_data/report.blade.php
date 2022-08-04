@@ -103,6 +103,15 @@
 {{--                    <span class="total-right">上月${{number_format($sale_summary['other_last_month_total'], 0) ?? '0.00'}}</span>--}}
                 </h6>
 
+{{--            2022-08-03 新增時節總數--}}
+                @if($sale_summary['other_seasonal_total'] != 0)
+                    <h6>
+                        <span class="total-left">時節${{number_format($sale_summary['other_seasonal_total'], 0) ?? '0.00'}}</span>
+                        <span class="total-right">本月時節${{number_format($sale_summary['other_seasonal_month_total'], 0) ?? '0.00'}}</span>
+                    </h6>
+                @endif
+
+
             @endisset
 
             @isset($front_groups['bakery'])
@@ -132,6 +141,15 @@
                         <span class="total-right">本月累積${{number_format($sale_summary['bakery_month_total'], 0) ?? '0.00'}}</span>
 {{--                        <span class="total-right">上月${{number_format($sale_summary['bakery_last_month_total'], 0) ?? '0.00'}}</span>--}}
                     </h6>
+
+                    {{--            2022-08-03 新增時節總數--}}
+                    @if($sale_summary['bakery_seasonal_total'] != 0)
+                        <h6>
+                            <span class="total-left">時節${{number_format($sale_summary['bakery_seasonal_total'], 0) ?? '0.00'}}</span>
+                            <span class="total-right">本月時節${{number_format($sale_summary['bakery_seasonal_month_total'], 0) ?? '0.00'}}</span>
+                        </h6>
+                    @endif
+
                 </div>
 
             @endisset
@@ -139,6 +157,10 @@
                 <h5><span>總計:${{number_format($sale_summary['total'], 2) ?? '0.00'}}</span></h5>
                 <h5>本月累積:${{number_format($sale_summary['month_total'], 2) ?? '0.00'}}</h5>
 {{--                <h5>上月:${{number_format($sale_summary['last_month_total'], 2) ?? '0.00'}}</h5>--}}
+                @if($sale_summary['seasonal_total'] != 0)
+                    <h5>時節:${{number_format($sale_summary['seasonal_total'], 2) ?? '0.00'}}</h5>
+                    <h5>本月總計:${{number_format($sale_summary['seasonal_month_total'], 2) ?? '0.00'}}</h5>
+                @endif
             </div>
         </div>
 
