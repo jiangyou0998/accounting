@@ -58,7 +58,7 @@ class WorkshopSalesDataController extends Controller
         $hongkan_today = WorkshopCartItem::getCustomerTotalByIDs($date, $date, $hongkan_ids);
         $hongkan_this_month = WorkshopCartItem::getCustomerTotalByIDs($start_of_month, $date, $hongkan_ids);
 
-        $jinzhong_ids = [179];
+        $jinzhong_ids = [179,180];
         $jinzhong_today = WorkshopCartItem::getCustomerTotalByIDs($date, $date, $jinzhong_ids);
         $jinzhong_this_month = WorkshopCartItem::getCustomerTotalByIDs($start_of_month, $date, $jinzhong_ids    );
 
