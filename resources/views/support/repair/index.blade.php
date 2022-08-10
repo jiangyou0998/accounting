@@ -97,9 +97,12 @@
 
                             </div>
                             <div class="col-md-12 mb-3">
-                                <label for="cc-expiration">其他資料提供</label>
+                                <label for="cc-expiration">問題描述</label>
                                 <textarea class="form-control" name="textarea" id="textarea" cols="30"
-                                          rows="8"></textarea>
+                                          rows="8" required=""></textarea>
+                                <div class="invalid-feedback">
+                                    請提供「問題描述」
+                                </div>
                             </div>
                         </div>
                     </div>
