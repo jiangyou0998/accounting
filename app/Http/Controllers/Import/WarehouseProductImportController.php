@@ -8,6 +8,7 @@ use App\Models\Supplier\Supplier;
 use App\Models\SupplierGroup;
 use App\Models\WarehouseGroup;
 use App\Models\WarehouseProduct;
+use App\Models\WarehouseProductPrice;
 use App\Models\WorkshopUnit;
 use Box\Spout\Common\Type;
 use Box\Spout\Reader\Common\Creator\ReaderFactory;
@@ -69,8 +70,14 @@ class WarehouseProductImportController extends Controller
                 }
 
                 $group = trim($rowValues[10]);
+//                if($group == ''){
+//                    $group = '其他';
+//                }
                 $groupArr[] = $group;
 
+                if($rowValues[12] == ''){
+                    $rowValues[12] = '其他';
+                }
                 $warehouse_group = trim($rowValues[12]);
                 $warehouseGroupArr[] = $warehouse_group;
 
@@ -82,7 +89,7 @@ class WarehouseProductImportController extends Controller
 
                 $import_unit = $rowValues[3];
                 $pos = mb_strrpos($import_unit, "/");
-                $min_unit = $rowValues[8];
+                $min_unit = $rowValues[14];
                 $unit = $import_unit;
 
                 if($pos){
@@ -90,8 +97,9 @@ class WarehouseProductImportController extends Controller
                     $unit = mb_substr($import_unit, $pos + 1);
                 }
 
-                $min_unit = strtolower($min_unit);
-                $unit = strtolower($unit);
+                $min_unit = is_string($min_unit) ? strtolower($min_unit) : '';
+                $unit = is_string($unit) ? strtolower($unit) : '';
+
 //                dump($min_unit);
                 if(array_key_exists($min_unit, $changeUnitArr)){
                     $min_unit = $changeUnitArr[$min_unit];
@@ -121,7 +129,7 @@ class WarehouseProductImportController extends Controller
 
 //        dd($unitArr);
 //        dd($productArr);
-//        dump($supplierArr);
+//        dd($supplierArr);
 
         $this->importUnits($unitArr);
         $this->importSuppliers($supplierArr);
@@ -191,6 +199,15 @@ class WarehouseProductImportController extends Controller
                 $warehouseProductModel->weight_unit = ($value[8] != '') ? $value[8] : null;
                 $warehouseProductModel->warehouse_group_id = $warehGroupArr[$value[12]];
                 $warehouseProductModel->save();
+                $warehouseProductModel->prices()->saveMany([
+                    new WarehouseProductPrice([
+                        'price' => is_numeric($value[4]) ? $value[4] : 0,
+                        'base_price' => is_numeric($value[15]) ? $value[15] : 0,
+                        'sort' => 1,
+                        'start_date' => '2022-08-01',
+                        'end_date' => '9999-12-31',
+                    ])
+                ]);
             }
 
         });

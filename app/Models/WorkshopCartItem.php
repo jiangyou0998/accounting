@@ -39,17 +39,6 @@ class WorkshopCartItem extends Model
         return $this->hasOneThrough(WorkshopUnit::class,WorkshopProduct::class,"id" ,"id","product_id","unit_id");
     }
 
-//    public function scopeOfShop($query, $shop)
-//    {
-//        if($shop === 'kb'){
-//            return $query->where('users.name','like', 'kb%')
-//                ->orWhere('users.name','like','ces%')
-//                ->orWhere('users.name','like','b&b%');
-//        }else if($shop === 'rb'){
-//            return $query->where('users.name','like', 'rb%');
-//        }
-//    }
-
     public function scopeOfShop($query, $shops)
     {
         $shop_group_ids = $shop_group_ids = explode(',', $shops);
@@ -142,10 +131,7 @@ class WorkshopCartItem extends Model
         });
     }
 
-
-
     public static function getCartItems($shop , $dept , $deli_date){
-
 
         $items = new WorkshopCartItem();
 
@@ -179,7 +165,7 @@ class WorkshopCartItem extends Model
         //設置查詢條件
         $items = $items
             ->where('workshop_cart_items.user_id','=',$shop)
-            ->whereNotIn('workshop_cart_items.status',[4])
+            ->whereNotIn('workshop_cart_items.status',[self::STATUS_DELETE])
             ->where('workshop_cart_items.qty','>=',0)
             //2021-01-15 根據dept選擇分組
 //            ->ofDept($dept)
@@ -234,7 +220,7 @@ class WorkshopCartItem extends Model
         //設置查詢條件
         $items = $items
             ->where('workshop_cart_items.user_id','=',$shop)
-            ->whereNotIn('workshop_cart_items.status',[4])
+            ->whereNotIn('workshop_cart_items.status',[self::STATUS_DELETE])
             ->where('workshop_cart_items.qty','>=',0)
             ->where('workshop_cart_items.deli_date','=',$deli_date)
             ->hideZero($type);
@@ -273,7 +259,7 @@ class WorkshopCartItem extends Model
         //設置查詢條件
         $items = $items
             ->where('workshop_cart_items.user_id','=',$shop)
-            ->whereNotIn('workshop_cart_items.status',[4])
+            ->whereNotIn('workshop_cart_items.status',[self::STATUS_DELETE])
             ->where('workshop_cart_items.qty','>=',0)
             ->where('workshop_cart_items.deli_date','=',$deli_date);
 
@@ -316,7 +302,7 @@ class WorkshopCartItem extends Model
         //設置查詢條件
         $items = $items
             ->where('workshop_cart_items.user_id','=',$shop)
-            ->whereNotIn('workshop_cart_items.status',[4])
+            ->whereNotIn('workshop_cart_items.status',[self::STATUS_DELETE])
             ->where('workshop_cart_items.qty','>=',0)
             ->where('workshop_cart_items.deli_date','=',$deli_date);
 
@@ -335,8 +321,7 @@ class WorkshopCartItem extends Model
             ->select('deli_date')
             ->addSelect('users.report_name')
             ->addSelect('workshop_cart_items.user_id')
-            ->addSelect(DB::raw('SUM(order_price * ifnull(qty_received,qty)) as po_total'))
-        ;
+            ->addSelect(DB::raw('SUM(order_price * ifnull(qty_received,qty)) as po_total'));
 
         //設置關聯表
         $items = $items
@@ -345,7 +330,7 @@ class WorkshopCartItem extends Model
 
         //設置查詢條件
         $items = $items
-            ->whereNotIn('workshop_cart_items.status',[4])
+            ->whereNotIn('workshop_cart_items.status',[self::STATUS_DELETE])
             ->where('workshop_cart_items.deli_date','=',$deli_date);
 
         switch ($group){
@@ -398,11 +383,10 @@ class WorkshopCartItem extends Model
         //設置查詢條件
         $items = $items
             ->whereIn('workshop_cart_items.user_id',$shopids)
-            ->whereNotIn('workshop_cart_items.status',[4])
+            ->whereNotIn('workshop_cart_items.status',[self::STATUS_DELETE])
             ->where('workshop_cart_items.qty','>=',0)
             ->where('workshop_cart_items.deli_date','>=',$start_date)
-            ->where('workshop_cart_items.deli_date','<=',$end_date)
-        ;
+            ->where('workshop_cart_items.deli_date','<=',$end_date);
 
         if($dept){
             $items = $items->where('workshop_cart_items.dept', $dept);
@@ -410,8 +394,7 @@ class WorkshopCartItem extends Model
 
         $items = $items
             ->groupBy('workshop_cart_items.deli_date')
-            ->groupBy('workshop_cart_items.user_id')
-        ;
+            ->groupBy('workshop_cart_items.user_id');
 
         $items = $items
 //            ->orderBy('workshop_products.product_no')
@@ -423,7 +406,7 @@ class WorkshopCartItem extends Model
 
     public function scopeNotDeleted($query)
     {
-        return $query->where('status', '!=' ,4);
+        return $query->where('status', '!=' ,self::STATUS_DELETE);
     }
 
     public function updateBatch(array $attributes = [])
@@ -481,7 +464,7 @@ class WorkshopCartItem extends Model
 
         $cartitem = $cartitem
             ->whereBetween('workshop_cart_items.deli_date', [$start, $end])
-            ->where('workshop_cart_items.status', '<>', 4)
+            ->where('workshop_cart_items.status', '<>', self::STATUS_DELETE)
             ->where('shop_group_has_users.shop_group_id', '<>', ShopGroup::CURRENT_SHOP_ID)
             ->groupBy('shop_group_has_users.shop_group_id');
 
@@ -506,12 +489,41 @@ class WorkshopCartItem extends Model
 
         $cartitem = $cartitem
             ->whereBetween('workshop_cart_items.deli_date', [$start, $end])
-            ->where('workshop_cart_items.status', '<>', 4)
+            ->where('workshop_cart_items.status', '<>', self::STATUS_DELETE)
             ->whereIn('users.id', $ids);
 
         $total = $cartitem->get('Total')->first();
 
         return $total;
+    }
+
+    //2022-08-12 獲取下級分類總數
+    public static function getSubGroupTotal($start, $end)
+    {
+        $cartitem = new WorkshopCartItem();
+        $cartitem = $cartitem
+            ->addSelect('shop_sub_group_has_users.shop_sub_group_id');
+
+        //查詢Total
+        $sql = "ROUND(sum(
+            (ifnull(workshop_cart_items.qty_received,workshop_cart_items.qty) * workshop_cart_items.order_price)),2)
+            as Total";
+        $cartitem = $cartitem
+            ->addSelect(DB::raw($sql));
+
+        $cartitem = $cartitem
+            ->leftJoin('users', 'users.id', '=', 'workshop_cart_items.user_id')
+            //右連接, 不需要查詢所有user
+            ->rightJoin('shop_sub_group_has_users', 'users.id', '=', 'shop_sub_group_has_users.user_id');
+
+        $cartitem = $cartitem
+            ->whereBetween('workshop_cart_items.deli_date', [$start, $end])
+            ->where('workshop_cart_items.status', '<>', self::STATUS_DELETE)
+            ->groupBy('shop_sub_group_has_users.shop_sub_group_id');
+
+        $cartitem = $cartitem->pluck('Total', 'shop_sub_group_id');
+
+        return $cartitem;
     }
 
 }

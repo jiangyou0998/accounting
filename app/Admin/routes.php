@@ -52,6 +52,9 @@ Route::group([
     //貨倉入貨報告
     $router->resource('reports/warehouse/stock', 'Reports\WarehouseStockReportController');
 
+    //貨倉產品價格報告
+    $router->resource('reports/warehouse/product_price', 'Reports\WarehouseProductPriceReportController');
+
     //維修報表
     $router->resource('reports/repair_project', 'Reports\RepairProjectController');
 

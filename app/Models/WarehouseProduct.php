@@ -45,6 +45,11 @@ class WarehouseProduct extends Model
         return $this->hasMany(WarehouseStockItem::class,"product_id","id");
     }
 
+    public function prices()
+    {
+        return $this->hasMany(WarehouseProductPrice::class,"product_id","id");
+    }
+
     public static function getProducts($ids = null, $warehouse_group = null, $supplier = null, $search = null, $type = null, $times = null){
 
         $products = self::with(['unit', 'base_unit'])
@@ -206,4 +211,5 @@ class WarehouseProduct extends Model
 
         }
     }
+
 }

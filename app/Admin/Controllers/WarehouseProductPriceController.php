@@ -20,10 +20,16 @@ class WarehouseProductPriceController extends AdminController
     protected function grid()
     {
         return Grid::make(new WarehouseProductPrice(), function (Grid $grid) {
+
+            $grid->model()
+                ->with(['product'])
+                ->orderBy('product_id')
+                ->orderBy('start_date');
+
             $grid->column('id')->sortable();
             $grid->column('price');
             $grid->column('base_price');
-            $grid->column('product_id');
+            $grid->column('product.product_name', '貨品名稱');
             $grid->column('sort');
             $grid->column('start_date');
             $grid->column('end_date');
@@ -35,31 +41,9 @@ class WarehouseProductPriceController extends AdminController
                 $filter->equal('id');
 
                 $products = WarehouseProduct::query()->notDisabled()->pluck('product_name_short','id');
-                $filter->equal('product_id')->select($products);
+                $filter->equal('product_id', '產品名稱')->select($products);
 
             });
-        });
-    }
-
-    /**
-     * Make a show builder.
-     *
-     * @param mixed $id
-     *
-     * @return Show
-     */
-    protected function detail($id)
-    {
-        return Show::make($id, new WarehouseProductPrice(), function (Show $show) {
-            $show->field('id');
-            $show->field('price');
-            $show->field('base_price');
-            $show->field('product_id');
-            $show->field('sort');
-            $show->field('start_date');
-            $show->field('end_date');
-            $show->field('created_at');
-            $show->field('updated_at');
         });
     }
 
@@ -71,6 +55,7 @@ class WarehouseProductPriceController extends AdminController
     protected function form()
     {
         return Form::make(new WarehouseProductPrice(), function (Form $form) {
+            $form->model()->with('product');
             $form->display('id');
             $form->text('price')
                 ->rules('required|numeric|min:0.00')
@@ -79,8 +64,16 @@ class WarehouseProductPriceController extends AdminController
                 ->rules('required|numeric|min:0.00')
                 ->required();
 
-            $products = WarehouseProduct::query()->notDisabled()->pluck('product_name_short','id');
-            $form->select('product_id')->options($products)->required();
+            $products = WarehouseProduct::query()->notDisabled()->pluck('product_name_short','id')->toArray();
+            if ($form->isCreating()){
+                $form->select('product_id')->options($products)->required();
+            }else if ($form->isEditing()){
+                $form->hidden('product_id');
+                $form->display('product_id')->with(function ($value) use($products){
+                    return $products[$value] ?? '';
+                });
+            }
+
             $form->hidden('sort');
             $form->date('start_date')->required();
             $form->date('end_date');
@@ -89,6 +82,8 @@ class WarehouseProductPriceController extends AdminController
             $form->display('updated_at');
 
             $form->submitted(function (Form $form) {
+
+                $id = $form->getKey();
 
                 $form->input('sort', 2);
 
@@ -105,64 +100,102 @@ class WarehouseProductPriceController extends AdminController
                     ->count();
 
                 if($price_count === 0 && $end_date !== '9999-12-31'){
-                    return $form->error('第一次設定價格必須將結束時間設置為9999-12-31');
+                    return $form->error('第一次設定價格必須將「結束時間」設置為9999-12-31');
                 }
 
-                $last_data = WarehouseProductPrice::query()
+                if($start_date > $end_date){
+                    return $form->error('「開始日期」不能大於「結束日期」!');
+                }
+
+                $final_price_data = WarehouseProductPrice::query()
                     ->where('product_id', $product_id)
                     ->whereDate('end_date', '9999-12-31')
                     ->first();
 
-                if(! $last_data && $price_count > 0){
-                    return $form->error('服务器出错了~');
+//                if(! $final_price_data && $price_count > 0){
+//                    return $form->error('服务器出错了~');
+//                }
+
+                //開始日期 不符合要求數量統計
+                $start_date_error_count = WarehouseProductPrice::query()
+                    ->where('product_id', $product_id)
+                    ->whereDate('start_date', '<=', $start_date)
+                    ->whereDate('end_date', '>=', $start_date)
+                    ->isEndDate9999($end_date)
+                    ->where('id', '!=', $id)
+                    ->count();
+
+//                dump($start_date_error_count);
+
+                if($start_date_error_count > 0){
+                    return $form->error('「開始日期」已存在價格!');
                 }
 
-//                $pre_data = WarehouseProductPrice::query()
-//                    ->where('product_id', $product_id)
-//                    ->whereDate('start_date', '<', $start_date)
-//                    ->whereDate('end_date', '>', $start_date)
-//                    ->first();
-//
-//                if($pre_data){
-//                    dump($pre_data->toArray());
-//                    $pre_data->end_date = Carbon::parse($start_date)->subDay();
-//                    $pre_data->save();
-//                }
-//
-//                $next_data = WarehouseProductPrice::query()
-//                    ->where('product_id', $product_id)
-//                    ->whereDate('start_date', '<', $end_date)
-//                    ->whereDate('end_date', '>', $end_date)
-//                    ->first();
-//
-//                if ($next_data){
-//                    $next_start_date = Carbon::parse($end_date)->addDay();
-//                    $next_data->start_date =
-//                    $next_data->save();
-//                    $form->input('end_date', '9999-12-31');
-//                }else{
-//                    $form->input('end_date', '9999-12-31');
-//                }
+                //結束日期 不符合要求數量統計
+                $end_date_error_count = WarehouseProductPrice::query()
+                    ->where('product_id', $product_id)
+                    ->whereDate('start_date', '<=', $end_date)
+                    ->whereDate('end_date', '>=', $end_date)
+                    ->isEndDate9999($end_date)
+                    ->where('id', '!=', $id)
+                    ->count();
+
+//                dump($end_date_error_count);
+
+                if($end_date_error_count > 0){
+                    return $form->error('「結束日期」已存在價格!');
+                }
+
+                //開始日期 結束日期 之間存在價格
+                $include_error_count = WarehouseProductPrice::query()
+                    ->where('product_id', $product_id)
+                    ->whereDate('start_date', '>=', $start_date)
+                    ->whereDate('end_date', '<=', $end_date)
+                    ->isEndDate9999($end_date)
+                    ->where('id', '!=', $id)
+                    ->count();
+
+                if($include_error_count > 0){
+                    return $form->error('選擇時間段已存在價格!');
+                }
+
+                $date_error_count = $start_date_error_count + $end_date_error_count + $include_error_count;
+
+//                dump($id);
+//                dump($final_price_data->id);
+//                dump((int)$id !== $final_price_data->id);
+
+//                dump($end_date);
+
+                if ( 0 === $date_error_count
+                    && isset($final_price_data)
+                    && '9999-12-31' === $end_date
+                    && (int)$id !== $final_price_data->id){
+
+                    $final_start_date = $final_price_data->start_date;
+
+                    if($start_date === $final_start_date){
+                        return $form->error('選擇時間段已存在價格!');
+                    }
+
+                    if($start_date < $final_start_date){
+                        $end_date = Carbon::parse($final_start_date)->subDay()->toDateString();
+                    }
+
+                    if($start_date > $final_start_date){
+                        $final_price_data->end_date = Carbon::parse($start_date)->subDay()->toDateString();
+                        $final_price_data->save();
+                    }
+                }
+
+//                dump($end_date);
+
+                $form->input('end_date', $end_date);
+
+                return;
 
             });
 
-//            $form->saved(function (Form $form, $result) {
-//                // 判断是否是新增操作
-//                if ($form->isCreating()) {
-//                    // 自增ID
-//                    $newId = $result;
-//                    // 也可以这样获取自增ID
-//                    $newId = $form->getKey();
-//
-//                    if (! $newId) {
-//                        return $form->error('数据保存失败');
-//                    }
-//
-//                    return;
-//                }
-//
-//                // 修改操作
-//            });
         });
     }
 }
