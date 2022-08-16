@@ -12,6 +12,7 @@ use App\Models\SalesIncomeDetail;
 use App\Models\SalesIncomeType;
 use App\Models\ShopGroup;
 use App\Models\ShopGroupHasUser;
+use App\Models\ShopSubGroup;
 use App\Models\WorkshopCartItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -34,6 +35,11 @@ class WorkshopSalesDataController extends Controller
             ->pluck('name', 'id')
             ->toArray();
 
+        $shop_sub_groups = ShopSubGroup::query()
+            ->orderBy('sort')
+            ->pluck('name', 'id')
+            ->toArray();
+
         $start_of_month = Carbon::parse($date)->startOfMonth()->toDateString();
         //今日外客批發數
         $customer_total_today = WorkshopCartItem::getCustomerTotal($date, $date);
@@ -50,29 +56,22 @@ class WorkshopSalesDataController extends Controller
         $customer_total_today = $customer_total_today->toArray();
         $customer_total_this_month = $customer_total_this_month->toArray();
 
-        $jichang_ids = [127,128,129,130];
-        $jichang_today = WorkshopCartItem::getCustomerTotalByIDs($date, $date, $jichang_ids);
-        $jichang_this_month = WorkshopCartItem::getCustomerTotalByIDs($start_of_month, $date, $jichang_ids);
+        //下級分類總計(Lagardere拆分的分組)
+        $sub_group_total_today = WorkshopCartItem::getSubGroupTotal($date, $date);
+        $sub_group_total_this_month = WorkshopCartItem::getSubGroupTotal($start_of_month, $date);
 
-        $hongkan_ids = [169,170];
-        $hongkan_today = WorkshopCartItem::getCustomerTotalByIDs($date, $date, $hongkan_ids);
-        $hongkan_this_month = WorkshopCartItem::getCustomerTotalByIDs($start_of_month, $date, $hongkan_ids);
-
-        $jinzhong_ids = [179,180,181];
-        $jinzhong_today = WorkshopCartItem::getCustomerTotalByIDs($date, $date, $jinzhong_ids);
-        $jinzhong_this_month = WorkshopCartItem::getCustomerTotalByIDs($start_of_month, $date, $jinzhong_ids    );
+        //有下級分組的價格分組
+        $exclude_shop_groups = ShopSubGroup::query()->pluck('shop_group_id')->toArray();
 
         return view('workshop_sales_data.report', compact(
             'sale_summary',
             'shop_groups',
+            'shop_sub_groups',
+            'exclude_shop_groups',
             'customer_total_today',
             'customer_total_this_month',
-            'jichang_today',
-            'jichang_this_month',
-            'hongkan_today',
-            'hongkan_this_month',
-            'jinzhong_today',
-            'jinzhong_this_month',
+            'sub_group_total_today',
+            'sub_group_total_this_month',
             'date',
             'date_and_week')
         );

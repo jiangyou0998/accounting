@@ -107,6 +107,8 @@ Route::group([
 
     //價格分組
     $router->resource('shopgroup', 'ShopGroupController');
+    //價格分組
+    $router->resource('shopsubgroup', 'ShopSubGroupController');
     //分店用戶管理
     $router->resource('shopusers', 'ShopUserController');
 

@@ -78,8 +78,8 @@
             <h4>{{$date_and_week}}</h4>
 
             @foreach($customer_total_this_month as $shop_group_id => $value)
-{{--                臨時不顯示lagardere--}}
-                @if($shop_group_id !== 8)
+{{--                有下級分類不顯示--}}
+                @if( ! in_array($shop_group_id, $exclude_shop_groups))
                     <span class="left">
                         {{$shop_groups[$shop_group_id] ?? ''}} ${{number_format(($customer_total_today[$shop_group_id] ?? 0), 0) }}
                     </span>
@@ -90,32 +90,16 @@
                 @endif
             @endforeach
 
-{{--            機場(臨時)--}}
-            <span class="left">
-                    機場 ${{number_format(($jichang_today['Total'] ?? 0), 0) }}
+{{--            下級分類--}}
+            @foreach($sub_group_total_this_month as $shop_sub_group_id => $value)
+                <span class="left">
+                    {{$shop_sub_groups[$shop_sub_group_id] ?? ''}} ${{number_format(($sub_group_total_today[$shop_sub_group_id] ?? 0), 0) }}
                 </span>
-            <span class="right">
-                    本月累積 ${{number_format($jichang_this_month['Total'], 0)}}
+                <span class="right">
+                    本月累積 ${{number_format($value, 0)}}
                 </span>
-            <br>
-
-{{--            紅磡(臨時)--}}
-            <span class="left">
-                    紅磡 ${{number_format(($hongkan_today['Total'] ?? 0), 0) }}
-                </span>
-            <span class="right">
-                    本月累積 ${{number_format($hongkan_this_month['Total'], 0)}}
-                </span>
-            <br>
-
-{{--            金鐘(臨時)--}}
-            <span class="left">
-                    金鐘 ${{number_format(($jinzhong_today['Total'] ?? 0), 0) }}
-                </span>
-            <span class="right">
-                    本月累積 ${{number_format($jinzhong_this_month['Total'], 0)}}
-                </span>
-            <br>
+                <br>
+            @endforeach
 
             <div class="group-div">
                 <h5><span>總計:${{number_format($sale_summary['total'], 2) ?? '0.00'}}</span></h5>
