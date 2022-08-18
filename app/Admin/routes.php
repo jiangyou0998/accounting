@@ -102,6 +102,9 @@ Route::group([
     //通知電郵設定
     $router->resource('notification_emails', 'NotificationEmailController');
 
+    //CRM資料
+    $router->resource('crm_datas', 'CrmDataController');
+
     //test
 //    $router->get('data/', 'DataChangeController@index');
 //    $router->put('data/test', 'DataChangeController@test');
