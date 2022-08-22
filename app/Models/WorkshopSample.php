@@ -38,6 +38,8 @@ class WorkshopSample extends Model
             ->addSelect('workshop_units.unit_name as UoM')
             ->addSelect('workshop_order_sample_item.qty as qty')
             ->addSelect(DB::raw('LEFT(workshop_cats.cat_name, 2) AS suppName'))
+            //2022-08-22 檢測分類為時節產品, 不跳星期日
+            ->addSelect('workshop_cats.id as cat_id')
             //2021-01-06 獲取prices表cuttime,phase,base,min,canordertime
             ->addSelect('prices.cuttime')
             ->addSelect('prices.phase')

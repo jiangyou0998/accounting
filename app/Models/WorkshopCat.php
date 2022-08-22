@@ -11,6 +11,8 @@ class WorkshopCat extends Model
     protected $table = 'workshop_cats';
     public $timestamps = false;
 
+    const SEASONAL_CAT_ID = 6;
+
     public function groups()
     {
         return $this->hasMany(WorkshopGroup::class,"cat_id","id");

@@ -267,7 +267,7 @@ class WorkshopCartItemController extends Controller
                 $query->where('shop_group_id', '=', $shop_group_id);
             })
             ->get();
-//        dd($products);
+//        dd($products->toArray());
         $deli_date = $request->deli_date;
 
         $group = WorkshopGroup::find($groupid);
@@ -283,6 +283,8 @@ class WorkshopCartItemController extends Controller
         foreach ($products as $product) {
 
             $productDetail = $product->prices->where('shop_group_id', '=', $shop_group_id)->first();
+            //2022-08-22 檢測分類為時節產品, 不跳星期日
+            $productDetail->cat_id = $product->cats->id;
 
             $this->checkInvalidOrder($productDetail,$deli_date,$shopid);
 
@@ -310,19 +312,15 @@ class WorkshopCartItemController extends Controller
             $product->order_by_workshop = true;
         }
 
-        //跳過出貨期不出貨(星期日不是出貨期)
-        //2021-03-22 全跳過星期日
-        //2021-03-25 星期日時不用跳
-//        if (($deliW - $phase) <= 0 && $deliW != 0 && $phase > 0) {
-//            $phase += 1;
-//        }
-
         //判斷是否已截單
         if ($phase > 0) {
             $cuttime = $deli_date . " " . $product->cuttime . "00";
             $finalOrderTime = Carbon::parse($cuttime)->subDay($phase);
+
             //2021-03-26 最後下單時間是星期日時 要推前一日下單
-            if ($finalOrderTime->isSunday()){
+            //2022-08-22 檢測分類為時節產品, 不跳星期日
+            if ($finalOrderTime->isSunday() && $product->cat_id !== WorkshopCat::SEASONAL_CAT_ID){
+//            if ($finalOrderTime->isSunday()){
                 $finalOrderTime = $finalOrderTime->subDay(1);
             }
 //            dump($finalOrderTime->toDateTimeString());
