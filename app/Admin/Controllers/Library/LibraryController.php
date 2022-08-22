@@ -9,6 +9,7 @@ use App\Admin\Renderable\UserTable;
 use App\Models\FrontGroup;
 use App\Models\Library\Library;
 use App\Models\Library\LibraryGroup;
+use App\Models\ShopGroup;
 use App\User;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
@@ -146,9 +147,9 @@ class LibraryController extends AdminController
 
                     $form->tree('users','分店')
                         ->nodes(function () {
-                            return User::where('name','like','rb%')->get(['id','txt_name'])->toArray();
+                            return User::getShopsByShopGroup(ShopGroup::CURRENT_SHOP_ID)->toArray();
                         })
-                        ->setTitleColumn('txt_name')
+                        ->setTitleColumn('report_name')
                         ->customFormat(function ($v) {
                             if (!$v) return [];
 
