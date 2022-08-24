@@ -15,6 +15,8 @@ class ShopGroup extends Model
     const TWOCAFE_SHOP_ID = 4;
     const RB_SHOP_ID = 5;
     const LAGARDERE_SHOP_ID = 8;
+    const MANTAI_SHOP_ID = 9;
+    const TO_GATHER_CAFE_SHOP_ID = 10;
 
     protected $table = 'shop_groups';
 
@@ -60,7 +62,15 @@ class ShopGroup extends Model
     public static function getCustomerGroup()
     {
         $query = self::query();
-        return $query->whereNotIn('name',['蛋撻王','共食薈','一口烘焙','糧友'])->get();
+
+        //2022-08-24 隱藏滿泰 To-Gather Cafe
+        $hide_customer_ids = [
+            self::KB_SHOP_ID,
+            self::RB_SHOP_ID,
+            self::MANTAI_SHOP_ID,
+            self::TO_GATHER_CAFE_SHOP_ID
+        ];
+        return $query->whereNotIn('id', $hide_customer_ids)->orderBy('sort')->get();
     }
 
     public static function getShopGroupName($id)
