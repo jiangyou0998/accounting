@@ -16,4 +16,14 @@ class KBWorkshopUnit extends Model
         return $this->hasMany(KBWorkshopProduct::class,"unit_id","id");
     }
 
+    public static function getUnitInfoAndID()
+    {
+        return self::query()
+            ->get(['id', 'unit_name'])
+            ->mapWithKeys(function ($item, $key) {
+                return [$item['id'] => $item];
+            })
+            ->toArray();
+    }
+
 }

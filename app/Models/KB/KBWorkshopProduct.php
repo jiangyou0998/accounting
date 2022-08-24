@@ -11,6 +11,9 @@ class KBWorkshopProduct extends Model
     protected $connection = 'mysql_kb';
     protected $table = 'workshop_products';
 
+    const STATUS_PAUSED = 2;
+    const STATUS_DISABLED = 4;
+
 //    protected $appends = ['full_name'];
 
     public function groups()
@@ -49,6 +52,11 @@ class KBWorkshopProduct extends Model
 //        ];
     }
 
+    //篩選所有非暫停與刪除的產品
+    public function scopeNotPausedAndDisabled($query){
+        return $query->whereNotIn('status', [self::STATUS_PAUSED, self::STATUS_DISABLED]);
+    }
+
 //    public function getFullNameAttribute()
 //    {
 //        return "{$this->product_name} {$this->product_no}";
@@ -63,6 +71,17 @@ class KBWorkshopProduct extends Model
             return [$item['id'] => $item['cats']->id];
         });
         return $catids->toArray();
+    }
+
+    public static function getProductInfoAndID()
+    {
+        return self::query()
+            ->notPausedAndDisabled()
+            ->get(['id', 'product_name', 'product_no'])
+            ->mapWithKeys(function ($item, $key) {
+                return [$item['id'] => $item];
+            })
+            ->toArray();
     }
 
 

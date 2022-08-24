@@ -289,7 +289,49 @@ class KBWorkshopCartItem extends Model
 
     }
 
+    public static function getItemsByDateRange($start_date, $end_date, $shop_ids, $limit = 15){
 
 
+        $items = new KBWorkshopCartItem();
+
+        //蛋記ID
+        $kb_ids = array();
+        $shopidArr = explode(',', $shop_ids);
+        foreach ($shopidArr as $shop_id){
+            $kb_id = User::getKBIds($shop_id);
+            $kb_ids = array_merge($kb_ids, $kb_id);
+        }
+
+        //設置select
+        $items = $items
+            ->addSelect(DB::raw('SUM(workshop_cart_items.qty) as qty'))
+            ->addSelect('workshop_cart_items.product_id')
+            ->addSelect(DB::raw('MIN(workshop_cart_items.order_price) as min_price'))
+            ->addSelect(DB::raw('MAX(workshop_cart_items.order_price) as max_price'))
+            ->addSelect(DB::raw('MAX(workshop_products.unit_id) as unit_id'))
+            ->addSelect(DB::raw('SUM(workshop_cart_items.order_price * ifnull(qty_received,qty)) as po_total'));
+
+
+        //設置關聯表
+        $items = $items
+            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
+            ->leftJoin('prices', 'workshop_cart_items.product_id','=','prices.product_id');
+
+        //設置查詢條件
+        $items = $items
+            ->whereIn('workshop_cart_items.user_id', $kb_ids)
+            ->whereNotIn('workshop_cart_items.status',[4])
+            ->where('workshop_cart_items.qty','>=',0)
+            //2021-03-17 貳號分組為4
+            ->where('prices.shop_group_id', '=' , KBWorkshopGroup::CURRENTGROUPID)
+            ->whereBetween('workshop_cart_items.deli_date', [$start_date, $end_date]);
+
+        $items = $items
+            ->groupBy('workshop_cart_items.product_id')
+            ->orderByDesc('po_total')->limit($limit)->get();
+
+        return $items;
+
+    }
 
 }

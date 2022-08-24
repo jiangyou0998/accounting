@@ -104,6 +104,10 @@ Route::group(['middleware' => ['auth','permission:operation|accounting']], funct
     //營業數匯總
     Route::get('sales_data/report', 'SalesDataController@report')->name('sales_data.report');
     Route::get('workshop_sales_data/report', 'WorkshopSalesDataController@report')->name('workshop_sales_data.report');
+
+    //Top Sales Report
+    Route::get('top_sales/report', 'FrontReport\TopSalesReportController@report')->name('top_sales.report');
+
 });
 
 Route::group(['middleware' => ['auth']], function () {

@@ -28,6 +28,11 @@
         <a href='{{route('sales_data.sales_cal_results.create')}}' class='styleA'>新增營業數記錄</a>
     </div>
 
+    <div class="col-sm-4 square-btn">
+        <a href="{{route('top_sales.report')}}" target="_blank"><span class="btn" style="font-size: 40px;line-height: 50px;">Top<br/>Sales</span></a>
+        <br/>
+    </div>
+
 </div>
 
 
