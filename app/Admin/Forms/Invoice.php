@@ -23,10 +23,9 @@ class Invoice extends Form
         $idArr = $input['user_ids'] ?? null;
         $ids = implode('-', $idArr);
         $deli_date = $input['deli_date'] ?? null;
+        $deli_date_end = $input['deli_date_end'] ?? null;
 
-        $url = route('admin.invoice.view', ['shop' => $ids , 'deli_date' => $deli_date]);
-//         dump($ids);
-        // return $this->error('Your error message.');
+        $url = route('admin.invoice.view', ['shop' => $ids , 'deli_date' => $deli_date, 'deli_date_end' => $deli_date_end]);
 
         return $this->ajaxResponse($url);
     }
@@ -36,7 +35,8 @@ class Invoice extends Form
      */
     public function form()
     {
-        $this->date('deli_date','日期')->required();
+        $this->date('deli_date','開始日期')->required();
+        $this->date('deli_date_end','結束日期')->required();
         $shopGroupIds = ShopGroup::has('users')
             ->whereIn('id',[1,5])
             ->pluck('name','id')
@@ -55,8 +55,10 @@ class Invoice extends Form
      */
     public function default()
     {
+        $now = now()->toDateString();
         return [
-            'deli_date'  => Carbon::now()->toDateString(),
+            'deli_date'  => $now,
+            'deli_date_end'  => $now,
         ];
     }
 

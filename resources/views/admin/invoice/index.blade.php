@@ -41,10 +41,12 @@
 <body>
 
 {{--初始化頁碼--}}
-@foreach($allData as $data)
-@php
-    $page = 0;
-@endphp
+@foreach($allData as $shop_datas)
+
+@foreach($shop_datas as $data)
+    @php
+        $page = 0;
+    @endphp
 @foreach($data['details'] as $detail)
     {{--    每13個一頁,生成表頭和頂部--}}
     @if(($loop->index % $data['infos']->item_count) == 0)
@@ -164,6 +166,7 @@
         {{--    @endforeach--}}
 
         </table>
+@endforeach
 @endforeach
 </body>
 

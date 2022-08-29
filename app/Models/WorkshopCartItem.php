@@ -181,6 +181,7 @@ class WorkshopCartItem extends Model
 
     }
 
+    //獲取送貨單詳細資料
     public static function getDeliDetail($deli_date, $shop , $type = null)
     {
         $items = new WorkshopCartItem();
@@ -236,6 +237,7 @@ class WorkshopCartItem extends Model
 
     }
 
+    //獲取送貨單總數
     public static function getDeliTotal($deli_date, $shop, $type = null)
     {
         $items = new WorkshopCartItem();
@@ -270,6 +272,98 @@ class WorkshopCartItem extends Model
             ->get();
 
         return $items;
+    }
+
+    //2022-08-26 獲取Invoice「詳細」資料, 可選擇日期區間, 去掉重複查詢問題
+    public static function getInvoiceDetail($deli_date_start, $deli_date_end, $shop_ids, $type = null)
+    {
+        $items = new WorkshopCartItem();
+
+        $shopArr = explode('-', $shop_ids);
+
+        //設置select
+        $items = $items
+            ->addSelect('workshop_products.product_name as itemName')
+            ->addSelect('workshop_products.product_no')
+            ->addSelect('workshop_units.unit_name as UoM')
+            ->addSelect(DB::raw('SUM(workshop_cart_items.qty) as qty'))
+//            ->addSelect(DB::raw('SUM(ifnull(workshop_cart_items.qty_received, workshop_cart_items.qty)) as qty_received'))
+            ->addSelectAmount($type)
+            //2020-11-23 workshop_products.default_price改為workshop_cart_items.order_price
+            ->addSelect(DB::raw('MAX(workshop_cart_items.order_price) as default_price'))
+            ->addSelect('workshop_products.id as itemID')
+            ->addSelect('workshop_cart_items.deli_date')
+            ->addSelect('workshop_cart_items.user_id');
+
+        //設置關聯表
+        $items = $items
+            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
+            ->leftJoin('workshop_units', 'workshop_products.unit_id', '=', 'workshop_units.id');
+
+        //設置查詢條件
+        $items = $items
+            ->whereIn('workshop_cart_items.user_id', $shopArr)
+            ->whereNotIn('workshop_cart_items.status',[self::STATUS_DELETE])
+            ->where('workshop_cart_items.qty','>=',0)
+            ->whereBetween('workshop_cart_items.deli_date', [$deli_date_start, $deli_date_end])
+            ->hideZero($type);
+
+        $items = $items
+            ->groupBy('workshop_cart_items.user_id', 'workshop_cart_items.deli_date', 'workshop_products.id')
+            ->orderBy('workshop_cart_items.user_id')
+            ->orderBy('workshop_cart_items.deli_date')
+            ->orderBy('workshop_products.product_no')
+            ->get();
+
+        $invoiceDetailsArr = [];
+        foreach ($items as $item){
+            $invoiceDetailsArr[$item->user_id][$item->deli_date][] = $item;
+        }
+
+        return $invoiceDetailsArr;
+
+    }
+
+    //2022-08-26 獲取Invoice「總計」資料, 可選擇日期區間, 去掉重複查詢問題
+    public static function getInvoiceTotal($deli_date_start, $deli_date_end, $shop_ids, $type = null)
+    {
+        $items = new WorkshopCartItem();
+
+        $shopArr = explode('-', $shop_ids);
+
+        //設置select
+        $items = $items
+            //計算總數量
+            ->addSelect(DB::raw('SUM(if(workshop_cart_items.qty_received is not null , workshop_cart_items.qty_received, workshop_cart_items.qty)) as qty_total'))
+            //計算總價
+            //2020-11-23 workshop_products.default_price改為workshop_cart_items.order_price
+            ->addSelectTotal($type)
+            ->addSelect('workshop_cart_items.deli_date')
+            ->addSelect('workshop_cart_items.user_id');
+
+
+        //設置關聯表
+        $items = $items
+            ->leftJoin('workshop_products', 'workshop_products.id', '=', 'workshop_cart_items.product_id')
+            ->leftJoin('workshop_units', 'workshop_products.unit_id', '=', 'workshop_units.id');
+
+        //設置查詢條件
+        $items = $items
+            ->whereIn('workshop_cart_items.user_id', $shopArr)
+            ->whereNotIn('workshop_cart_items.status',[self::STATUS_DELETE])
+            ->where('workshop_cart_items.qty','>=',0)
+            ->whereBetween('workshop_cart_items.deli_date', [$deli_date_start, $deli_date_end]);
+
+        $items = $items
+            ->groupBy('workshop_cart_items.user_id', 'workshop_cart_items.deli_date')
+            ->get();
+
+        $totalDetailsArr = [];
+        foreach ($items as $item){
+            $totalDetailsArr[$item->user_id][$item->deli_date]   = $item->toArray();
+        }
+
+        return $totalDetailsArr;
     }
 
     public static function getDeliItem($deli_date, $shop)
