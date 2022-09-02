@@ -29,6 +29,7 @@ class TotalSalesByDayCombineReportController extends AdminController
 
             $grid->header(function ($collection) {
                 $shop_group = request()->group ?? 0;
+                $shop_sub_group = request()->sub_group ?? 0;
 
                 if($shop_group === 0){
                     $shop_group_name = '全部';
@@ -36,12 +37,21 @@ class TotalSalesByDayCombineReportController extends AdminController
                     $shopGroupArr = getReportShop()->toArray();
                     $shop_group_name = $shopGroupArr[$shop_group];
                 }
+
+                if($shop_sub_group === 0){
+                    $shop_sub_group_name = '';
+                }else{
+                    $shopSubGroupArr = getSubGroup()->toArray();
+                    $shop_sub_group_name = $shopSubGroupArr[$shop_sub_group];
+                }
+
                 $month = getMonth();
 
                 // 标题和内容
                 $cardInfo = <<<HTML
         <h1>月份:<span style="color: red">$month</span></h1>
         <h1>分組:<span style="color: red">$shop_group_name</span></h1>
+        <h1>子分組:<span style="color: red">$shop_sub_group_name</span></h1>
 HTML;
                 $card = Card::make('', $cardInfo);
 //                $card = Card::make('xxx:', $shop_group);
@@ -52,8 +62,9 @@ HTML;
 
             $month = getMonth();
             $shop_group = request()->group ?? 0;
+            $shop_sub_group = request()->sub_group ?? 0;
 
-            $data = $this->generate($month, $shop_group);
+            $data = $this->generate($month, $shop_group, $shop_sub_group);
 
             if (count($data) > 0) {
                 $keys = $data->first()->toArray();
@@ -86,6 +97,8 @@ HTML;
                 $filter->panel();
                 $filter->month('month', '報表日期');
                 $filter->equal('group', '分組')->select(getReportShop());
+                //2022-09-02 新增子分組Filter
+                $filter->equal('sub_group', '子分組')->select(getSubGroup());
 
             });
 
@@ -102,7 +115,7 @@ HTML;
      *
      * @return array
      */
-    public function generate($month ,$shop_group)
+    public function generate($month , $shop_group, $shop_sub_group)
     {
         if($shop_group === 0){
             $shops = User::getAllShopsAndCustomerShops();
@@ -111,6 +124,11 @@ HTML;
         }
 
         $shopids = $shops->pluck('id');
+
+        if($shop_sub_group > 0){
+            $sub_shop_ids = User::getShopsByShopSubGroup($shop_sub_group)->pluck('id');
+            $shopids = $shopids->intersect($sub_shop_ids);
+        }
 
         $cats = WorkshopCat::getCats();
         $testids = User::getTestUserIDs();

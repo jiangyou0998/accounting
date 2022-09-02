@@ -7,6 +7,7 @@ use App\Models\Library\Library;
 use App\Models\Role;
 use App\Models\ShopAddress;
 use App\Models\ShopGroup;
+use App\Models\ShopSubGroup;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -68,6 +69,15 @@ class User extends Authenticatable
         $relatedModel = ShopGroup::class; // 关联模型类名
 
         return $this->belongsToMany($relatedModel, $pivotTable, 'user_id', 'shop_group_id');
+    }
+
+    public function shop_sub_groups(): BelongsToMany
+    {
+        $pivotTable = 'shop_sub_group_has_users'; // 中间表
+
+        $relatedModel = ShopSubGroup::class; // 关联模型类名
+
+        return $this->belongsToMany($relatedModel, $pivotTable, 'user_id', 'shop_sub_group_id');
     }
 
     public function front_groups(): BelongsToMany
@@ -202,6 +212,24 @@ class User extends Authenticatable
                     $query->whereIn('id', $shop_group_id);
                 }else{
                     $query->where('id', '=', $shop_group_id);
+                }
+            })
+            ->orderBy('name')
+            ->get(['id','report_name']);
+
+        return $shops;
+    }
+
+    //2022-09-02 根據shop_sub_group的id,獲取分店資料
+    public static function getShopsByShopSubGroup($shop_sub_group_id){
+
+        $users = new User();
+        $shops = $users
+            ->whereHas('shop_sub_groups', function ($query) use($shop_sub_group_id){
+                if(is_array($shop_sub_group_id)){
+                    $query->whereIn('id', $shop_sub_group_id);
+                }else{
+                    $query->where('id', '=', $shop_sub_group_id);
                 }
             })
             ->orderBy('name')

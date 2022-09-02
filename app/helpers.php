@@ -1,10 +1,21 @@
 <?php
 
 use App\Models\ShopGroup;
+use App\Models\ShopSubGroup;
 use Carbon\Carbon;
 
 function getReportShop(){
     return ShopGroup::all()->pluck('name','id');
+}
+
+//2022-09-02 查詢子分組數組
+function getSubGroup(){
+    return ShopSubGroup::query()
+        ->with('shop_group')
+        ->get()
+        ->mapWithKeys(function ($item, $key) {
+            return [$item['id'] => $item['shop_group']['name'].'->'.$item['name']];
+        });
 }
 
 function getStartTime(){
