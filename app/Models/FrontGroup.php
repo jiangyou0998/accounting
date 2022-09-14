@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class FrontGroup extends Model
 {
+    const OFFICE_ID = 4;
 
     protected $table = 'front_groups';
 

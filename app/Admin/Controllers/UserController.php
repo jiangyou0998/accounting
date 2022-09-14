@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\FrontGroup;
 use App\Models\Role;
 use App\User;
 use Dcat\Admin\Form;
@@ -82,7 +83,8 @@ class UserController extends AdminController
     protected function form()
     {
         $user = User::with('roles')
-            ->with('address');
+            ->with('address')
+            ->with('front_groups');
         return Form::make($user, function (Form $form) {
             $form->display('id');
             $id = $form->getKey();
@@ -114,10 +116,25 @@ class UserController extends AdminController
             $form->text('company_english_name','公司名(英文)');
             $form->text('pocode');
 
+            $form->divider();
             $form->radio('login_disabled', '賬戶登錄')
                 ->options($this->login_disabled)
                 ->required()
             ->default(0);
+
+            //選擇角色
+            $form->selectResource('front_groups', '前台用戶分組')
+                ->path('frontgroup') // 设置表格页面链接
+//                ->multiple() // 设置为多选
+                ->options(function () { // 显示已选中的数据
+
+                    $v = FrontGroup::all()->pluck('name','id')->toArray();
+
+                    return $v;
+                })->customFormat(function ($v) {
+                    if (!$v) return [];
+                    return array_column($v, 'id');
+                })->default(FrontGroup::OFFICE_ID);
 
             if ($form->isCreating()) {
                 $form->radio('radio','是否分店賬號')
@@ -131,7 +148,7 @@ class UserController extends AdminController
                         $form->text('address.eng_address','英文地址');
                         $form->text('address.tel','電話');
                         $form->text('address.fax','FAX');
-                        $form->text('address.oper_time','營業時間');
+                        $form->editor('address.oper_time','營業時間');
                         $form->divider();
                     })
                     ->options([0=>'否',1=>'是'])
@@ -146,7 +163,7 @@ class UserController extends AdminController
                     $form->text('address.eng_address','英文地址');
                     $form->text('address.tel','電話');
                     $form->text('address.fax','FAX');
-                    $form->text('address.oper_time','營業時間');
+                    $form->editor('address.oper_time','營業時間');
                     $form->divider();
                 }
 
@@ -171,11 +188,18 @@ class UserController extends AdminController
                 });
 
             $form->saving(function (Form $form) {
+
+                $is_shop = $form->input('radio');
+
+                if($is_shop == 0){
+                    $form->deleteInput('address');
+                }
+
                 // 判断是否是新增操作
                 if ($form->isCreating()) {
                     $form->deleteInput('radio');
                 }
-
+                
                 $password = $form->input('password');
                 if ($password){
                     // 加密
