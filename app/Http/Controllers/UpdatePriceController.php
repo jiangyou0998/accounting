@@ -20,8 +20,14 @@ class UpdatePriceController extends Controller
     public function index()
     {
         $shop_group_ids = ShopGroup::all()->sortBy('sort')->pluck('name','id');
-//        dd($shop_group_ids);
-        return view('order.update_price.index', compact('shop_group_ids'));
+        $products = WorkshopProduct::whereNotIn('status', [2, 4])
+            ->has('prices')
+            ->get();
+
+        //2022-09-20 新增產品選擇
+        $codeProductArr = $products->pluck('code_product', 'id')->toArray();
+//        dd($codeProductArr);
+        return view('order.update_price.index', compact('shop_group_ids', 'codeProductArr'));
     }
 
     public function modify(Request $request)
@@ -31,6 +37,7 @@ class UpdatePriceController extends Controller
         $shop_group_id = $request->shop_group_id;
         $start = $request->start;
         $end = $request->end;
+        $products = $request->products;
 
         //價格從prices表獲取
         $prices = WorkshopProduct::with('prices')->whereHas('prices', function (Builder $query) use($shop_group_id){
@@ -47,6 +54,7 @@ class UpdatePriceController extends Controller
 
         $cart_items = WorkshopCartItem::whereBetween('deli_date', [ $start, $end])
             ->whereIn('user_id', $shop_ids)
+            ->ofProduct($products)
             ->notDeleted()
             ->get();
 
@@ -102,6 +110,7 @@ class UpdatePriceController extends Controller
         $shop_group_id = $request->shop_group_id;
         $start = $request->start;
         $end = $request->end;
+        $products = $request->products;
 
         //價格從prices表獲取
         $prices = WorkshopProduct::query()->with('prices')->whereHas('prices', function (Builder $query) use($shop_group_id){
@@ -119,6 +128,7 @@ class UpdatePriceController extends Controller
         $cart_items = WorkshopCartItem::query()
             ->whereBetween('deli_date', [ $start, $end ])
             ->whereIn('user_id', $shop_ids)
+            ->ofProduct($products)
             ->notDeleted()
             ->get();
 

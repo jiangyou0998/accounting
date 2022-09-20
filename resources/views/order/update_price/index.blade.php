@@ -7,8 +7,12 @@
 @section('js')
     {{--    laydate--}}
     <script src="../layui/laydate/laydate.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 @endsection
 
+@section('css')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@stop
 
 @section('style')
     <style type="text/css">
@@ -83,6 +87,22 @@
         </label>
         @endforeach
 
+        <div align="left" style="padding-top: 15px;">
+            <strong>
+                <span style="color: #FF0000; font-size: 172%; ">選擇產品:</span>
+            </strong>
+        </div>
+
+        <div class="col-12 w-100">
+            <label for="id_label_multiple">
+                <select class="js-example-basic-multiple w-100" id="products" name="states[]" multiple="multiple">
+                    @foreach($codeProductArr as $id => $name)
+                        <option value="{{ $id }}">{{ $name }}</option>
+                    @endforeach
+                </select>
+            </label>
+        </div>
+
 
         <div class="row">
 
@@ -154,6 +174,10 @@
             elem: '#end_date' //指定元素
         });
 
+        $(document).ready(function() {
+            $('.js-example-basic-multiple').select2();
+        });
+
         //鉤選或取消時,修改shopstr(隱藏)的值
         // $(document).on('change', 'input[type=checkbox]', function () {
         //     var shopstr = $('input[type=checkbox][class=\'shop\']:checked').map(function () {
@@ -163,11 +187,11 @@
         //     // alert(shopstr);
         // });
 
-        $(document).on('change', 'input[type=radio]', function () {
+        $(document).on('change', 'input[type=radio], #products', function () {
             $("#btnsubmit").attr('disabled', true);
         });
 
-        $(document).on('blur', '#start_date, #end_date', function () {
+        $(document).on('blur', '#start_date, #end_date, #products', function () {
             $("#btnsubmit").attr('disabled', true);
         });
 
@@ -188,10 +212,11 @@
             //禁止按鈕重複點擊
             $("#btncheck").attr('disabled', true);
 
-            var shopstr = $('input:radio[name="shop"]:checked').val();
-            var start_date = $('#start_date').val();
-            var end_date = $('#end_date').val();
-            console.log(shopstr);
+            let shopstr = $('input:radio[name="shop"]:checked').val();
+            let start_date = $('#start_date').val();
+            let end_date = $('#end_date').val();
+            let products = $('#products').val();
+            // console.log(products);
             if (shopstr == null) {
                 Swal.fire({
                     icon: 'error',
@@ -229,6 +254,7 @@
                     'start'  : start_date,
                     'end'  : end_date,
                     'shop_group_id': shopstr,
+                    'products' : products
                 },
                 dataType:'json',
                 success: function (data) {
@@ -355,7 +381,8 @@
             let shopstr = $('input:radio[name="shop"]:checked').val();
             let start_date = $('#start_date').val();
             let end_date = $('#end_date').val();
-            console.log(shopstr);
+            let products = $('#products').val();
+            // console.log(shopstr);
             if (shopstr == null) {
                 Swal.fire({
                     icon: 'error',
@@ -393,10 +420,11 @@
                     'start'  : start_date,
                     'end'  : end_date,
                     'shop_group_id': shopstr,
+                    'products' : products
                 },
                 dataType:'json',
                 success: function (data) {
-                    console.log(data);
+                    // console.log(data);
                     if(data.status === 'success'){
                         Swal.fire({
                             icon: 'success',

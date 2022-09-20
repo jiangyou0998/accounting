@@ -131,6 +131,15 @@ class WorkshopCartItem extends Model
         });
     }
 
+    public function scopeOfProduct($query, $products)
+    {
+        if(empty($products)){
+            return $query;
+        }else{
+            return $query->whereIn('product_id', $products);
+        }
+    }
+
     public static function getCartItems($shop , $dept , $deli_date){
 
         $items = new WorkshopCartItem();
