@@ -26,7 +26,7 @@ Route::group([
 //    $router->get('production_order/printCheck', 'OrderPrintController@printCheck')->name('admin.order_print.check');
     $router->post('checks/create','WorkshopCheckController@createChecks')->name('checkcreate');
     $router->patch('checks/update/{id}','WorkshopCheckController@updateChecks')->name('checkupdate');
-    $router->resource('shopgroups', 'ShopGroupController');
+//    $router->resource('shopgroups', 'ShopGroupController');
     $router->resource('cart', 'WorkshopCartItemController');
     $router->resource('cartitem_log', 'WorkshopCartItemLogController');
     $router->resource('mypage', 'MypageController');
@@ -89,7 +89,7 @@ Route::group([
     $router->resource('front/menu', 'MenuController');
     $router->resource('front/permissions', 'PermissionController');
     $router->resource('front/roles', 'RoleController');
-    $router->resource('front/shop_groups', 'ShopGroupController');
+//    $router->resource('front/shop_groups', 'ShopGroupController');
     $router->resource('pages/front_users', 'UserController');
 
     //供應商

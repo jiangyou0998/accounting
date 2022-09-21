@@ -138,7 +138,7 @@ class ShopUserController extends AdminController
 
             //選擇角色
             $form->selectResource('shop_groups', '價格分組')
-                ->path('front/shop_groups') // 设置表格页面链接
+                ->path('shopgroup') // 设置表格页面链接
 //                ->multiple() // 设置为多选
                 ->required()
                 ->options(function () { // 显示已选中的数据
