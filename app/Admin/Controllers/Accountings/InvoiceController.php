@@ -6,6 +6,7 @@ use App\Admin\Forms\Invoice;
 use App\Admin\Renderable\ShopTable;
 use App\Admin\Traits\InvoiceTraits;
 use App\Admin\Traits\ReportTimeTraits;
+use App\Models\ShopGroup;
 use App\Models\WorkshopCartItem;
 use App\User;
 use Dcat\Admin\Controllers\AdminController;
@@ -58,9 +59,9 @@ class InvoiceController extends AdminController
 
             //選中的商店id
             $shop_id = request()->shop_id ?? "";
-            $shop_group = request()->group ?? 'all';
+            $shop_group = request()->group ?? 0;
 
-            $data = $this->generate($start,$end,$pocode,$shop_id,$shop_group);
+            $data = $this->generate($start, $end, $pocode, $shop_id, $shop_group);
 
             $grid->number();
             if (count($data) > 0) {
@@ -95,7 +96,7 @@ class InvoiceController extends AdminController
                     ->title('弹窗标题')
                     ->dialogWidth('50%') // 弹窗宽度，默认 800px
                     ->model(User::class, 'id', 'txt_name'); // 设置编辑数据显示
-                $filter->equal('group', '分組')->select(config('report.report_group'));
+                $filter->equal('group', '分組')->multipleSelect(getReportShopByIDs([ShopGroup::KB_SHOP_ID, ShopGroup::RB_SHOP_ID]));
                 $filter->like('pocode', 'PO');
 
             });
@@ -129,7 +130,7 @@ class InvoiceController extends AdminController
     public function generate($start, $end, $pocode, $shop_id, $shop_group)
     {
         $testids = User::getTestUserIDs();
-        $shop_ids = explode(',', $shop_id);
+        $shop_ids = $shop_id ? explode(',', $shop_id) : [];
 
         if($start == '' && $end != '') $start = '0000-01-01';
         if($end == '' && $start != '') $end = '9999-12-31';
@@ -138,8 +139,20 @@ class InvoiceController extends AdminController
             $end = '9999-12-31';
         }
 
-        $shops = User::getAllShops();
-        $shopgroupids = $shops->pluck('id');
+        if($shop_group === 0){
+            $shops = User::getAllShops();
+        }else{
+            $shops = User::getShopsByShopGroup($shop_group);
+        }
+
+        //2021-07-15 添加根據分組選擇分店
+        $shop_ids_by_group = $shops->pluck('id')->toArray();
+
+        if(count($shop_ids) > 0){
+            $shop_ids = array_intersect($shop_ids, $shop_ids_by_group);
+        }else{
+            $shop_ids = $shop_ids_by_group;
+        }
 
         $cartitem = new WorkshopCartItem();
         $cartitem = $cartitem
@@ -173,7 +186,7 @@ class InvoiceController extends AdminController
         $cartitem = $cartitem
             ->whereBetween('workshop_cart_items.deli_date', [$start, $end])
             ->where('workshop_cart_items.status', '<>', 4)
-            ->whereIn('workshop_cart_items.user_id', $shopgroupids)
+            ->whereIn('workshop_cart_items.user_id', $shop_ids)
             ->whereNotIn('users.id', $testids)
             ->groupBy('users.id','workshop_cart_items.deli_date')
             ->orderBy('users.name');

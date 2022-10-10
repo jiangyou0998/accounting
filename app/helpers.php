@@ -8,6 +8,10 @@ function getReportShop(){
     return ShopGroup::all()->pluck('name','id');
 }
 
+function getReportShopByIDs(array $ids){
+    return ShopGroup::query()->whereIn('id', $ids)->get()->pluck('name','id');
+}
+
 //2022-09-02 查詢子分組數組
 function getSubGroup(){
     return ShopSubGroup::query()
