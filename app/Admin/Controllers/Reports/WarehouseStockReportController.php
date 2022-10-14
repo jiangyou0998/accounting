@@ -166,7 +166,8 @@ class WarehouseStockReportController extends AdminController
             $loop_start_date = Carbon::parse($start_date);
             $loop_end_date = Carbon::parse($end_date);
 
-            while ($loop_start_date < $loop_end_date) {
+            //2022-10-14 修復無法獲取最後一日價格bug
+            while ($loop_start_date <= $loop_end_date) {
                 $price_group_by_date_and_product_id[$loop_start_date->isoFormat('YMMDD')][$price->product_id]['price'] = $price->price;
                 $price_group_by_date_and_product_id[$loop_start_date->isoFormat('YMMDD')][$price->product_id]['base_price'] = $price->base_price;
                 $loop_start_date->addDay();
