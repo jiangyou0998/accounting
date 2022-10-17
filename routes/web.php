@@ -209,6 +209,21 @@ Route::group(['middleware' => ['auth']], function () {
 
 });
 
+//2022-04-28 貨倉入庫
+Route::group(['middleware' => ['auth','permission:shop']], function () {
+    //選擇日期
+//    Route::get('stock/warehouse/select_day', 'WarehouseStockController@select_day')->name('stock.warehouse.select_day');
+    Route::get('stock/warehouse', 'WarehouseStockController@index')->name('stock.warehouse.index');
+    Route::post('stock/warehouse', 'WarehouseStockController@index')->name('stock.warehouse.search');
+    Route::get('stock/warehouse/{times}/edit', 'WarehouseStockController@edit')->name('stock.warehouse.edit');
+    Route::post('stock/warehouse/add', 'WarehouseStockController@add')->name('stock.warehouse.add');
+    Route::delete('stock/warehouse/delete', 'WarehouseStockController@delete')->name('stock.warehouse.delete');
+    Route::post('stock/warehouse/save_invoice', 'WarehouseStockController@saveInvoice')->name('stock.warehouse.save_invoice');
+    Route::post('stock/warehouse/edit_invoice', 'WarehouseStockController@editInvoice')->name('stock.warehouse.edit_invoice');
+
+    Route::get('stock/warehouse/price_check', 'WarehouseStockController@price_check')->name('stock.warehouse.price_check');
+});
+
 
 
 //Route::get('/import', 'ImportController@import');
@@ -224,7 +239,8 @@ Route::group(['middleware' => ['auth']], function () {
 //datachange
 //Route::get('/api/datachange/product_to_price', 'Api\DataChangeApiController@copyProductToPrice');
 
-
+//warehouseProduct 導入
+//Route::get('/import/warehouse/product', 'Import\WarehouseProductImportController@importProduct');
 
 
 
