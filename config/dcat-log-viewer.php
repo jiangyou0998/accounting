@@ -2,7 +2,7 @@
 
 return [
     'route' => [
-        'prefix'     => 'dcat-logs',
+        'prefix'     => 'admin/dcat-logs',
         'namespace'  => 'Dcat\LogViewer',
         'middleware' => [],
     ],
