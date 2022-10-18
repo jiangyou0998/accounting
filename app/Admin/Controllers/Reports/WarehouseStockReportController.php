@@ -3,14 +3,11 @@
 namespace App\Admin\Controllers\Reports;
 
 
-use App\Models\Price;
-use App\Models\StockItem;
-use App\Models\Supplier\SupplierProduct;
-use App\Models\SupplierStockItem;
-use App\Models\WarehouseProduct;
+use App\Admin\Renderable\FrontUserTable;
 use App\Models\WarehouseProductPrice;
 use App\Models\WarehouseStockItem;
 use App\Models\WorkshopUnit;
+use App\User;
 use Carbon\Carbon;
 use Dcat\Admin\Controllers\AdminController;
 use Dcat\Admin\Grid;
@@ -48,9 +45,9 @@ class WarehouseStockReportController extends AdminController
             $start = getStartTime();
             $end = getEndTime();
 
-            $shop_group = request()->group ?? 0;
+            $shop_ids = request()->shop_ids;
 
-            $data = $this->generate($start, $end);
+            $data = $this->generate($start, $end, $shop_ids);
 
             $titles = [
                 'supplier_name' => '供應商',
@@ -95,7 +92,12 @@ class WarehouseStockReportController extends AdminController
                 // 更改为 panel 布局
                 $filter->panel();
                 $filter->between('between', '報表日期')->date();
-//                $filter->equal('group', '分組')->select(getReportShop());
+                //2022-10-18 新增分店filter
+                $filter->equal('shop_ids', '分店')
+                    ->multipleSelectTable(FrontUserTable::make(['roles' => 'Ryoyu'])) // 设置渲染类实例，并传递自定义参数
+                    ->title('弹窗标题')
+                    ->dialogWidth('50%') // 弹窗宽度，默认 800px
+                    ->model(User::class, 'id', 'txt_name'); // 设置编辑数据显示
             });
 
             $filename = '貨倉入貨報告 ' . $start . '至' . $end;
@@ -110,7 +112,7 @@ class WarehouseStockReportController extends AdminController
      *
      * @return array
      */
-    public function generate($start_date, $end_date)
+    public function generate($start_date, $end_date, $shop_ids)
     {
         //月份格式202106
 //        $month = Carbon::parse($month)->isoFormat('YMM');
@@ -143,6 +145,11 @@ class WarehouseStockReportController extends AdminController
             ->leftJoin('suppliers', 'suppliers.id', '=', 'warehouse_products.supplier_id')
             ->leftJoin('supplier_groups', 'supplier_groups.id', '=', 'warehouse_products.group_id')
             ->whereBetween('date', [$start, $end]);
+
+        //2022-10-18 新增分店filter
+        if($shop_ids){
+            $supplier_items = $supplier_items->whereIn('users.id', explode(',', $shop_ids));
+        }
 
         $items = $supplier_items
             ->orderBy('date')
