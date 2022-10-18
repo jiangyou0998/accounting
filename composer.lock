@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba5e5368aeb056e0e787e77641f71175",
+    "content-hash": "78ef3fc957945a49262d9aa4fdda4b99",
     "packages": [
         {
             "name": "barryvdh/laravel-debugbar",
@@ -293,6 +293,58 @@
                 "laravel admin"
             ],
             "time": "2020-08-24T08:10:00+00:00"
+        },
+        {
+            "name": "dcat/laravel-log-viewer",
+            "version": "0.1.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jqhph/laravel-log-viewer.git",
+                "reference": "fffc82d65bbc6a64349f4977108833ed4773ef04"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jqhph/laravel-log-viewer/zipball/fffc82d65bbc6a64349f4977108833ed4773ef04",
+                "reference": "fffc82d65bbc6a64349f4977108833ed4773ef04",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Dcat\\LogViewer\\DcatLogViewerServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Dcat\\LogViewer\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "jqh",
+                    "email": "841324345@qq.com"
+                }
+            ],
+            "description": "Laravel Log Viewer",
+            "homepage": "https://github.com/jqhph/laravel-log-viewer",
+            "keywords": [
+                "laravel",
+                "log viewer"
+            ],
+            "support": {
+                "issues": "https://github.com/jqhph/laravel-log-viewer/issues",
+                "source": "https://github.com/jqhph/laravel-log-viewer/tree/0.1.6"
+            },
+            "time": "2022-08-15T03:27:54+00:00"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",

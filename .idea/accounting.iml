@@ -14,6 +14,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dcat/easy-excel" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dcat/laravel-admin" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/dcat/laravel-log-viewer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/dnoegel/php-xdg-base-dir" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/cache" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/dbal" />
