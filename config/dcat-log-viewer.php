@@ -4,7 +4,7 @@ return [
     'route' => [
         'prefix'     => 'admin/dcat-logs',
         'namespace'  => 'Dcat\LogViewer',
-        'middleware' => [],
+        'middleware' => config('admin.route.middleware'),
     ],
 
     'directory' => storage_path('logs'),
