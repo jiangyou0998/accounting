@@ -13,7 +13,7 @@ use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Card;
 
 
-//貨倉入貨報告
+//分店三更數報告
 class SalesDataByShopReportController extends AdminController
 {
     public function index(Content $content)
@@ -139,6 +139,7 @@ HTML;
             $data[$loop_start_date->day.'_6'][$date_column_name] = '';
             $data[$loop_start_date->day.'_7'][$date_column_name] = '';
             $data[$loop_start_date->day.'_8'][$date_column_name] = '';
+            $data[$loop_start_date->day.'_9'][$date_column_name] = '';
 
             $type_column_name = '收/存';
             $data[$loop_start_date->day.'_1'][$type_column_name] = '營業額';
@@ -146,26 +147,30 @@ HTML;
             $data[$loop_start_date->day.'_3'][$type_column_name] = '其他收入';
             $data[$loop_start_date->day.'_4'][$type_column_name] = '總收入';
             $data[$loop_start_date->day.'_5'][$type_column_name] = '存';
-            $data[$loop_start_date->day.'_6'][$type_column_name] = '八達通';
-            $data[$loop_start_date->day.'_7'][$type_column_name] = '支付寶';
-            $data[$loop_start_date->day.'_8'][$type_column_name] = '微信';
+            $data[$loop_start_date->day.'_6'][$type_column_name] = '存入銀行';
+            $data[$loop_start_date->day.'_7'][$type_column_name] = '八達通';
+            $data[$loop_start_date->day.'_8'][$type_column_name] = '支付寶';
+            $data[$loop_start_date->day.'_9'][$type_column_name] = '微信';
 
             foreach ($shop_names as $shop_id => $shop_name) {
                 $date_string = $loop_start_date->toDateString();
 
+                //2022-10-21 新增「存入銀行」欄,並在「存」欄總數加上
+                $deposit_in_bank = $result[$shop_id][$date_string]['deposit_in_bank'] ?? 0;
                 $octopus_income = $result[$shop_id][$date_string]['octopus_income'] ?? 0;
                 $alipay_income = $result[$shop_id][$date_string]['alipay_income'] ?? 0;
                 $wechatpay_income = $result[$shop_id][$date_string]['wechatpay_income'] ?? 0;
-                $deposit = (float)$octopus_income + (float)$alipay_income + (float)$wechatpay_income;
+                $deposit = (float)$octopus_income + (float)$alipay_income + (float)$wechatpay_income + (float)$deposit_in_bank;
 
                 $data[$loop_start_date->day.'_1'][$shop_name] = $result[$shop_id][$date_string]['income_sum'] ?? '';
                 $data[$loop_start_date->day.'_2'][$shop_name] = '';
                 $data[$loop_start_date->day.'_3'][$shop_name] = '';
                 $data[$loop_start_date->day.'_4'][$shop_name] = $result[$shop_id][$date_string]['income_sum'] ?? '';
                 $data[$loop_start_date->day.'_5'][$shop_name] = ($deposit != 0) ? $deposit : '';
-                $data[$loop_start_date->day.'_6'][$shop_name] = ($octopus_income != 0) ? $octopus_income : '';
-                $data[$loop_start_date->day.'_7'][$shop_name] = ($alipay_income != 0) ? $alipay_income : '';
-                $data[$loop_start_date->day.'_8'][$shop_name] = ($wechatpay_income != 0) ? $wechatpay_income : '';
+                $data[$loop_start_date->day.'_6'][$shop_name] = ($deposit_in_bank != 0) ? $deposit_in_bank : '';
+                $data[$loop_start_date->day.'_7'][$shop_name] = ($octopus_income != 0) ? $octopus_income : '';
+                $data[$loop_start_date->day.'_8'][$shop_name] = ($alipay_income != 0) ? $alipay_income : '';
+                $data[$loop_start_date->day.'_9'][$shop_name] = ($wechatpay_income != 0) ? $wechatpay_income : '';
 
             }
             $loop_start_date->addDay();
