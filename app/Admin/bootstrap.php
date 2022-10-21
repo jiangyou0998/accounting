@@ -2,6 +2,7 @@
 
 use Dcat\Admin\Grid;
 use Dcat\Admin\Form;
+use Dcat\Admin\Layout\Navbar;
 
 /**
  * Dcat-admin - admin builder based on Laravel.
@@ -56,5 +57,18 @@ Form::resolving(function (Form $form) {
         // 去掉`查看`按钮
         $tools->disableView();
     });
+
+});
+
+Admin::navbar(function (Navbar $navbar) {
+
+    //測試環境提示
+    if (app()->environment('local')){
+
+        $test_html = <<<HTML
+    <span style="color: red;font-size: xx-large">測試環境</span>
+HTML;
+        $navbar->right($test_html);
+    }
 
 });
