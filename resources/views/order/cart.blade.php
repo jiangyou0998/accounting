@@ -249,6 +249,9 @@
         @can('workshop')
             isworkshop = true;
         @endcan
+
+        var deli_date = '{{request()->deli_date}}';
+
         //insert
         $(".cart").each(function () {
 
@@ -259,7 +262,7 @@
 
             var qty = $("#qty" + id).val();
             // console.log($qty);
-            var deli_date = '{{request()->deli_date}}';
+
             var dept = '{{request()->dept}}';
 
             //管理員可以把數量改成0
@@ -309,9 +312,9 @@
             delarray.push(item);
 
         });
-        console.log(JSON.stringify(insertarray));
-        console.log(JSON.stringify(updatearray));
-        console.log(JSON.stringify(delarray));
+        // console.log(JSON.stringify(insertarray));
+        // console.log(JSON.stringify(updatearray));
+        // console.log(JSON.stringify(delarray));
 
         {{--shopid = {{$_REQUEST['shop']}};--}}
         $.ajax({
@@ -321,10 +324,11 @@
                 'insertData': JSON.stringify(insertarray),
                 'updateData': JSON.stringify(updatearray),
                 'delData': JSON.stringify(delarray),
+                'deli_date': deli_date,
                 'dept' : '{{request()->dept}}'
             },
             success: function (msg) {
-                // alert('已落貨!');
+                console.log(msg);
                 Swal.fire({
                     icon: 'success',
                     title: "已落貨!",

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Requests\WarehouseCartItemRequest;
 use App\Models\ForbiddenDate;
+use App\Models\ShopGroup;
 use App\Models\SpecialDate;
 use App\Models\WorkshopCartItem;
 use App\Models\WorkshopCartItemLog;
@@ -28,27 +30,29 @@ class WorkshopCartItemController extends Controller
 
     public function update(Request $request, $shopid)
     {
-        $user = Auth::User();
-
-        if ($user->can('shop')) {
-//            dump('shop');
-            $shopid = $user->id;
-        }
-        if ($user->can('workshop')) {
-//            dump('workshop');
-
-        }
-        if ($user->can('operation')) {
-//            dump('operation');
-
-        }
-
         // 数据库事务处理
-        DB::transaction(function () use ($user, $shopid, $request) {
+        return DB::transaction(function () use ($shopid, $request) {
+
+            $user = Auth::User();
+
+            //2022-09-28 判斷能否修改所有產品
+            $allow_all = true;
+            if ($user->can('shop')) {
+                $shopid = $user->id;
+                $allow_all = false;
+            }
+            if ($user->can('workshop')) {
+
+                $allow_all = true;
+            }
+            if ($user->can('operation')) {
+                $allow_all = true;
+            }
 
             $insertDatas = json_decode($request->insertData, true);
             $updateDatas = json_decode($request->updateData, true);
             $delDatas = json_decode($request->delData, true);
+            $deli_date = $request->deli_date;
             $ip = $request->ip();
             $cartItemModel = new WorkshopCartItem();
             $cartItemLogsModel = new WorkshopCartItemLog();
@@ -56,12 +60,37 @@ class WorkshopCartItemController extends Controller
 
 //            dump($insertDatas);
 //            dump($delDatas);
-            $shop_group_id = 1;
+            $shop_group_id = ShopGroup::KB_SHOP_ID;
             //2021-01-13 dept為RB 分組改為糧友
-            if(request()->dept === 'RB') $shop_group_id = 5;
+            if(request()->dept === 'RB') $shop_group_id = ShopGroup::RB_SHOP_ID;
 
-            //2020-11-23 新增下單時候的價格
-//            $prices = WorkshopProduct::all()->pluck('default_price','id');
+            //2022-09-28 分店不能在截單時間後提交
+            $products = WorkshopProduct::with(['cats', 'prices'])
+                ->whereHas('prices', function (Builder $query) use($shop_group_id){
+                $query->where('shop_group_id', '=', $shop_group_id);
+            })->get();
+
+            $this->productArr = WorkshopProduct::getProductCatIds();
+            $this->special_dates = SpecialDate::where('special_date', $deli_date)->get();
+            $this->forbidden_dates = ForbiddenDate::where('forbidden_date', $deli_date)->get();
+
+            //查出所有能修改的有效ID
+            $valid_ids = [];
+
+            foreach ($products as $product){
+                $productDetail = $product->prices->where('shop_group_id', '=', $shop_group_id)->first();
+                //2022-08-22 檢測分類為時節產品, 不跳星期日
+                $productDetail->cat_id = $product->cats->id;
+
+                $this->checkInvalidOrder($productDetail,$deli_date,$shopid);
+//                dump($productDetail);
+                if($productDetail->invalid_order === false){
+                    $valid_ids[] = $productDetail->product_id;
+                }
+            }
+//            dump($valid_ids);
+//2022-09-28 -------------------分店不能在截單時間後提交 --------------------end
+
             //2021-01-06 下單時候價格改為從prices表獲取
             $prices = WorkshopProduct::with('prices')->whereHas('prices', function (Builder $query) use($shop_group_id){
                 $query->where('shop_group_id', '=', $shop_group_id);
@@ -73,15 +102,39 @@ class WorkshopCartItemController extends Controller
 
             //新增
 //            $insertArr = array();
+            //2022-10-05 禁止重複提交
+            $exist_data = WorkshopCartItem::getExistDataByShopidAndDelidate($shopid, $deli_date);
+            $message = [];
+
             foreach ($insertDatas as $insertData) {
+                $product_id = $insertData['itemid'];
+
+                //2022-10-05 禁止重複提交
+                $is_exist = $exist_data
+                    ->where('user_id', $shopid)
+                    ->where('product_id', $product_id)
+                    ->where('deli_date', $deli_date)
+                    ->count() > 0;
+
+                if($is_exist === true){
+                    $message['duplicate'] = '部分產品已提交過，請勿重複提交！';
+                    continue;
+                }
+
+                //2022-09-28 通過驗證的數據才能提交
+                if(($allow_all === false) && (!in_array($product_id, $valid_ids))){
+                    $message['cantorder'] = '部分產品已過截單時間，已拒絕此部分產品提交！';
+                    continue;
+                }
+
                 //插入數據
                 $insertArr = [
                     'order_date' => $now,
                     'user_id' => $shopid,
-                    'product_id' => $insertData['itemid'],
+                    'product_id' => $product_id,
                     'qty' => $insertData['qty'],
                     //2020-11-23 新增下單時候的價格
-                    'order_price' => $prices[$insertData['itemid']],
+                    'order_price' => $prices[$product_id],
                     'ip' => $ip,
                     'status' => 1,
 //                    'po_no' => ,
@@ -95,11 +148,11 @@ class WorkshopCartItemController extends Controller
                 $insertLogsArr= [
                     'operate_user_id' => $user->id,
                     'shop_id' => $shopid,
-                    'product_id' => $insertData['itemid'],
+                    'product_id' => $product_id,
                     'cart_item_id' => $cartItemId,
                     'method' => 'INSERT',
                     'ip' => $ip,
-                    'input' => '新增數量'.$insertData['qty'].',價格:'.$prices[$insertData['itemid']],
+                    'input' => '新增數量'.$insertData['qty'].',價格:'.$prices[$product_id],
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];
@@ -108,18 +161,22 @@ class WorkshopCartItemController extends Controller
 
             }
 
-
 //            dump($updateLogsArr);
 
             //更新
             $updateLogsArr = array();
             foreach ($updateDatas as $updateData) {
+                $product_id = $cartItemModel::find($updateData['mysqlid'])->product_id;
+                //2022-09-28 通過驗證的數據才能提交
+                if(($allow_all === false) && (!in_array($product_id, $valid_ids))){
+                    continue;
+                }
                 $cartItemModel::where('id', $updateData['mysqlid'])->update(['qty' => $updateData['qty'] , 'order_date' => $now]);
 //                $productModel = new WorkshopProduct();
                 $updateLogsArr[] = [
                     'operate_user_id' => $user->id,
                     'shop_id' => $shopid,
-                    'product_id' => $cartItemModel::find($updateData['mysqlid'])->product_id,
+                    'product_id' => $product_id,
                     'cart_item_id' => $updateData['mysqlid'],
                     'method' => 'UPDATE',
                     'ip' => $ip,
@@ -154,6 +211,8 @@ class WorkshopCartItemController extends Controller
             //插入刪除LOG
             $cartItemLogsModel->insert($delLogsArr);
 
+            //todo 返回提示有部分貨品未添加成功, 因為貨品已截單
+            return json_encode($message, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         });
 
     }
