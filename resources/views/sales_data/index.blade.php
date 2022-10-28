@@ -452,6 +452,16 @@
 
             $('.btn-submit').attr('disabled', true);
 
+            //2022-10-28 「收銀機收入」必須跟「時段收入」一致才可以提交
+            if(getPosIncomeSum() !== getPeriodIncomeSum()){
+                Swal.fire({
+                    icon: 'error',
+                    title: "「1.收銀機收入」與「2.時段收入」不一致，請檢查是否輸入錯誤",
+                });
+                $('.btn-submit').attr('disabled', false);
+                return false;
+            }
+
             let difference = getDifference();
 
             if(difference != 0){
