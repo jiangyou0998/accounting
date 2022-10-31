@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class WarehouseStockController extends Controller
 {
@@ -301,6 +302,7 @@ class WarehouseStockController extends Controller
     {
         $user = $request->user();
         $product_id = $request->input('product_id');
+        $times = $request->input('times');
 
         //格式:20220429
 //        $currentdate = Carbon::now()->subDays(self::DELAY_DAY)->isoFormat('YMMDD');
@@ -312,6 +314,18 @@ class WarehouseStockController extends Controller
             ->where('user_id', $user->id)
 //            ->where('date', $date)
             ->delete();
+
+        $filled_count = WarehouseStockItem::query()
+            ->where('user_id', Auth::id())
+            ->where('times', $times)
+            ->count();
+
+        if ($filled_count === 0){
+            return response()->json(array(
+                'code' => 200,
+                'msg' => 'empty',
+            ));
+        }
 
         return [];
     }
@@ -395,6 +409,8 @@ class WarehouseStockController extends Controller
     public function price_check(Request $request)
     {
         $date = $request->input('date');
+
+        session(['date' => $date]);
 
         $prices = WarehouseProductPrice::query()
             ->whereDate('start_date','<=', $date)

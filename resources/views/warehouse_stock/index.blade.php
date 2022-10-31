@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    貨倉入庫
+    供應商收貨
 @stop
 
 @section('content')
@@ -28,14 +28,14 @@
 
 {{--            <h1>{{ request()->date }}</h1>--}}
             <h2>{{ Auth::user()->txt_name ?? '' }}</h2>
-            <h2>貨倉入庫</h2>
+            <h2>供應商收貨</h2>
 
 {{--            保存訂單--}}
             @if($filled_count !== 0)
                 <div class="d-flex justify-content-end input-group">
                     <div class="card p-1">
                         <div class="input-group">
-                            <input type="date" name="invoice_date" id="invoice_date" class="form-control" style="padding-right: 2px;" autocomplete="off" max="{{\Carbon\Carbon::now()->toDateString()}}">
+                            <input type="date" name="invoice_date" id="invoice_date" value="{{session('date')}}" class="form-control" style="padding-right: 2px;" autocomplete="off" max="{{\Carbon\Carbon::now()->toDateString()}}">
                             <input type="text" name="invoice_no" id="invoice_no" class="form-control" style="padding-right: 2px;" placeholder="請填寫訂單編號" autocomplete="off">
                             <div class="input-group-append">
                                 <button class="btn btn-danger save-invoice" style="margin-right: 5px;">保存訂單</button>
@@ -163,6 +163,12 @@
     @include('warehouse_stock._script')
 
     <script>
+
+        $(document).ready(function() {
+            if($('#invoice_date').val()){
+                $('#invoice_date').trigger('change');
+            }
+        });
 
         //提交批次
         $(document).on('click', '.save-invoice', function () {

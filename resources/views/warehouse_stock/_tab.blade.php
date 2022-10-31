@@ -14,6 +14,9 @@
 {{--            </ul>--}}
 
 {{--            已保存invoice tab--}}
+<div>
+    <h3>已保存訂單:</h3>
+</div>
 <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
         @foreach($tabs as $supplier_id => $tab)

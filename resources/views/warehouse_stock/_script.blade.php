@@ -82,17 +82,27 @@
 
         $.ajax({
             type: "DELETE",
-            url: "{{ route('stock.warehouse.delete', ['date' => request()->date] ) }}",
+            url: "{{ route('stock.warehouse.delete', ['date' => request()->date, 'times' => request()->times] ) }}",
             data: {
                 'product_id': product_id,
             },
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            success: function (msg) {
-                qty_input.val('');
-                base_qty_input.val('');
-                cal_price(search_prices);
+            success: function (data) {
+                if(data.msg === 'empty'){
+                    window.location.href = "{{route('stock.warehouse.index')}}";
+                }
+                if(data.code === 403){
+                    Swal.fire({
+                        icon: 'error',
+                        title: data.error,
+                    });
+                }else{
+                    qty_input.val('');
+                    base_qty_input.val('');
+                    cal_price(search_prices);
+                }
             },
             error:function () {
                 Swal.fire({
