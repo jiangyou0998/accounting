@@ -556,6 +556,8 @@
 
         $('.btn-submit').click(function () {
 
+            $('.btn-submit').attr('disabled', true);
+
             //存入銀行填寫後必須選擇銀行
             if($('#deposit_in_bank').val() && !$('#deposit_bank option:selected').val()){
                 // alert('請選擇銀行');
@@ -565,10 +567,19 @@
                     confirmButtonColor: '#3085d6',
                     confirmButtonText: '確定',
                 })
-                return;
+                $('.btn-submit').attr('disabled', false);
+                return false;
             }
 
-            $('.btn-submit').attr('disabled', true);
+            //2022-10-28 「收銀機收入」必須跟「時段收入」一致才可以提交
+            if(getPosIncomeSum() !== getPeriodIncomeSum()){
+                Swal.fire({
+                    icon: 'error',
+                    title: "「1.收銀機收入」與「2.時段收入」不一致，請檢查是否輸入錯誤",
+                });
+                $('.btn-submit').attr('disabled', false);
+                return false;
+            }
 
             // 构建请求参数，将用户选择的維修項目 ,維修員 和 維修費用 写入请求参数
             var req = {
