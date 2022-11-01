@@ -6,6 +6,7 @@ namespace App\Models;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class WarehouseStockItem extends Model
@@ -53,6 +54,8 @@ class WarehouseStockItem extends Model
     public static function getInvoiceTab(){
         $warehouse_stock_items = WarehouseStockItem::query()
             ->with('product')
+            //2022-10-17 頂部tab只搜索當前用戶
+            ->where('user_id', Auth::id())
             ->whereBetween(DB::raw("date(`date`)"), [Carbon::now()->subDay(self::TAB_SHOW_DATE), Carbon::now()])
             ->whereNotNull('times')
             ->orderBy('date')
