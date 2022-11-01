@@ -39,6 +39,8 @@ class WorkshopCartItem extends Model
         return $this->hasOneThrough(WorkshopUnit::class,WorkshopProduct::class,"id" ,"id","product_id","unit_id");
     }
 
+    // ---------------------------- Scope Start------------------------------
+
     public function scopeOfShop($query, $shops)
     {
         $shop_group_ids = $shop_group_ids = explode(',', $shops);
@@ -139,6 +141,13 @@ class WorkshopCartItem extends Model
             return $query->whereIn('product_id', $products);
         }
     }
+
+    public function scopeNotDeleted($query)
+    {
+        return $query->where('status', '!=', self::STATUS_DELETE);
+    }
+
+    // ---------------------------- Scope End------------------------------
 
     public static function getCartItems($shop , $dept , $deli_date){
 
@@ -509,11 +518,6 @@ class WorkshopCartItem extends Model
 
     }
 
-    public function scopeNotDeleted($query)
-    {
-        return $query->where('status', '!=' ,self::STATUS_DELETE);
-    }
-
     public function updateBatch(array $attributes = [])
     {
         try {
@@ -629,6 +633,16 @@ class WorkshopCartItem extends Model
         $cartitem = $cartitem->pluck('Total', 'shop_sub_group_id');
 
         return $cartitem;
+    }
+
+    //2022-10-03 根據分店ID與送貨日期查找訂單資料
+    public static function getExistDataByShopidAndDelidate($shop_id, $deli_date)
+    {
+        return self::query()
+            ->where('user_id', $shop_id)
+            ->where('deli_date', $deli_date)
+            ->notDeleted()
+            ->get();
     }
 
 }

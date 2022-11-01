@@ -184,6 +184,7 @@ namespace Dcat\Admin {
      * @property Grid\Column|Collection eng_address
      * @property Grid\Column|Collection int_area
      * @property Grid\Column|Collection oper_time
+     * @property Grid\Column|Collection shop_sub_group_id
      * @property Grid\Column|Collection special_date
      * @property Grid\Column|Collection month
      * @property Grid\Column|Collection unit_id
@@ -430,6 +431,7 @@ namespace Dcat\Admin {
      * @method Grid\Column|Collection eng_address(string $label = null)
      * @method Grid\Column|Collection int_area(string $label = null)
      * @method Grid\Column|Collection oper_time(string $label = null)
+     * @method Grid\Column|Collection shop_sub_group_id(string $label = null)
      * @method Grid\Column|Collection special_date(string $label = null)
      * @method Grid\Column|Collection month(string $label = null)
      * @method Grid\Column|Collection unit_id(string $label = null)
@@ -681,6 +683,7 @@ namespace Dcat\Admin {
      * @property Show\Field|Collection eng_address
      * @property Show\Field|Collection int_area
      * @property Show\Field|Collection oper_time
+     * @property Show\Field|Collection shop_sub_group_id
      * @property Show\Field|Collection special_date
      * @property Show\Field|Collection month
      * @property Show\Field|Collection unit_id
@@ -927,6 +930,7 @@ namespace Dcat\Admin {
      * @method Show\Field|Collection eng_address(string $label = null)
      * @method Show\Field|Collection int_area(string $label = null)
      * @method Show\Field|Collection oper_time(string $label = null)
+     * @method Show\Field|Collection shop_sub_group_id(string $label = null)
      * @method Show\Field|Collection special_date(string $label = null)
      * @method Show\Field|Collection month(string $label = null)
      * @method Show\Field|Collection unit_id(string $label = null)
