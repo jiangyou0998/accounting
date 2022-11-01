@@ -4,6 +4,7 @@ namespace App\Admin\Controllers;
 
 use App\Admin\Repositories\TblOrderZCat;
 use App\Models\WorkshopCat;
+use Dcat\Admin\Admin;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
 use Dcat\Admin\Show;
@@ -23,15 +24,16 @@ class WorkshopCatController extends AdminController
             $grid->model()->orderBy('sort');
             $grid->cat_name;
             $grid->sort;
-            $grid->status;
             $grid->start_date;
             $grid->end_date;
 
             $grid->disableRowSelector();
-            $grid->disableCreateButton();
             $grid->disableBatchDelete();
             $grid->actions(function (Grid\Displayers\Actions $actions) {
                 $actions->disableView();
+//                if(!Admin::user()->isAdministrator()){
+//                    $actions->disableDelete();
+//                }
                 $actions->disableDelete();
             });
 
@@ -63,9 +65,10 @@ class WorkshopCatController extends AdminController
 
             });
 
-            $form->text('cat_name');
-            $form->text('sort');
-            $form->text('status');
+            $form->text('cat_name')->required();
+            $form->text('sort')->required();
+            $form->hidden('status')->default(1);
+            $form->hidden('int_page')->default(1);
             $form->dateRange('start_date', 'end_date', '生效時間');
 
         });
