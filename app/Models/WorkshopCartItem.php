@@ -636,11 +636,13 @@ class WorkshopCartItem extends Model
     }
 
     //2022-10-03 根據分店ID與送貨日期查找訂單資料
-    public static function getExistDataByShopidAndDelidate($shop_id, $deli_date)
+    //2022-11-07 重複提交判斷必須增加下單部門
+    public static function getExistDataByShopidAndDelidate($shop_id, $deli_date, $dept)
     {
         return self::query()
             ->where('user_id', $shop_id)
             ->where('deli_date', $deli_date)
+            ->where('dept', $dept)
             ->notDeleted()
             ->get();
     }

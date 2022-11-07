@@ -103,7 +103,9 @@ class WorkshopCartItemController extends Controller
             //新增
 //            $insertArr = array();
             //2022-10-05 禁止重複提交
-            $exist_data = WorkshopCartItem::getExistDataByShopidAndDelidate($shopid, $deli_date);
+            //2022-11-07 重複提交判斷必須增加下單部門
+            $dept = request()->dept;
+            $exist_data = WorkshopCartItem::getExistDataByShopidAndDelidate($shopid, $deli_date, $dept);
             $message = [];
 
             foreach ($insertDatas as $insertData) {
