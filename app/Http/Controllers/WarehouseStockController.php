@@ -190,8 +190,7 @@ class WarehouseStockController extends Controller
 
         $tabs = WarehouseStockItem::getInvoiceTab();
 
-        $invoice = WarehouseStockItem::query()
-            ->where('times', $times)
+        $invoice = (clone $warehouseStockItemModel)
             ->first();
 
         $forbidden = WarehouseStockItemForbidden::checkModifyPermission($invoice->date);
