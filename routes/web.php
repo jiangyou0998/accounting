@@ -16,6 +16,7 @@
 //Auth::routes();
 
 
+use App\Http\Controllers\OrderImportController;
 use App\Http\Controllers\SalesCalResultController;
 use App\Http\Controllers\SalesDataChangeApplicationController;
 use App\Http\Controllers\SalesDataController;
@@ -111,6 +112,12 @@ Route::group(['middleware' => ['auth','permission:workshop']], function () {
     Route::get('order/batch_delete', 'BatchDeleteController@index')->name('order.batch_delete');
     Route::post('order/batch_delete/check','BatchDeleteController@check')->name('order.batch_delete.check');
     Route::delete('order/batch_delete/delete','BatchDeleteController@delete')->name('order.batch_delete.delete');
+
+    //2022-11-15 Excel柯打Import
+    Route::get('order/order_import', [OrderImportController::class, 'index'])->name('order.order_import');
+    Route::post('order/order_import', [OrderImportController::class, 'read_excel_result'])->name('order.order_import.result');
+    Route::post('order/order_import/match_code', [OrderImportController::class, 'match_code'])->name('order.order_import.match_code');
+    Route::post('order/order_import/save_order', [OrderImportController::class, 'save_order'])->name('order.order_import.save_order');
 });
 
 Route::group(['middleware' => ['auth','permission:shop']], function () {
@@ -254,6 +261,9 @@ Route::group(['middleware' => ['auth','permission:warehouse']], function () {
 
 //Repair Item 導入
 //Route::get('/import/repair/item', 'Import\RepairItemImportController@importRepairItem');
+
+//Customer Order Code 導入
+//Route::get('/import/customer_order_code', 'Import\CustomerOrderCodeImportController@import');
 
 //Route::get('/api/resetpassword', 'Api\ApiController@resetAllPassword');
 //Route::get('/api/resetshoppassword', 'Api\ApiController@resetShopPassword');
