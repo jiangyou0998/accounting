@@ -16,13 +16,13 @@ use Dcat\Admin\Widgets\Card;
 use Illuminate\Support\Facades\DB;
 
 
-//貨倉入貨報告
+//供應商收貨報告
 class WarehouseStockReportController extends AdminController
 {
     public function index(Content $content)
     {
         return $content
-            ->header('貨倉入貨報告')
+            ->header('供應商收貨報告')
             ->body($this->grid());
     }
 
@@ -100,7 +100,7 @@ class WarehouseStockReportController extends AdminController
                     ->model(User::class, 'id', 'txt_name'); // 设置编辑数据显示
             });
 
-            $filename = '貨倉入貨報告 ' . $start . '至' . $end;
+            $filename = '供應商收貨報告 ' . $start . '至' . $end;
             $grid->export()->titles($titles)->csv()->filename($filename);
 
         });

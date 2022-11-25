@@ -2,20 +2,15 @@
 
 namespace App\Admin\Controllers;
 
-use App\Admin\Actions\Modal\memberModal;
-use App\Admin\Actions\Template\WarehousePriceDownloadTemplate;
-use App\Admin\Forms\WarehousePriceImport;
+
 use App\Models\WarehouseProduct;
 use App\Models\WarehouseProductPrice;
 use Carbon\Carbon;
 use Dcat\Admin\Form;
 use Dcat\Admin\Grid;
-use Dcat\Admin\Show;
 use Dcat\Admin\Controllers\AdminController;
-use Dcat\Admin\Widgets\Modal;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-use Symfony\Component\Console\Input\Input;
+
 
 class WarehouseProductPriceController extends AdminController
 {
@@ -28,20 +23,20 @@ class WarehouseProductPriceController extends AdminController
     {
         return Grid::make(new WarehouseProductPrice(), function (Grid $grid) {
 
-            $grid->tools(function (Grid\Tools $tools) {
-                $tools->append(Modal::make()
-                    // 大号弹窗
-                    ->lg()
-                    // 弹窗标题
-                    ->title('上传文件')
-                    // 按钮
-                    ->button('<button class="btn btn-primary"><i class="feather icon-upload"></i> 导入数据</button>')
-                    // 弹窗内容
-                    ->body(WarehousePriceImport::make()));
-                // 下载导入模板
-                $tools->append(WarehousePriceDownloadTemplate::make()->setKey('test_question'));
-
-            });
+//            $grid->tools(function (Grid\Tools $tools) {
+//                $tools->append(Modal::make()
+//                    // 大号弹窗
+//                    ->lg()
+//                    // 弹窗标题
+//                    ->title('上传文件')
+//                    // 按钮
+//                    ->button('<button class="btn btn-primary"><i class="feather icon-upload"></i> 导入数据</button>')
+//                    // 弹窗内容
+//                    ->body(WarehousePriceImport::make()));
+//                // 下载导入模板
+//                $tools->append(WarehousePriceDownloadTemplate::make()->setKey('test_question'));
+//
+//            });
 
             $grid->model()
                 ->with(['product'])
