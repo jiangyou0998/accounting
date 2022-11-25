@@ -26,10 +26,10 @@ class CrmDataController extends AdminController
             $grid->column('date_of_birth');
             $grid->column('mobile');
             $grid->column('email');
-            $grid->column('last_visit');
+            $grid->column('last_visit')->sortable();
             $grid->column('create_date');
             $grid->column('expiry_date');
-            $grid->column('point');
+            $grid->column('point')->sortable();
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->equal('id');
@@ -37,6 +37,7 @@ class CrmDataController extends AdminController
             });
 
             $titles = [
+                'id' => '客戶編號',
                 'code' => '地區號碼',
                 'mobile' => '會員電話*',
                 'name' => '姓名',
@@ -55,7 +56,7 @@ class CrmDataController extends AdminController
                 'terms' => '同意會員條款 (同意/不同意)',
                 'promote' => '同意接受推廣訊息 (同意/不同意)',
                 'remark' => '備註',
-                'id' => '客戶編號'
+                'last_visit' => '最近一次光顧時間',
             ];
 
             $grid->export($titles)->rows(function (array $rows) {
@@ -86,7 +87,7 @@ class CrmDataController extends AdminController
                     //會員電話 - 去掉+852
                     $row['mobile'] = preg_replace('/\+852\s/', '', $row['mobile']);
 
-                    //電話號碼沒有填寫的 刪除改數據
+                    //電話號碼沒有填寫的 刪除該數據
                     if(strlen($row['mobile']) === 0){
                         unset($rows[$index]);
                         continue;
@@ -100,11 +101,12 @@ class CrmDataController extends AdminController
                     //等級
                     $row['level'] = '上流糧粉';
 
+                    //由過期12個月改成2021-09-05後有消費的
                     //如果過去12個月：有惠顧、有積分 - 分數照轉
                     //如果過去12個月：沒有惠顧、有積分 - 積分0
                     //如果過去12個月：沒有惠顧、沒有積 - 積分0
                     $last_visit = $row['last_visit'] == '' ? Carbon::parse('2000-01-01') : Carbon::parse($row['last_visit']);
-                    $today_last_year = Carbon::now()->subYear();
+                    $today_last_year = Carbon::parse('2021-09-05');
 
                     if($last_visit->lt($today_last_year)){
                         $row['point'] = 0;
