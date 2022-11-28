@@ -33,6 +33,9 @@ Route::group([
     $router->resource('special_date', 'SpecialDateController');
     $router->resource('forbidden_date', 'ForbiddenDateController');
 
+    //匹配外客導入Code
+    $router->resource('customer_order_code', 'CustomerOrderCodeController');
+
     //------------------------------ 報告 ------------------------------------
 
     //分店每月銷售數量報告
