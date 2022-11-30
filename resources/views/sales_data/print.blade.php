@@ -84,10 +84,10 @@
         padding: 5px;
     }
 
-    .footer {
-        page-break-after:always;
-        bottom : 0;
-    }
+    /*.footer {*/
+    /*    page-break-after:always;*/
+    /*    bottom : 0;*/
+    /*}*/
 
 </style>
 
@@ -221,7 +221,7 @@
                 </div>
 
 {{--                分頁用--}}
-                <footer class="footer"></footer>
+{{--                <footer class="footer"></footer>--}}
 
             </div>
         </div>
