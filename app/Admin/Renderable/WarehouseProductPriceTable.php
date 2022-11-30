@@ -21,19 +21,19 @@ class WarehouseProductPriceTable extends LazyRenderable
                 ->latest('start_date');
 
             //新增按鈕
-            $createButtonUrl = route('warehouse.product.price.create', ['product_id' => $product_id]);
-            $createButtonHtml = <<<HTML
-    <a href="{$createButtonUrl}" target="_blank" class="btn btn-primary btn-outline pull-right">
-    <i class="feather icon-plus"></i><span class="d-none d-sm-inline">&nbsp;&nbsp;新增</span>
-</a>
-HTML;
-            $grid->tools($createButtonHtml);
+//            $createButtonUrl = route('warehouse.product.price.create', ['product_id' => $product_id]);
+//            $createButtonHtml = <<<HTML
+//    <a href="{$createButtonUrl}" target="_blank" class="btn btn-primary btn-outline pull-right">
+//    <i class="feather icon-plus"></i><span class="d-none d-sm-inline">&nbsp;&nbsp;新增</span>
+//</a>
+//HTML;
+//            $grid->tools($createButtonHtml);
 
             //查看按鈕
             $searchButtonUrl = route('warehouse.product.price.index', ['product_id' => $product_id]);
             $searchButtonUrl = <<<HTML
     <a href="{$searchButtonUrl}" target="_blank" class="btn btn-primary btn-outline pull-right">
-    <i class="feather icon-zoom-in"></i><span class="d-none d-sm-inline">&nbsp;&nbsp;查看</span>
+    <i class="feather icon-zoom-in"></i><span class="d-none d-sm-inline">&nbsp;&nbsp;前往修改</span>
 </a>
 HTML;
             $grid->tools($searchButtonUrl);
