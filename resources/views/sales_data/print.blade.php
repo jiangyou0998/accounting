@@ -342,7 +342,7 @@
                     </div>
 
                     {{--                分頁用--}}
-                    <footer class="footer"></footer>
+{{--                    <footer class="footer"></footer>--}}
 
                 </div>
             </div>
