@@ -61,10 +61,10 @@ Route::group([
     //營業數報告查看
     $router->get('reports/print/sales_data_report', 'Reports\SalesDataReportController@print')->name('admin.sales_data.print');
 
-    //貨倉入貨報告
+    //供應商收貨報告
     $router->resource('reports/warehouse/stock', 'Reports\WarehouseStockReportController');
 
-    //貨倉產品價格報告
+    //供應商產品價格報告
     $router->resource('reports/warehouse/product_price', 'Reports\WarehouseProductPriceReportController');
 
 
@@ -114,10 +114,13 @@ Route::group([
 
     $router->resource('warehouse_stock_item_forbidden', 'WarehouseStockItemForbiddenController');
 
-    //貨倉產品
+    //供應商產品
     $router->resource('warehouse_products', 'WarehouseProductController');
-    //貨倉產品價格
-    $router->resource('warehouse/product/price', 'WarehouseProductPriceController');
+    //供應商產品價格
+    $router->resource('warehouse/product/price', 'WarehouseProductPriceController', ['names' => [
+        'index' => 'warehouse.product.price.index',
+        'create' => 'warehouse.product.price.create'
+    ]]);
 
     //test
 //    $router->get('data/', 'DataChangeController@index');

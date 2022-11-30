@@ -1,7 +1,7 @@
 <?php
 return [
     'labels' => [
-        'WarehouseProductPrice' => '貨倉產品價格',
+        'WarehouseProductPrice' => '供應商產品價格',
     ],
     'fields' => [
         'price' => '價錢',

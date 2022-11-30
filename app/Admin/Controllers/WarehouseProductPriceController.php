@@ -38,6 +38,20 @@ class WarehouseProductPriceController extends AdminController
 //
 //            });
 
+            // 获取外部传递的参数
+            $product_id = request()->product_id ?? '';
+
+            if ($product_id){
+                $createButtonUrl = route('warehouse.product.price.create', ['product_id' => $product_id]);
+                $createButtonHtml = <<<HTML
+    <a href="{$createButtonUrl}" class="btn btn-primary btn-outline pull-right">
+    <i class="feather icon-plus"></i><span class="d-none d-sm-inline">&nbsp;&nbsp;新增</span>
+</a>
+HTML;
+                $grid->tools($createButtonHtml);
+                $grid->disableCreateButton();
+            }
+
             $grid->model()
                 ->with(['product'])
                 ->orderBy('product_id')
@@ -55,7 +69,6 @@ class WarehouseProductPriceController extends AdminController
 
             $grid->filter(function (Grid\Filter $filter) {
                 $filter->panel();
-                $filter->equal('id');
 
                 $products = WarehouseProduct::query()->notDisabled()->pluck('product_name_short','id');
                 $filter->equal('product_id', '產品名稱')->select($products);
@@ -71,7 +84,9 @@ class WarehouseProductPriceController extends AdminController
      */
     protected function form()
     {
-        return Form::make(new WarehouseProductPrice(), function (Form $form) {
+        $product_id = \request()->product_id ?? '';
+
+        return Form::make(new WarehouseProductPrice(), function (Form $form) use($product_id){
             $form->model()->with('product');
             $form->display('id');
             $form->text('price')
@@ -83,7 +98,7 @@ class WarehouseProductPriceController extends AdminController
 
             $products = WarehouseProduct::query()->notDisabled()->pluck('product_name_short','id')->toArray();
             if ($form->isCreating()){
-                $form->select('product_id')->options($products)->required();
+                $form->select('product_id')->default($product_id)->options($products)->required();
             }else if ($form->isEditing()){
                 $form->hidden('product_id');
                 $form->display('product_id')->with(function ($value) use($products){

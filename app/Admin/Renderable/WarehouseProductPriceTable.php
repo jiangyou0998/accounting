@@ -12,13 +12,31 @@ class WarehouseProductPriceTable extends LazyRenderable
     public function grid(): Grid
     {
         // 获取外部传递的参数
-        $id = $this->key;
+        $product_id = $this->key;
 
-        return Grid::make(new WarehouseProductPrice(), function (Grid $grid) use($id){
+        return Grid::make(new WarehouseProductPrice(), function (Grid $grid) use($product_id){
             $grid->model()
                 ->with('product')
-                ->where('product_id', $id)
+                ->where('product_id', $product_id)
                 ->latest('start_date');
+
+            //新增按鈕
+            $createButtonUrl = route('warehouse.product.price.create', ['product_id' => $product_id]);
+            $createButtonHtml = <<<HTML
+    <a href="{$createButtonUrl}" target="_blank" class="btn btn-primary btn-outline pull-right">
+    <i class="feather icon-plus"></i><span class="d-none d-sm-inline">&nbsp;&nbsp;新增</span>
+</a>
+HTML;
+            $grid->tools($createButtonHtml);
+
+            //查看按鈕
+            $searchButtonUrl = route('warehouse.product.price.index', ['product_id' => $product_id]);
+            $searchButtonUrl = <<<HTML
+    <a href="{$searchButtonUrl}" target="_blank" class="btn btn-primary btn-outline pull-right">
+    <i class="feather icon-zoom-in"></i><span class="d-none d-sm-inline">&nbsp;&nbsp;查看</span>
+</a>
+HTML;
+            $grid->tools($searchButtonUrl);
 
             $grid->column('id', 'ID')->sortable();
             $grid->column('product.product_name', '產品名稱')->limit(20);

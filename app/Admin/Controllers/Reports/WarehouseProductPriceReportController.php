@@ -12,13 +12,13 @@ use Dcat\Admin\Layout\Content;
 use Dcat\Admin\Widgets\Card;
 
 
-//貨倉產品價格報告
+//供應商產品價格報告
 class WarehouseProductPriceReportController extends AdminController
 {
     public function index(Content $content)
     {
         return $content
-            ->header('貨倉產品價格報告')
+            ->header('供應商產品價格報告')
             ->body($this->grid());
     }
 
@@ -76,7 +76,7 @@ class WarehouseProductPriceReportController extends AdminController
 //                $filter->equal('group', '分組')->select(getReportShop());
             });
 
-            $filename = '貨倉產品價格報告 ' . $start . '至' . $end;
+            $filename = '供應商產品價格報告 ' . $start . '至' . $end;
             $grid->export()->csv()->filename($filename);
 
         });

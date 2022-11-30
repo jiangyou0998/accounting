@@ -74,7 +74,7 @@ class WarehouseProductController extends AdminController
                 'base_unit_id' => '包裝單位',
                 'weight' => '重量',
                 'weight_unit' => '重量單位',
-                'default_price' => '來貨價',
+//                'default_price' => '來貨價',
 //                'base_price' => '單價',
                 'status' => '狀態',
             ];
@@ -136,8 +136,6 @@ class WarehouseProductController extends AdminController
             $form->select('unit_id', '單位')->options(WorkshopUnit::all()->pluck('unit_name','id'))->required();
             $form->select('base_unit_id', '包裝單位')->options(WorkshopUnit::all()->pluck('unit_name','id'))->required();
             $form->text('base_qty', '包裝數量')->required();
-            $form->text('default_price');
-//            $form->text('base_price');
             $form->text('weight');
             $form->text('weight_unit');
             $form->radio('status', '狀態')->options([0 => '啟用', 1 => '禁用'])->default(0)->required();
