@@ -113,6 +113,7 @@ class GrossMarginController extends AdminController
             ->where('status', '!=', 4)
             ->get(['user_id', 'product_id', 'deli_date', 'qty', 'qty_received', 'order_price']);
 
+
         $results = [];
         $time = $start_date_carbon;
 
@@ -181,6 +182,7 @@ class GrossMarginController extends AdminController
             $income_sum = $results[$item->user_id][$item->deli_date]['營業額'];
             $total = $results[$item->user_id][$item->deli_date]['total'];
 
+            //計算毛利率
             if($income_sum > $total){
                 $results[$item->user_id][$item->deli_date]['毛利率'] = round(($income_sum - $total) / $income_sum * 100 , 2) . '%';
             }
