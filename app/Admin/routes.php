@@ -114,6 +114,8 @@ Route::group([
 
     $router->resource('warehouse_stock_item_forbidden', 'WarehouseStockItemForbiddenController');
 
+    //供應商
+    $router->resource('suppliers', 'SupplierController');
     //供應商產品
     $router->resource('warehouse_products', 'WarehouseProductController');
     //供應商產品價格
