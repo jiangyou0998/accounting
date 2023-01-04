@@ -15,13 +15,15 @@ use Dcat\Admin\Widgets\Card;
 use Illuminate\Support\Facades\DB;
 
 
-//分店每月銷售數量報告
+//分店產品銷售數量報告
 class TotalSalesAmountByMenuReportController extends AdminController
 {
+    const TITLE = '分店產品銷售數量報告';
+
     public function index(Content $content)
     {
           return $content
-            ->header('分店每月銷售數量報告')
+            ->header(self::TITLE)
             ->body($this->grid());
     }
 
@@ -89,7 +91,7 @@ class TotalSalesAmountByMenuReportController extends AdminController
                 $filter->equal('group', '分組')->select(getReportShop());
             });
 
-            $filename = '分店每月銷售數量報告 '.$start.'至'.$end ;
+            $filename = self::TITLE . ' ' . $start . '至' . $end;
             $grid->export()->csv()->filename($filename);
 
 

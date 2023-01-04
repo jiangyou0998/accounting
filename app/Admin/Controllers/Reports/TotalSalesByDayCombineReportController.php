@@ -13,13 +13,15 @@ use Dcat\Admin\Widgets\Card;
 use Illuminate\Support\Facades\DB;
 
 
-//分店每月銷售總額報告(按日)
+//分店每日銷售類別額報告(大類)
 class TotalSalesByDayCombineReportController extends AdminController
 {
+    const TITLE = '分店每日銷售類別額報告(大類)';
+
     public function index(Content $content)
     {
         return $content
-            ->header('分店每月銷售總額報告(按日)')
+            ->header(self::TITLE)
             ->body($this->grid());
     }
 
@@ -102,7 +104,7 @@ HTML;
 
             });
 
-            $filename = '分店每月銷售總額報告(按日) ' . $month ;
+            $filename = self::TITLE . ' ' . $month;
             $grid->export()->csv()->filename($filename);
 
 
