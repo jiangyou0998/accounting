@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class WarehouseStockItem extends Model
 {
-    const TAB_SHOW_DATE = 30;
+    const TAB_SHOW_DATE = 45;
 
     protected $table = 'warehouse_stock_items';
     public $timestamps = false;
