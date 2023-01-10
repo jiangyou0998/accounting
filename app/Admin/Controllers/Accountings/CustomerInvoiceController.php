@@ -88,11 +88,12 @@ class CustomerInvoiceController extends AdminController
                         });
                     }elseif($key == 'R_PO'){
                         //2023-01-10 外客不需要R單
-//                        $grid->column('rpo','查看R單')->display(function (){
-//                            if($this->R_PO){
+                        $grid->column('rpo','REVISED')->display(function (){
+                            if($this->R_PO){
 //                                return '<button class="viewR btn btn-danger" data-shop="'.$this->id.'" data-delidate="'.$this->deli_date.'">查看</button>';
-//                            }
-//                        });
+                                return '<span style="font-size: large">REVISED</span>';
+                            }
+                        });
                     }else{
                         $grid->column($key);
                     }
