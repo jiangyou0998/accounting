@@ -87,11 +87,12 @@ class CustomerInvoiceController extends AdminController
                             return '<button class="view btn btn-primary" data-shop="'.$this->id.'" data-delidate="'.$this->deli_date.'">查看</button>';
                         });
                     }elseif($key == 'R_PO'){
-                        $grid->column('rpo','查看R單')->display(function (){
-                            if($this->R_PO){
-                                return '<button class="viewR btn btn-danger" data-shop="'.$this->id.'" data-delidate="'.$this->deli_date.'">查看</button>';
-                            }
-                        });
+                        //2023-01-10 外客不需要R單
+//                        $grid->column('rpo','查看R單')->display(function (){
+//                            if($this->R_PO){
+//                                return '<button class="viewR btn btn-danger" data-shop="'.$this->id.'" data-delidate="'.$this->deli_date.'">查看</button>';
+//                            }
+//                        });
                     }else{
                         $grid->column($key);
                     }
@@ -128,24 +129,30 @@ class CustomerInvoiceController extends AdminController
 $('.view').click(function () {
     let shop = $(this).data('shop');
     let deli_date = $(this).data('delidate');
-    let type = 'CU';
-    let url = '/admin/reports/invoice/view?shop=' + shop + '&deli_date=' + deli_date + '&type=' + type;
+    // let type = 'CU';
+    // let url = '/admin/reports/invoice/view?shop=' + shop + '&deli_date=' + deli_date + '&type=' + type;
+    // 2023-01-10 外客也使用Reviced單
+    let url = '/admin/reports/invoice/view?shop=' + shop + '&deli_date=' + deli_date;
     window.open(url);
 });
 
 $('.viewD').click(function () {
     let shop = $(this).data('shop');
     let deli_date = $(this).data('delidate');
-    let type = 'CU';
-    let url = '/admin/reports/delivery/view?shop=' + shop + '&deli_date=' + deli_date + '&type=' + type;
+    // let type = 'CU';
+    // let url = '/admin/reports/delivery/view?shop=' + shop + '&deli_date=' + deli_date + '&type=' + type;
+    // 2023-01-10 外客也使用Reviced單
+    let url = '/admin/reports/delivery/view?shop=' + shop + '&deli_date=' + deli_date;
     window.open(url);
 });
 
 $('.viewR').click(function () {
     let shop = $(this).data('shop');
     let deli_date = $(this).data('delidate');
-    let type = 'CUR';
-    let url = '/admin/reports/invoice/view?shop=' + shop + '&deli_date=' + deli_date + '&type=' + type;
+    // let type = 'CUR';
+    // let url = '/admin/reports/invoice/view?shop=' + shop + '&deli_date=' + deli_date + '&type=' + type;
+    // 2023-01-10 外客也使用Reviced單
+    let url = '/admin/reports/invoice/view?shop=' + shop + '&deli_date=' + deli_date;
     window.open(url);
 });
 JS
