@@ -102,6 +102,13 @@
                                             <span>PO</span>
                                         </div>
                                     @endif
+
+                                    {{--                            修改過的訂單顯示「REVISED」--}}
+                                    @if($data['infos']->revised)
+                                        <div>
+                                            <span style="font-size: x-large">REVISED</span>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="right">
                                     <div>
