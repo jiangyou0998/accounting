@@ -29,7 +29,7 @@
         .left{
             /*float:left;*/
             display:inline-block;
-            width:105px;
+            width:130px;
             font-size: small;
         }
 
