@@ -158,48 +158,48 @@
         <hr class="mb-4">
 
 {{--        不顯示八達通--}}
-        <div class="py-5 text-center">
-            <h2>{{$date_and_week}}</h2>
-            <h2>營業數</h2>
+{{--        <div class="py-5 text-center">--}}
+{{--            <h2>{{$date_and_week}}</h2>--}}
+{{--            <h2>營業數</h2>--}}
 
-        </div>
+{{--        </div>--}}
 
-        <hr class="mb-4">
-        <div class="copy">
-            <h4>{{$date_and_week}}</h4>
+{{--        <hr class="mb-4">--}}
+{{--        <div class="copy">--}}
+{{--            <h4>{{$date_and_week}}</h4>--}}
 
-            @isset($sale_summary['bakery'])
-                <h5>營業數</h5>
-                @foreach($sale_summary['bakery'] as $value)
-                    @if($loop->iteration % 2 === 1)
-                        <span style="float:left;width:140px;">
-                            {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}
-                        </span>
-                    @endif
+{{--            @isset($sale_summary['bakery'])--}}
+{{--                <h5>營業數</h5>--}}
+{{--                @foreach($sale_summary['bakery'] as $value)--}}
+{{--                    @if($loop->iteration % 2 === 1)--}}
+{{--                        <span style="float:left;width:140px;">--}}
+{{--                            {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}--}}
+{{--                        </span>--}}
+{{--                    @endif--}}
 
-                    @if($loop->iteration % 2 === 0)
-                        <span style="width:180px;">
-                            {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}
-                        </span>
-                        <br>
-                    @endif
+{{--                    @if($loop->iteration % 2 === 0)--}}
+{{--                        <span style="width:180px;">--}}
+{{--                            {{$value->user->report_name}} ${{number_format($value->income_sum, 2)}}--}}
+{{--                        </span>--}}
+{{--                        <br>--}}
+{{--                    @endif--}}
 
-                    @if($loop->iteration % 2 === 1 && $loop->last)
-                        <br>
-                    @endif
-                @endforeach
-                <h5>
-                    <span>合計:${{number_format($sale_summary['bakery_total'], 2) ?? '0.00'}}</span>
-                </h5>
-                <br>
-            @endisset
-            <div class="group-div">
-                <h5><span>總計:${{number_format($sale_summary['total'], 2) ?? '0.00'}}</span></h5>
-                <h5>本月總計:${{number_format($sale_summary['month_total'], 2) ?? '0.00'}}</h5>
-            </div>
-        </div>
+{{--                    @if($loop->iteration % 2 === 1 && $loop->last)--}}
+{{--                        <br>--}}
+{{--                    @endif--}}
+{{--                @endforeach--}}
+{{--                <h5>--}}
+{{--                    <span>合計:${{number_format($sale_summary['bakery_total'], 2) ?? '0.00'}}</span>--}}
+{{--                </h5>--}}
+{{--                <br>--}}
+{{--            @endisset--}}
+{{--            <div class="group-div">--}}
+{{--                <h5><span>總計:${{number_format($sale_summary['total'], 2) ?? '0.00'}}</span></h5>--}}
+{{--                <h5>本月總計:${{number_format($sale_summary['month_total'], 2) ?? '0.00'}}</h5>--}}
+{{--            </div>--}}
+{{--        </div>--}}
 
-        <hr class="mb-4">
+{{--        <hr class="mb-4">--}}
 
         <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     </div>
