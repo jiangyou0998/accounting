@@ -3,6 +3,7 @@
 namespace App\Models\KB;
 
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class KBWorkshopGroup extends Model
@@ -32,6 +33,26 @@ class KBWorkshopGroup extends Model
             ->get(['id','group_name']);
 
         return $groups;
+    }
+
+    //获取所有大類
+    public static function getGroups()
+    {
+        $groups = new KBWorkshopGroup();
+        $groups = $groups->with('cats')->whereHas('products', function (Builder $query) {
+            $query->whereHas('prices', function (Builder $query) {
+                $query->where('shop_group_id', '=', KBWorkshopGroup::CURRENTGROUPID);
+            });
+        })
+            ->orderby('sort')
+            ->get();
+
+        $catAndGroup = [];
+        foreach ($groups as $group){
+            $catAndGroup[$group->cats->cat_name][$group->id] = $group->group_name;
+        }
+
+        return $catAndGroup;
     }
 
 }

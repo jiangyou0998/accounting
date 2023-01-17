@@ -289,7 +289,7 @@ class KBWorkshopCartItem extends Model
 
     }
 
-    public static function getItemsByDateRange($start_date, $end_date, $shop_ids, $limit = 15){
+    public static function getItemsByDateRange($start_date, $end_date, $shop_ids, $group_ids, $limit = 15){
 
 
         $items = new KBWorkshopCartItem();
@@ -325,6 +325,10 @@ class KBWorkshopCartItem extends Model
             //2021-03-17 貳號分組為4
             ->where('prices.shop_group_id', '=' , KBWorkshopGroup::CURRENTGROUPID)
             ->whereBetween('workshop_cart_items.deli_date', [$start_date, $end_date]);
+
+        if($group_ids){
+            $items = $items->whereIn('workshop_products.group_id', explode(',', $group_ids));
+        }
 
         $items = $items
             ->groupBy('workshop_cart_items.product_id')

@@ -33,31 +33,6 @@
 
     <div class="container">
 
-{{--        查詢:--}}
-        <div class="m-4">
-            <div class="row">
-                <span class="describe-text">開始時間:</span><input type="date" id="start_date" value="{{ request()->start_date ?? now()->toDateString() }}">
-            </div>
-            <div class="row">
-                <span class="describe-text">結束時間:</span><input type="date" id="end_date" value="{{ request()->end_date ?? now()->toDateString() }}">
-            </div>
-            <div class="row">
-                @foreach($shops as $shop)
-                    <label style="padding-right:15px;">
-                        <input type="checkbox" name="shop" value="{{$shop->id}}" @if(in_array($shop->id, explode(',', request()->shop_ids))) checked @endif>
-                        <span class="checkbox">{{$shop->report_name}}</span>
-                    </label>
-                @endforeach
-            </div>
-
-            <div class="row">
-                <button class="btn btn-success btn-search">查詢</button>
-            </div>
-
-            <input type="hidden" name="shopstr" id="shopstr" value="{{ request()->shop_ids }}"/>
-
-        </div>
-
         {{--        標題--}}
         <div class="py-1 text-center">
 
@@ -76,20 +51,93 @@
                 @endif
             </div>
         </div>
+        <hr>
+
+{{--        查詢:--}}
+        <div class="m-4">
+            <div class="row">
+                <span class="describe-text">開始時間:</span><input type="date" id="start_date" value="{{ request()->start_date ?? now()->toDateString() }}">
+            </div>
+            <div class="row">
+                <span class="describe-text">結束時間:</span><input type="date" id="end_date" value="{{ request()->end_date ?? now()->toDateString() }}">
+            </div>
+            <div class="row">
+                @foreach($shops as $shop)
+                    <label style="padding-right:15px;">
+                        <input class="shop-checkbox" type="checkbox" name="shop" value="{{$shop->id}}" @if(in_array($shop->id, explode(',', request()->shop_ids))) checked @endif>
+                        <span class="checkbox">{{$shop->report_name}}</span>
+                    </label>
+                @endforeach
+            </div>
+
+            @foreach($catsAndGroups as $cat_name => $group)
+                <div class="row">
+                    <div class="col-12">
+                        <h1>{{$cat_name}}</h1>
+                        <input class="check-all" type="checkbox" data-name="{{$cat_name}}" onclick="checkAll('{{$cat_name}}')">
+                        <span class="checkbox" data-name="{{$cat_name}}">全選</span>
+                        <hr>
+                    </div>
+                    <div class="col-12">
+                        @foreach($group as $group_id => $group_name)
+                            <label style="padding-right:15px;">
+                                <input class="group-checkbox" type="checkbox" name="group"  value="{{$group_id}}" data-name="{{$cat_name}}" @if(in_array($group_id, explode(',', request()->group_ids))) checked @endif>
+                                <span class="checkbox">{{$group_name}}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
+            @endforeach
+
+            <div class="row">
+                <button class="btn btn-success btn-search">查詢</button>
+{{--                <button class="btn btn-primary btn-clear-group-search">清空部門</button>--}}
+                <button class="btn btn-danger btn-clear-search">清空搜索條件</button>
+            </div>
+
+            <input type="hidden" name="shopstr" id="shopstr" data-loading-text="..." value="{{ request()->shop_ids }}"/>
+            <input type="hidden" name="groupstr" id="groupstr" value="{{ request()->group_ids }}"/>
+        </div>
 
 @endsection
 
 @section('script')
         <script>
             //鉤選或取消時,修改shopstr(隱藏)的值
-            $(document).on('change', 'input[type=checkbox]', function () {
-                let shopstr = $('input[type=checkbox]:checked').map(function () {
+            $(document).on('change', '.shop-checkbox', function () {
+                let shopstr = $('.shop-checkbox:checked').map(function () {
                     return this.value
                 }).get().join(',');
                 $('#shopstr').val(shopstr);
             });
 
+            //鉤選或取消時,修改groupstr(隱藏)的值
+            $(document).on('change', '.group-checkbox', function () {
+                let groupstr = $('.group-checkbox:checked').map(function () {
+                    return this.value
+                }).get().join(',');
+                $('#groupstr').val(groupstr);
+            });
+
+            //全選/反選
+            function checkAll(cat_name){
+                // let cat_name = $(obj).data('name');
+                console.log(cat_name);
+                let input = $("input[data-name=" + cat_name + "]");
+                if($(".check-all[data-name=" + cat_name + "]").prop("checked")){    //判斷check_all是否被選中
+                    input.prop("checked",true);//全選
+                    $(".checkbox[data-name=" + cat_name + "]").html("取消");
+                }else{
+                    input.prop("checked",false); //反選
+                    $(".checkbox[data-name=" + cat_name + "]").html("全選");
+                }
+                input.trigger('change');
+            }
+
             $(document).on('click', '.btn-search', function () {
+
+                $(this).attr('disabled', true);
+
                 let start_date = $('#start_date').val();
                 let end_date = $('#end_date').val();
                 let shopstr = $('#shopstr').val();
@@ -99,6 +147,7 @@
                         icon: 'error',
                         title: "請選擇「開始時間」!",
                     });
+                    $(this).attr('disabled', false);
                     return ;
                 }
 
@@ -107,6 +156,7 @@
                         icon: 'error',
                         title: "請選擇「結束時間」!",
                     });
+                    $(this).attr('disabled', false);
                     return ;
                 }
 
@@ -115,13 +165,26 @@
                         icon: 'error',
                         title: "請選擇「分店」!",
                     });
+                    $(this).attr('disabled', false);
                     return ;
                 }
 
-                window.location.href = '{{ route('top_sales.report')}}'
+                let url = '{{ route('top_sales.report')}}'
                     + '?start_date=' + $('#start_date').val()
                     + '&end_date=' + $('#end_date').val()
                     + '&shop_ids=' + $('#shopstr').val();
+
+                if($('#groupstr').val()){
+                    url += '&group_ids=' + $('#groupstr').val();
+                }
+
+                window.location.href = url;
+
+            });
+
+            $(document).on('click', '.btn-clear-search', function () {
+
+                window.location.href  = '{{ route('top_sales.report')}}';
 
             });
         </script>
